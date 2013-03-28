@@ -9,6 +9,9 @@
 #ifndef v6502_core_h
 #define v6502_core_h
 
+#include "cpu.h"
+
 void v6502_faultExternal(const char *error);
+void v6502_printCpuState(v6502_cpu *cpu);
 
 #endif
