@@ -9,10 +9,14 @@
 #ifndef v6502_cpu_h
 #define v6502_cpu_h
 
+// Use this to work headless, ignoring faults
+//#define v6502_fault	(void)
+
 #include <stdint.h>
 
 #include "mem.h"
 
+// CPU Object
 typedef struct {
 	uint16_t pc;	// program counter
 	uint8_t ac;		// accumulator
@@ -24,6 +28,15 @@ typedef struct {
 	v6502_memory *memory;
 } v6502_cpu;
 
+// Instruction Set
+typedef enum {
+	v6502_opcode_brk		= 0x00,
+	v6502_opcode_ora_x		= 0x01,
+	v6502_opcode_ora_zpg	= 0x05,
+	v6502_opcode_asl_zpg	= 0x06,
+	v6502_opcode_ora_val	= 0x09,
+} v6502_opcode;
+
 // CPU object lifecycle
 v6502_cpu *v6502_createCPU(void);
 void v6502_destroyCPU(v6502_cpu *cpu);
@@ -31,15 +44,5 @@ void v6502_destroyCPU(v6502_cpu *cpu);
 // Execution
 void v6502_execute(v6502_cpu *cpu, uint16_t instruction);
 void v6502_step(v6502_cpu *cpu);
-
-// Instruction Transliteration
-const char *v6502_stringForInstruction(uint16_t instruction);
-uint16_t v6502_instructionForString(const char *string);
-
-// Instruction Set
-typedef enum {
-	v6502_opcode_brk = 0x0000,
-	//<#enumerator2#> = <#value2#>
-} v6502_opcode;
 
 #endif

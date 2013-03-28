@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "core.h"
 
@@ -43,4 +44,37 @@ void v6502_printMemoryRange(v6502_memory *memory, uint8_t start, uint8_t len) {
 		}
 		printf("\n");
 	}
+}
+
+uint16_t v6502_instructionForString(const char *string) {
+	v6502_opcode opcode = v6502_opcodeForString(string);
+	uint8_t operand = 0;
+	
+	char *space = strrchr(string, ' ');
+	if (space) {
+		operand = strtol(space + 1, NULL, 16);
+	}
+	
+	return (opcode << 8) | operand;
+}
+
+v6502_opcode v6502_opcodeForString(const char *string) {
+	char *arg1 = strchr(string, ' ');
+	
+	if (!strncmp(string, "brk", 3)) {
+		return v6502_opcode_brk;
+	}
+	if (!strncmp(string, "ora", 3)) {
+		if (arg1[0] == 'X') {
+			return v6502_opcode_ora_x;
+		}
+		if (arg1[0] == '#') {
+			return v6502_opcode_ora_val;
+		}
+	}
+	
+	char exception[50];
+	snprintf(exception, 50, "Unknown Opcode - %s", string);
+	v6502_fault(exception);
+	return v6502_opcode_brk;
 }
