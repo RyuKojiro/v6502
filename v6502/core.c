@@ -11,8 +11,8 @@
 
 #include "core.h"
 
-void v6502_faultExternal(const char *error) {
-	fprintf(stderr, "External fault: ");
+void v6502_fault(const char *error) {
+	fprintf(stderr, "fault: ");
 	fprintf(stderr, "%s", error);
 	if (error[strlen(error)] != '\n') {
 		fprintf(stderr, "\n");

@@ -15,7 +15,7 @@ v6502_memory *v6502_createMemory(size_t size) {
 	// Allocate Memory Struct
 	v6502_memory *memory = malloc(sizeof(v6502_memory));
 	if (!memory) {
-		v6502_faultExternal("VM Allocation - Internal Structure");
+		v6502_fault("VM Allocation - Internal Structure");
 		return NULL;
 	}
 	
@@ -23,7 +23,7 @@ v6502_memory *v6502_createMemory(size_t size) {
 	memory->bytes = malloc(size);
 	if (!memory->bytes) {
 		free(memory);
-		v6502_faultExternal("VM Allocation - Blob");
+		v6502_fault("VM Allocation - Blob");
 		return NULL;
 	}
 	memory->size = size;
