@@ -22,6 +22,7 @@ v6502_memory *v6502_createMemory(size_t size) {
 	// Allocate Virtual Memory
 	memory->bytes = malloc(size);
 	if (!memory->bytes) {
+		free(memory);
 		v6502_faultExternal("VM Allocation - Blob");
 		return NULL;
 	}
