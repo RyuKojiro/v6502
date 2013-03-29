@@ -35,6 +35,9 @@ int main(int argc, const char * argv[])
 	printf("Allocating virtual memory of size 2k…\n");
 	cpu->memory = v6502_createMemory(2048);
 	
+	printf("Resetting CPU and dropping to interpreter…\n");
+	v6502_reset(cpu);
+	
 	char command[MAX_COMMAND_LEN];
 	char *eof;
 	for (;;) {
