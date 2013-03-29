@@ -25,6 +25,15 @@ void v6502_destroyCPU(v6502_cpu *cpu) {
 	free(cpu);
 }
 
+void v6502_reset(v6502_cpu *cpu) {
+	cpu->pc = 0x0000;
+	cpu->ac = 0x00;
+	cpu->x  = 0x00;
+	cpu->y  = 0x00;
+	cpu->sr = 0x20;
+	cpu->sp = 0xFF;
+}
+
 void v6502_step(v6502_cpu *cpu) {
 	v6502_execute(cpu, *(uint16_t *)cpu->memory + cpu->pc);
 	cpu->pc++;
@@ -36,8 +45,9 @@ void v6502_execute(v6502_cpu *cpu, uint16_t instruction) {
 	
 	switch (opcode) {
 		case v6502_opcode_brk: {
-			cpu->pc+=2;
-			cpu->sr++;
+			cpu->pc-=3;
+			cpu->sr |= v6502_cpu_status_break;
+			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 		case v6502_opcode_ora_x: {
 			cpu->ac |= *(uint8_t *)(cpu->memory + cpu->x);

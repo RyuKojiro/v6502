@@ -38,6 +38,18 @@ typedef enum {
 	v6502_opcode_nop		= 0xEA,
 } v6502_opcode;
 
+// Status Register Values
+typedef enum {
+	v6502_cpu_status_carry		= 1,
+	v6502_cpu_status_zero		= 2,
+	v6502_cpu_status_interrupt	= 4,
+	v6502_cpu_status_decimal	= 8,
+	v6502_cpu_status_break		= 16,
+	v6502_cpu_status_ignored	= 32,
+	v6502_cpu_status_overflow	= 64,
+	v6502_cpu_status_negative	= 128,
+} v6502_cpu_status;
+
 // CPU object lifecycle
 v6502_cpu *v6502_createCPU(void);
 void v6502_destroyCPU(v6502_cpu *cpu);
@@ -45,5 +57,6 @@ void v6502_destroyCPU(v6502_cpu *cpu);
 // Execution
 void v6502_execute(v6502_cpu *cpu, uint16_t instruction);
 void v6502_step(v6502_cpu *cpu);
+void v6502_reset(v6502_cpu *cpu);
 
 #endif
