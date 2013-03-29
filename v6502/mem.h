@@ -12,11 +12,11 @@
 // Memory Object
 typedef struct {
 	void *bytes;
-	size_t size;
+	uint16_t size;
 } v6502_memory;
 
 // Memory Lifecycle
-v6502_memory *v6502_createMemory(size_t size);
+v6502_memory *v6502_createMemory(uint16_t size);
 void v6502_destroyMemory(v6502_memory *memory);
 
 #endif

@@ -11,7 +11,7 @@
 #include "mem.h"
 #include "core.h"
 
-v6502_memory *v6502_createMemory(size_t size) {
+v6502_memory *v6502_createMemory(uint16_t size) {
 	// Allocate Memory Struct
 	v6502_memory *memory = malloc(sizeof(v6502_memory));
 	if (!memory) {
