@@ -25,16 +25,11 @@ void v6502_printCpuState(v6502_cpu *cpu) {
 }
 
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) {
-	// Round to the nearest 0x10
-	int alignment = start % 16;
-	start -= alignment;
+	uint16_t end = start + len;
 	
 	// Make sure we go to at least the same range specified, but then also round up to the nearest 0x0F
-	len += alignment;
-	uint16_t end = start + len;
-	alignment = end % 16;
-	end -= alignment;
-	end += 0x0F;
+	start &= ~15;
+	end |= 15;
 	
 	printf("      0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F\n");
 	for (uint16_t y = start; y < end - 0x10; y += 0x10) {
