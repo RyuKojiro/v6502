@@ -53,7 +53,7 @@ int main(int argc, const char * argv[])
 			popArg(command, MAX_COMMAND_LEN);
 			
 			// Make sure we don't go out of bounds either direction
-			uint8_t start = strtol(command, NULL, 16);
+			uint16_t start = strtol(command, NULL, 16);
 			if (start <= 0x10) {
 				start = 0x00;
 			}
