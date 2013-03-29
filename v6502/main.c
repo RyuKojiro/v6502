@@ -45,6 +45,10 @@ int main(int argc, const char * argv[])
 			v6502_printCpuState(cpu);
 			continue;
 		}
+		if (!strncmp(command, "!step", 5)) {
+			v6502_step(cpu);
+			continue;
+		}
 		if (!strncmp(command, "!peek", 5)) {
 			popArg(command, MAX_COMMAND_LEN);
 			
