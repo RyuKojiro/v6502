@@ -9,6 +9,8 @@
 #ifndef v6502_mem_h
 #define v6502_mem_h
 
+#include <stdint.h>
+
 // Memory Object
 typedef struct {
 	void *bytes;
