@@ -25,6 +25,11 @@ void v6502_destroyCPU(v6502_cpu *cpu) {
 	free(cpu);
 }
 
+void v6502_step(v6502_cpu *cpu) {
+	v6502_execute(cpu, *(uint16_t *)cpu->memory + cpu->pc);
+	cpu->pc++;
+}
+
 void v6502_execute(v6502_cpu *cpu, uint16_t instruction) {
 	v6502_opcode opcode = instruction >> 8;
 	//uint8_t operand = instruction & 0xFF;
