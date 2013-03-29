@@ -41,37 +41,40 @@ int main(int argc, const char * argv[])
 		printf("0x%x] ", cpu->pc);
 		eof = fgets(command, sizeof(command), stdin);
 
-		if (!strncmp(command, "!cpu", 4)) {
-			v6502_printCpuState(cpu);
-			continue;
-		}
-		if (!strncmp(command, "!step", 5)) {
-			v6502_step(cpu);
-			continue;
-		}
-		if (!strncmp(command, "!peek", 5)) {
-			popArg(command, MAX_COMMAND_LEN);
-			
-			// Make sure we don't go out of bounds either direction
-			uint16_t start = strtol(command, NULL, 16);
-			if (start <= 0x10) {
-				start = 0x00;
+		if (command[0] == '!') {
+			if (!strncmp(command + 1, "cpu", 4)) {
+				v6502_printCpuState(cpu);
+				continue;
 			}
-			else if (start >= cpu->memory->size - 0x30) {
-				start = cpu->memory->size - 0x30;
+			if (!strncmp(command + 1, "step", 5)) {
+				v6502_step(cpu);
+				continue;
 			}
-			else {
-				start -= 0x10;
+			if (!strncmp(command + 1, "peek", 5)) {
+				popArg(command, MAX_COMMAND_LEN);
+				
+				// Make sure we don't go out of bounds either direction
+				uint16_t start = strtol(command, NULL, 16);
+				if (start <= 0x10) {
+					start = 0x00;
+				}
+				else if (start >= cpu->memory->size - 0x30) {
+					start = cpu->memory->size - 0x30;
+				}
+				else {
+					start -= 0x10;
+				}
+				
+				v6502_printMemoryRange(cpu->memory, start, 0x30);
+				continue;
 			}
-			
-			v6502_printMemoryRange(cpu->memory, start, 0x30);
-			continue;
+			if (!strncmp(command + 1, "quit", 5)) {
+				break;
+			}
 		}
-		if (!strncmp(command, "!quit", 5)) {
-			break;
+		else {
+			v6502_execute(cpu, v6502_instructionForString(command));
 		}
-
-		v6502_execute(cpu, v6502_instructionForString(command));
 	}
 	
 	v6502_destroyMemory(cpu->memory);

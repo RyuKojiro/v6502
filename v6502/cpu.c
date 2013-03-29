@@ -42,6 +42,8 @@ void v6502_execute(v6502_cpu *cpu, uint16_t instruction) {
 		case v6502_opcode_ora_x: {
 			cpu->ac |= *(uint8_t *)(cpu->memory + cpu->x);
 		} return;
+		case v6502_opcode_nop:
+			return;
 		default: {
 			v6502_fault("Unhandled CPU Instruction");
 		} return;

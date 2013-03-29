@@ -72,6 +72,9 @@ v6502_opcode v6502_opcodeForString(const char *string) {
 			return v6502_opcode_ora_val;
 		}
 	}
+	if (!strncmp(string, "nop", 3)) {
+		return v6502_opcode_nop;
+	}
 	
 	char exception[50];
 	snprintf(exception, 50, "Unknown Opcode - %s", string);

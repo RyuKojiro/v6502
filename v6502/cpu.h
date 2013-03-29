@@ -35,6 +35,7 @@ typedef enum {
 	v6502_opcode_ora_zpg	= 0x05,
 	v6502_opcode_asl_zpg	= 0x06,
 	v6502_opcode_ora_val	= 0x09,
+	v6502_opcode_nop		= 0xEA,
 } v6502_opcode;
 
 // CPU object lifecycle
