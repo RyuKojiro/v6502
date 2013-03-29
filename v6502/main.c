@@ -42,15 +42,15 @@ int main(int argc, const char * argv[])
 		eof = fgets(command, sizeof(command), stdin);
 
 		if (command[0] == '!') {
-			if (!strncmp(command + 1, "cpu", 4)) {
+			if (!strncmp(command + 1, "cpu", 3)) {
 				v6502_printCpuState(cpu);
 				continue;
 			}
-			if (!strncmp(command + 1, "step", 5)) {
+			if (!strncmp(command + 1, "step", 4)) {
 				v6502_step(cpu);
 				continue;
 			}
-			if (!strncmp(command + 1, "peek", 5)) {
+			if (!strncmp(command + 1, "peek", 4)) {
 				popArg(command, MAX_COMMAND_LEN);
 				
 				// Make sure we don't go out of bounds either direction
@@ -68,9 +68,10 @@ int main(int argc, const char * argv[])
 				v6502_printMemoryRange(cpu->memory, start, 0x30);
 				continue;
 			}
-			if (!strncmp(command + 1, "quit", 5)) {
+			if (!strncmp(command + 1, "quit", 4)) {
 				break;
 			}
+			printf("Unknown Command - %s\n", command);
 		}
 		else {
 			v6502_execute(cpu, v6502_instructionForString(command));
