@@ -14,7 +14,7 @@
 // Debugging
 void v6502_fault(const char *error);
 void v6502_printCpuState(v6502_cpu *cpu);
-void v6502_printMemoryRange(v6502_memory *memory, uint8_t start, uint8_t len);
+void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len);
 
 // Instruction Transliteration
 const char *v6502_stringForInstruction(uint16_t instruction);
