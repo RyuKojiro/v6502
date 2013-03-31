@@ -45,6 +45,12 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t operand1, uint8_t ope
 			cpu->sr |= v6502_cpu_status_break;
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
+		case v6502_opcode_jmp_abs: {
+			cpu->pc = operand1;
+		} return;
+		case v6502_opcode_jmp_ind: {
+			cpu->pc = cpu->memory->bytes[operand1];
+		} return;			
 		case v6502_opcode_ora_x: {
 			cpu->ac |= cpu->x;
 		} return;
@@ -54,8 +60,9 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t operand1, uint8_t ope
 		case v6502_opcode_ora_zpg: {
 			cpu->ac |= cpu->memory->bytes[operand1];
 		} return;
-		case v6502_opcode_nop:
-			return;
+		case v6502_opcode_nop: {
+			cpu->pc++;
+		} return;
 		default: {
 			v6502_fault("Unhandled CPU Instruction");
 		} return;

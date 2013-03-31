@@ -31,11 +31,16 @@ typedef struct {
 // Instruction Set
 typedef enum {
 	v6502_opcode_brk		= 0x00,
+	v6502_opcode_nop		= 0xEA,
+	v6502_opcode_asl_zpg	= 0x06,
+
+	v6502_opcode_jmp_abs	= 0x4C,
+	v6502_opcode_jmp_ind	= 0x6C,
+	
 	v6502_opcode_ora_x		= 0x01,
 	v6502_opcode_ora_zpg	= 0x05,
-	v6502_opcode_asl_zpg	= 0x06,
 	v6502_opcode_ora_val	= 0x09,
-	v6502_opcode_nop		= 0xEA,
+
 } v6502_opcode;
 
 // Status Register Values
