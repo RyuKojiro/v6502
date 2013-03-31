@@ -13,7 +13,7 @@
 
 // Memory Object
 typedef struct {
-	void *bytes;
+	uint8_t *bytes;
 	uint16_t size;
 } v6502_memory;
 
