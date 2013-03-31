@@ -78,7 +78,7 @@ int main(int argc, const char * argv[])
 			printf("Unknown Command - %s\n", command);
 		}
 		else if (command[0] != ';') {
-			v6502_executeAsmLineOnCPU(command, cpu);
+			v6502_executeAsmLineOnCPU(cpu, command, strlen(command));
 		}
 	}
 	

@@ -18,7 +18,6 @@ void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len);
 
 // Instruction Transliteration
 const char *v6502_stringForInstruction(uint16_t instruction);
-uint16_t v6502_instructionForString(const char *string);
 v6502_opcode v6502_opcodeForString(const char *string);
 
 #endif

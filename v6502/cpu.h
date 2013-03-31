@@ -55,7 +55,8 @@ v6502_cpu *v6502_createCPU(void);
 void v6502_destroyCPU(v6502_cpu *cpu);
 
 // Execution
-void v6502_execute(v6502_cpu *cpu, uint16_t instruction);
+void v6502_execute(v6502_cpu *cpu, uint8_t opcode,
+				   uint8_t operand1, uint8_t operand2, uint8_t operand3);
 void v6502_step(v6502_cpu *cpu);
 void v6502_reset(v6502_cpu *cpu);
 

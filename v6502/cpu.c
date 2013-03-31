@@ -35,15 +35,10 @@ void v6502_reset(v6502_cpu *cpu) {
 }
 
 void v6502_step(v6502_cpu *cpu) {
-	v6502_execute(cpu, *(uint16_t *)cpu->memory + cpu->pc);
-	// FIXME: pc stepping?
-	//cpu->pc++;
+	v6502_execute(cpu, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 1], cpu->memory->bytes[cpu->pc + 2], cpu->memory->bytes[cpu->pc + 3]);
 }
 
-void v6502_execute(v6502_cpu *cpu, uint16_t instruction) {
-	v6502_opcode opcode = instruction >> 8;
-	uint8_t operand = instruction & 0xFF;
-	
+void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t operand1, uint8_t operand2, uint8_t operand3) {	
 	switch (opcode) {
 		case v6502_opcode_brk: {
 			cpu->sp -= 3;
@@ -54,10 +49,10 @@ void v6502_execute(v6502_cpu *cpu, uint16_t instruction) {
 			cpu->ac |= cpu->x;
 		} return;
 		case v6502_opcode_ora_val: {
-			cpu->ac |= operand;
+			cpu->ac |= operand1;
 		} return;
 		case v6502_opcode_ora_zpg: {
-			cpu->ac |= cpu->memory->bytes[operand];
+			cpu->ac |= cpu->memory->bytes[operand1];
 		} return;
 		case v6502_opcode_nop:
 			return;

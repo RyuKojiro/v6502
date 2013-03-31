@@ -41,18 +41,6 @@ void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) 
 	}
 }
 
-uint16_t v6502_instructionForString(const char *string) {
-	v6502_opcode opcode = v6502_opcodeForString(string);
-	uint8_t operand = 0;
-	
-	char *space = strrchr(string, ' ');
-	if (space) {
-		operand = strtol(space + 1, NULL, 16);
-	}
-	
-	return (opcode << 8) | operand;
-}
-
 v6502_opcode v6502_opcodeForString(const char *string) {
 	char *arg1 = strchr(string, ' ');
 	

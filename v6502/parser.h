@@ -9,8 +9,10 @@
 #ifndef v6502_parser_h
 #define v6502_parser_h
 
+#include <string.h>
+
 #include "cpu.h"
 
-void v6502_executeAsmLineOnCPU(const char *line, v6502_cpu *cpu);
+void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len);
 
 #endif
