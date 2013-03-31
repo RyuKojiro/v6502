@@ -13,6 +13,7 @@
 #include "cpu.h"
 #include "mem.h"
 #include "core.h"
+#include "parser.h"
 
 #define MAX_COMMAND_LEN		80
 
@@ -41,7 +42,7 @@ int main(int argc, const char * argv[])
 	char command[MAX_COMMAND_LEN];
 	char *eof;
 	for (;;) {
-		printf("0x%x] ", cpu->pc);
+		printf("(0x%x) ", cpu->pc);
 		eof = fgets(command, sizeof(command), stdin);
 
 		if (command[0] == '!') {
@@ -76,8 +77,8 @@ int main(int argc, const char * argv[])
 			}
 			printf("Unknown Command - %s\n", command);
 		}
-		else {
-			v6502_execute(cpu, v6502_instructionForString(command));
+		else if (command[0] != '#') {
+			v6502_executeAsmLineOnCPU(command, cpu);
 		}
 	}
 	
