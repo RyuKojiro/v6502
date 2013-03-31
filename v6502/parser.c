@@ -12,7 +12,11 @@
 #include "parser.h"
 #include "core.h"
 
-v6502_opcode v6502_opcodeForString(const char *string) {
+void v6502_parseError(const char *fmt, ...) {
+	
+}
+
+v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
 	char *arg1 = strchr(string, ' ');
 	
 	if (!strncmp(string, "brk", 3)) {
@@ -40,18 +44,70 @@ void v6502_populateOperandsFromLine(const char *line, size_t len, uint8_t *opera
 	// Work backwards filling an array, swapping bytes as needed, remember this is little endian
 }
 
+v6502_address_mode v6502_addressModeForLine(const char *string) {
+	/* 
+	 √ OPC	....	implied
+	 √ OPC A	....	Accumulator
+	 √ OPC #BB	....	immediate
+	 OPC HHLL	....	absolute
+	 OPC HHLL,X	....	absolute, X-indexed
+	 OPC HHLL,Y	....	absolute, Y-indexed
+	 OPC *LL	....	zeropage
+	 OPC *LL,X	....	zeropage, X-indexed
+	 OPC *LL,Y	....	zeropage, Y-indexed
+	 OPC (BB,X)	....	X-indexed, indirect
+	 OPC (LL),Y	....	indirect, Y-indexed
+	 OPC (HHLL)	....	indirect
+	 OPC BB	....	relative
+	 */
+	
+	const char *cur;
+	
+	// Skip opcode and whitespace to find first argument
+	for (cur = string + 3; isspace(*cur); cur++) {
+		if (*cur == '\0' || *cur == ';') {
+			return v6502_address_mode_implied;
+		}
+	}
+	
+	// Check first character of argument, and byte length
+	switch (*cur) {
+		case 'a': // Accumulator (normalized)
+			return v6502_address_mode_accumulator;
+		case '#': // Immediate
+			return v6502_address_mode_immediate;
+		case '*': { // Zeropage
+			
+		} break;
+		case '(': { // Indirect
+			
+		} break;
+		default: { // Relative or Absolute
+			
+		} break;
+	}
+	
+	v6502_parseError("Unknown address mode for line - %s", string);
+	return -1;
+}
+
 void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
+	v6502_address_mode mode;
 	v6502_opcode opcode;
 	uint8_t operand1, operand2, operand3;
 	char string[len];
 	
 	// Normalize text (all lowercase) and copy into a non-const string
+	// Perhaps this should collapse whitespace as well?
 	for(int i = 0; string[i]; i++){
 		string[i] = tolower(line[i]);
 	}
 	
+	// Determine address mode
+	mode = v6502_addressModeForLine(string);
+	
 	// Determine opcode, based on entire line
-	opcode = v6502_opcodeForString(string);
+	opcode = v6502_opcodeForStringAndMode(string, mode);
 	
 	// Determine operands
 	v6502_populateOperandsFromLine(string, len, &operand1, &operand2, &operand3);

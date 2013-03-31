@@ -13,9 +13,26 @@
 
 #include "cpu.h"
 
+typedef enum {
+	v6502_address_mode_implied = 0,		// Or none
+	v6502_address_mode_accumulator,
+	v6502_address_mode_immediate,
+	v6502_address_mode_absolute,
+	v6502_address_mode_absolute_x,
+	v6502_address_mode_absolute_y,
+	v6502_address_mode_indirect,
+	v6502_address_mode_indirect_x,
+	v6502_address_mode_indirect_y,
+	v6502_address_mode_relative,
+	v6502_address_mode_zeropage,
+	v6502_address_mode_zeropage_x,
+	v6502_address_mode_zeropage_y
+} v6502_address_mode;
+
 // Instruction Transliteration
 const char *v6502_stringForInstruction(uint16_t instruction);
-v6502_opcode v6502_opcodeForString(const char *string);
+v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode);
+v6502_address_mode v6502_addressModeForLine(const char *string);
 
 // Line Based Parsing
 void v6502_populateOperandsFromLine(const char *line, size_t len,
