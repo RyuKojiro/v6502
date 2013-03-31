@@ -40,27 +40,3 @@ void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) 
 		printf("\n");
 	}
 }
-
-v6502_opcode v6502_opcodeForString(const char *string) {
-	char *arg1 = strchr(string, ' ');
-	
-	if (!strncmp(string, "brk", 3)) {
-		return v6502_opcode_brk;
-	}
-	if (!strncmp(string, "ora", 3)) {
-		if (arg1[0] == 'X') {
-			return v6502_opcode_ora_x;
-		}
-		if (arg1[0] == '#') {
-			return v6502_opcode_ora_val;
-		}
-	}
-	if (!strncmp(string, "nop", 3)) {
-		return v6502_opcode_nop;
-	}
-	
-	char exception[50];
-	snprintf(exception, 50, "Unknown Opcode - %s", string);
-	v6502_fault(exception);
-	return v6502_opcode_brk;
-}
