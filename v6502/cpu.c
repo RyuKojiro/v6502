@@ -36,21 +36,28 @@ void v6502_reset(v6502_cpu *cpu) {
 
 void v6502_step(v6502_cpu *cpu) {
 	v6502_execute(cpu, *(uint16_t *)cpu->memory + cpu->pc);
-	cpu->pc++;
+	// FIXME: pc stepping?
+	//cpu->pc++;
 }
 
 void v6502_execute(v6502_cpu *cpu, uint16_t instruction) {
 	v6502_opcode opcode = instruction >> 8;
-	//uint8_t operand = instruction & 0xFF;
+	uint8_t operand = instruction & 0xFF;
 	
 	switch (opcode) {
 		case v6502_opcode_brk: {
-			cpu->pc-=3;
+			cpu->sp -= 3;
 			cpu->sr |= v6502_cpu_status_break;
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 		case v6502_opcode_ora_x: {
-			cpu->ac |= *(uint8_t *)(cpu->memory + cpu->x);
+			cpu->ac |= cpu->x;
+		} return;
+		case v6502_opcode_ora_val: {
+			cpu->ac |= operand;
+		} return;
+		case v6502_opcode_ora_zpg: {
+			cpu->ac |= cpu->memory->bytes[operand];
 		} return;
 		case v6502_opcode_nop:
 			return;
