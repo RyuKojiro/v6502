@@ -7,6 +7,7 @@
 //
 
 #include <ctype.h>
+#include <stdio.h>
 
 #include "parser.h"
 #include "core.h"
