@@ -36,8 +36,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 v6502_address_mode v6502_addressModeForLine(const char *string);
 
 // Line Based Parsing
-void v6502_populateOperandsFromLine(const char *line, size_t len,
-									uint8_t *operand1, uint8_t *operand2, uint8_t *operand3);
+void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *string);
 void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len);
 
 #endif
