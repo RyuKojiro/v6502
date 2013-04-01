@@ -30,13 +30,16 @@ typedef struct {
 
 // Instruction Set
 typedef enum {
+	// Single Byte Instructions
 	v6502_opcode_brk		= 0x00,
 	v6502_opcode_nop		= 0xEA,
 	v6502_opcode_asl_zpg	= 0x06,
 
+	// JMP
 	v6502_opcode_jmp_abs	= 0x4C,
 	v6502_opcode_jmp_ind	= 0x6C,
 	
+	// ORA
 	v6502_opcode_ora_imm	= 0x09,
 	v6502_opcode_ora_zpg	= 0x05,
 	v6502_opcode_ora_zpgx	= 0x15,
@@ -45,6 +48,49 @@ typedef enum {
 	v6502_opcode_ora_absy	= 0x19,
 	v6502_opcode_ora_indx	= 0x01,
 	v6502_opcode_ora_indy	= 0x11,
+	
+	// LDA
+	v6502_opcode_lda_imm	= 0xA9,
+	v6502_opcode_lda_zpg	= 0xA5,
+	v6502_opcode_lda_zpgx	= 0xB5,
+	v6502_opcode_lda_abs	= 0xAD,
+	v6502_opcode_lda_absx	= 0xBD,
+	v6502_opcode_lda_absy	= 0xB9,
+	v6502_opcode_lda_indx	= 0xA1,
+	v6502_opcode_lda_indy	= 0xB1,
+
+	// LDX
+	v6502_opcode_ldx_imm	= 0xA2,
+	v6502_opcode_ldx_zpg	= 0xA6,
+	v6502_opcode_ldx_zpgy	= 0xB6,
+	v6502_opcode_ldx_abs	= 0xAE,
+	v6502_opcode_ldx_absy	= 0xBE,
+
+	// LDY
+	v6502_opcode_ldy_imm	= 0xA0,
+	v6502_opcode_ldy_zpg	= 0xA4,
+	v6502_opcode_ldy_zpgx	= 0xB4,
+	v6502_opcode_ldy_abs	= 0xAC,
+	v6502_opcode_ldy_absx	= 0xBC,
+	
+	// STA
+	v6502_opcode_sta_zpg	= 0x85,
+	v6502_opcode_sta_zpgx	= 0x95,
+	v6502_opcode_sta_abs	= 0x8D,
+	v6502_opcode_sta_absx	= 0x9D,
+	v6502_opcode_sta_absy	= 0x99,
+	v6502_opcode_sta_indx	= 0x81,
+	v6502_opcode_sta_indy	= 0x91,
+
+	// STX
+	v6502_opcode_stx_zpg	= 0x86,
+	v6502_opcode_stx_zpgy	= 0x96,
+	v6502_opcode_stx_abs	= 0x8E,
+	
+	// STY
+	v6502_opcode_sty_zpg	= 0x84,
+	v6502_opcode_sty_zpgx	= 0x94,
+	v6502_opcode_sty_abs	= 0x8C,
 } v6502_opcode;
 
 // Status Register Values
