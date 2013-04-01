@@ -16,10 +16,14 @@
 #define YES		1
 #define NO		0
 
-static v6502_opcode _badAddressMode(const char *op) {
-	char error[37] = "Bad address mode for operation - ";
-	strncat(error, op, 3);
-	v6502_fault(error);
+#define kBadAddressModeErrorText		"Bad address mode for operation - "
+#define kUnknownAddressModeErrorText	"Unknown address mode for operation - "
+
+static v6502_opcode _opError(const char *op, const char *error) {
+	char e[80];
+	strncpy(e, error, 76);
+	strncat(e, op, 3);
+	v6502_fault(e);
 	return v6502_opcode_nop;
 }
 
@@ -49,7 +53,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_ora_indy;
 			default:
-				return _badAddressMode(string);
+				return _opError(string, kBadAddressModeErrorText);
 		}
 	}
 	if (!strncmp(string, "jmp", 3)) {
@@ -59,7 +63,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect:
 				return v6502_opcode_jmp_ind;
 			default:
-				return _badAddressMode(string);
+				return _opError(string, kBadAddressModeErrorText);
 		}
 	}
 	
@@ -81,10 +85,10 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *s
 	uint16_t result;
 	int base;
 	
-	// Remove all whitespace, #'s, *'s, and parenthesis, also, truncate at comma
+	// Remove all whitespace, #'s, *'s, high ascii, and parenthesis, also, truncate at comma
 	int i = 0;
 	for (const char *cur = string; *cur; cur++) {
-		if (!isspace(*cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')') {
+		if (!isspace(*cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')' && *cur < 0x7F) {
 			workString[i++] = *cur;
 		}
 		if (*cur == ',') {
@@ -136,15 +140,16 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *s
 	}
 }
 
-static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode, const char *cur) {
+static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode, const char *string) {
 	/* This relies on the fact that the enum is always ordered in normal, x, y. */
+	const char *cur;
 	
-	cur = strchr(cur, 'x');
+	cur = strchr(string, 'x');
 	if (cur) {
 		return mode + 1;
 	}
 	
-	cur = strchr(cur, 'y');
+	cur = strchr(string, 'y');
 	if (cur) {
 		return mode + 2;
 	}
@@ -203,7 +208,7 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 		} break;
 	}
 	
-	v6502_parseError("Unknown address mode for line - %s", string);
+	_opError(string, kUnknownAddressModeErrorText);
 	return -1;
 }
 
