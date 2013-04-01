@@ -13,6 +13,9 @@
 #include "parser.h"
 #include "core.h"
 
+#define YES		1
+#define NO		0
+
 void v6502_parseError(const char *fmt, ...) {
 	
 }
@@ -53,6 +56,13 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	return v6502_opcode_brk;
 }
 
+static int _valueLengthInChars(const char *string) {
+	int i;
+	for (i = 0; string[i] && (isdigit(string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
+	
+	return i;
+}
+
 void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *string) {
 	char workString[6];
 	uint16_t result;
@@ -74,19 +84,43 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *s
 	switch (workString[0]) {
 		case '$': { // Hex
 			base = 16;
+			if (*wide) {
+				*wide = (_valueLengthInChars(workString + 1) > 2) ? YES : NO;
+			}
 		} break;
 		case '%': { // Binary
 			base = 2;
+			if (*wide) {
+				*wide = (_valueLengthInChars(workString + 1) > 8) ? YES : NO;
+			}
 		} break;
 		case '0': { // Octal
 			base = 8;
+			if (*wide) {
+				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
+			}
 		} break;
 		default: { // Decimal
 			base = 10;
+			if (*wide) {
+				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
+			}
 		} break;
 	}
 	
 	result = strtol(workString + 1, NULL, base);
+
+	if (result > 0xFF) {
+		// Octal and decimal split digits
+		*wide = YES;
+	}
+	if (low) {
+		*low = result & 0xFF;
+	}
+
+	if (high) {
+		*low = result >> 8;
+	}
 }
 
 static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode, const char *cur) {
