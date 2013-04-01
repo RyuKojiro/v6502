@@ -35,10 +35,10 @@ void v6502_reset(v6502_cpu *cpu) {
 }
 
 void v6502_step(v6502_cpu *cpu) {
-	v6502_execute(cpu, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 1], cpu->memory->bytes[cpu->pc + 2], cpu->memory->bytes[cpu->pc + 3]);
+	v6502_execute(cpu, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 1], cpu->memory->bytes[cpu->pc + 2]);
 }
 
-void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t operand1, uint8_t operand2, uint8_t operand3) {	
+void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 	switch (opcode) {
 		case v6502_opcode_brk: {
 			cpu->sp -= 3;
@@ -46,19 +46,19 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t operand1, uint8_t ope
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 		case v6502_opcode_jmp_abs: {
-			cpu->pc = operand1;
+			cpu->pc = high << 8 | low;
 		} return;
 		case v6502_opcode_jmp_ind: {
-			cpu->pc = cpu->memory->bytes[operand1];
+			cpu->pc = cpu->memory->bytes[low];
 		} return;			
 //		case v6502_opcode_ora_absx: {
 //			cpu->ac |= cpu->x;
 //		} return;
 		case v6502_opcode_ora_imm: {
-			cpu->ac |= operand1;
+			cpu->ac |= low;
 		} return;
 		case v6502_opcode_ora_zpg: {
-			cpu->ac |= cpu->memory->bytes[operand1];
+			cpu->ac |= cpu->memory->bytes[low];
 		} return;
 		case v6502_opcode_nop: {
 			cpu->pc++;
