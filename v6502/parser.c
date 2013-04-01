@@ -17,18 +17,30 @@ void v6502_parseError(const char *fmt, ...) {
 	
 }
 
-v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
-	char *arg1 = strchr(string, ' ');
-	
+v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {	
 	if (!strncmp(string, "brk", 3)) {
 		return v6502_opcode_brk;
 	}
 	if (!strncmp(string, "ora", 3)) {
-		if (arg1[0] == 'X') {
-			return v6502_opcode_ora_x;
-		}
-		if (arg1[0] == '#') {
-			return v6502_opcode_ora_val;
+		switch (mode) {
+			case v6502_address_mode_immediate:
+				return v6502_opcode_ora_imm;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_ora_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_ora_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_ora_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_ora_absx;
+			case v6502_address_mode_absolute_y:
+				return v6502_opcode_ora_absy;
+			case v6502_address_mode_indirect_x:
+				return v6502_opcode_ora_indx;
+			case v6502_address_mode_indirect_y:
+				return v6502_opcode_ora_indy;
+			default:
+				break;
 		}
 	}
 	if (!strncmp(string, "nop", 3)) {
@@ -151,7 +163,7 @@ void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	
 	// Normalize text (all lowercase) and copy into a non-const string
 	// Perhaps this should collapse whitespace as well?
-	for(int i = 0; string[i]; i++){
+	for(int i = 0; line[i]; i++){
 		string[i] = tolower(line[i]);
 	}
 	
