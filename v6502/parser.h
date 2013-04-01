@@ -14,19 +14,20 @@
 #include "cpu.h"
 
 typedef enum {
+	v6502_address_mode_unknown = -1,
 	v6502_address_mode_implied = 0,		// Or none
-	v6502_address_mode_accumulator,
-	v6502_address_mode_immediate,
-	v6502_address_mode_absolute,
-	v6502_address_mode_absolute_x,
-	v6502_address_mode_absolute_y,
-	v6502_address_mode_indirect,
-	v6502_address_mode_indirect_x,
-	v6502_address_mode_indirect_y,
-	v6502_address_mode_relative,
-	v6502_address_mode_zeropage,
-	v6502_address_mode_zeropage_x,
-	v6502_address_mode_zeropage_y
+	v6502_address_mode_accumulator = 1,
+	v6502_address_mode_immediate = 2,
+	v6502_address_mode_absolute = 3,
+	v6502_address_mode_absolute_x = 4,
+	v6502_address_mode_absolute_y = 5,
+	v6502_address_mode_indirect = 6,
+	v6502_address_mode_indirect_x = 7,
+	v6502_address_mode_indirect_y = 8,
+	v6502_address_mode_relative = 9,
+	v6502_address_mode_zeropage = 10,
+	v6502_address_mode_zeropage_x = 11,
+	v6502_address_mode_zeropage_y = 12
 } v6502_address_mode;
 
 // Instruction Transliteration
