@@ -44,6 +44,26 @@ void v6502_populateOperandsFromLine(const char *line, size_t len, uint8_t *opera
 	// Work backwards filling an array, swapping bytes as needed, remember this is little endian
 }
 
+void v6502_addressForString(uint8_t *highByte, uint8_t *lowByte, const char *string) {
+	
+}
+
+static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode, const char *cur) {
+	/* This relies on the fact that the enum is always ordered in normal, x, y. */
+	
+	cur = strchr(cur, 'x');
+	if (cur) {
+		return mode + 1;
+	}
+	
+	cur = strchr(cur, 'y');
+	if (cur) {
+		return mode + 2;
+	}
+	
+	return mode;
+}
+
 v6502_address_mode v6502_addressModeForLine(const char *string) {
 	/* 
 	 √ OPC	....	implied
@@ -52,12 +72,12 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	 OPC HHLL	....	absolute
 	 OPC HHLL,X	....	absolute, X-indexed
 	 OPC HHLL,Y	....	absolute, Y-indexed
-	 OPC *LL	....	zeropage
-	 OPC *LL,X	....	zeropage, X-indexed
-	 OPC *LL,Y	....	zeropage, Y-indexed
-	 OPC (BB,X)	....	X-indexed, indirect
-	 OPC (LL),Y	....	indirect, Y-indexed
-	 OPC (HHLL)	....	indirect
+	 √ OPC *LL	....	zeropage
+	 √ OPC *LL,X	....	zeropage, X-indexed
+	 √ OPC *LL,Y	....	zeropage, Y-indexed
+	 √ OPC (BB,X)	....	X-indexed, indirect
+	 √ OPC (LL),Y	....	indirect, Y-indexed
+	 √ OPC (HHLL)	....	indirect
 	 OPC BB	....	relative
 	 */
 	
@@ -77,13 +97,13 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 		case '#': // Immediate
 			return v6502_address_mode_immediate;
 		case '*': { // Zeropage
-			
+			return _incrementModeByFoundRegister(v6502_address_mode_zeropage, cur);
 		} break;
 		case '(': { // Indirect
-			
+			return _incrementModeByFoundRegister(v6502_address_mode_indirect, cur);
 		} break;
 		default: { // Relative or Absolute
-			
+			// TODO: Use v6502_addressForString to test byte length
 		} break;
 	}
 	
