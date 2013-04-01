@@ -16,13 +16,19 @@
 #define YES		1
 #define NO		0
 
-void v6502_parseError(const char *fmt, ...) {
-	
+static v6502_opcode _badAddressMode(const char *op) {
+	char error[37] = "Bad address mode for operation - ";
+	strncat(error, op, 3);
+	v6502_fault(error);
+	return v6502_opcode_nop;
 }
 
 v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {	
 	if (!strncmp(string, "brk", 3)) {
 		return v6502_opcode_brk;
+	}
+	if (!strncmp(string, "nop", 3)) {
+		return v6502_opcode_nop;
 	}
 	if (!strncmp(string, "ora", 3)) {
 		switch (mode) {
@@ -43,12 +49,18 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_ora_indy;
 			default:
-				v6502_fault("Bad address mode for operation ORA");
-				return v6502_opcode_nop;
+				return _badAddressMode(string);
 		}
 	}
-	if (!strncmp(string, "nop", 3)) {
-		return v6502_opcode_nop;
+	if (!strncmp(string, "jmp", 3)) {
+		switch (mode) {
+			case v6502_address_mode_absolute:
+				return v6502_opcode_jmp_abs;
+			case v6502_address_mode_indirect:
+				return v6502_opcode_jmp_ind;
+			default:
+				return _badAddressMode(string);
+		}
 	}
 	
 	char exception[50];
