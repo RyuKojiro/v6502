@@ -37,10 +37,14 @@ typedef enum {
 	v6502_opcode_jmp_abs	= 0x4C,
 	v6502_opcode_jmp_ind	= 0x6C,
 	
-	v6502_opcode_ora_x		= 0x01,
+	v6502_opcode_ora_imm	= 0x09,
 	v6502_opcode_ora_zpg	= 0x05,
-	v6502_opcode_ora_val	= 0x09,
-
+	v6502_opcode_ora_zpgx	= 0x15,
+	v6502_opcode_ora_abs	= 0x0D,
+	v6502_opcode_ora_absx	= 0x1D,
+	v6502_opcode_ora_absy	= 0x19,
+	v6502_opcode_ora_indx	= 0x01,
+	v6502_opcode_ora_indy	= 0x11,
 } v6502_opcode;
 
 // Status Register Values

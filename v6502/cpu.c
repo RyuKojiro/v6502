@@ -51,10 +51,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t operand1, uint8_t ope
 		case v6502_opcode_jmp_ind: {
 			cpu->pc = cpu->memory->bytes[operand1];
 		} return;			
-		case v6502_opcode_ora_x: {
-			cpu->ac |= cpu->x;
-		} return;
-		case v6502_opcode_ora_val: {
+//		case v6502_opcode_ora_absx: {
+//			cpu->ac |= cpu->x;
+//		} return;
+		case v6502_opcode_ora_imm: {
 			cpu->ac |= operand1;
 		} return;
 		case v6502_opcode_ora_zpg: {
