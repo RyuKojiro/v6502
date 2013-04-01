@@ -163,9 +163,11 @@ void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	
 	// Normalize text (all lowercase) and copy into a non-const string
 	// Perhaps this should collapse whitespace as well?
-	for(int i = 0; line[i]; i++){
+	int i;
+	for(i = 0; line[i]; i++){
 		string[i] = tolower(line[i]);
 	}
+	string[i] = '\0';
 	
 	// Determine address mode
 	mode = v6502_addressModeForLine(string);
