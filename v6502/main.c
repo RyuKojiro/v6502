@@ -40,10 +40,9 @@ int main(int argc, const char * argv[])
 	v6502_reset(cpu);
 	
 	char command[MAX_COMMAND_LEN];
-	char *eof;
 	for (;;) {
 		printf("(0x%x) ", cpu->pc);
-		eof = fgets(command, sizeof(command), stdin);
+		fgets(command, sizeof(command), stdin);
 
 		if (command[0] == '!') {
 			if (!strncmp(command + 1, "cpu", 3)) {
