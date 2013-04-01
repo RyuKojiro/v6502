@@ -8,6 +8,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "parser.h"
 #include "core.h"
@@ -44,8 +45,32 @@ void v6502_populateOperandsFromLine(const char *line, size_t len, uint8_t *opera
 	// Work backwards filling an array, swapping bytes as needed, remember this is little endian
 }
 
-void v6502_addressForString(uint8_t *highByte, uint8_t *lowByte, const char *string) {
+uint16_t v6502_valueForString(const char *string) {
+	// ???: Not sure about the endianness safety of this function
+	char workString[6];
 	
+	// Remove all whitespace, also, truncate at comma
+	int i = 0;
+	for (const char *cur = string; *cur; cur++) {
+		if (!isspace(*cur)) {
+			workString[i++] = *cur;
+		}
+		if (*cur == ',') {
+			break;
+		}
+	}
+	
+	// Check first char to determine base
+	switch (workString[0]) {
+		case '$': // Hex
+			return (uint16_t)strtol(workString + 1, NULL, 16);
+		case '%': // Binary
+			return (uint16_t)strtol(workString + 1, NULL, 2);
+		case '0': // Octal
+			return (uint16_t)strtol(workString + 1, NULL, 8);
+		default: // Decimal
+			return (uint16_t)strtol(workString + 1, NULL, 10);
+	}
 }
 
 static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode, const char *cur) {
@@ -69,16 +94,16 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	 √ OPC	....	implied
 	 √ OPC A	....	Accumulator
 	 √ OPC #BB	....	immediate
-	 OPC HHLL	....	absolute
-	 OPC HHLL,X	....	absolute, X-indexed
-	 OPC HHLL,Y	....	absolute, Y-indexed
+	 √ OPC HHLL	....	absolute
+	 √ OPC HHLL,X	....	absolute, X-indexed
+	 √ OPC HHLL,Y	....	absolute, Y-indexed
 	 √ OPC *LL	....	zeropage
 	 √ OPC *LL,X	....	zeropage, X-indexed
 	 √ OPC *LL,Y	....	zeropage, Y-indexed
 	 √ OPC (BB,X)	....	X-indexed, indirect
 	 √ OPC (LL),Y	....	indirect, Y-indexed
 	 √ OPC (HHLL)	....	indirect
-	 OPC BB	....	relative
+	 √ OPC BB	....	relative
 	 */
 	
 	const char *cur;
@@ -103,7 +128,14 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 			return _incrementModeByFoundRegister(v6502_address_mode_indirect, cur);
 		} break;
 		default: { // Relative or Absolute
-			// TODO: Use v6502_addressForString to test byte length
+			// TODO: Use v6502_valueForString to test byte length
+			uint16_t value = v6502_valueForString(cur);
+			if (value > UINT8_MAX) {
+				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
+			}
+			else {
+				return v6502_address_mode_relative;
+			}
 		} break;
 	}
 	
