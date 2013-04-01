@@ -43,7 +43,8 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_ora_indy;
 			default:
-				break;
+				v6502_fault("Bad address mode for operation ORA");
+				return v6502_opcode_nop;
 		}
 	}
 	if (!strncmp(string, "nop", 3)) {
@@ -53,7 +54,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	char exception[50];
 	snprintf(exception, 50, "Unknown Opcode - %s", string);
 	v6502_fault(exception);
-	return v6502_opcode_brk;
+	return v6502_opcode_nop;
 }
 
 static int _valueLengthInChars(const char *string) {
@@ -68,10 +69,10 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *s
 	uint16_t result;
 	int base;
 	
-	// Remove all whitespace, also, truncate at comma
+	// Remove all whitespace, #'s, *'s, and parenthesis, also, truncate at comma
 	int i = 0;
 	for (const char *cur = string; *cur; cur++) {
-		if (!isspace(*cur)) {
+		if (!isspace(*cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')') {
 			workString[i++] = *cur;
 		}
 		if (*cur == ',') {
@@ -84,25 +85,25 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *s
 	switch (workString[0]) {
 		case '$': { // Hex
 			base = 16;
-			if (*wide) {
+			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 2) ? YES : NO;
 			}
 		} break;
 		case '%': { // Binary
 			base = 2;
-			if (*wide) {
+			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 8) ? YES : NO;
 			}
 		} break;
 		case '0': { // Octal
 			base = 8;
-			if (*wide) {
+			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
 			}
 		} break;
 		default: { // Decimal
 			base = 10;
-			if (*wide) {
+			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
 			}
 		} break;
@@ -110,7 +111,7 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *s
 	
 	result = strtol(workString + 1, NULL, base);
 
-	if (result > 0xFF) {
+	if (result > 0xFF && wide) {
 		// Octal and decimal split digits
 		*wide = YES;
 	}
@@ -119,7 +120,7 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *s
 	}
 
 	if (high) {
-		*low = result >> 8;
+		*high = result >> 8;
 	}
 }
 
@@ -211,11 +212,12 @@ void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	// Determine address mode
 	mode = v6502_addressModeForLine(string);
 	
+	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line
 	opcode = v6502_opcodeForStringAndMode(string, mode);
 	
 	// Determine operands
-	v6502_valueForString(&high, &low, NULL, string);
+	v6502_valueForString(&high, &low, NULL, string + 3);
 	
 	// Execute whole instruction
 	v6502_execute(cpu, opcode, low, high);
