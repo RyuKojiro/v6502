@@ -71,6 +71,7 @@ uint16_t v6502_valueForString(const char *string) {
 			break;
 		}
 	}
+	workString[i] = '\0';
 	
 	// Check first char to determine base
 	switch (workString[0]) {
@@ -140,7 +141,7 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 			return _incrementModeByFoundRegister(v6502_address_mode_indirect, cur);
 		} break;
 		default: { // Relative or Absolute
-			// TODO: Use v6502_valueForString to test byte length
+			// TODO: Better byte length determination, this doesn't tell shit
 			uint16_t value = v6502_valueForString(cur);
 			if (value > UINT8_MAX) {
 				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
