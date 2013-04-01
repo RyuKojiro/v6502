@@ -53,13 +53,10 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	return v6502_opcode_brk;
 }
 
-void v6502_populateOperandsFromLine(const char *line, size_t len, uint8_t *operand1, uint8_t *operand2, uint8_t *operand3) {
-	// Work backwards filling an array, swapping bytes as needed, remember this is little endian
-}
-
-uint16_t v6502_valueForString(const char *string) {
-	// ???: Not sure about the endianness safety of this function
+void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *string) {
 	char workString[6];
+	uint16_t result;
+	int base;
 	
 	// Remove all whitespace, also, truncate at comma
 	int i = 0;
@@ -75,15 +72,21 @@ uint16_t v6502_valueForString(const char *string) {
 	
 	// Check first char to determine base
 	switch (workString[0]) {
-		case '$': // Hex
-			return (uint16_t)strtol(workString + 1, NULL, 16);
-		case '%': // Binary
-			return (uint16_t)strtol(workString + 1, NULL, 2);
-		case '0': // Octal
-			return (uint16_t)strtol(workString + 1, NULL, 8);
-		default: // Decimal
-			return (uint16_t)strtol(workString + 1, NULL, 10);
+		case '$': { // Hex
+			base = 16;
+		} break;
+		case '%': { // Binary
+			base = 2;
+		} break;
+		case '0': { // Octal
+			base = 8;
+		} break;
+		default: { // Decimal
+			base = 10;
+		} break;
 	}
+	
+	result = strtol(workString + 1, NULL, base);
 }
 
 static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode, const char *cur) {
@@ -104,19 +107,19 @@ static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode,
 
 v6502_address_mode v6502_addressModeForLine(const char *string) {
 	/* 
-	 √ OPC	....	implied
-	 √ OPC A	....	Accumulator
-	 √ OPC #BB	....	immediate
-	 √ OPC HHLL	....	absolute
+	 √ OPC			....	implied
+	 √ OPC A		....	Accumulator
+	 √ OPC #BB		....	immediate
+	 √ OPC HHLL		....	absolute
 	 √ OPC HHLL,X	....	absolute, X-indexed
 	 √ OPC HHLL,Y	....	absolute, Y-indexed
-	 √ OPC *LL	....	zeropage
+	 √ OPC *LL		....	zeropage
 	 √ OPC *LL,X	....	zeropage, X-indexed
 	 √ OPC *LL,Y	....	zeropage, Y-indexed
 	 √ OPC (BB,X)	....	X-indexed, indirect
 	 √ OPC (LL),Y	....	indirect, Y-indexed
 	 √ OPC (HHLL)	....	indirect
-	 √ OPC BB	....	relative
+	 √ OPC BB		....	relative
 	 */
 	
 	const char *cur;
@@ -142,8 +145,9 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 		} break;
 		default: { // Relative or Absolute
 			// TODO: Better byte length determination, this doesn't tell shit
-			uint16_t value = v6502_valueForString(cur);
-			if (value > UINT8_MAX) {
+			char wide;
+			v6502_valueForString(NULL, NULL, &wide, cur);
+			if (wide) {
 				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
 			}
 			else {
@@ -159,7 +163,7 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	v6502_address_mode mode;
 	v6502_opcode opcode;
-	uint8_t operand1, operand2, operand3;
+	uint8_t low, high;
 	char string[len];
 	
 	// Normalize text (all lowercase) and copy into a non-const string
@@ -177,8 +181,8 @@ void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	opcode = v6502_opcodeForStringAndMode(string, mode);
 	
 	// Determine operands
-	v6502_populateOperandsFromLine(string, len, &operand1, &operand2, &operand3);
+	v6502_valueForString(&high, &low, NULL, string);
 	
 	// Execute whole instruction
-	v6502_execute(cpu, opcode, operand1, operand2, operand3);
+	v6502_execute(cpu, opcode, low, high);
 }
