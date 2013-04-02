@@ -66,7 +66,105 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _opError(string, kBadAddressModeErrorText);
 		}
 	}
-	
+	if (!strncmp(string, "lda", 3)) {
+		switch (mode) {
+			case v6502_address_mode_immediate:
+				return v6502_opcode_lda_imm;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_lda_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_lda_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_lda_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_lda_absx;
+			case v6502_address_mode_absolute_y:
+				return v6502_opcode_lda_absy;
+			case v6502_address_mode_indirect_x:
+				return v6502_opcode_lda_indx;
+			case v6502_address_mode_indirect_y:
+				return v6502_opcode_lda_indy;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "ldx", 3)) {
+		switch (mode) {
+			case v6502_address_mode_immediate:
+				return v6502_opcode_ldx_imm;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_ldx_zpg;
+			case v6502_address_mode_zeropage_y:
+				return v6502_opcode_ldx_zpgy;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_ldx_abs;
+			case v6502_address_mode_absolute_y:
+				return v6502_opcode_ldx_absy;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "ldy", 3)) {
+		switch (mode) {
+			case v6502_address_mode_immediate:
+				return v6502_opcode_ldy_imm;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_ldy_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_ldy_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_ldy_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_ldy_absx;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "sta", 3)) {
+		switch (mode) {
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_sta_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_sta_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_sta_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_sta_absx;
+			case v6502_address_mode_absolute_y:
+				return v6502_opcode_sta_absy;
+			case v6502_address_mode_indirect_x:
+				return v6502_opcode_sta_indx;
+			case v6502_address_mode_indirect_y:
+				return v6502_opcode_sta_indy;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "stx", 3)) {
+		switch (mode) {
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_stx_zpg;
+			case v6502_address_mode_zeropage_y:
+				return v6502_opcode_stx_zpgy;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_stx_abs;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "sty", 3)) {
+		switch (mode) {
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_sty_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_sty_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_sty_abs;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+
 	char exception[50];
 	snprintf(exception, 50, "Unknown Opcode - %s", string);
 	v6502_fault(exception);
