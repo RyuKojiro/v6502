@@ -21,7 +21,7 @@ void v6502_fault(const char *error) {
 }
 
 void v6502_printCpuState(v6502_cpu *cpu) {
-	fprintf(stderr, "CPU %p: pc = %x, ac = %x, x = %x, y = %x, sr = %x, sp = %x\nMEM %p: memsize = %hu\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size);
+	fprintf(stderr, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sr = 0x%02x, sp = 0x%02x\nMEM %p: memsize = %hu (0x%04x)\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
 }
 
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) {
