@@ -16,12 +16,13 @@
 #define YES		1
 #define NO		0
 
-#define kBadAddressModeErrorText		"Bad address mode for operation - "
-#define kUnknownAddressModeErrorText	"Unknown address mode for operation - "
+#define kBadAddressModeErrorText		"Bad address mode for operation"
+#define kUnknownAddressModeErrorText	"Unknown address mode for operation"
 
 static v6502_opcode _opError(const char *op, const char *error) {
 	char e[80];
-	strncpy(e, error, 76);
+	strncpy(e, error, 73);
+	strncat(e, " - ", 3);
 	strncat(e, op, 3);
 	v6502_fault(e);
 	return v6502_opcode_nop;
