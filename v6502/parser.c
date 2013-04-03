@@ -34,6 +34,13 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	if (!strncmp(string, "nop", 3)) {
 		return v6502_opcode_nop;
 	}
+	if (!strncmp(string, "cld", 3)) {
+		return v6502_opcode_cld;
+	}
+	if (!strncmp(string, "sed", 3)) {
+		return v6502_opcode_sed;
+	}
+	
 	if (!strncmp(string, "ora", 3)) {
 		switch (mode) {
 			case v6502_address_mode_immediate:

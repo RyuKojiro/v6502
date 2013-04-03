@@ -33,8 +33,11 @@ typedef enum {
 	// Single Byte Instructions
 	v6502_opcode_brk		= 0x00,
 	v6502_opcode_nop		= 0xEA,
+	v6502_opcode_cld		= 0xD8,
+	v6502_opcode_sed		= 0xF8,
+	
 	v6502_opcode_asl_zpg	= 0x06,
-
+	
 	// JMP
 	v6502_opcode_jmp_abs	= 0x4C,
 	v6502_opcode_jmp_ind	= 0x6C,
