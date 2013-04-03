@@ -33,8 +33,12 @@ typedef enum {
 	// Single Byte Instructions
 	v6502_opcode_brk		= 0x00,
 	v6502_opcode_nop		= 0xEA,
+	v6502_opcode_clc		= 0x18,
 	v6502_opcode_cld		= 0xD8,
+	v6502_opcode_cli		= 0x58,
+	v6502_opcode_sec		= 0x38,
 	v6502_opcode_sed		= 0xF8,
+	v6502_opcode_sei		= 0x78,
 	
 	v6502_opcode_asl_zpg	= 0x06,
 	
@@ -94,6 +98,8 @@ typedef enum {
 	v6502_opcode_sty_zpg	= 0x84,
 	v6502_opcode_sty_zpgx	= 0x94,
 	v6502_opcode_sty_abs	= 0x8C,
+	
+	
 } v6502_opcode;
 
 // Status Register Values

@@ -34,11 +34,23 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	if (!strncmp(string, "nop", 3)) {
 		return v6502_opcode_nop;
 	}
+	if (!strncmp(string, "clc", 3)) {
+		return v6502_opcode_clc;
+	}
 	if (!strncmp(string, "cld", 3)) {
 		return v6502_opcode_cld;
 	}
+	if (!strncmp(string, "cli", 3)) {
+		return v6502_opcode_cli;
+	}
+	if (!strncmp(string, "sec", 3)) {
+		return v6502_opcode_sec;
+	}
 	if (!strncmp(string, "sed", 3)) {
 		return v6502_opcode_sed;
+	}
+	if (!strncmp(string, "sei", 3)) {
+		return v6502_opcode_sei;
 	}
 	
 	if (!strncmp(string, "ora", 3)) {

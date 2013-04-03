@@ -51,11 +51,23 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_nop: {
 			cpu->pc++;
 		} return;
+		case v6502_opcode_clc: {
+			cpu->sr &= ~v6502_cpu_status_carry;
+		} return;
 		case v6502_opcode_cld: {
 			cpu->sr &= ~v6502_cpu_status_decimal;
 		} return;
+		case v6502_opcode_cli: {
+			cpu->sr &= ~v6502_cpu_status_interrupt;
+		} return;
+		case v6502_opcode_sec: {
+			cpu->sr |= v6502_cpu_status_carry;
+		} return;
 		case v6502_opcode_sed: {
 			cpu->sr |= v6502_cpu_status_decimal;
+		} return;
+		case v6502_opcode_sei: {
+			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 
 		// JMP
