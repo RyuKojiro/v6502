@@ -39,6 +39,8 @@ typedef enum {
 	v6502_opcode_sec		= 0x38,
 	v6502_opcode_sed		= 0xF8,
 	v6502_opcode_sei		= 0x78,
+	v6502_opcode_dex		= 0xCA,
+	v6502_opcode_dey		= 0x88,
 	
 	v6502_opcode_asl_zpg	= 0x06,
 	

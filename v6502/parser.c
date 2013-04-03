@@ -53,6 +53,12 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	if (!strncmp(string, "sei", 3)) {
 		return v6502_opcode_sei;
 	}
+	if (!strncmp(string, "dex", 3)) {
+		return v6502_opcode_dex;
+	}
+	if (!strncmp(string, "dey", 3)) {
+		return v6502_opcode_dey;
+	}
 	
 	if (!strncmp(string, "and", 3)) {
 		switch (mode) {
