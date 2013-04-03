@@ -70,6 +70,32 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 
+		// AND
+		case v6502_opcode_and_imm: {
+			cpu->ac &= low;
+		} return;
+		case v6502_opcode_and_zpg: {
+			cpu->ac &= cpu->memory->bytes[low];
+		} return;
+		case v6502_opcode_and_zpgx: {
+			cpu->ac &= cpu->memory->bytes[low + cpu->x];
+		} return;
+		case v6502_opcode_and_abs: {
+			cpu->ac &= cpu->memory->bytes[low];
+		} return;
+		case v6502_opcode_and_absx: {
+			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->x];
+		} return;
+		case v6502_opcode_and_absy: {
+			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+		} return;
+		case v6502_opcode_and_indx: {
+			cpu->ac &= cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x];
+		} return;
+		case v6502_opcode_and_indy: {
+			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+		} return;
+			
 		// JMP
 		case v6502_opcode_jmp_abs: {
 			cpu->pc = BOTH_BYTES;

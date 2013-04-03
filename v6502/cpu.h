@@ -42,6 +42,16 @@ typedef enum {
 	
 	v6502_opcode_asl_zpg	= 0x06,
 	
+	// AND
+	v6502_opcode_and_imm	= 0x29,
+	v6502_opcode_and_zpg	= 0x25,
+	v6502_opcode_and_zpgx	= 0x35,
+	v6502_opcode_and_abs	= 0x2D,
+	v6502_opcode_and_absx	= 0x3D,
+	v6502_opcode_and_absy	= 0x39,
+	v6502_opcode_and_indx	= 0x21,
+	v6502_opcode_and_indy	= 0x31,
+
 	// JMP
 	v6502_opcode_jmp_abs	= 0x4C,
 	v6502_opcode_jmp_ind	= 0x6C,
