@@ -59,6 +59,24 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	if (!strncmp(string, "dey", 3)) {
 		return v6502_opcode_dey;
 	}
+	if (!strncmp(string, "tax", 3)) {
+		return v6502_opcode_tax;
+	}
+	if (!strncmp(string, "tay", 3)) {
+		return v6502_opcode_tay;
+	}
+	if (!strncmp(string, "tsx", 3)) {
+		return v6502_opcode_tsx;
+	}
+	if (!strncmp(string, "txa", 3)) {
+		return v6502_opcode_txa;
+	}
+	if (!strncmp(string, "txs", 3)) {
+		return v6502_opcode_txs;
+	}
+	if (!strncmp(string, "tya", 3)) {
+		return v6502_opcode_dey;
+	}
 	
 	if (!strncmp(string, "and", 3)) {
 		switch (mode) {

@@ -41,7 +41,7 @@ void v6502_step(v6502_cpu *cpu) {
 }
 
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
-	switch (opcode) {
+	switch ((v6502_opcode)opcode) {
 		// Single Byte Instructions
 		case v6502_opcode_brk: {
 			cpu->sp -= 3;
@@ -74,6 +74,24 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		case v6502_opcode_dey: {
 			cpu->y--;
+		} return;
+		case v6502_opcode_tax: {
+			cpu->x = cpu->ac;
+		} return;
+		case v6502_opcode_tay: {
+			cpu->y = cpu->ac;
+		} return;
+		case v6502_opcode_tsx: {
+			cpu->x = cpu->sp;
+		} return;
+		case v6502_opcode_txa: {
+			cpu->ac = cpu->x;
+		} return;
+		case v6502_opcode_txs: {
+			cpu->sp = cpu->x;
+		} return;
+		case v6502_opcode_tya: {
+			cpu->ac = cpu->y;
 		} return;
 
 		// AND
