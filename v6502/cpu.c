@@ -96,6 +96,32 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->y];
 		} return;
 			
+		// EOR
+		case v6502_opcode_eor_imm: {
+			cpu->ac ^= low;
+		} return;
+		case v6502_opcode_eor_zpg: {
+			cpu->ac ^= cpu->memory->bytes[low];
+		} return;
+		case v6502_opcode_eor_zpgx: {
+			cpu->ac ^= cpu->memory->bytes[low + cpu->x];
+		} return;
+		case v6502_opcode_eor_abs: {
+			cpu->ac ^= cpu->memory->bytes[low];
+		} return;
+		case v6502_opcode_eor_absx: {
+			cpu->ac ^= cpu->memory->bytes[BOTH_BYTES + cpu->x];
+		} return;
+		case v6502_opcode_eor_absy: {
+			cpu->ac ^= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+		} return;
+		case v6502_opcode_eor_indx: {
+			cpu->ac ^= cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x];
+		} return;
+		case v6502_opcode_eor_indy: {
+			cpu->ac ^= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+		} return;
+			
 		// JMP
 		case v6502_opcode_jmp_abs: {
 			cpu->pc = BOTH_BYTES;
@@ -105,14 +131,29 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		
 		// ORA
-		case v6502_opcode_ora_absx: {
-			cpu->ac |= BOTH_BYTES + cpu->x;
-		} return;
 		case v6502_opcode_ora_imm: {
 			cpu->ac |= low;
 		} return;
 		case v6502_opcode_ora_zpg: {
 			cpu->ac |= cpu->memory->bytes[low];
+		} return;
+		case v6502_opcode_ora_zpgx: {
+			cpu->ac |= cpu->memory->bytes[low + cpu->x];
+		} return;
+		case v6502_opcode_ora_abs: {
+			cpu->ac |= cpu->memory->bytes[low];
+		} return;
+		case v6502_opcode_ora_absx: {
+			cpu->ac |= cpu->memory->bytes[BOTH_BYTES + cpu->x];
+		} return;
+		case v6502_opcode_ora_absy: {
+			cpu->ac |= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+		} return;
+		case v6502_opcode_ora_indx: {
+			cpu->ac |= cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x];
+		} return;
+		case v6502_opcode_ora_indy: {
+			cpu->ac |= cpu->memory->bytes[BOTH_BYTES + cpu->y];
 		} return;
 			
 		// LDA

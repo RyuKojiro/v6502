@@ -51,6 +51,16 @@ typedef enum {
 	v6502_opcode_and_absy	= 0x39,
 	v6502_opcode_and_indx	= 0x21,
 	v6502_opcode_and_indy	= 0x31,
+	
+	// EOR
+	v6502_opcode_eor_imm	= 0x49,
+	v6502_opcode_eor_zpg	= 0x45,
+	v6502_opcode_eor_zpgx	= 0x55,
+	v6502_opcode_eor_abs	= 0x4D,
+	v6502_opcode_eor_absx	= 0x5D,
+	v6502_opcode_eor_absy	= 0x59,
+	v6502_opcode_eor_indx	= 0x41,
+	v6502_opcode_eor_indy	= 0x51,
 
 	// JMP
 	v6502_opcode_jmp_abs	= 0x4C,

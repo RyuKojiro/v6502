@@ -76,6 +76,28 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _opError(string, kBadAddressModeErrorText);
 		}
 	}
+	if (!strncmp(string, "eor", 3)) {
+		switch (mode) {
+			case v6502_address_mode_immediate:
+				return v6502_opcode_eor_imm;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_eor_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_eor_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_eor_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_eor_absx;
+			case v6502_address_mode_absolute_y:
+				return v6502_opcode_eor_absy;
+			case v6502_address_mode_indirect_x:
+				return v6502_opcode_eor_indx;
+			case v6502_address_mode_indirect_y:
+				return v6502_opcode_eor_indy;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
 	if (!strncmp(string, "ora", 3)) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
