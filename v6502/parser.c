@@ -44,6 +44,9 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	if (!strncmp(string, "cli", 3)) {
 		return v6502_opcode_cli;
 	}
+	if (!strncmp(string, "clv", 3)) {
+		return v6502_opcode_clv;
+	}
 	if (!strncmp(string, "sec", 3)) {
 		return v6502_opcode_sec;
 	}

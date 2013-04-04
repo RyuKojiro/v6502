@@ -36,6 +36,7 @@ typedef enum {
 	v6502_opcode_clc		= 0x18,
 	v6502_opcode_cld		= 0xD8,
 	v6502_opcode_cli		= 0x58,
+	v6502_opcode_clv		= 0xB8,
 	v6502_opcode_sec		= 0x38,
 	v6502_opcode_sed		= 0xF8,
 	v6502_opcode_sei		= 0x78,
