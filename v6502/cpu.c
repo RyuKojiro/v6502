@@ -96,6 +96,12 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_tya: {
 			cpu->ac = cpu->y;
 		} return;
+		case v6502_opcode_inx: {
+			cpu->x++;
+		} return;
+		case v6502_opcode_iny: {
+			cpu->y++;
+		} return;
 
 		// AND
 		case v6502_opcode_and_imm: {

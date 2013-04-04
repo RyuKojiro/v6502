@@ -80,6 +80,12 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	if (!strncmp(string, "tya", 3)) {
 		return v6502_opcode_dey;
 	}
+	if (!strncmp(string, "inx", 3)) {
+		return v6502_opcode_inx;
+	}
+	if (!strncmp(string, "iny", 3)) {
+		return v6502_opcode_iny;
+	}
 	
 	if (!strncmp(string, "and", 3)) {
 		switch (mode) {

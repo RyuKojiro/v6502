@@ -48,6 +48,8 @@ typedef enum {
 	v6502_opcode_txa		= 0x8A,
 	v6502_opcode_txs		= 0x9A,
 	v6502_opcode_tya		= 0x98,
+	v6502_opcode_inx		= 0xE8,
+	v6502_opcode_iny		= 0xC8,
 	
 	// AND
 	v6502_opcode_and_imm	= 0x29,
