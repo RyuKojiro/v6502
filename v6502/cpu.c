@@ -128,6 +128,23 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_and_indy: {
 			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->y];
 		} return;
+		
+		// ASL
+		case v6502_opcode_asl_acc: {
+			cpu->ac <<= 1;
+		} return;
+		case v6502_opcode_asl_zpg: {
+			cpu->ac = cpu->memory->bytes[low] << 1;
+		} return;
+		case v6502_opcode_asl_zpgx: {
+			cpu->ac = cpu->memory->bytes[low + cpu->x] << 1;
+		} return;
+		case v6502_opcode_asl_abs: {
+			cpu->ac = cpu->memory->bytes[BOTH_BYTES] << 1;
+		} return;
+		case v6502_opcode_asl_absx: {
+			cpu->ac = cpu->memory->bytes[BOTH_BYTES + cpu->x] << 1;
+		} return;
 			
 		// EOR
 		case v6502_opcode_eor_imm: {

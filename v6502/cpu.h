@@ -61,6 +61,13 @@ typedef enum {
 	v6502_opcode_and_indx	= 0x21,
 	v6502_opcode_and_indy	= 0x31,
 	
+	// ASL
+	v6502_opcode_asl_acc	= 0x0A,
+	v6502_opcode_asl_zpg	= 0x06,
+	v6502_opcode_asl_zpgx	= 0x16,
+	v6502_opcode_asl_abs	= 0x0E,
+	v6502_opcode_asl_absx	= 0x1E,
+	
 	// EOR
 	v6502_opcode_eor_imm	= 0x49,
 	v6502_opcode_eor_zpg	= 0x45,
