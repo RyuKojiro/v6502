@@ -12,8 +12,8 @@
 #include "core.h"
 
 #define	BOTH_BYTES	(high << 8 | low)
-#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sp &= (0xFE | (a >> 7)); \
-													cpu->sp |= a >> 7;
+#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (0xFE | (a >> 7)); \
+													cpu->sr |= a >> 7;
 
 v6502_cpu *v6502_createCPU(void) {
 	// Allocate CPU Struct
@@ -273,7 +273,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ldy_absx: {
 			cpu->y = cpu->memory->bytes[BOTH_BYTES + cpu->x];
 		} return;
-
 		
 		// STA
 		case v6502_opcode_sta_zpg: {
