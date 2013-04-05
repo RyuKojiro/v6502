@@ -12,6 +12,8 @@
 #include "core.h"
 
 #define	BOTH_BYTES	(high << 8 | low)
+#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sp &= (0xFE | (a >> 7)); \
+													cpu->sp |= a >> 7;
 
 v6502_cpu *v6502_createCPU(void) {
 	// Allocate CPU Struct
@@ -105,6 +107,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 
 		// AND
 		case v6502_opcode_and_imm: {
+			
 			cpu->ac &= low;
 		} return;
 		case v6502_opcode_and_zpg: {
@@ -131,19 +134,24 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		
 		// ASL
 		case v6502_opcode_asl_acc: {
+			FLAG_CARRY_WITH_HIGH_BIT(cpu->ac);
 			cpu->ac <<= 1;
 		} return;
 		case v6502_opcode_asl_zpg: {
-			cpu->ac = cpu->memory->bytes[low] << 1;
+			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[low]);
+			cpu->memory->bytes[low] <<= 1;
 		} return;
 		case v6502_opcode_asl_zpgx: {
-			cpu->ac = cpu->memory->bytes[low + cpu->x] << 1;
+			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[low + cpu->x]);
+			cpu->memory->bytes[low + cpu->x] <<= 1;
 		} return;
 		case v6502_opcode_asl_abs: {
-			cpu->ac = cpu->memory->bytes[BOTH_BYTES] << 1;
+			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[BOTH_BYTES]);
+			cpu->memory->bytes[BOTH_BYTES] <<= 1;
 		} return;
 		case v6502_opcode_asl_absx: {
-			cpu->ac = cpu->memory->bytes[BOTH_BYTES + cpu->x] << 1;
+			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[BOTH_BYTES + cpu->x]);
+			cpu->memory->bytes[BOTH_BYTES + cpu->x] <<= 1;
 		} return;
 			
 		// EOR
