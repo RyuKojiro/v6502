@@ -43,6 +43,10 @@ int main(int argc, const char * argv[])
 	for (;;) {
 		printf("(0x%x) ", cpu->pc);
 		fgets(command, sizeof(command), stdin);
+		
+		if (command[0] == '\n') {
+			continue;
+		}
 
 		if (command[0] == '!') {
 			if (!strncmp(command + 1, "cpu", 3)) {
