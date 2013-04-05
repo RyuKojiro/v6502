@@ -90,15 +90,15 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	if (!strncmp(string, "asl", 3)) {
 		switch (mode) {
 			case v6502_address_mode_accumulator:
-				return v6502_opcode_and_imm;
+				return v6502_opcode_asl_acc;
 			case v6502_address_mode_zeropage:
-				return v6502_opcode_and_zpg;
+				return v6502_opcode_asl_zpg;
 			case v6502_address_mode_zeropage_x:
-				return v6502_opcode_and_zpgx;
+				return v6502_opcode_asl_zpgx;
 			case v6502_address_mode_absolute:
-				return v6502_opcode_and_abs;
+				return v6502_opcode_asl_abs;
 			case v6502_address_mode_absolute_x:
-				return v6502_opcode_and_absx;
+				return v6502_opcode_asl_absx;
 			default:
 				return _opError(string, kBadAddressModeErrorText);
 		}
@@ -291,7 +291,7 @@ static int _valueLengthInChars(const char *string) {
 	return i;
 }
 
-void v6502_valueForString(uint8_t *high, uint8_t *low, char *wide, const char *string) {
+void v6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *string) {
 	char workString[6];
 	uint16_t result;
 	int base;
@@ -386,9 +386,10 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	 */
 	
 	const char *cur;
-	
+	int wide;
+
 	// Skip opcode and whitespace to find first argument
-	for (cur = string + 3; isspace(*cur); cur++) {
+	for (cur = string + 3; isspace(*cur) || *cur > 0x7F; cur++) {
 		if (*cur == '\0' || *cur == ';') {
 			return v6502_address_mode_implied;
 		}
@@ -408,7 +409,6 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 		} break;
 		default: { // Relative or Absolute
 			// TODO: Better byte length determination, this doesn't tell shit
-			char wide;
 			v6502_valueForString(NULL, NULL, &wide, cur);
 			if (wide) {
 				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
