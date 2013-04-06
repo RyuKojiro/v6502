@@ -16,8 +16,8 @@
 													cpu->sr |= a >> 7;
 #define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= 0xFE | a; \
 													cpu->sr |= 0x01 & a;
-// ???: Should this clear the zero flag when arithmetic results in non-zero?
-#define FLAG_ZERO_WITH_RESULT(a)					cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
+#define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
+													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
 #define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_carry : 0);
 #define FLAG_OVERFLOW_WITH_EXPRESSION(a)			cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_overflow : 0);
