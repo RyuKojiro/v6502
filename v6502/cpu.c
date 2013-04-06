@@ -15,7 +15,7 @@
 #define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (0xFE | (a >> 7)); \
 													cpu->sr |= a >> 7;
 #define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= 0xFE | a; \
-													cpu->sr |= a & 0x01;
+													cpu->sr |= 0x01 & a;
 // ???: Should this clear the zero flag when arithmetic results in non-zero?
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
@@ -29,7 +29,7 @@ static void _executeInPlaceASL(v6502_cpu *cpu, uint8_t *operand) {
 
 static void _executeInPlaceLSR(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_CARRY_WITH_LOW_BIT(*operand);
-	*operand <<= 1;
+	*operand >>= 1;
 	FLAG_ZERO_WITH_RESULT(*operand);
 }
 
@@ -125,7 +125,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 
 		// AND
 		case v6502_opcode_and_imm: {
-			
 			cpu->ac &= low;
 		} return;
 		case v6502_opcode_and_zpg: {
@@ -289,24 +288,19 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		
 		// LSR
 		case v6502_opcode_lsr_acc: {
-			FLAG_CARRY_WITH_LOW_BIT(cpu->ac);
-			cpu->ac >>= 1;
+			_executeInPlaceLSR(cpu, &cpu->ac);
 		} return;
 		case v6502_opcode_lsr_zpg: {
-			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[low]);
-			cpu->memory->bytes[low] >>= 1;
+			_executeInPlaceLSR(cpu, &cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_lsr_zpgx: {
-			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[low + cpu->x]);
-			cpu->memory->bytes[low + cpu->x] >>= 1;
+			_executeInPlaceLSR(cpu, &cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_lsr_abs: {
-			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[BOTH_BYTES]);
-			cpu->memory->bytes[BOTH_BYTES] >>= 1;
+			_executeInPlaceLSR(cpu, &cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 		case v6502_opcode_lsr_absx: {
-			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[BOTH_BYTES + cpu->x]);
-			cpu->memory->bytes[BOTH_BYTES + cpu->x] >>= 1;
+			_executeInPlaceLSR(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
 
 		// STA
