@@ -20,6 +20,9 @@
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
 
+#pragma mark -
+#pragma mark CPU Internal Instruction Execution
+
 static void _executeInPlaceASL(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_CARRY_WITH_HIGH_BIT(*operand);
 	*operand <<= 1;
@@ -32,6 +35,21 @@ static void _executeInPlaceLSR(v6502_cpu *cpu, uint8_t *operand) {
 	*operand >>= 1;
 	FLAG_ZERO_WITH_RESULT(*operand);
 }
+
+static void _executeInPlaceORA(v6502_cpu *cpu, uint8_t operand) {
+	cpu->ac |= operand;
+	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
+	FLAG_ZERO_WITH_RESULT(cpu->ac);
+}
+
+static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
+	cpu->ac &= operand;
+	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
+	FLAG_ZERO_WITH_RESULT(cpu->ac);
+}
+
+#pragma mark -
+#pragma mark CPU Lifecycle
 
 v6502_cpu *v6502_createCPU(void) {
 	// Allocate CPU Struct
@@ -46,6 +64,9 @@ v6502_cpu *v6502_createCPU(void) {
 void v6502_destroyCPU(v6502_cpu *cpu) {
 	free(cpu);
 }
+
+#pragma mark -
+#pragma mark CPU Runtime
 
 void v6502_reset(v6502_cpu *cpu) {
 	cpu->pc = 0x0000;
@@ -125,28 +146,28 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 
 		// AND
 		case v6502_opcode_and_imm: {
-			cpu->ac &= low;
+			_executeInPlaceAND(cpu, low);
 		} return;
 		case v6502_opcode_and_zpg: {
-			cpu->ac &= cpu->memory->bytes[low];
+			_executeInPlaceAND(cpu, cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_and_zpgx: {
-			cpu->ac &= cpu->memory->bytes[low + cpu->x];
+			_executeInPlaceAND(cpu, cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_and_abs: {
-			cpu->ac &= cpu->memory->bytes[low];
+			_executeInPlaceAND(cpu, cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_and_absx: {
-			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->x];
+			_executeInPlaceAND(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
 		case v6502_opcode_and_absy: {
-			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+			_executeInPlaceAND(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
 		} return;
 		case v6502_opcode_and_indx: {
-			cpu->ac &= cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x];
+			_executeInPlaceAND(cpu, cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x]);
 		} return;
 		case v6502_opcode_and_indy: {
-			cpu->ac &= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+			_executeInPlaceAND(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
 		} return;
 		
 		// ASL
@@ -202,28 +223,28 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		
 		// ORA
 		case v6502_opcode_ora_imm: {
-			cpu->ac |= low;
+			_executeInPlaceORA(cpu, low);
 		} return;
 		case v6502_opcode_ora_zpg: {
-			cpu->ac |= cpu->memory->bytes[low];
+			_executeInPlaceORA(cpu, cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_ora_zpgx: {
-			cpu->ac |= cpu->memory->bytes[low + cpu->x];
+			_executeInPlaceORA(cpu, cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_ora_abs: {
-			cpu->ac |= cpu->memory->bytes[low];
+			_executeInPlaceORA(cpu, cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_ora_absx: {
-			cpu->ac |= cpu->memory->bytes[BOTH_BYTES + cpu->x];
+			_executeInPlaceORA(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
 		case v6502_opcode_ora_absy: {
-			cpu->ac |= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+			_executeInPlaceORA(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
 		} return;
 		case v6502_opcode_ora_indx: {
-			cpu->ac |= cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x];
+			_executeInPlaceORA(cpu, cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x]);
 		} return;
 		case v6502_opcode_ora_indy: {
-			cpu->ac |= cpu->memory->bytes[BOTH_BYTES + cpu->y];
+			_executeInPlaceORA(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
 		} return;
 			
 		// LDA
