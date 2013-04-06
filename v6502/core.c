@@ -21,6 +21,15 @@ void v6502_fault(const char *error) {
 }
 
 void v6502_printCpuState(v6502_cpu *cpu) {
+	fprintf(stderr, "Status Register: %c%c%c%c%c%c%c%c\n",
+			cpu->sr & v6502_cpu_status_negative ? 'N' : '-',
+			cpu->sr & v6502_cpu_status_overflow ? 'V' : '-',
+			cpu->sr & v6502_cpu_status_ignored ? 'X' : '-',
+			cpu->sr & v6502_cpu_status_break ? 'B' : '-',
+			cpu->sr & v6502_cpu_status_decimal ? 'D' : '-',
+			cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
+			cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
+			cpu->sr & v6502_cpu_status_carry ? 'C' : '-');
 	fprintf(stderr, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sr = 0x%02x, sp = 0x%02x\nMEM %p: memsize = %hu (0x%04x)\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
 }
 
