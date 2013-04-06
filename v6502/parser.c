@@ -87,22 +87,6 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 		return v6502_opcode_iny;
 	}
 	
-	if (!strncmp(string, "asl", 3)) {
-		switch (mode) {
-			case v6502_address_mode_accumulator:
-				return v6502_opcode_asl_acc;
-			case v6502_address_mode_zeropage:
-				return v6502_opcode_asl_zpg;
-			case v6502_address_mode_zeropage_x:
-				return v6502_opcode_asl_zpgx;
-			case v6502_address_mode_absolute:
-				return v6502_opcode_asl_abs;
-			case v6502_address_mode_absolute_x:
-				return v6502_opcode_asl_absx;
-			default:
-				return _opError(string, kBadAddressModeErrorText);
-		}
-	}
 	if (!strncmp(string, "and", 3)) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
@@ -121,6 +105,22 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return v6502_opcode_and_indx;
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_and_indy;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "asl", 3)) {
+		switch (mode) {
+			case v6502_address_mode_accumulator:
+				return v6502_opcode_asl_acc;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_asl_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_asl_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_asl_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_asl_absx;
 			default:
 				return _opError(string, kBadAddressModeErrorText);
 		}
@@ -229,6 +229,22 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return v6502_opcode_ldy_abs;
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_ldy_absx;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "lsr", 3)) {
+		switch (mode) {
+			case v6502_address_mode_accumulator:
+				return v6502_opcode_lsr_acc;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_lsr_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_lsr_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_lsr_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_lsr_absx;
 			default:
 				return _opError(string, kBadAddressModeErrorText);
 		}

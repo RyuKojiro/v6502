@@ -14,6 +14,8 @@
 #define	BOTH_BYTES	(high << 8 | low)
 #define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (0xFE | (a >> 7)); \
 													cpu->sr |= a >> 7;
+#define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= 0xFE | a; \
+													cpu->sr |= a & 0x01;
 
 v6502_cpu *v6502_createCPU(void) {
 	// Allocate CPU Struct
@@ -153,7 +155,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 			cpu->memory->bytes[BOTH_BYTES + cpu->x] <<= 1;
 		} return;
-			
+
 		// EOR
 		case v6502_opcode_eor_imm: {
 			cpu->ac ^= low;
@@ -274,6 +276,28 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->y = cpu->memory->bytes[BOTH_BYTES + cpu->x];
 		} return;
 		
+		// LSR
+		case v6502_opcode_lsr_acc: {
+			FLAG_CARRY_WITH_LOW_BIT(cpu->ac);
+			cpu->ac >>= 1;
+		} return;
+		case v6502_opcode_lsr_zpg: {
+			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[low]);
+			cpu->memory->bytes[low] >>= 1;
+		} return;
+		case v6502_opcode_lsr_zpgx: {
+			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[low + cpu->x]);
+			cpu->memory->bytes[low + cpu->x] >>= 1;
+		} return;
+		case v6502_opcode_lsr_abs: {
+			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[BOTH_BYTES]);
+			cpu->memory->bytes[BOTH_BYTES] >>= 1;
+		} return;
+		case v6502_opcode_lsr_absx: {
+			FLAG_CARRY_WITH_LOW_BIT(cpu->memory->bytes[BOTH_BYTES + cpu->x]);
+			cpu->memory->bytes[BOTH_BYTES + cpu->x] >>= 1;
+		} return;
+
 		// STA
 		case v6502_opcode_sta_zpg: {
 			cpu->memory->bytes[low] = cpu->ac;
