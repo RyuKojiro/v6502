@@ -16,6 +16,22 @@
 													cpu->sr |= a >> 7;
 #define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= 0xFE | a; \
 													cpu->sr |= a & 0x01;
+// ???: Should this clear the zero flag when arithmetic results in non-zero?
+#define FLAG_ZERO_WITH_RESULT(a)					cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
+#define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
+
+static void _executeInPlaceASL(v6502_cpu *cpu, uint8_t *operand) {
+	FLAG_CARRY_WITH_HIGH_BIT(*operand);
+	*operand <<= 1;
+	FLAG_NEGATIVE_WITH_RESULT(*operand);
+	FLAG_ZERO_WITH_RESULT(*operand);
+}
+
+static void _executeInPlaceLSR(v6502_cpu *cpu, uint8_t *operand) {
+	FLAG_CARRY_WITH_LOW_BIT(*operand);
+	*operand <<= 1;
+	FLAG_ZERO_WITH_RESULT(*operand);
+}
 
 v6502_cpu *v6502_createCPU(void) {
 	// Allocate CPU Struct
@@ -136,24 +152,19 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		
 		// ASL
 		case v6502_opcode_asl_acc: {
-			FLAG_CARRY_WITH_HIGH_BIT(cpu->ac);
-			cpu->ac <<= 1;
+			_executeInPlaceASL(cpu, &cpu->ac);
 		} return;
 		case v6502_opcode_asl_zpg: {
-			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[low]);
-			cpu->memory->bytes[low] <<= 1;
+			_executeInPlaceASL(cpu, &cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_asl_zpgx: {
-			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[low + cpu->x]);
-			cpu->memory->bytes[low + cpu->x] <<= 1;
+			_executeInPlaceASL(cpu, &cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_asl_abs: {
-			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[BOTH_BYTES]);
-			cpu->memory->bytes[BOTH_BYTES] <<= 1;
+			_executeInPlaceASL(cpu, &cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 		case v6502_opcode_asl_absx: {
-			FLAG_CARRY_WITH_HIGH_BIT(cpu->memory->bytes[BOTH_BYTES + cpu->x]);
-			cpu->memory->bytes[BOTH_BYTES + cpu->x] <<= 1;
+			_executeInPlaceASL(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
 
 		// EOR
