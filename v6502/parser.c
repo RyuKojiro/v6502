@@ -87,6 +87,28 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 		return v6502_opcode_iny;
 	}
 	
+	if (!strncmp(string, "adc", 3)) {
+		switch (mode) {
+			case v6502_address_mode_immediate:
+				return v6502_opcode_adc_imm;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_adc_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_adc_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_adc_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_adc_absx;
+			case v6502_address_mode_absolute_y:
+				return v6502_opcode_adc_absy;
+			case v6502_address_mode_indirect_x:
+				return v6502_opcode_adc_indx;
+			case v6502_address_mode_indirect_y:
+				return v6502_opcode_adc_indy;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
 	if (!strncmp(string, "and", 3)) {
 		switch (mode) {
 			case v6502_address_mode_immediate:

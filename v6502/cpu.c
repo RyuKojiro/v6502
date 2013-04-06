@@ -19,6 +19,8 @@
 // ???: Should this clear the zero flag when arithmetic results in non-zero?
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
+#define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_carry : 0);
+#define FLAG_OVERFLOW_WITH_EXPRESSION(a)			cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_overflow : 0);
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
@@ -44,6 +46,14 @@ static void _executeInPlaceORA(v6502_cpu *cpu, uint8_t operand) {
 
 static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 	cpu->ac &= operand;
+	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
+	FLAG_ZERO_WITH_RESULT(cpu->ac);
+}
+
+static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
+	// TODO: overflow
+	FLAG_CARRY_WITH_EXPRESSION(cpu->ac += operand);
+	cpu->ac += operand;
 	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
 	FLAG_ZERO_WITH_RESULT(cpu->ac);
 }
@@ -142,6 +152,32 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		case v6502_opcode_iny: {
 			cpu->y++;
+		} return;
+
+		// ADC
+		case v6502_opcode_adc_imm: {
+			_executeInPlaceADC(cpu, low);
+		} return;
+		case v6502_opcode_adc_zpg: {
+			_executeInPlaceADC(cpu, cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_adc_zpgx: {
+			_executeInPlaceADC(cpu, cpu->memory->bytes[low + cpu->x]);
+		} return;
+		case v6502_opcode_adc_abs: {
+			_executeInPlaceADC(cpu, cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_adc_absx: {
+			_executeInPlaceADC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
+		} return;
+		case v6502_opcode_adc_absy: {
+			_executeInPlaceADC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
+		} return;
+		case v6502_opcode_adc_indx: {
+			_executeInPlaceADC(cpu, cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x]);
+		} return;
+		case v6502_opcode_adc_indy: {
+			_executeInPlaceADC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
 		} return;
 
 		// AND

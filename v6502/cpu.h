@@ -51,6 +51,16 @@ typedef enum {
 	v6502_opcode_inx		= 0xE8,
 	v6502_opcode_iny		= 0xC8,
 	
+	// ADC
+	v6502_opcode_adc_imm	= 0x69,
+	v6502_opcode_adc_zpg	= 0x65,
+	v6502_opcode_adc_zpgx	= 0x75,
+	v6502_opcode_adc_abs	= 0x6D,
+	v6502_opcode_adc_absx	= 0x7D,
+	v6502_opcode_adc_absy	= 0x79,
+	v6502_opcode_adc_indx	= 0x61,
+	v6502_opcode_adc_indy	= 0x71,
+
 	// AND
 	v6502_opcode_and_imm	= 0x29,
 	v6502_opcode_and_zpg	= 0x25,
