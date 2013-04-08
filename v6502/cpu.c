@@ -12,10 +12,10 @@
 #include "core.h"
 
 #define	BOTH_BYTES	(high << 8 | low)
-#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (0xFE | (a >> 7)); \
+#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (~v6502_cpu_status_carry | (a >> 7)); \
 													cpu->sr |= a >> 7;
-#define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= 0xFE | a; \
-													cpu->sr |= 0x01 & a;
+#define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry | a; \
+													cpu->sr |= v6502_cpu_status_carry & a;
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
@@ -51,9 +51,12 @@ static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 }
 
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
-	// TODO: overflow
+	uint8_t overflowCheck = cpu->ac;
 	FLAG_CARRY_WITH_EXPRESSION(cpu->ac += operand);
-	cpu->ac += operand;
+	overflowCheck ^= cpu->ac;
+	overflowCheck >>= 1; // Shift to overflow flag position
+	cpu->sr &= (overflowCheck | ~v6502_cpu_status_overflow);
+	cpu->sr |= (overflowCheck & v6502_cpu_status_overflow);
 	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
 	FLAG_ZERO_WITH_RESULT(cpu->ac);
 }
