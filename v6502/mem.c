@@ -11,6 +11,9 @@
 #include "mem.h"
 #include "core.h"
 
+#pragma mark -
+#pragma mark Memory Lifecycle
+
 v6502_memory *v6502_createMemory(uint16_t size) {
 	// Allocate Memory Struct
 	v6502_memory *memory = malloc(sizeof(v6502_memory));
@@ -34,4 +37,14 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 void v6502_destroyMemory(v6502_memory *memory) {
 	free(memory->bytes);
 	free(memory);
+}
+
+#pragma mark -
+#pragma mark Memory Access Functionality
+
+signed int v6502_signedValueOfByte(uint8_t byte) {
+	if (byte & 0x80) {
+		return (0 - (byte & 0x7F));
+	}
+	return byte;
 }

@@ -20,5 +20,6 @@ typedef struct {
 // Memory Lifecycle
 v6502_memory *v6502_createMemory(uint16_t size);
 void v6502_destroyMemory(v6502_memory *memory);
+signed int v6502_signedValueOfByte(uint8_t byte);
 
 #endif
