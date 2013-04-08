@@ -54,6 +54,8 @@ typedef enum {
 	// Branch Instructions
 	v6502_opcode_bcc		= 0x90,
 	v6502_opcode_bcs		= 0xB0,
+	v6502_opcode_bvc		= 0x50,
+	v6502_opcode_bvs		= 0x70,
 	
 	// ADC
 	v6502_opcode_adc_imm	= 0x69,
