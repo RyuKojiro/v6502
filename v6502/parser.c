@@ -217,6 +217,20 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _opError(string, kBadAddressModeErrorText);
 		}
 	}
+	if (!strncmp(string, "inc", 3)) {
+		switch (mode) {
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_inc_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_inc_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_inc_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_inc_absx;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
 	if (!strncmp(string, "jmp", 3)) {
 		switch (mode) {
 			case v6502_address_mode_absolute:
