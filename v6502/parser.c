@@ -121,6 +121,22 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _opError(string, kBadAddressModeErrorText);
 		}
 	}
+	if (!strncmp(string, "bmi", 3)) {
+		if (mode == v6502_address_mode_relative) {
+			return v6502_opcode_bmi;
+		}
+		else {
+			return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	if (!strncmp(string, "bpl", 3)) {
+		if (mode == v6502_address_mode_relative) {
+			return v6502_opcode_bpl;
+		}
+		else {
+			return _opError(string, kBadAddressModeErrorText);
+		}
+	}
 	if (!strncmp(string, "bvc", 3)) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bvc;
