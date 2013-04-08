@@ -28,7 +28,8 @@ static v6502_opcode _opError(const char *op, const char *error) {
 	return v6502_opcode_nop;
 }
 
-v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {	
+v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
+	// Single-byte Instructions
 	if (!strncmp(string, "brk", 3)) {
 		return v6502_opcode_brk;
 	}
@@ -87,6 +88,17 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 		return v6502_opcode_iny;
 	}
 	
+	// Branching Instructions
+	if (!strncmp(string, "bcc", 3)) {
+		if (mode == v6502_address_mode_relative) {
+			return v6502_opcode_bcc;
+		}
+		else {
+			return _opError(string, kBadAddressModeErrorText);
+		}
+	}
+	
+	// All of the rest
 	if (!strncmp(string, "adc", 3)) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
