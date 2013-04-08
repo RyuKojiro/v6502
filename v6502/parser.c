@@ -285,6 +285,22 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _opError(string, kBadAddressModeErrorText);
 		}
 	}
+	if (!strncmp(string, "rol", 3)) {
+		switch (mode) {
+			case v6502_address_mode_accumulator:
+				return v6502_opcode_rol_acc;
+			case v6502_address_mode_zeropage:
+				return v6502_opcode_rol_zpg;
+			case v6502_address_mode_zeropage_x:
+				return v6502_opcode_rol_zpgx;
+			case v6502_address_mode_absolute:
+				return v6502_opcode_rol_abs;
+			case v6502_address_mode_absolute_x:
+				return v6502_opcode_rol_absx;
+			default:
+				return _opError(string, kBadAddressModeErrorText);
+		}
+	}
 	if (!strncmp(string, "sbc", 3)) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
