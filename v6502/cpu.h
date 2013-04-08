@@ -88,6 +88,16 @@ typedef enum {
 	v6502_opcode_asl_abs	= 0x0E,
 	v6502_opcode_asl_absx	= 0x1E,
 	
+	// CMP
+	v6502_opcode_cmp_imm	= 0xC9,
+	v6502_opcode_cmp_zpg	= 0xC5,
+	v6502_opcode_cmp_zpgx	= 0xD5,
+	v6502_opcode_cmp_abs	= 0xCD,
+	v6502_opcode_cmp_absx	= 0xDD,
+	v6502_opcode_cmp_absy	= 0xD9,
+	v6502_opcode_cmp_indx	= 0xC1,
+	v6502_opcode_cmp_indy	= 0xD1,
+
 	// DEC
 	v6502_opcode_dec_zpg	= 0xC6,
 	v6502_opcode_dec_zpgx	= 0xD6,
