@@ -200,6 +200,11 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 				cpu->pc += v6502_signedValueOfByte(low);
 			}
 		} return;
+		case v6502_opcode_bcs: {
+			if (cpu->sr & v6502_cpu_status_carry) {
+				cpu->pc += v6502_signedValueOfByte(low);
+			}
+		} return;
 			
 		// ADC
 		case v6502_opcode_adc_imm: {

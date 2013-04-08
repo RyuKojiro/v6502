@@ -97,6 +97,14 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _opError(string, kBadAddressModeErrorText);
 		}
 	}
+	if (!strncmp(string, "bcs", 3)) {
+		if (mode == v6502_address_mode_relative) {
+			return v6502_opcode_bcs;
+		}
+		else {
+			return _opError(string, kBadAddressModeErrorText);
+		}
+	}
 	
 	// All of the rest
 	if (!strncmp(string, "adc", 3)) {
