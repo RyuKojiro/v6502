@@ -49,6 +49,13 @@ static void _executeInPlaceROL(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_ZERO_WITH_RESULT(*operand);
 }
 
+static void _executeInPlaceROR(v6502_cpu *cpu, uint8_t *operand) {
+	FLAG_CARRY_WITH_HIGH_BIT(*operand);
+	*operand = (*operand >> 1) | (*operand << 7);
+	FLAG_NEGATIVE_WITH_RESULT(*operand);
+	FLAG_ZERO_WITH_RESULT(*operand);
+}
+
 static void _executeInPlaceORA(v6502_cpu *cpu, uint8_t operand) {
 	cpu->ac |= operand;
 	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
@@ -408,7 +415,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceLSR(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
 
-		// ROL
+			// ROL
 		case v6502_opcode_rol_acc: {
 			_executeInPlaceROL(cpu, &cpu->ac);
 		} return;
@@ -424,7 +431,24 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_rol_absx: {
 			_executeInPlaceROL(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
-		
+
+		// ROR
+		case v6502_opcode_ror_acc: {
+			_executeInPlaceROR(cpu, &cpu->ac);
+		} return;
+		case v6502_opcode_ror_zpg: {
+			_executeInPlaceROR(cpu, &cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_ror_zpgx: {
+			_executeInPlaceROR(cpu, &cpu->memory->bytes[low + cpu->x]);
+		} return;
+		case v6502_opcode_ror_abs: {
+			_executeInPlaceROR(cpu, &cpu->memory->bytes[BOTH_BYTES]);
+		} return;
+		case v6502_opcode_ror_absx: {
+			_executeInPlaceROR(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
+		} return;
+
 		// SBC
 		case v6502_opcode_sbc_imm: {
 			_executeInPlaceSBC(cpu, low);

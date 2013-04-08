@@ -148,6 +148,13 @@ typedef enum {
 	v6502_opcode_rol_zpgx	= 0x36,
 	v6502_opcode_rol_abs	= 0x2E,
 	v6502_opcode_rol_absx	= 0x3E,
+	
+	// ROR
+	v6502_opcode_ror_acc	= 0x6A,
+	v6502_opcode_ror_zpg	= 0x66,
+	v6502_opcode_ror_zpgx	= 0x76,
+	v6502_opcode_ror_abs	= 0x6E,
+	v6502_opcode_ror_absx	= 0x7E,
 
 	// SBC
 	v6502_opcode_sbc_imm	= 0xE9,
