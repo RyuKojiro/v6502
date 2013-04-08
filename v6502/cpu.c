@@ -205,6 +205,16 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 				cpu->pc += v6502_signedValueOfByte(low);
 			}
 		} return;
+		case v6502_opcode_beq: {
+			if (cpu->sr & v6502_cpu_status_zero) {
+				cpu->pc += v6502_signedValueOfByte(low);
+			}
+		} return;
+		case v6502_opcode_bne: {
+			if (!(cpu->sr & v6502_cpu_status_zero)) {
+				cpu->pc += v6502_signedValueOfByte(low);
+			}
+		} return;
 		case v6502_opcode_bvc: {
 			if (!(cpu->sr & v6502_cpu_status_overflow)) {
 				cpu->pc += v6502_signedValueOfByte(low);
