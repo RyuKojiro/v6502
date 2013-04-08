@@ -72,6 +72,12 @@ static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_ZERO_WITH_RESULT(cpu->ac);
 }
 
+static void _executeInPlaceDEC(v6502_cpu *cpu, uint8_t *operand) {
+	(*operand)--;
+	FLAG_NEGATIVE_WITH_RESULT(*operand);
+	FLAG_ZERO_WITH_RESULT(*operand);
+}
+
 #pragma mark -
 #pragma mark CPU Lifecycle
 
@@ -235,6 +241,20 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		case v6502_opcode_asl_absx: {
 			_executeInPlaceASL(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
+		} return;
+
+		// DEC
+		case v6502_opcode_dec_zpg: {
+			_executeInPlaceDEC(cpu, &cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_dec_zpgx: {
+			_executeInPlaceDEC(cpu, &cpu->memory->bytes[low + cpu->x]);
+		} return;
+		case v6502_opcode_dec_abs: {
+			_executeInPlaceDEC(cpu, &cpu->memory->bytes[BOTH_BYTES]);
+		} return;
+		case v6502_opcode_dec_absx: {
+			_executeInPlaceDEC(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
 
 		// EOR
