@@ -133,6 +133,16 @@ typedef enum {
 	v6502_opcode_lsr_abs	= 0x4E,
 	v6502_opcode_lsr_absx	= 0x5E,
 	
+	// SBC
+	v6502_opcode_sbc_imm	= 0xE9,
+	v6502_opcode_sbc_zpg	= 0xE5,
+	v6502_opcode_sbc_zpgx	= 0xF5,
+	v6502_opcode_sbc_abs	= 0xED,
+	v6502_opcode_sbc_absx	= 0xFD,
+	v6502_opcode_sbc_absy	= 0xF9,
+	v6502_opcode_sbc_indx	= 0xE1,
+	v6502_opcode_sbc_indy	= 0xF1,
+
 	// STA
 	v6502_opcode_sta_zpg	= 0x85,
 	v6502_opcode_sta_zpgx	= 0x95,

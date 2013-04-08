@@ -20,7 +20,11 @@
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
 #define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_carry : 0);
-#define FLAG_OVERFLOW_WITH_EXPRESSION(a)			cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_overflow : 0);
+#define FLAG_OVERFLOW_PREPARE(a)					uint8_t _overflowCheck = a;
+#define FLAG_OVERFLOW_CHECK(a)						_overflowCheck ^= a; \
+													_overflowCheck >>= 1; /* Shift to overflow flag position */ \
+													cpu->sr &= (_overflowCheck | ~v6502_cpu_status_overflow); \
+													cpu->sr |= (_overflowCheck & v6502_cpu_status_overflow); \
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
@@ -51,12 +55,19 @@ static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 }
 
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
-	uint8_t overflowCheck = cpu->ac;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->ac += operand);
-	overflowCheck ^= cpu->ac;
-	overflowCheck >>= 1; // Shift to overflow flag position
-	cpu->sr &= (overflowCheck | ~v6502_cpu_status_overflow);
-	cpu->sr |= (overflowCheck & v6502_cpu_status_overflow);
+	FLAG_OVERFLOW_PREPARE(cpu->ac);
+	cpu->ac += operand;
+	FLAG_CARRY_WITH_EXPRESSION(cpu->ac);
+	FLAG_OVERFLOW_CHECK(cpu->ac);
+	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
+	FLAG_ZERO_WITH_RESULT(cpu->ac);
+}
+
+static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
+	FLAG_OVERFLOW_PREPARE(cpu->ac);
+	cpu->ac -= operand;
+	FLAG_CARRY_WITH_EXPRESSION(cpu->ac);
+	FLAG_OVERFLOW_CHECK(cpu->ac);
 	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
 	FLAG_ZERO_WITH_RESULT(cpu->ac);
 }
@@ -361,6 +372,32 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		case v6502_opcode_lsr_absx: {
 			_executeInPlaceLSR(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
+		} return;
+
+		// SBC
+		case v6502_opcode_sbc_imm: {
+			_executeInPlaceSBC(cpu, low);
+		} return;
+		case v6502_opcode_sbc_zpg: {
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_sbc_zpgx: {
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[low + cpu->x]);
+		} return;
+		case v6502_opcode_sbc_abs: {
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_sbc_absx: {
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
+		} return;
+		case v6502_opcode_sbc_absy: {
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
+		} return;
+		case v6502_opcode_sbc_indx: {
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[cpu->memory->bytes[BOTH_BYTES] + cpu->x]);
+		} return;
+		case v6502_opcode_sbc_indy: {
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
 		} return;
 
 		// STA
