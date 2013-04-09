@@ -104,6 +104,18 @@ static void _executeInPlaceCMP(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_ZERO_WITH_RESULT(result);
 }
 
+static void _executeInPlaceCPY(v6502_cpu *cpu, uint8_t operand) {
+	uint8_t result = cpu->y - operand;
+	FLAG_NEGATIVE_WITH_RESULT(result);
+	FLAG_ZERO_WITH_RESULT(result);
+}
+
+static void _executeInPlaceCPX(v6502_cpu *cpu, uint8_t operand) {
+	uint8_t result = cpu->x - operand;
+	FLAG_NEGATIVE_WITH_RESULT(result);
+	FLAG_ZERO_WITH_RESULT(result);
+}
+
 #pragma mark -
 #pragma mark CPU Lifecycle
 
@@ -336,7 +348,29 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_cmp_indy: {
 			_executeInPlaceCMP(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
 		} return;
-			
+		
+		// CPX
+		case v6502_opcode_cpx_imm: {
+			_executeInPlaceCPX(cpu, low);
+		} return;
+		case v6502_opcode_cpx_zpg: {
+			_executeInPlaceCPX(cpu, cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_cpx_abs: {
+			_executeInPlaceCPX(cpu, cpu->memory->bytes[low]);
+		} return;
+
+		// CPY
+		case v6502_opcode_cpy_imm: {
+			_executeInPlaceCPY(cpu, low);
+		} return;
+		case v6502_opcode_cpy_zpg: {
+			_executeInPlaceCPY(cpu, cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_cpy_abs: {
+			_executeInPlaceCPY(cpu, cpu->memory->bytes[low]);
+		} return;
+
 		// DEC
 		case v6502_opcode_dec_zpg: {
 			_executeInPlaceDEC(cpu, &cpu->memory->bytes[low]);

@@ -98,6 +98,16 @@ typedef enum {
 	v6502_opcode_cmp_indx	= 0xC1,
 	v6502_opcode_cmp_indy	= 0xD1,
 
+	// CPX
+	v6502_opcode_cpx_imm	= 0xE0,
+	v6502_opcode_cpx_zpg	= 0xE4,
+	v6502_opcode_cpx_abs	= 0xEC,
+
+	// CPY
+	v6502_opcode_cpy_imm	= 0xC0,
+	v6502_opcode_cpy_zpg	= 0xC4,
+	v6502_opcode_cpy_abs	= 0xCC,
+
 	// DEC
 	v6502_opcode_dec_zpg	= 0xC6,
 	v6502_opcode_dec_zpgx	= 0xD6,
