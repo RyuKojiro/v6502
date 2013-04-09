@@ -88,6 +88,29 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 		return v6502_opcode_iny;
 	}
 	
+	// Stack Instructions
+	if (!strncmp(string, "jsr", 3)) {
+		return v6502_opcode_jsr;
+	}
+	if (!strncmp(string, "rti", 3)) {
+		return v6502_opcode_rti;
+	}
+	if (!strncmp(string, "rts", 3)) {
+		return v6502_opcode_rts;
+	}
+	if (!strncmp(string, "pha", 3)) {
+		return v6502_opcode_pha;
+	}
+	if (!strncmp(string, "pla", 3)) {
+		return v6502_opcode_pla;
+	}
+	if (!strncmp(string, "php", 3)) {
+		return v6502_opcode_php;
+	}
+	if (!strncmp(string, "plp", 3)) {
+		return v6502_opcode_plp;
+	}
+	
 	// Branching Instructions
 	if (!strncmp(string, "bcc", 3)) {
 		if (mode == v6502_address_mode_relative) {
