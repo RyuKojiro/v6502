@@ -51,6 +51,15 @@ typedef enum {
 	v6502_opcode_inx		= 0xE8,
 	v6502_opcode_iny		= 0xC8,
 	
+	// Stack Instructions
+	v6502_opcode_jsr		= 0x20,
+	v6502_opcode_rti		= 0x40,
+	v6502_opcode_rts		= 0x60,
+	v6502_opcode_pha		= 0x48,
+	v6502_opcode_php		= 0x08,
+	v6502_opcode_pla		= 0x68,
+	v6502_opcode_plp		= 0x28,
+
 	// Branch Instructions
 	v6502_opcode_bcc		= 0x90,
 	v6502_opcode_bcs		= 0xB0,
@@ -88,6 +97,10 @@ typedef enum {
 	v6502_opcode_asl_abs	= 0x0E,
 	v6502_opcode_asl_absx	= 0x1E,
 	
+	// BIT
+	v6502_opcode_bit_zpg	= 0x24,
+	v6502_opcode_bit_abs	= 0x2C,
+
 	// CMP
 	v6502_opcode_cmp_imm	= 0xC9,
 	v6502_opcode_cmp_zpg	= 0xC5,

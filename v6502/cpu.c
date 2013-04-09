@@ -116,6 +116,14 @@ static void _executeInPlaceCPX(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_ZERO_WITH_RESULT(result);
 }
 
+static void _executeInPlaceBIT(v6502_cpu *cpu, uint8_t operand) {
+	uint8_t result = cpu->ac & operand;
+	cpu->sr &= ~v6502_cpu_status_overflow;
+	cpu->sr |= (result & v6502_cpu_status_overflow);
+	FLAG_NEGATIVE_WITH_RESULT(result);
+	FLAG_ZERO_WITH_RESULT(result);
+}
+
 #pragma mark -
 #pragma mark CPU Lifecycle
 
@@ -265,7 +273,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceADC(cpu, cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_adc_abs: {
-			_executeInPlaceADC(cpu, cpu->memory->bytes[low]);
+			_executeInPlaceADC(cpu, cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 		case v6502_opcode_adc_absx: {
 			_executeInPlaceADC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
@@ -291,7 +299,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceAND(cpu, cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_and_abs: {
-			_executeInPlaceAND(cpu, cpu->memory->bytes[low]);
+			_executeInPlaceAND(cpu, cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 		case v6502_opcode_and_absx: {
 			_executeInPlaceAND(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
@@ -322,6 +330,14 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_asl_absx: {
 			_executeInPlaceASL(cpu, &cpu->memory->bytes[BOTH_BYTES + cpu->x]);
 		} return;
+			
+		// BIT
+		case v6502_opcode_bit_zpg: {
+			_executeInPlaceBIT(cpu, cpu->memory->bytes[low]);
+		} return;
+		case v6502_opcode_bit_abs: {
+			_executeInPlaceBIT(cpu, cpu->memory->bytes[BOTH_BYTES]);
+		} return;
 
 		// CMP
 		case v6502_opcode_cmp_imm: {
@@ -334,7 +350,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceCMP(cpu, cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_cmp_abs: {
-			_executeInPlaceCMP(cpu, cpu->memory->bytes[low]);
+			_executeInPlaceCMP(cpu, cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 		case v6502_opcode_cmp_absx: {
 			_executeInPlaceCMP(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
@@ -357,7 +373,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceCPX(cpu, cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_cpx_abs: {
-			_executeInPlaceCPX(cpu, cpu->memory->bytes[low]);
+			_executeInPlaceCPX(cpu, cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 
 		// CPY
@@ -368,7 +384,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceCPY(cpu, cpu->memory->bytes[low]);
 		} return;
 		case v6502_opcode_cpy_abs: {
-			_executeInPlaceCPY(cpu, cpu->memory->bytes[low]);
+			_executeInPlaceCPY(cpu, cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 
 		// DEC
@@ -396,7 +412,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->ac ^= cpu->memory->bytes[low + cpu->x];
 		} return;
 		case v6502_opcode_eor_abs: {
-			cpu->ac ^= cpu->memory->bytes[low];
+			cpu->ac ^= cpu->memory->bytes[BOTH_BYTES];
 		} return;
 		case v6502_opcode_eor_absx: {
 			cpu->ac ^= cpu->memory->bytes[BOTH_BYTES + cpu->x];
@@ -444,7 +460,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceORA(cpu, cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_ora_abs: {
-			_executeInPlaceORA(cpu, cpu->memory->bytes[low]);
+			_executeInPlaceORA(cpu, cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 		case v6502_opcode_ora_absx: {
 			_executeInPlaceORA(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
@@ -581,7 +597,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceSBC(cpu, cpu->memory->bytes[low + cpu->x]);
 		} return;
 		case v6502_opcode_sbc_abs: {
-			_executeInPlaceSBC(cpu, cpu->memory->bytes[low]);
+			_executeInPlaceSBC(cpu, cpu->memory->bytes[BOTH_BYTES]);
 		} return;
 		case v6502_opcode_sbc_absx: {
 			_executeInPlaceSBC(cpu, cpu->memory->bytes[BOTH_BYTES + cpu->x]);
