@@ -261,7 +261,31 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 				cpu->pc += v6502_signedValueOfByte(low);
 			}
 		} return;
-			
+		
+		// Stack Instructions
+		case v6502_opcode_jsr: {
+			cpu->memory->bytes[cpu->sp--] = cpu->pc;
+			cpu->pc = BOTH_BYTES;
+		} return;
+		case v6502_opcode_rti: {
+			// TODO: Interrupts
+		} return;
+		case v6502_opcode_rts: {
+			cpu->pc = cpu->memory->bytes[++cpu->sp];
+		} return;
+		case v6502_opcode_pha: {
+			cpu->memory->bytes[cpu->sp--] = cpu->ac;
+		} return;
+		case v6502_opcode_pla: {
+			cpu->ac = cpu->memory->bytes[++cpu->sp];
+		} return;
+		case v6502_opcode_php: {
+			cpu->memory->bytes[cpu->sp--] = cpu->sr;
+		} return;
+		case v6502_opcode_plp: {
+			cpu->sr = cpu->memory->bytes[++cpu->sp];
+		} return;
+
 		// ADC
 		case v6502_opcode_adc_imm: {
 			_executeInPlaceADC(cpu, low);
