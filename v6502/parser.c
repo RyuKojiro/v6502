@@ -54,7 +54,7 @@ static v6502_opcode _opError(const char *op, const char *error) {
 	char e[MAX_ERROR_LEN];	
 	int depth = 0;
 	
-	strncat(e, error, MIN(sizeof(error), MAX_ERROR_LEN - depth));
+	strncpy(e, error, MIN(strlen(error), MAX_ERROR_LEN - depth));
 	depth += sizeof(kForOperationErrorText);
 	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
 	_trimTrailingWhitespace(e);
