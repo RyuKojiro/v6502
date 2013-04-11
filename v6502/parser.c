@@ -43,7 +43,7 @@ static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	depth += 12;
 	strncat(e, kForOperationErrorText, MIN(sizeof(kForOperationErrorText), MAX_ERROR_LEN - depth));
 	depth += sizeof(kForOperationErrorText);
-	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
+	strncat(e, op, MIN(strlen(op) + 1, MAX_ERROR_LEN - depth));
 	_trimTrailingWhitespace(e);
 	strncat(e, "'", 2);
 	v6502_fault(e);
@@ -54,7 +54,7 @@ static v6502_opcode _opError(const char *op, const char *error) {
 	char e[MAX_ERROR_LEN];	
 	int depth = 0;
 	
-	strncpy(e, error, MIN(strlen(error), MAX_ERROR_LEN - depth));
+	strncpy(e, error, MIN(strlen(error) + 1, MAX_ERROR_LEN - depth));
 	depth += sizeof(kForOperationErrorText);
 	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
 	_trimTrailingWhitespace(e);
