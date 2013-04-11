@@ -61,6 +61,9 @@
 		E666A8131715D1C000EDBF95 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = as6502/Makefile; sourceTree = "<group>"; };
 		E666A81F1715E50E00EDBF95 /* as6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = as6502; sourceTree = BUILT_PRODUCTS_DIR; };
 		E666A8231715E50E00EDBF95 /* as6502.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; name = as6502.1; path = as6502/as6502.1; sourceTree = "<group>"; };
+		E666A83F17169DB800EDBF95 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		E666A84017169DB800EDBF95 /* test.out */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.out; sourceTree = "<group>"; };
+		E666A84117169DB800EDBF95 /* test.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = test.s; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,11 +126,40 @@
 				E666A8121715D1C000EDBF95 /* main.c */,
 				E666A8131715D1C000EDBF95 /* Makefile */,
 				E666A8231715E50E00EDBF95 /* as6502.1 */,
+				E666A83E17169DB800EDBF95 /* tests */,
 			);
 			name = as6502;
 			sourceTree = "<group>";
 		};
+		E666A83E17169DB800EDBF95 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				E666A83F17169DB800EDBF95 /* Makefile */,
+				E666A84017169DB800EDBF95 /* test.out */,
+				E666A84117169DB800EDBF95 /* test.s */,
+			);
+			name = tests;
+			path = as6502/tests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		E666A83A17169D9A00EDBF95 /* as6502-test */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E666A83D17169D9A00EDBF95 /* Build configuration list for PBXLegacyTarget "as6502-test" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = as6502/tests;
+			dependencies = (
+			);
+			name = "as6502-test";
+			passBuildSettingsInEnvironment = 1;
+			productName = "as6502-test";
+		};
+/* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
 		E65212A51704B90D009CE919 /* v6502 */ = {
@@ -187,6 +219,7 @@
 			targets = (
 				E65212A51704B90D009CE919 /* v6502 */,
 				E666A81E1715E50E00EDBF95 /* as6502 */,
+				E666A83A17169D9A00EDBF95 /* as6502-test */,
 			);
 		};
 /* End PBXProject section */
@@ -308,6 +341,27 @@
 			};
 			name = Release;
 		};
+		E666A83B17169D9A00EDBF95 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E666A83C17169D9A00EDBF95 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -334,6 +388,15 @@
 			buildConfigurations = (
 				E666A8261715E50E00EDBF95 /* Debug */,
 				E666A8271715E50E00EDBF95 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E666A83D17169D9A00EDBF95 /* Build configuration list for PBXLegacyTarget "as6502-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E666A83B17169D9A00EDBF95 /* Debug */,
+				E666A83C17169D9A00EDBF95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
