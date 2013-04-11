@@ -559,14 +559,14 @@ static int _valueLengthInChars(const char *string) {
 }
 
 void v6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *string) {
-	char workString[6];
+	char workString[80];
 	uint16_t result;
 	int base;
 	
 	// Remove all whitespace, #'s, *'s, high ascii, and parenthesis, also, truncate at comma
 	int i = 0;
 	for (const char *cur = string; *cur; cur++) {
-		if (!isspace(*cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')' && *cur < 0x7F) {
+		if (!isspace(*cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')' && *cur < 0x7F && *cur != ';') {
 			workString[i++] = *cur;
 		}
 		if (*cur == ',') {
@@ -656,7 +656,7 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	int wide;
 
 	// Skip opcode and whitespace to find first argument
-	for (cur = string + 3; isspace(*cur) || *cur > 0x7F; cur++) {
+	for (cur = string + 3; *cur || *cur > 0x7F; cur++) {
 		if (*cur == '\0' || *cur == ';') {
 			return v6502_address_mode_implied;
 		}
@@ -727,11 +727,15 @@ void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v650
 		opcode = &_opcode;
 	}
 	
-	// Normalize text (all lowercase) and copy into a non-const string
-	// Perhaps this should collapse whitespace as well?
-	int i;
-	for(i = 0; line[i]; i++){
-		string[i] = tolower(line[i]);
+	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string
+	int i = 0;
+	int o = 0;
+	int charEncountered = NO;
+	for(; line[i]; i++){
+		if (!isspace(line[i]) || charEncountered) {
+			charEncountered = YES;
+			string[o++] = tolower(line[i]);
+		}
 	}
 	string[i] = '\0';
 	
@@ -743,7 +747,9 @@ void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v650
 	*opcode = v6502_opcodeForStringAndMode(string, *mode);
 	
 	// Determine operands
-	v6502_valueForString(high, low, NULL, string + 3);
+	if (v6502_instructionLengthForAddressMode(*mode) > 1) {
+		v6502_valueForString(high, low, NULL, string + 3);
+	}
 }
 
 void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
