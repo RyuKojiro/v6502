@@ -15,17 +15,100 @@
 
 #define YES		1
 #define NO		0
+#define MIN(a, b)	((a < b) ? a : b)
 
-#define kBadAddressModeErrorText		"Bad address mode for operation"
-#define kUnknownAddressModeErrorText	"Unknown address mode for operation"
+#define MAX_ERROR_LEN					255
 
-static v6502_opcode _opError(const char *op, const char *error) {
-	char e[80];
-	strncpy(e, error, 73);
-	strncat(e, " - ", 3);
-	strncat(e, op, 3);
+#define kBadAddressModeErrorText		"Address mode '"
+#define kForOperationErrorText			"' invalid for operation '"
+#define kUnknownAddressModeErrorText	"Unknown address mode for operation '"
+#define kInvalidOpcodeErrorText			"Invalid opcode '"
+
+static void _trimTrailingWhitespace(char *str) {
+	char *cur = str + strlen(str) - 1;
+	while(cur > str && isspace(*cur)) cur--;
+	
+	cur[1] = '\0';
+}
+
+static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
+	char e[MAX_ERROR_LEN];
+	char m[12];
+	int depth = 0;
+	
+	v6502_stringForAddressMode(m, mode);
+	strncpy(e, kBadAddressModeErrorText, MIN(sizeof(kBadAddressModeErrorText), MAX_ERROR_LEN - depth));
+	depth += sizeof(kBadAddressModeErrorText);
+	strncat(e, m, MIN(12, MAX_ERROR_LEN - depth));
+	depth += 12;
+	strncat(e, kForOperationErrorText, MIN(sizeof(kForOperationErrorText), MAX_ERROR_LEN - depth));
+	depth += sizeof(kForOperationErrorText);
+	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
+	_trimTrailingWhitespace(e);
+	strncat(e, "'", 2);
 	v6502_fault(e);
 	return v6502_opcode_nop;
+}
+
+static v6502_opcode _opError(const char *op, const char *error) {
+	char e[MAX_ERROR_LEN];	
+	int depth = 0;
+	
+	strncat(e, error, MIN(sizeof(error), MAX_ERROR_LEN - depth));
+	depth += sizeof(kForOperationErrorText);
+	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
+	_trimTrailingWhitespace(e);
+	strncat(e, "'", 2);
+	v6502_fault(e);
+	return v6502_opcode_nop;
+}
+
+void v6502_stringForAddressMode(char *out, v6502_address_mode mode) {
+	switch (mode) {
+		case v6502_address_mode_accumulator: {
+			strncpy(out, "accumulator", 12);
+		} return;
+		case v6502_address_mode_implied: {
+			strncpy(out, "implied", 8);
+		} return;
+		case v6502_address_mode_zeropage: {
+			strncpy(out, "zeropage", 9);
+		} return;
+		case v6502_address_mode_indirect: {
+			strncpy(out, "indirect", 9);
+		} return;
+		case v6502_address_mode_relative: {
+			strncpy(out, "relative", 9);
+		} return;
+		case v6502_address_mode_immediate: {
+			strncpy(out, "immediate", 10);
+		} return;
+		case v6502_address_mode_zeropage_x: {
+			strncpy(out, "zeropage+x", 11);
+		} return;
+		case v6502_address_mode_zeropage_y: {
+			strncpy(out, "zeropage+y", 11);
+		} return;
+		case v6502_address_mode_absolute: {
+			strncpy(out, "absolute", 9);
+		} return;
+		case v6502_address_mode_absolute_x: {
+			strncpy(out, "absolute+y", 11);
+		} return;
+		case v6502_address_mode_absolute_y: {
+			strncpy(out, "absolute+y", 11);
+		} return;
+		case v6502_address_mode_indirect_x: {
+			strncpy(out, "indirect+y", 11);
+		} return;
+		case v6502_address_mode_indirect_y: {
+			strncpy(out, "indirect+y", 11);
+		} return;
+		case v6502_address_mode_unknown:
+		default:
+			strncpy(out, "unknown", 8);
+			break;
+	}
 }
 
 v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
@@ -117,7 +200,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_bcc;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "bcs", 3)) {
@@ -125,7 +208,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_bcs;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "beq", 3)) {
@@ -133,7 +216,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_beq;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "bne", 3)) {
@@ -141,7 +224,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_bne;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "bmi", 3)) {
@@ -149,7 +232,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_bmi;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "bpl", 3)) {
@@ -157,7 +240,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_bpl;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "bvc", 3)) {
@@ -165,7 +248,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_bvc;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "bvs", 3)) {
@@ -173,7 +256,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return v6502_opcode_bvs;
 		}
 		else {
-			return _opError(string, kBadAddressModeErrorText);
+			return _addrModeError(string, mode);
 		}
 	}
 	
@@ -197,7 +280,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_adc_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "and", 3)) {
@@ -219,7 +302,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_and_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "asl", 3)) {
@@ -235,7 +318,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_asl_absx;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "cmp", 3)) {
@@ -257,7 +340,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_cmp_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "bit", 3)) {
@@ -267,7 +350,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute:
 				return v6502_opcode_bit_abs;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "cpx", 3)) {
@@ -279,7 +362,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute:
 				return v6502_opcode_cpx_abs;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "cpy", 3)) {
@@ -291,7 +374,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute:
 				return v6502_opcode_cpy_abs;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "dec", 3)) {
@@ -305,7 +388,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_dec_absx;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "eor", 3)) {
@@ -327,7 +410,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_eor_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "ora", 3)) {
@@ -349,7 +432,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_ora_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "inc", 3)) {
@@ -363,7 +446,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_inc_absx;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "jmp", 3)) {
@@ -373,7 +456,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect:
 				return v6502_opcode_jmp_ind;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "lda", 3)) {
@@ -395,7 +478,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_lda_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "ldx", 3)) {
@@ -411,7 +494,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_y:
 				return v6502_opcode_ldx_absy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "ldy", 3)) {
@@ -427,7 +510,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_ldy_absx;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "lsr", 3)) {
@@ -443,7 +526,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_lsr_absx;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "rol", 3)) {
@@ -459,7 +542,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_rol_absx;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "ror", 3)) {
@@ -475,7 +558,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_ror_absx;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "sbc", 3)) {
@@ -497,7 +580,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_sbc_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "sta", 3)) {
@@ -517,7 +600,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_sta_indy;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "stx", 3)) {
@@ -529,7 +612,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute:
 				return v6502_opcode_stx_abs;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 	if (!strncmp(string, "sty", 3)) {
@@ -541,14 +624,11 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			case v6502_address_mode_absolute:
 				return v6502_opcode_sty_abs;
 			default:
-				return _opError(string, kBadAddressModeErrorText);
+				return _addrModeError(string, mode);
 		}
 	}
 
-	char exception[50];
-	snprintf(exception, 50, "Unknown Opcode - %s", string);
-	v6502_fault(exception);
-	return v6502_opcode_nop;
+	return _opError(string, kInvalidOpcodeErrorText);
 }
 
 static int _valueLengthInChars(const char *string) {

@@ -34,6 +34,7 @@ typedef enum {
 const char *v6502_stringForInstruction(uint16_t instruction);
 v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode);
 v6502_address_mode v6502_addressModeForLine(const char *string);
+void v6502_stringForAddressMode(char *out, v6502_address_mode mode);
 
 // Line Based Parsing
 void v6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *string);
