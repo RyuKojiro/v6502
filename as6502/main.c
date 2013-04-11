@@ -14,7 +14,7 @@
 #define MAX_FILENAME_LEN	255
 
 static unsigned long currentLineNum;
-static char currentFileName[MAX_FILENAME_LEN];
+static const char *currentFileName;
 
 void v6502_fault(const char *error) {
 	fprintf(stderr, "%s:%lu: error: ", currentFileName, currentLineNum);
@@ -35,7 +35,7 @@ static void assembleFile(FILE *in, FILE *out) {
 	do {
 		currentLineNum++;
 		fgets(line, MAX_LINE_LEN, in);
-		
+
 		if (line[0] != ';' && line[0] != '\n') {
 			v6502_instructionForLine(&opcode, &low, &high, &mode, line, strlen(line));
 			addrLen = v6502_instructionLengthForAddressMode(mode);
@@ -68,6 +68,7 @@ static void outNameFromInName(char *out, int len, const char *in) {
 int main(int argc, const char * argv[]) {
 	FILE *in;
 	FILE *out;
+	char outName[MAX_FILENAME_LEN];
 	
 	if (argc < 2) {
 		assembleFile(stdin, stdout);
@@ -76,8 +77,9 @@ int main(int argc, const char * argv[]) {
 	
 	for (int i = 1; i < argc; i++) {
 		in = fopen(argv[i], "r");
-		outNameFromInName(currentFileName, MAX_FILENAME_LEN, argv[i]);
-		out = fopen(currentFileName, "w");
+		currentFileName = argv[i];
+		outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
+		out = fopen(outName, "w");
 		assembleFile(in, out);
 		fclose(in);
 		fclose(out);
