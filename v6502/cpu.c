@@ -11,7 +11,7 @@
 #include "cpu.h"
 #include "core.h"
 
-#define	BOTH_BYTES	(high << 8 | low)
+#define	BOTH_BYTES									(high << 8 | low)
 #define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (~v6502_cpu_status_carry | (a >> 7)); \
 													cpu->sr |= a >> 7;
 #define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry | a; \

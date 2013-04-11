@@ -690,11 +690,42 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	return -1;
 }
 
-void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
-	v6502_address_mode mode;
-	v6502_opcode opcode;
-	uint8_t low, high;
+int v6502_instructionLengthForAddressMode(v6502_address_mode mode) {
+	switch (mode) {
+		case v6502_address_mode_accumulator:
+		case v6502_address_mode_implied:
+			return 1;
+		case v6502_address_mode_immediate:
+		case v6502_address_mode_zeropage:
+		case v6502_address_mode_zeropage_x:
+		case v6502_address_mode_zeropage_y:
+		case v6502_address_mode_relative:
+			return 2;
+		case v6502_address_mode_absolute:
+		case v6502_address_mode_absolute_x:
+		case v6502_address_mode_absolute_y:
+		case v6502_address_mode_indirect:
+		case v6502_address_mode_indirect_x:
+		case v6502_address_mode_indirect_y:
+			return 3;
+		case v6502_address_mode_unknown:
+			return 0;
+	}
+}
+
+void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len) {
 	char string[len];
+
+	// Use stack if required storage is not passed in
+	if (!*mode) {
+		v6502_address_mode _mode;
+		mode = &_mode;
+	}
+
+	if (!*opcode) {
+		uint8_t _opcode;
+		opcode = &_opcode;
+	}
 	
 	// Normalize text (all lowercase) and copy into a non-const string
 	// Perhaps this should collapse whitespace as well?
@@ -705,15 +736,18 @@ void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	string[i] = '\0';
 	
 	// Determine address mode
-	mode = v6502_addressModeForLine(string);
+	*mode = v6502_addressModeForLine(string);
 	
 	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line
-	opcode = v6502_opcodeForStringAndMode(string, mode);
+	*opcode = v6502_opcodeForStringAndMode(string, *mode);
 	
 	// Determine operands
-	v6502_valueForString(&high, &low, NULL, string + 3);
-	
-	// Execute whole instruction
+	v6502_valueForString(high, low, NULL, string + 3);
+}
+
+void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
+	uint8_t opcode, low, high;
+	v6502_instructionForLine(&opcode, &low, &high, NULL, line, len);
 	v6502_execute(cpu, opcode, low, high);
 }
