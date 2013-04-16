@@ -62,7 +62,6 @@
 		E666A81F1715E50E00EDBF95 /* as6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = as6502; sourceTree = BUILT_PRODUCTS_DIR; };
 		E666A8231715E50E00EDBF95 /* as6502.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; name = as6502.1; path = as6502/as6502.1; sourceTree = "<group>"; };
 		E666A83F17169DB800EDBF95 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		E666A84017169DB800EDBF95 /* test.out */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.out; sourceTree = "<group>"; };
 		E666A84117169DB800EDBF95 /* test.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = test.s; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,7 +134,6 @@
 			isa = PBXGroup;
 			children = (
 				E666A83F17169DB800EDBF95 /* Makefile */,
-				E666A84017169DB800EDBF95 /* test.out */,
 				E666A84117169DB800EDBF95 /* test.s */,
 			);
 			name = tests;
