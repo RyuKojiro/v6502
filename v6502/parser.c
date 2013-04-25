@@ -17,6 +17,12 @@
 #define NO		0
 #define MIN(a, b)	((a < b) ? a : b)
 
+/* v6502_opcodeForStringAndMode is a huge function with very repetetive behavior.
+ * In order to alleviate a lot of linear calls to strncmp(), asmeq() was created.
+ * Much faster than strncmp, slower than a jump table?
+ */
+#define asmeq(a, b) ((a[0] == b[0] && a[1] == b[1] && a[2] == b[2]) ? YES : NO)
+
 #define MAX_ERROR_LEN					255
 
 #define kBadAddressModeErrorText		"Address mode '"
@@ -112,90 +118,94 @@ void v6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 }
 
 v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
+	if (strlen(string) < 3) {
+		return _opError(string, kInvalidOpcodeErrorText);
+	}
+	
 	// Single-byte Instructions
-	if (!strncmp(string, "brk", 3)) {
+	if (asmeq(string, "brk")) {
 		return v6502_opcode_brk;
 	}
-	if (!strncmp(string, "nop", 3)) {
+	if (asmeq(string, "nop")) {
 		return v6502_opcode_nop;
 	}
-	if (!strncmp(string, "clc", 3)) {
+	if (asmeq(string, "clc")) {
 		return v6502_opcode_clc;
 	}
-	if (!strncmp(string, "cld", 3)) {
+	if (asmeq(string, "cld")) {
 		return v6502_opcode_cld;
 	}
-	if (!strncmp(string, "cli", 3)) {
+	if (asmeq(string, "cli")) {
 		return v6502_opcode_cli;
 	}
-	if (!strncmp(string, "clv", 3)) {
+	if (asmeq(string, "clv")) {
 		return v6502_opcode_clv;
 	}
-	if (!strncmp(string, "sec", 3)) {
+	if (asmeq(string, "sec")) {
 		return v6502_opcode_sec;
 	}
-	if (!strncmp(string, "sed", 3)) {
+	if (asmeq(string, "sed")) {
 		return v6502_opcode_sed;
 	}
-	if (!strncmp(string, "sei", 3)) {
+	if (asmeq(string, "sei")) {
 		return v6502_opcode_sei;
 	}
-	if (!strncmp(string, "dex", 3)) {
+	if (asmeq(string, "dex")) {
 		return v6502_opcode_dex;
 	}
-	if (!strncmp(string, "dey", 3)) {
+	if (asmeq(string, "dey")) {
 		return v6502_opcode_dey;
 	}
-	if (!strncmp(string, "tax", 3)) {
+	if (asmeq(string, "tax")) {
 		return v6502_opcode_tax;
 	}
-	if (!strncmp(string, "tay", 3)) {
+	if (asmeq(string, "tay")) {
 		return v6502_opcode_tay;
 	}
-	if (!strncmp(string, "tsx", 3)) {
+	if (asmeq(string, "tsx")) {
 		return v6502_opcode_tsx;
 	}
-	if (!strncmp(string, "txa", 3)) {
+	if (asmeq(string, "txa")) {
 		return v6502_opcode_txa;
 	}
-	if (!strncmp(string, "txs", 3)) {
+	if (asmeq(string, "txs")) {
 		return v6502_opcode_txs;
 	}
-	if (!strncmp(string, "tya", 3)) {
+	if (asmeq(string, "tya")) {
 		return v6502_opcode_dey;
 	}
-	if (!strncmp(string, "inx", 3)) {
+	if (asmeq(string, "inx")) {
 		return v6502_opcode_inx;
 	}
-	if (!strncmp(string, "iny", 3)) {
+	if (asmeq(string, "iny")) {
 		return v6502_opcode_iny;
 	}
 	
 	// Stack Instructions
-	if (!strncmp(string, "jsr", 3)) {
+	if (asmeq(string, "jsr")) {
 		return v6502_opcode_jsr;
 	}
-	if (!strncmp(string, "rti", 3)) {
+	if (asmeq(string, "rti")) {
 		return v6502_opcode_rti;
 	}
-	if (!strncmp(string, "rts", 3)) {
+	if (asmeq(string, "rts")) {
 		return v6502_opcode_rts;
 	}
-	if (!strncmp(string, "pha", 3)) {
+	if (asmeq(string, "pha")) {
 		return v6502_opcode_pha;
 	}
-	if (!strncmp(string, "pla", 3)) {
+	if (asmeq(string, "pla")) {
 		return v6502_opcode_pla;
 	}
-	if (!strncmp(string, "php", 3)) {
+	if (asmeq(string, "php")) {
 		return v6502_opcode_php;
 	}
-	if (!strncmp(string, "plp", 3)) {
+	if (asmeq(string, "plp")) {
 		return v6502_opcode_plp;
 	}
 	
 	// Branching Instructions
-	if (!strncmp(string, "bcc", 3)) {
+	if (asmeq(string, "bcc")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bcc;
 		}
@@ -203,7 +213,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "bcs", 3)) {
+	if (asmeq(string, "bcs")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bcs;
 		}
@@ -211,7 +221,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "beq", 3)) {
+	if (asmeq(string, "beq")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_beq;
 		}
@@ -219,7 +229,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "bne", 3)) {
+	if (asmeq(string, "bne")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bne;
 		}
@@ -227,7 +237,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "bmi", 3)) {
+	if (asmeq(string, "bmi")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bmi;
 		}
@@ -235,7 +245,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "bpl", 3)) {
+	if (asmeq(string, "bpl")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bpl;
 		}
@@ -243,7 +253,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "bvc", 3)) {
+	if (asmeq(string, "bvc")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bvc;
 		}
@@ -251,7 +261,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 			return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "bvs", 3)) {
+	if (asmeq(string, "bvs")) {
 		if (mode == v6502_address_mode_relative) {
 			return v6502_opcode_bvs;
 		}
@@ -261,7 +271,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 	}
 	
 	// All of the rest
-	if (!strncmp(string, "adc", 3)) {
+	if (asmeq(string, "adc")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_adc_imm;
@@ -283,7 +293,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "and", 3)) {
+	if (asmeq(string, "and")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_and_imm;
@@ -305,7 +315,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "asl", 3)) {
+	if (asmeq(string, "asl")) {
 		switch (mode) {
 			case v6502_address_mode_accumulator:
 				return v6502_opcode_asl_acc;
@@ -321,7 +331,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "cmp", 3)) {
+	if (asmeq(string, "cmp")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_cmp_imm;
@@ -343,7 +353,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "bit", 3)) {
+	if (asmeq(string, "bit")) {
 		switch (mode) {
 			case v6502_address_mode_zeropage:
 				return v6502_opcode_bit_zpg;
@@ -353,7 +363,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "cpx", 3)) {
+	if (asmeq(string, "cpx")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_cpx_imm;
@@ -365,7 +375,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "cpy", 3)) {
+	if (asmeq(string, "cpy")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_cpy_imm;
@@ -377,7 +387,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "dec", 3)) {
+	if (asmeq(string, "dec")) {
 		switch (mode) {
 			case v6502_address_mode_zeropage:
 				return v6502_opcode_dec_zpg;
@@ -391,7 +401,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "eor", 3)) {
+	if (asmeq(string, "eor")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_eor_imm;
@@ -413,7 +423,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "ora", 3)) {
+	if (asmeq(string, "ora")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_ora_imm;
@@ -435,7 +445,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "inc", 3)) {
+	if (asmeq(string, "inc")) {
 		switch (mode) {
 			case v6502_address_mode_zeropage:
 				return v6502_opcode_inc_zpg;
@@ -449,7 +459,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "jmp", 3)) {
+	if (asmeq(string, "jmp")) {
 		switch (mode) {
 			case v6502_address_mode_absolute:
 				return v6502_opcode_jmp_abs;
@@ -459,7 +469,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "lda", 3)) {
+	if (asmeq(string, "lda")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_lda_imm;
@@ -481,7 +491,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "ldx", 3)) {
+	if (asmeq(string, "ldx")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_ldx_imm;
@@ -497,7 +507,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "ldy", 3)) {
+	if (asmeq(string, "ldy")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_ldy_imm;
@@ -513,7 +523,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "lsr", 3)) {
+	if (asmeq(string, "lsr")) {
 		switch (mode) {
 			case v6502_address_mode_accumulator:
 				return v6502_opcode_lsr_acc;
@@ -529,7 +539,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "rol", 3)) {
+	if (asmeq(string, "rol")) {
 		switch (mode) {
 			case v6502_address_mode_accumulator:
 				return v6502_opcode_rol_acc;
@@ -545,7 +555,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "ror", 3)) {
+	if (asmeq(string, "ror")) {
 		switch (mode) {
 			case v6502_address_mode_accumulator:
 				return v6502_opcode_ror_acc;
@@ -561,7 +571,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "sbc", 3)) {
+	if (asmeq(string, "sbc")) {
 		switch (mode) {
 			case v6502_address_mode_immediate:
 				return v6502_opcode_sbc_imm;
@@ -583,7 +593,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "sta", 3)) {
+	if (asmeq(string, "sta")) {
 		switch (mode) {
 			case v6502_address_mode_zeropage:
 				return v6502_opcode_sta_zpg;
@@ -603,7 +613,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "stx", 3)) {
+	if (asmeq(string, "stx")) {
 		switch (mode) {
 			case v6502_address_mode_zeropage:
 				return v6502_opcode_stx_zpg;
@@ -615,7 +625,7 @@ v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode
 				return _addrModeError(string, mode);
 		}
 	}
-	if (!strncmp(string, "sty", 3)) {
+	if (asmeq(string, "sty")) {
 		switch (mode) {
 			case v6502_address_mode_zeropage:
 				return v6502_opcode_sty_zpg;
