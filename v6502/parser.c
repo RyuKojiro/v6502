@@ -736,7 +736,7 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	int wide;
 
 	// Skip opcode and whitespace to find first argument
-	for (cur = string + 3; *cur || *cur > 0x7F; cur++) {
+	for (cur = string + 3; isspace(*cur); cur++) {
 		if (*cur == '\0' || *cur == ';') {
 			return v6502_address_mode_implied;
 		}
@@ -797,12 +797,12 @@ void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v650
 	char string[len];
 
 	// Use stack if required storage is not passed in
-	if (!*mode) {
+	if (!mode) {
 		v6502_address_mode _mode;
 		mode = &_mode;
 	}
 
-	if (!*opcode) {
+	if (!opcode) {
 		uint8_t _opcode;
 		opcode = &_opcode;
 	}
