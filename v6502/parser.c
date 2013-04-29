@@ -745,6 +745,11 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	const char *cur;
 	int wide;
 
+	if (!string) {
+		v6502_fault("Cannot determine address mode for null string");
+		return v6502_address_mode_unknown;
+	}
+	
 	// Skip opcode and whitespace to find first argument
 	for (cur = string + 3; isspace(*cur); cur++) {
 		if (*cur == '\0' || *cur == ';') {
