@@ -59,12 +59,12 @@ static void removeNewline(char *string) {
 
 static void getInput(char *command, int len) {
 	char buf[len];
-	int x;
+	unsigned int x;
 	char in;
 	
 	removeNewline(command);
 	
-	for (x = 0; x < len && (buf[x - 1] != '\n'); x++) {
+	for (x = 0; (x < len) && (buf[x - 1] != '\n'); x++) {
 		in = getch();
 		
 		if (in == '\357') {
