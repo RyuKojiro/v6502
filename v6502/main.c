@@ -99,8 +99,8 @@ int main(int argc, const char * argv[])
 	printf("Creating 1 virtual CPU…\n");
 	v6502_cpu *cpu = v6502_createCPU();
 	
-	printf("Allocating virtual memory of size 2k…\n");
-	cpu->memory = v6502_createMemory(2048);
+	printf("Allocating virtual memory of size 32k…\n");
+	cpu->memory = v6502_createMemory(0xFFFF);
 	
 	printf("Resetting CPU and dropping to interpreter…\n");
 	v6502_reset(cpu);
