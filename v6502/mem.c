@@ -29,7 +29,7 @@
 #define kMemoryStartCeiling				0xFFFF
 
 // Memory Blob Sizes
-#define kMemorySizeWorkMemory			0x8000
+#define kMemorySizeWorkMemory			0x0800
 #define kMemorySizePPURegisters			0x0008
 
 #pragma mark -
