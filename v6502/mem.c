@@ -11,8 +11,86 @@
 #include "mem.h"
 #include "core.h"
 
+// Error Text
+#define kUnableToMapMemoryErrorText		"Unable to map memory address"
+#define kMemoryStructErrorText			"Internal memory structure inconsitency"
+#define kMemoryBoundsErrorText			"Memory access out of bounds"
+
+// Memory Boundaries
+#define kMemoryStartWorkMemory			0x0000
+#define kMemoryStartPPURegisters		0x2000
+#define kMemoryStartAPURegisters		0x4000
+#define kMemoryStartExpansionRom		0x4020
+#define kMemoryStartSRAM				0x6000
+#define kMemoryStartPRGROM				0x8000
+#define kMemoryStartCeiling				0xFFFF
+
+// Memory Blob Sizes
+
 #pragma mark -
 #pragma mark Memory Lifecycle
+
+/* This is actually much more compilcated than dereferencing an offset, in fact,
+ * it is actually creating a reference to it. However, it is creating a mapped
+ * pointer to whatever it is supposed to be pointing to. This is NOT safe for
+ * larger than single byte access.
+ */
+uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
+	// Safety
+	if (!memory || !memory->bytes) {
+		v6502_fault(kMemoryStructErrorText);
+		return NULL;
+	}
+	if (offset > memory->size) {
+		v6502_fault(kMemoryBoundsErrorText);
+		return NULL;
+	}
+	
+	// Work memory, 0x07FF + 3 mirrors = 0x1FFF
+	if (offset < kMemoryStartPPURegisters) {
+		offset %= 0x07FF;
+		
+		return &memory->bytes[offset];
+	}
+	
+	// PPU Registers
+	if (offset >= kMemoryStartPPURegisters && offset < kMemoryStartAPURegisters) {
+		offset %= 8;
+		offset += kMemoryStartPPURegisters;
+		
+		return &memory->bytes[offset];
+	}
+
+	// FIXME: Everything past here, is it mapped or just in memory?
+	// APU registers
+	if (offset >= kMemoryStartAPURegisters && offset < kMemoryStartExpansionRom) {
+		return &memory->bytes[offset];
+	}
+
+	// Expansion ROM (Cartridge)
+	if (offset >= kMemoryStartExpansionRom && offset < kMemoryStartSRAM) {
+		return &memory->bytes[offset];
+	}
+	
+	// SRAM
+	if (offset >= kMemoryStartSRAM && offset < kMemoryStartPRGROM) {
+		return &memory->bytes[offset];
+	}
+
+	// PRG ROM
+	if (offset >= kMemoryStartPRGROM && offset < kMemoryStartCeiling) {
+		return &memory->bytes[offset];
+	}
+	
+	v6502_fault(kUnableToMapMemoryErrorText);
+	return NULL;
+}
+
+void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size) {
+	for (uint16_t i = 0; i < size; i++) {
+		*v6502_map(memory, kMemoryStartExpansionRom + i) = rom[i];
+	}
+}
 
 v6502_memory *v6502_createMemory(uint16_t size) {
 	// Allocate Memory Struct

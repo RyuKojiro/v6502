@@ -20,6 +20,10 @@ typedef struct {
 // Memory Lifecycle
 v6502_memory *v6502_createMemory(uint16_t size);
 void v6502_destroyMemory(v6502_memory *memory);
+void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size);
+
+// Memory Access
+uint8_t *v6502_map(v6502_memory *memory, uint16_t offset);
 signed int v6502_signedValueOfByte(uint8_t byte);
 
 #endif
