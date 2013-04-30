@@ -26,6 +26,8 @@
 #define kMemoryStartCeiling				0xFFFF
 
 // Memory Blob Sizes
+#define kMemorySizeWorkMemory			0x0800
+#define kMemorySizePPURegisters			0x0008
 
 #pragma mark -
 #pragma mark Memory Lifecycle
@@ -48,14 +50,14 @@ uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 	
 	// Work memory, 0x07FF + 3 mirrors = 0x1FFF
 	if (offset < kMemoryStartPPURegisters) {
-		offset %= 0x07FF;
+		offset %= kMemorySizeWorkMemory;
 		
 		return &memory->bytes[offset];
 	}
 	
 	// PPU Registers
 	if (offset >= kMemoryStartPPURegisters && offset < kMemoryStartAPURegisters) {
-		offset %= 8;
+		offset %= kMemorySizePPURegisters;
 		offset += kMemoryStartPPURegisters;
 		
 		return &memory->bytes[offset];
