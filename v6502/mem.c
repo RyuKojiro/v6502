@@ -12,6 +12,9 @@
 #include "core.h"
 
 // Error Text
+#define kMemoryStructAllocErrorText		"Internal memory structure allocation"
+#define kMemoryBlobAllocErrorText		"Memory blob allocation"
+
 #define kUnableToMapMemoryErrorText		"Unable to map memory address"
 #define kMemoryStructErrorText			"Internal memory structure inconsitency"
 #define kMemoryBoundsErrorText			"Memory access out of bounds"
@@ -26,7 +29,7 @@
 #define kMemoryStartCeiling				0xFFFF
 
 // Memory Blob Sizes
-#define kMemorySizeWorkMemory			0x0800
+#define kMemorySizeWorkMemory			0x8000
 #define kMemorySizePPURegisters			0x0008
 
 #pragma mark -
@@ -98,7 +101,7 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	// Allocate Memory Struct
 	v6502_memory *memory = malloc(sizeof(v6502_memory));
 	if (!memory) {
-		v6502_fault("VM Allocation - Internal Structure");
+		v6502_fault(kMemoryStructAllocErrorText);
 		return NULL;
 	}
 	
@@ -106,7 +109,7 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	memory->bytes = malloc(size);
 	if (!memory->bytes) {
 		free(memory);
-		v6502_fault("VM Allocation - Blob");
+		v6502_fault(kMemoryBlobAllocErrorText);
 		return NULL;
 	}
 	memory->size = size;
