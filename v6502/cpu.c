@@ -306,7 +306,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
 		} return;
 		case v6502_opcode_adc_indx: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x));
+			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
 		} return;
 		case v6502_opcode_adc_indy: {
 			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
@@ -332,7 +332,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceAND(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
 		} return;
 		case v6502_opcode_and_indx: {
-			_executeInPlaceAND(cpu, *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x));
+			_executeInPlaceAND(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
 		} return;
 		case v6502_opcode_and_indy: {
 			_executeInPlaceAND(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
@@ -383,7 +383,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceCMP(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
 		} return;
 		case v6502_opcode_cmp_indx: {
-			_executeInPlaceCMP(cpu, *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x));
+			_executeInPlaceCMP(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
 		} return;
 		case v6502_opcode_cmp_indy: {
 			_executeInPlaceCMP(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
@@ -445,7 +445,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->ac ^= *v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
 		} return;
 		case v6502_opcode_eor_indx: {
-			cpu->ac ^= *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x);
+			cpu->ac ^= *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x);
 		} return;
 		case v6502_opcode_eor_indy: {
 			cpu->ac ^= *v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
@@ -493,7 +493,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
 		} return;
 		case v6502_opcode_ora_indx: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x));
+			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
 		} return;
 		case v6502_opcode_ora_indy: {
 			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
@@ -519,10 +519,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->ac = *v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
 		} return;
 		case v6502_opcode_lda_indx: { // ???: Not sure about these indirect operations
-			cpu->ac = *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x);
+			cpu->ac = *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x);
 		} return;
 		case v6502_opcode_lda_indy: {
-			cpu->ac = *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES + cpu->y]);
+			cpu->ac = *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
 		} return;
 		
 		// LDX
@@ -630,7 +630,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
 		} return;
 		case v6502_opcode_sbc_indx: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x));
+			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
 		} return;
 		case v6502_opcode_sbc_indy: {
 			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
@@ -653,10 +653,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			*v6502_map(cpu->memory, BOTH_BYTES + cpu->y) = cpu->ac;
 		} return;
 		case v6502_opcode_sta_indx: { // ???: Not sure about these indirect operations
-			*v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES] + cpu->x) = cpu->ac;
+			*v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x) = cpu->ac;
 		} return;
 		case v6502_opcode_sta_indy: {
-			*v6502_map(cpu->memory, cpu->memory->bytes[BOTH_BYTES + cpu->y]) = cpu->ac;
+			*v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y)) = cpu->ac;
 		} return;
 			
 		// STX
