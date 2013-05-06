@@ -22,19 +22,20 @@ typedef struct {
 typedef struct {
 	char *name;
 	uint16_t address;
+	uint8_t init;
 } as6502_var;
 
 typedef struct {
 	int labelCount;
-	as6502_label *labels;
+	as6502_label **labels;
 	int varCount;
-	as6502_var *vars;
+	as6502_var **vars;
 } as6502_symbol_table;
 
 // Address Table Lifecycle Functions
 as6502_symbol_table *as6502_createLabelTable();
 void as6502_destroySymbolTable(as6502_symbol_table *table);
-void as6502_populatSymbolTableWithFile(as6502_symbol_table *table, FILE *file);
+void as6502_populateSymbolTableWithFile(as6502_symbol_table *table, FILE *file);
 void as6502_printSymbolTable(as6502_symbol_table *table);
 
 // Symbol Table Accessors
