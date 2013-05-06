@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 #include "parser.h"
+#include "labels.h"
 
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
@@ -20,6 +21,13 @@ void v6502_fault(const char *error) {
 	fprintf(stderr, "%s:%lu: error: ", currentFileName, currentLineNum);
 	fprintf(stderr, "%s", error);
 	if (error[strlen(error)] != '\n') {
+		fprintf(stderr, "\n");
+	}
+}
+
+void as6502_warn(const char *warning) {
+	fprintf(stderr, "%s:%lu: warning: %s", currentFileName, currentLineNum, warning);
+	if (warning[strlen(warning)] != '\n') {
 		fprintf(stderr, "\n");
 	}
 }
@@ -71,6 +79,11 @@ int main(int argc, const char * argv[]) {
 	char outName[MAX_FILENAME_LEN];
 	
 	if (argc < 2) {
+		currentFileName = "stdin";
+		currentLineNum = 0;
+		
+		as6502_warn("Assembling from stdin does not support labels");
+		
 		assembleFile(stdin, stdout);
 		return 0;
 	}
