@@ -14,8 +14,6 @@
 #include "parser.h"
 #include "core.h"
 
-#define YES		1
-#define NO		0
 #define MIN(a, b)	((a < b) ? a : b)
 
 /* v6502_opcodeForStringAndMode is a huge function with very repetetive behavior.
