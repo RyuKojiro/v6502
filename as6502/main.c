@@ -10,7 +10,8 @@
 
 #include "linectl.h"
 #include "parser.h"
-#include "labels.h"
+#include "symbols.h"
+#include "object.h"
 
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
