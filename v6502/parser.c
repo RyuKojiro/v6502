@@ -803,7 +803,7 @@ int v6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 }
 
 void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len) {
-	char string[len];
+	char *string = malloc(len);
 
 	// Use stack if required storage is not passed in
 	if (!mode) {
@@ -816,17 +816,17 @@ void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v650
 		opcode = &_opcode;
 	}
 	
-	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string
+	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string, all in one shot (mangling text?)
 	int i = 0;
 	int o = 0;
 	int charEncountered = NO;
-	for(; line[i]; i++){
+	for(; line[i] && i < len; i++){
 		if (!isspace(line[i]) || charEncountered) {
 			charEncountered = YES;
 			string[o++] = tolower(line[i]);
 		}
 	}
-	string[i] = '\0';
+	string[o] = '\0';
 	
 	// Determine address mode
 	*mode = v6502_addressModeForLine(string);
@@ -839,6 +839,8 @@ void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v650
 	if (v6502_instructionLengthForAddressMode(*mode) > 1) {
 		v6502_valueForString(high, low, NULL, string + 3);
 	}
+	
+	free(string);
 }
 
 void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
