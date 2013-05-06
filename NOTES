@@ -8,6 +8,16 @@ only cares about instruction size, and then the second pass actually begins
 converting the assembly to machine code, while dereferencing the labels along
 the way via the pre-built table.
 
+DESIGN:
+
+Pass 1:
+	Handling of dot-prefix lines. Allocation of .data blocks, .words, .org
+
+Pass 2:
+	Reference calculation; conversion of variable names and labels to addresses.
+
+Pass 3: (Final) (Only pass when using stdin)
+	Conversion of instructions to machine code.
 
 TODO:
 
