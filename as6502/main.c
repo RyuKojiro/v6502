@@ -40,12 +40,16 @@ static void assembleFile(FILE *in, FILE *out) {
 	v6502_address_mode mode;
 	uint16_t address = 0;
 	int addrLen;
-	currentLineNum = 0;
-
+	currentLineNum = 1;
+	int newline;
+	
 	do {
-		currentLineNum++;
-		fgets(line, MAX_LINE_LEN, in);
-
+		newline = NO;
+		fgets(line, MAX_LINE_LEN, in);		
+		if (strchr(line, '\n')) {
+			newline = YES;
+		}
+		
 		// Truncate at comments
 		trimgreedytailchard(line, ';');
 		
@@ -69,6 +73,11 @@ static void assembleFile(FILE *in, FILE *out) {
 					fwrite(&high , 1, 1, out);
 			}
 			address += addrLen;
+		}
+		
+		// Check if we are on the next line yet
+		if (newline) {
+			currentLineNum++;
 		}
 	} while (!feof(in));
 }
