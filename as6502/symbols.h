@@ -1,13 +1,13 @@
 //
-//  labels.h
+//  symbols.h
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/05/05.
 //  Copyright (c) 平成25年 Hello-Channel, LLC. All rights reserved.
 //
 
-#ifndef as6502_labels_h
-#define as6502_labels_h
+#ifndef as6502_symbols_h
+#define as6502_symbols_h
 
 #include <stdint.h>
 #include <stdio.h>
