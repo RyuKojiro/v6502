@@ -1,7 +1,7 @@
 CC=		clang
 PROG=	as6502
 SRCS=	main.c labels.c\
-		../v6502/parser.c ../v6502/cpu.c ../v6502/mem.c
+		../v6502/parser.c ../v6502/cpu.c ../v6502/mem.c ../v6502/linectl.c
 #LIB=	-lncurses
 OBJS=	$(patsubst %.c, %.o, $(SRCS))
 CFLAGS=	-Wall

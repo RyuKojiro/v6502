@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+#include "linectl.h"
 #include "parser.h"
 #include "labels.h"
 
@@ -34,6 +35,7 @@ void as6502_warn(const char *warning) {
 
 static void assembleFile(FILE *in, FILE *out) {
 	char line[MAX_LINE_LEN];
+	char *trimmedLine;
 	uint8_t opcode, low, high;
 	v6502_address_mode mode;
 	uint16_t address = 0;
@@ -44,8 +46,18 @@ static void assembleFile(FILE *in, FILE *out) {
 		currentLineNum++;
 		fgets(line, MAX_LINE_LEN, in);
 
-		if (line[0] != ';' && line[0] != '\n') {
-			v6502_instructionForLine(&opcode, &low, &high, &mode, line, strlen(line));
+		// Truncate at comments
+		trimgreedytailchard(line, ';');
+		
+		// Trim trailing whitespace
+		trimtaild(line);
+		
+		// Trim leading whitespace
+		trimmedLine = trimhead(line);
+				
+		// Assemble whatever is left
+		if (strlen(trimmedLine)) {
+			v6502_instructionForLine(&opcode, &low, &high, &mode, trimmedLine, strlen(trimmedLine));
 			addrLen = v6502_instructionLengthForAddressMode(mode);
 			
 			switch (addrLen) {
