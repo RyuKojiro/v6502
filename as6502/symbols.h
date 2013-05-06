@@ -15,11 +15,13 @@
 // Types
 
 typedef struct {
+	int line;
 	char *name;
 	uint16_t address;
 } as6502_label;
 
 typedef struct {
+	int line;
 	char *name;
 	uint16_t address;
 	uint8_t init;
@@ -39,9 +41,9 @@ void as6502_populateSymbolTableWithFile(as6502_symbol_table *table, FILE *file);
 void as6502_printSymbolTable(as6502_symbol_table *table);
 
 // Symbol Table Accessors
-void as6502_addLabelToTable(as6502_symbol_table *table, const char name, uint16_t address);
-uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char name);
-void as6502_addVarToTable(as6502_symbol_table *table, const char name, uint16_t address);
-uint16_t as6502_addressForVar(as6502_symbol_table *table, const char name);
+void as6502_addLabelToTable(as6502_symbol_table *table, int line, const char *name, uint16_t address);
+uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name);
+void as6502_addVarToTable(as6502_symbol_table *table, int line, const char *name, uint16_t address);
+uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name);
 
 #endif
