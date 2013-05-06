@@ -9,6 +9,9 @@
 #ifndef v6502_labels_h
 #define v6502_labels_h
 
+#include <stdint.h>
+#include <stdio.h>
+
 // Types
 typedef struct {
 	int size;
