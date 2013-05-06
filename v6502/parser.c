@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "linectl.h"
 #include "parser.h"
 #include "core.h"
 
@@ -30,13 +31,6 @@
 #define kUnknownAddressModeErrorText	"Unknown address mode for operation '"
 #define kInvalidOpcodeErrorText			"Invalid opcode '"
 
-static void _trimTrailingWhitespace(char *str) {
-	char *cur = str + strlen(str) - 1;
-	while(cur > str && isspace(*cur)) cur--;
-	
-	cur[1] = '\0';
-}
-
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char e[MAX_ERROR_LEN];
 	char m[12];
@@ -50,7 +44,7 @@ static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	strncat(e, kForOperationErrorText, MIN(sizeof(kForOperationErrorText), MAX_ERROR_LEN - depth));
 	depth += sizeof(kForOperationErrorText);
 	strncat(e, op, MIN(strlen(op) + 1, MAX_ERROR_LEN - depth));
-	_trimTrailingWhitespace(e);
+	trimtaild(e);
 	strncat(e, "'", 2);
 	v6502_fault(e);
 	return v6502_opcode_nop;
@@ -63,7 +57,7 @@ static v6502_opcode _opError(const char *op, const char *error) {
 	strncpy(e, error, MIN(strlen(error) + 1, MAX_ERROR_LEN - depth));
 	depth += sizeof(kForOperationErrorText);
 	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
-	_trimTrailingWhitespace(e);
+	trimtaild(e);
 	strncat(e, "'", 2);
 	v6502_fault(e);
 	return v6502_opcode_nop;
