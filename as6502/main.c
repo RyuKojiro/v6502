@@ -43,6 +43,8 @@ static void assembleFile(FILE *in, FILE *out) {
 	int addrLen;
 	currentLineNum = 1;
 	int newline;
+	as6502_symbol_table *table = as6502_createSymbolTable();
+	as6502_object *obj = as6502_createObject();
 	
 	do {
 		newline = NO;
@@ -57,14 +59,18 @@ static void assembleFile(FILE *in, FILE *out) {
 		// Trim trailing whitespace
 		trimtaild(line);
 		
+		// Check for symbols
+		as6502_addSymbolForLine(table, line);
+		
 		// Trim leading whitespace
 		trimmedLine = trimhead(line);
-				
+		
 		// Assemble whatever is left
 		if (strlen(trimmedLine)) {
 			v6502_instructionForLine(&opcode, &low, &high, &mode, trimmedLine, strlen(trimmedLine));
 			addrLen = v6502_instructionLengthForAddressMode(mode);
 			
+			// TODO: Write machine code to object, not directly to file
 			switch (addrLen) {
 				case 1:
 					fwrite(&opcode , 1, 1, out);
@@ -81,6 +87,11 @@ static void assembleFile(FILE *in, FILE *out) {
 			currentLineNum++;
 		}
 	} while (!feof(in));
+	
+	as6502_writeObjectToFile(obj, out);
+	
+	as6502_destroyObject(obj);
+	as6502_destroySymbolTable(table);
 }
 
 static void outNameFromInName(char *out, int len, const char *in) {
@@ -90,8 +101,6 @@ static void outNameFromInName(char *out, int len, const char *in) {
 	}
 	out[c] = '.';
 	out[++c] = 'o';
-	out[++c] = 'u';
-	out[++c] = 't';
 	out[++c] = '\0';
 }
 
