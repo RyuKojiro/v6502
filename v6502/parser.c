@@ -28,19 +28,26 @@
 #define kForOperationErrorText			"' invalid for operation '"
 #define kUnknownAddressModeErrorText	"Unknown address mode for operation '"
 #define kInvalidOpcodeErrorText			"Invalid opcode '"
+#define kUnknownSymbolErrorText			"Unknown symbol for operation '"
 
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char e[MAX_ERROR_LEN];
 	char m[12];
 	int depth = 0;
 	
-	v6502_stringForAddressMode(m, mode);
-	strncpy(e, kBadAddressModeErrorText, MIN(sizeof(kBadAddressModeErrorText), MAX_ERROR_LEN - depth));
-	depth += sizeof(kBadAddressModeErrorText);
-	strncat(e, m, MIN(12, MAX_ERROR_LEN - depth));
-	depth += 12;
-	strncat(e, kForOperationErrorText, MIN(sizeof(kForOperationErrorText), MAX_ERROR_LEN - depth));
-	depth += sizeof(kForOperationErrorText);
+	if (mode == v6502_address_mode_symbol) {
+		strncpy(e, kUnknownSymbolErrorText, MIN(sizeof(kUnknownSymbolErrorText), MAX_ERROR_LEN - depth));
+		depth += sizeof(kUnknownSymbolErrorText);
+	}
+	else {
+		v6502_stringForAddressMode(m, mode);
+		strncpy(e, kBadAddressModeErrorText, MIN(sizeof(kBadAddressModeErrorText), MAX_ERROR_LEN - depth));
+		depth += sizeof(kBadAddressModeErrorText);
+		strncat(e, m, MIN(12, MAX_ERROR_LEN - depth));
+		depth += 12;
+		strncat(e, kForOperationErrorText, MIN(sizeof(kForOperationErrorText), MAX_ERROR_LEN - depth));
+		depth += sizeof(kForOperationErrorText);
+	}
 	strncat(e, op, MIN(strlen(op) + 1, MAX_ERROR_LEN - depth));
 	trimtaild(e);
 	strncat(e, "'", 2);
@@ -717,6 +724,15 @@ static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode,
 	return mode;
 }
 
+static int _isDigit(char c) {
+	if ((c > 'a' && c < 'f') ||
+		(c > 'A' && c < 'F') ||
+		(c < '0' && c > '9')) {
+		return YES;
+	}
+	return NO;
+}
+
 v6502_address_mode v6502_addressModeForLine(const char *string) {
 	/* 
 	 √ OPC			....	implied
@@ -751,8 +767,14 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 	
 	// Check first character of argument, and byte length
 	switch (*cur) {
-		case 'a': // Accumulator (normalized)
-			return v6502_address_mode_accumulator;
+		case 'a': { // Accumulator (normalized)
+			if (isalnum(*(cur + 1))) {
+				return v6502_address_mode_symbol;
+			}
+			else {
+				return v6502_address_mode_accumulator;
+			}
+		}
 		case '#': // Immediate
 			return v6502_address_mode_immediate;
 		case '*': { // Zeropage
@@ -768,7 +790,12 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
 			}
 			else {
-				return v6502_address_mode_relative;
+				if (_isDigit(*cur) && _isDigit(*(cur+1))) {
+					return v6502_address_mode_relative;
+				}
+				else {
+					return v6502_address_mode_symbol;
+				}
 			}
 		} break;
 	}

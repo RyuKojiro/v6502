@@ -17,6 +17,7 @@
 #define NO		0
 
 typedef enum {
+	v6502_address_mode_symbol = -2,
 	v6502_address_mode_unknown = -1,
 	v6502_address_mode_implied = 0,		// Or none
 	v6502_address_mode_accumulator = 1,
