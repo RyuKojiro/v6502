@@ -11,12 +11,10 @@ the way via the pre-built table.
 DESIGN:
 
 Pass 1:
-	Handling of dot-prefix lines. Allocation of .data blocks, .words, .org
-
-Pass 2:
 	Reference calculation; conversion of variable names and labels to addresses.
 
-Pass 3: (Final) (Only pass when using stdin)
+Pass 2: (Final) (Only pass when using stdin)
+	Handling of dot-prefix lines. Allocation of .data blocks, .words, .org.
 	Conversion of instructions to machine code.
 
 TODO:

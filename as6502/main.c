@@ -46,6 +46,24 @@ static void assembleFile(FILE *in, FILE *out) {
 	as6502_symbol_table *table = as6502_createSymbolTable();
 	as6502_object *obj = as6502_createObject();
 	
+	// First pass, build symbol table
+	do {
+		newline = NO;
+		fgets(line, MAX_LINE_LEN, in);
+		if (strchr(line, '\n')) {
+			newline = YES;
+		}
+		
+		as6502_addSymbolForLine(table, line);
+		
+		// Check if we are on the next line yet
+		if (newline) {
+			currentLineNum++;
+		}
+	} while (!feof(in));
+	rewind(in);
+	
+	// Final pass, parse file to bitcode
 	do {
 		newline = NO;
 		fgets(line, MAX_LINE_LEN, in);		
@@ -59,8 +77,8 @@ static void assembleFile(FILE *in, FILE *out) {
 		// Trim trailing whitespace
 		trimtaild(line);
 		
-		// Check for symbols
-		as6502_addSymbolForLine(table, line);
+		// Convert symbols to hard addresses from symbol table
+		as6502_desymbolicateLine(table, line);
 		
 		// Trim leading whitespace
 		trimmedLine = trimhead(line);
@@ -113,7 +131,7 @@ int main(int argc, const char * argv[]) {
 		currentFileName = "stdin";
 		currentLineNum = 0;
 		
-		as6502_warn("Assembling from stdin does not support labels");
+		as6502_warn("Assembling from stdin does not support symbols");
 		
 		assembleFile(stdin, stdout);
 		return 0;

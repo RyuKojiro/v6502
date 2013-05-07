@@ -41,10 +41,6 @@ void as6502_destroySymbolTable(as6502_symbol_table *table) {
 	free(table);
 }
 
-void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line) {
-	
-}
-
 void as6502_printSymbolTable(as6502_symbol_table *table) {
 	printf("Symbol table %p = {\n", table);
 	for (int i = 0; i < table->varCount; i++) {
@@ -123,3 +119,14 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
 	
 	return 0;
 }
+
+// Easy Symbol Table Access
+
+void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line) {
+	
+}
+
+void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
+	
+}
+
