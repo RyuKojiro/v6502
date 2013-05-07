@@ -10,7 +10,6 @@
 #define as6502_symbols_h
 
 #include <stdint.h>
-#include <stdio.h>
 
 // Types
 
@@ -35,12 +34,12 @@ typedef struct {
 } as6502_symbol_table;
 
 // Address Table Lifecycle Functions
-as6502_symbol_table *as6502_createLabelTable();
+as6502_symbol_table *as6502_createSymbolTable();
 void as6502_destroySymbolTable(as6502_symbol_table *table);
-void as6502_populateSymbolTableWithFile(as6502_symbol_table *table, FILE *file);
 void as6502_printSymbolTable(as6502_symbol_table *table);
 
 // Symbol Table Accessors
+void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line);
 void as6502_addLabelToTable(as6502_symbol_table *table, int line, const char *name, uint16_t address);
 uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name);
 void as6502_addVarToTable(as6502_symbol_table *table, int line, const char *name, uint16_t address);

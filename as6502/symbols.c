@@ -8,12 +8,13 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h> // as6502_printSymbolTable
 
 #include "symbols.h"
 #include "common.h"
 
 // Address Table Lifecycle Functions
-as6502_symbol_table *as6502_createLabelTable() {
+as6502_symbol_table *as6502_createSymbolTable() {
 	as6502_symbol_table *table = malloc(sizeof(as6502_symbol_table));
 	
 	table->labelCount = 0;
@@ -40,8 +41,8 @@ void as6502_destroySymbolTable(as6502_symbol_table *table) {
 	free(table);
 }
 
-void as6502_populateSymbolTableWithFile(as6502_symbol_table *table, FILE *file) {
-	// TODO: automatic population
+void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line) {
+	
 }
 
 void as6502_printSymbolTable(as6502_symbol_table *table) {
