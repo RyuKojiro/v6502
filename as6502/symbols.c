@@ -12,6 +12,7 @@
 
 #include "symbols.h"
 #include "common.h"
+#include "linectl.h"
 
 // Address Table Lifecycle Functions
 as6502_symbol_table *as6502_createSymbolTable() {
@@ -53,7 +54,7 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 }
 
 // Symbol Table Accessors
-void as6502_addLabelToTable(as6502_symbol_table *table, int line, const char *name, uint16_t address) {
+void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
 	as6502_label *label = malloc(sizeof(as6502_label));
 	if (!label) {
 		die("label malloc in as6502_addLabelToTable");
@@ -87,7 +88,7 @@ uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
 }
 
 
-void as6502_addVarToTable(as6502_symbol_table *table, int line, const char *name, uint16_t address) {
+void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
 	as6502_var *var = malloc(sizeof(as6502_var));
 	if (!var) {
 		die("var malloc in as6502_addVarToTable");
@@ -122,8 +123,21 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
 
 // Easy Symbol Table Access
 
-void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line) {
+void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset) {
+	size_t len = strlen(line) + 1;
+	char *symbol = malloc(len);
+	strncpy(symbol, line, len);
+	trimgreedytaild(symbol); // symbol will only be the first phrase
 	
+	if (strchr(line, '=')) { // Variable
+		// TODO: allocate variable addresses
+		as6502_addVarToTable(table, lineNumber, symbol, 0);
+	}
+	else { // Label
+		as6502_addLabelToTable(table, lineNumber, symbol, offset);
+	}
+	
+	free(symbol);
 }
 
 void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {

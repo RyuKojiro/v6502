@@ -32,6 +32,17 @@ void trimtailchard(char *str, char token) {
 	}
 }
 
+void trimgreedytaild(char *str) {
+	while (*str) {
+		if (isspace(*str)) {
+			*str = '\0';
+			return;
+		}
+		
+		str++;
+	}
+}
+
 void trimgreedytailchard(char *str, char token) {
 	while (*str) {
 		if (*str == token) {
@@ -45,6 +56,14 @@ void trimgreedytailchard(char *str, char token) {
 
 char *trimhead(char *str) {
 	while (isspace(*str)) {
+		str++;
+	}
+	
+	return str;
+}
+
+char *trimheadchar(char *str, char token) {
+	while (*str == token) {
 		str++;
 	}
 	

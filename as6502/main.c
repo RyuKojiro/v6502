@@ -7,6 +7,7 @@
 //
 
 #include <stdio.h>
+#include <ctype.h>
 
 #include "linectl.h"
 #include "parser.h"
@@ -54,14 +55,26 @@ static void assembleFile(FILE *in, FILE *out) {
 			newline = YES;
 		}
 		
-		as6502_addSymbolForLine(table, line);
+		// Check for symbols
+		trimmedLine = trimheadchar(line, '\n');
+		if (isalnum(trimmedLine[0])) {
+			as6502_addSymbolForLine(table, line, currentLineNum, address);
+		}
+		
+		// Increment offset
+		mode = v6502_addressModeForLine(line);
+		address += v6502_instructionLengthForAddressMode(mode);
 		
 		// Check if we are on the next line yet
 		if (newline) {
 			currentLineNum++;
 		}
 	} while (!feof(in));
+	
+	// Reset for pass 2
 	rewind(in);
+	address = 0;
+	currentLineNum = 1;
 	
 	// Final pass, parse file to bitcode
 	do {

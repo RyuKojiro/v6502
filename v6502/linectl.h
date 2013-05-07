@@ -16,9 +16,15 @@ void trimtaild(char *str);
 void trimtailchard(char *str, char token);
 
 // Destructively tail trim at first encounter of token char from the head end
+void trimgreedytaild(char *str);
+
+// Destructively tail trim at first encounter of token char from the head end
 void trimgreedytailchard(char *str, char token);
 
 // Safely trim leading whitespace by pushing pointer
 char *trimhead(char *str);
+
+// Safely trim head til first encounter of token char from the head end
+char *trimheadchar(char *str, char token);
 
 #endif
