@@ -1,10 +1,10 @@
-CC=		clang
+#CC=		clang
 PROG=	as6502
-SRCS=	main.c labels.c\
-		../v6502/parser.c ../v6502/cpu.c ../v6502/mem.c ../v6502/linectl.c
+SRCS=	main.c symbols.c object.c common.c\
+	../v6502/parser.c ../v6502/cpu.c ../v6502/mem.c ../v6502/linectl.c
 #LIB=	-lncurses
 OBJS=	$(patsubst %.c, %.o, $(SRCS))
-CFLAGS=	-Wall
+CFLAGS=	-Wall -std=c99
 INCLUDE+=	-I../v6502
 
 $(PROG): $(SRCS)
