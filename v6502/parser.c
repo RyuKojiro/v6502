@@ -26,7 +26,6 @@
 
 #define kBadAddressModeErrorText		"Address mode '"
 #define kForOperationErrorText			"' invalid for operation '"
-#define kUnknownAddressModeErrorText	"Unknown address mode for operation '"
 #define kInvalidOpcodeErrorText			"Invalid opcode '"
 #define kUnknownSymbolErrorText			"Unknown symbol for operation '"
 
@@ -777,12 +776,10 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 		}
 		case '#': // Immediate
 			return v6502_address_mode_immediate;
-		case '*': { // Zeropage
+		case '*': // Zeropage
 			return _incrementModeByFoundRegister(v6502_address_mode_zeropage, cur);
-		} break;
-		case '(': { // Indirect
+		case '(': // Indirect
 			return _incrementModeByFoundRegister(v6502_address_mode_indirect, cur);
-		} break;
 		default: { // Relative or Absolute
 			// TODO: Better byte length determination, this doesn't tell shit
 			v6502_valueForString(NULL, NULL, &wide, cur);
@@ -797,11 +794,8 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 					return v6502_address_mode_symbol;
 				}
 			}
-		} break;
+		}
 	}
-	
-	_opError(string, kUnknownAddressModeErrorText);
-	return -1;
 }
 
 int v6502_instructionLengthForAddressMode(v6502_address_mode mode) {
@@ -822,6 +816,7 @@ int v6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 		case v6502_address_mode_indirect_x:
 		case v6502_address_mode_indirect_y:
 			return 3;
+		case v6502_address_mode_symbol:
 		case v6502_address_mode_unknown:
 			return 0;
 	}
