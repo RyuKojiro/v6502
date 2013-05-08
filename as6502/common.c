@@ -11,7 +11,7 @@
 
 #include "common.h"
 
-void die(const char *reason) {
+__attribute((noreturn)) void die(const char *reason) {
 	fprintf(stderr, "as6502: fatal: %s\n", reason);
 	exit(EXIT_FAILURE);
 }
