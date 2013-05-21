@@ -19,36 +19,38 @@ as6502_symbol_table *as6502_createSymbolTable() {
 	as6502_symbol_table *table = malloc(sizeof(as6502_symbol_table));
 	
 	table->labelCount = 0;
-	table->labels = NULL;
+	table->first_label = NULL;
 	table->varCount = 0;
-	table->vars = NULL;
+	table->first_var = NULL;
 	
 	return table;
 }
 
 void as6502_destroySymbolTable(as6502_symbol_table *table) {
-	for (int i = 0; i < table->labelCount; i++) {
-		free(table->labels[i]->name);
-		free(table->labels[i]);
+	as6502_var *next_var;
+	for (as6502_var *this = table->first_var; this; this = next_var) {
+		next_var = this->next;
+		free(this->name);
+		free(this);
 	}
-	free(table->labels);
 	
-	for (int i = 0; i < table->varCount; i++) {
-		free(table->vars[i]->name);
-		free(table->vars[i]);
+	as6502_label *next_label;
+	for (as6502_label *this = table->first_label; this; this = next_label) {
+		next_label = this->next;
+		free(this->name);
+		free(this);
 	}
-	free(table->vars);
 	
 	free(table);
 }
 
 void as6502_printSymbolTable(as6502_symbol_table *table) {
 	printf("Symbol table %p = {\n", table);
-	for (int i = 0; i < table->varCount; i++) {
-		printf("\tVar[%d] { name = \"%s\", addr = 0x%x, init = 0x%x }\n", i, table->vars[i]->name, table->vars[i]->address, table->vars[i]->init);
+	for (as6502_var *this = table->first_var; this; this = this->next) {
+		printf("\tVar { name = \"%s\", addr = 0x%x, init = 0x%x, next = %p }\n", this->name, this->address, this->init, this->next);
 	}
-	for (int i = 0; i < table->labelCount; i++) {
-		printf("\tLabel[%d] { name = \"%s\", addr = 0x%x }\n", i, table->labels[i]->name, table->labels[i]->address);
+	for (as6502_label *this = table->first_label; this; this = this->next) {
+		printf("\tLabel { name = \"%s\", addr = 0x%x, next = %p }\n", this->name, this->address, this->next);
 	}
 	printf("}\n");
 }
@@ -69,18 +71,28 @@ void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, cons
 	}
 	memcpy(label->name, name, len);
 
-	table->labels = realloc(table->labels, sizeof(as6502_label *) * table->labelCount + 1);
-	if (!table->labels) {
-		die("labels realloc in as6502_addLabelToTable");
+	// Add it to the table
+	if (!table->first_label) {
+		label->next = NULL;
+		table->first_label = label;
 	}
-	table->labels[table->labelCount++] = label;
+	else {
+		for (as6502_label *this = table->first_label; this; this = this->next) {
+			if (!this->next || strlen(this->next->name) < strlen(name)) {
+				as6502_label *next = this->next;
+				this->next = label;
+				label->next = next;
+				return;
+			}
+		}
+	}
 }
 
 as6502_label *as6502_labelForString(as6502_symbol_table *table, const char *name) {
 	size_t len = strlen(name);
-	for (int i = 0; i < table->labelCount; i++) {
-		if (strncmp(table->labels[i]->name, name, len)) {
-			return table->labels[i];
+	for (as6502_label *this = table->first_label; this; this = this->next) {
+		if (strncmp(this->name, name, len)) {
+			return this;
 		}
 	}
 	
@@ -93,9 +105,9 @@ uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
 
 as6502_var *as6502_varForString(as6502_symbol_table *table, const char *name) {
 	size_t len = strlen(name);
-	for (int i = 0; i < table->varCount; i++) {
-		if (strncmp(table->vars[i]->name, name, len)) {
-			return table->vars[i];
+	for (as6502_var *this = table->first_var; this; this = this->next) {
+		if (strncmp(this->name, name, len)) {
+			return this;
 		}
 	}
 	
@@ -121,11 +133,21 @@ void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const 
 	}
 	memcpy(var->name, name, len);
 	
-	table->vars = realloc(table->vars, sizeof(as6502_var *) * table->varCount + 1);
-	if (!table->vars) {
-		die("vars realloc in as6502_addVarToTable");
+	// Add it to the table
+	if (!table->first_var) {
+		var->next = NULL;
+		table->first_var = var;
 	}
-	table->vars[table->varCount++] = var;
+	else {
+		for (as6502_var *this = table->first_var; this; this = this->next) {
+			if (!this->next || strlen(this->next->name) < strlen(name)) {
+				as6502_var *next = this->next;
+				this->next = var;
+				var->next = next;
+				return;
+			}
+		}
+	}
 }
 
 // Easy Symbol Table Access
@@ -172,21 +194,20 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
 	// NOTE: Must be null terminated, this is not good, especially for cases where desymbolication will expand the line length
 	// This is absurdly inefficient, but works, given the current symbol table implementation
 	char *cur;
-	int i;
 	char addrString[7];
 	
-	for (i = 0; i < table->varCount; i++) {
-		cur = strstr(line, table->vars[i]->name);
+	for (as6502_var *this = table->first_var; this; this = this->next) {
+		cur = strstr(line, this->name);
 		if (cur) {
 			// TODO: What actual address length are we going to use, can there be absolute addressed symbols?
-			snprintf(addrString, 7, "0x%02x", table->vars[i]->address);
-			as6502_replaceSymbolInLineAtLocationWithText(line, cur, table->vars[i]->name, addrString);
+			snprintf(addrString, 7, "0x%02x", this->address);
+			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, addrString);
 		}
 	}
-	for (i = 0; i < table->labelCount; i++) {
-		cur = strstr(line, table->labels[i]->name);
+	for (as6502_label *this = table->first_label; this; this = this->next) {
+		cur = strstr(line, this->name);
 		if (cur) {
-			as6502_replaceSymbolInLineAtLocationWithText(line, cur, table->labels[i]->name, "");
+			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, "");
 		}
 	}	
 }

@@ -12,14 +12,16 @@
 #include <stdint.h>
 
 // Types
-
-typedef struct {
+// TODO: union?
+typedef struct _as6502_label {
+	struct _as6502_label *next;
 	unsigned long line;
 	char *name;
 	uint16_t address;
 } as6502_label;
 
-typedef struct {
+typedef struct _as6502_var {
+	struct _as6502_var *next;
 	unsigned long line;
 	char *name;
 	uint16_t address;
@@ -28,9 +30,9 @@ typedef struct {
 
 typedef struct {
 	int labelCount;
-	as6502_label **labels;
+	as6502_label *first_label;
 	int varCount;
-	as6502_var **vars;
+	as6502_var *first_var;
 } as6502_symbol_table;
 
 // Address Table Lifecycle Functions
