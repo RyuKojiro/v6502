@@ -140,7 +140,46 @@ void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsig
 	free(symbol);
 }
 
-void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
+static void as6502_replaceSymbolInLineAtLocationWithText(char *line, char *loc, const char *symbol, const char *text) {
+	size_t symLen = strlen(symbol);
+	size_t txtLen = strlen(text);
+	long difference = txtLen - symLen;
 	
+	if (difference < 0) { // Shift string left
+		for (/* difference */; difference < 0; difference++) {
+			for (char *cur = loc + symLen - 1; *cur; cur++) {
+				cur[0] = cur[1];
+			}
+		}
+	}
+
+	if (difference > 0) { // Shift string right (Unsafely?)
+		*((void *)0);
+	}
+	
+	// Strings are aligned, overwrite
+	memcpy(loc, text, txtLen);
 }
 
+void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
+	// NOTE: Must be null terminated, this is not good, especially for cases where desymbolication will expand the line length
+	// This is absurdly inefficient, but works, given the current symbol table implementation
+	char *cur;
+	int i;
+	char addrString[7];
+	
+	for (i = 0; i < table->varCount; i++) {
+		cur = strstr(line, table->vars[i]->name);
+		if (cur) {
+			// TODO: What actual address length are we going to use, can there be absolute addressed symbols?
+			snprintf(addrString, 7, "0x%02x", table->vars[i]->address);
+			as6502_replaceSymbolInLineAtLocationWithText(line, cur, table->vars[i]->name, addrString);
+		}
+	}
+	for (i = 0; i < table->labelCount; i++) {
+		cur = strstr(line, table->labels[i]->name);
+		if (cur) {
+			as6502_replaceSymbolInLineAtLocationWithText(line, cur, table->labels[i]->name, "");
+		}
+	}	
+}
