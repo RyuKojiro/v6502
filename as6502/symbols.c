@@ -76,17 +76,35 @@ void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, cons
 	table->labels[table->labelCount++] = label;
 }
 
-uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
+as6502_label *as6502_labelForString(as6502_symbol_table *table, const char *name) {
 	size_t len = strlen(name);
 	for (int i = 0; i < table->labelCount; i++) {
 		if (strncmp(table->labels[i]->name, name, len)) {
-			return table->labels[i]->address;
+			return table->labels[i];
 		}
 	}
 	
 	return 0;
 }
 
+uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
+	return as6502_labelForString(table, name)->address;
+}
+
+as6502_var *as6502_varForString(as6502_symbol_table *table, const char *name) {
+	size_t len = strlen(name);
+	for (int i = 0; i < table->varCount; i++) {
+		if (strncmp(table->vars[i]->name, name, len)) {
+			return table->vars[i];
+		}
+	}
+	
+	return 0;
+}
+
+uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
+	return as6502_varForString(table, name)->address;
+}
 
 void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
 	as6502_var *var = malloc(sizeof(as6502_var));
@@ -108,17 +126,6 @@ void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const 
 		die("vars realloc in as6502_addVarToTable");
 	}
 	table->vars[table->varCount++] = var;
-}
-
-uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
-	size_t len = strlen(name);
-	for (int i = 0; i < table->varCount; i++) {
-		if (strncmp(table->vars[i]->name, name, len)) {
-			return table->vars[i]->address;
-		}
-	}
-	
-	return 0;
 }
 
 // Easy Symbol Table Access
@@ -154,7 +161,7 @@ static void as6502_replaceSymbolInLineAtLocationWithText(char *line, char *loc, 
 	}
 
 	if (difference > 0) { // Shift string right (Unsafely?)
-		*((void *)0);
+		fprintf(stderr, "as6502: Tried to desymbolicate label less than 4 chars! - FIXME\n");
 	}
 	
 	// Strings are aligned, overwrite
