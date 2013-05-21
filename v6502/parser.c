@@ -805,7 +805,7 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 						return v6502_address_mode_implied;
 					}
 					else {
-						if (isalnum(*cur)) {
+						if (!_isDigit(*cur)) {
 							return v6502_address_mode_symbol;
 						}
 						else {
