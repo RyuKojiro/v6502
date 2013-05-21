@@ -723,10 +723,19 @@ static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode,
 	return mode;
 }
 
+static int _isEndOfString(const char *c) {
+	for (/* c */; *c; c++) {
+		if (!isspace(*c)) {
+			return NO;
+		}
+	}
+	return YES;
+}
+
 static int _isDigit(char c) {
-	if ((c > 'a' && c < 'f') ||
-		(c > 'A' && c < 'F') ||
-		(c < '0' && c > '9')) {
+	if ((c >= 'a' && c <= 'f') ||
+		(c >= 'A' && c <= 'F') ||
+		(c >= '0' && c <= '9')) {
 		return YES;
 	}
 	return NO;
@@ -780,18 +789,29 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 			return _incrementModeByFoundRegister(v6502_address_mode_zeropage, cur);
 		case '(': // Indirect
 			return _incrementModeByFoundRegister(v6502_address_mode_indirect, cur);
-		default: { // Relative or Absolute
+		default: { // Relative, Absolute, or Implied
 			// TODO: Better byte length determination, this doesn't tell shit
 			v6502_valueForString(NULL, NULL, &wide, cur);
 			if (wide) {
 				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
 			}
 			else {
-				if (_isDigit(*cur) && _isDigit(*(cur+1))) {
+				if ( (_isDigit(cur[0]) && _isDigit(cur[1]) && _isDigit(cur[2])) || // Octal
+					(cur[0] == '$' && _isDigit(cur[1]) && _isDigit(cur[2])) ) { // Hex
 					return v6502_address_mode_relative;
 				}
 				else {
-					return v6502_address_mode_symbol;
+					if (_isEndOfString(cur)) {
+						return v6502_address_mode_implied;
+					}
+					else {
+						if (isalnum(*cur)) {
+							return v6502_address_mode_symbol;
+						}
+						else {
+							return v6502_address_mode_unknown;							
+						}
+					}
 				}
 			}
 		}
