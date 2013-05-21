@@ -175,10 +175,8 @@ static void as6502_replaceSymbolInLineAtLocationWithText(char *line, char *loc, 
 	long difference = txtLen - symLen;
 	
 	if (difference < 0) { // Shift string left
-		for (/* difference */; difference < 0; difference++) {
-			for (char *cur = loc + symLen - 1; *cur; cur++) {
-				cur[0] = cur[1];
-			}
+		for (char *cur = loc + txtLen; *cur; cur++) {
+			cur[0] = cur[0 - difference];
 		}
 	}
 
@@ -200,7 +198,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
 		cur = strstr(line, this->name);
 		if (cur) {
 			// TODO: What actual address length are we going to use, can there be absolute addressed symbols?
-			snprintf(addrString, 7, "0x%02x", this->address);
+			snprintf(addrString, 7, "$%04x", this->address);
 			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, addrString);
 		}
 	}
