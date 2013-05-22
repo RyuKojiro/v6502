@@ -13,5 +13,10 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 }
 
 void as6502_resolveVariableDeclaration(char *line, size_t len) {
-	
+	// This will take 1 line in and output 4 lines
+	// e.g.	 IN: var1 = $ff
+	//		OUT:	pha
+	//				lda #$ff
+	//				sta var1
+	//				pla
 }
