@@ -181,7 +181,7 @@ static void as6502_replaceSymbolInLineAtLocationWithText(char *line, char *loc, 
 	}
 
 	if (difference > 0) { // Shift string right (Unsafely?)
-		fprintf(stderr, "as6502: Tried to desymbolicate label less than 4 chars! - FIXME\n");
+		as6502_warn("Tried to desymbolicate label less than 4 chars! - FIXME");
 	}
 	
 	// Strings are aligned, overwrite
@@ -189,7 +189,8 @@ static void as6502_replaceSymbolInLineAtLocationWithText(char *line, char *loc, 
 }
 
 void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
-	// NOTE: Must be null terminated, this is not good, especially for cases where desymbolication will expand the line length
+	// HACK: Must be null terminated, this is not good, especially for cases where desymbolication will expand the line length
+	// FIXME: This needs to be smart about address formation, based on address mode
 	// This is absurdly inefficient, but works, given the current symbol table implementation
 	char *cur;
 	char addrString[7];
@@ -197,15 +198,18 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
 	for (as6502_var *this = table->first_var; this; this = this->next) {
 		cur = strstr(line, this->name);
 		if (cur) {
-			// TODO: What actual address length are we going to use, can there be absolute addressed symbols?
 			snprintf(addrString, 7, "$%04x", this->address);
 			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, addrString);
 		}
 	}
 	for (as6502_label *this = table->first_label; this; this = this->next) {
 		cur = strstr(line, this->name);
-		if (cur) {
+		if (cur == line) {
 			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, "");
+		}
+		else if (cur) {
+			snprintf(addrString, 7, "$%04x", this->address);
+			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, addrString);
 		}
 	}	
 }
