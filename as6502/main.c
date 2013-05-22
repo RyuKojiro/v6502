@@ -13,6 +13,7 @@
 #include "parser.h"
 #include "symbols.h"
 #include "object.h"
+#include "codegen.h"
 
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
@@ -91,7 +92,7 @@ static void assembleFile(FILE *in, FILE *out) {
 		trimtaild(line);
 		
 		// Convert symbols to hard addresses from symbol table
-		as6502_desymbolicateLine(table, line);
+		as6502_desymbolicateLine(table, line, MAX_LINE_LEN);
 		
 		// Trim leading whitespace
 		trimmedLine = trimhead(line);

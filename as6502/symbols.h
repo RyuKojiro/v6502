@@ -48,6 +48,6 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name);
 
 // Easy Symbol Table Interaction
 void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset);
-void as6502_desymbolicateLine(as6502_symbol_table *table, char *line);
+void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len);
 
 #endif

@@ -14,6 +14,8 @@
 #include "common.h"
 #include "linectl.h"
 
+#define kDesymErrorText	"Could not shift string far enough while desymbolicating"
+
 // Address Table Lifecycle Functions
 as6502_symbol_table *as6502_createSymbolTable() {
 	as6502_symbol_table *table = malloc(sizeof(as6502_symbol_table));
@@ -169,7 +171,7 @@ void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsig
 	free(symbol);
 }
 
-static void as6502_replaceSymbolInLineAtLocationWithText(char *line, char *loc, const char *symbol, const char *text) {
+static void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, const char *symbol, const char *text) {
 	size_t symLen = strlen(symbol);
 	size_t txtLen = strlen(text);
 	long difference = txtLen - symLen;
@@ -180,36 +182,46 @@ static void as6502_replaceSymbolInLineAtLocationWithText(char *line, char *loc, 
 		}
 	}
 
-	if (difference > 0) { // Shift string right (Unsafely?)
-		as6502_warn("Tried to desymbolicate label less than 4 chars! - FIXME");
+	if (difference > 0) { // Shift string right
+		if (strlen(line) + difference < len) {
+			char *start = line + strlen(line) + 1;
+			for (char *cur = start + difference; cur > start; cur--) {
+				*cur = *(cur - difference);
+			}
+		}
+		else {
+			die(kDesymErrorText);
+		}
 	}
 	
 	// Strings are aligned, overwrite
 	memcpy(loc, text, txtLen);
 }
 
-void as6502_desymbolicateLine(as6502_symbol_table *table, char *line) {
-	// HACK: Must be null terminated, this is not good, especially for cases where desymbolication will expand the line length
+void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len) {
 	// FIXME: This needs to be smart about address formation, based on address mode
 	// This is absurdly inefficient, but works, given the current symbol table implementation
 	char *cur;
 	char addrString[7];
 	
+	// Ensure termination for strstr
+	line[len - 1] = '\0';
+	
 	for (as6502_var *this = table->first_var; this; this = this->next) {
 		cur = strstr(line, this->name);
 		if (cur) {
 			snprintf(addrString, 7, "$%04x", this->address);
-			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, addrString);
+			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
 		}
 	}
 	for (as6502_label *this = table->first_label; this; this = this->next) {
 		cur = strstr(line, this->name);
 		if (cur == line) {
-			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, "");
+			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, "");
 		}
 		else if (cur) {
 			snprintf(addrString, 7, "$%04x", this->address);
-			as6502_replaceSymbolInLineAtLocationWithText(line, cur, this->name, addrString);
+			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
 		}
 	}	
 }
