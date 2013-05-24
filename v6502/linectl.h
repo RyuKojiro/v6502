@@ -9,6 +9,8 @@
 #ifndef v6502_linectl_h
 #define v6502_linectl_h
 
+#include <sys/types.h>
+
 // Destructively trim trailing whitespace with NUL
 void trimtaild(char *str);
 
@@ -26,5 +28,11 @@ char *trimhead(char *str);
 
 // Safely trim head til first encounter of token char from the head end
 char *trimheadchar(char *str, char token);
+
+// Reverse search string for character, safely
+char *rev_strnchr(char *str, char *start, char chr);
+
+// Safely search potentially unterminated string for character
+char *strnchr(char *str, char chr, size_t len);
 
 #endif

@@ -69,3 +69,21 @@ char *trimheadchar(char *str, char token) {
 	
 	return str;
 }
+
+char *rev_strnchr(char *str, char *start, char chr) {
+	for (/* start */; start > str; start--) {
+		if (*start == chr) {
+			return start;
+		}
+	}
+	return NULL;
+}
+
+char *strnchr(char *str, char chr, size_t len) {
+	for (size_t i = 0; str[i] && i < len; i++) {
+		if (str[i] == chr) {
+			return str + i;
+		}
+	}
+	return NULL;
+}
