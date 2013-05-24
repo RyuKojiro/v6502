@@ -80,7 +80,7 @@ static void assembleFile(FILE *in, FILE *out) {
 	// Final pass, parse file to bitcode
 	do {
 		newline = NO;
-		fgets(line, MAX_LINE_LEN, in);		
+		fgets(line, MAX_LINE_LEN, in);
 		if (strchr(line, '\n')) {
 			newline = YES;
 		}
@@ -93,6 +93,9 @@ static void assembleFile(FILE *in, FILE *out) {
 		
 		// Convert symbols to hard addresses from symbol table
 		as6502_desymbolicateLine(table, line, MAX_LINE_LEN);
+		
+		// Check for Variable Declarations and Arithmetic
+		as6502_resolveArithmetic(line, MAX_LINE_LEN);
 		
 		// Trim leading whitespace
 		trimmedLine = trimhead(line);
