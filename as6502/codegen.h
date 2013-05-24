@@ -12,6 +12,6 @@
 #include <stdio.h>
 
 void as6502_resolveArithmetic(char *line, size_t len);
-void as6502_resolveVariableDeclaration(char *line, size_t len);
+int as6502_resolveVariableDeclaration(char *line, size_t len);
 
 #endif
