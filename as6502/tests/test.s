@@ -673,16 +673,13 @@ Child1	cmp #$00
 ;	Note that PLA's are not required to get rid of the JSR Child1 start up
 ;	address since the RTI address pushed in points to Child1  NOT  Child
 Go_For_It
- 
-  Body of the spawned process
- 
+  
 ;
 ;
 ;=======================================================================
 ;  An Example of a Kill of the present Process
 ;=======================================================================
 ;
-	  { User Code  }
 ;
 	 sei
 	 jsr Kill	  ;  This should kill the process unless it is the
@@ -691,7 +688,6 @@ Go_For_It
 ;
 ;	This is the only process
 ;
-	  { More user code }
 ;
 ;
 ;
@@ -699,7 +695,6 @@ Go_For_It
 ; Start of User Code
 ;=======================================================================
 Start_Code
-{ Your first process goes here }
 ;
 ;
 ;  Example Spawn of Process	'Child'
@@ -732,7 +727,6 @@ Start_Code
 ;============================================================================
 ;
 	 sei				 ; Disable swaps
-  { User Code }
 	 cli				 ; Re-enable swaps
 ;
 ;
@@ -778,7 +772,6 @@ Done_Kill
 			  ; are no other processes we could prevent swap decisions
 			  ; by not clearing the IRQ mask.
 ;
-	{ More code that will not be swapped out }
 ;
 ;
 ;
