@@ -44,7 +44,7 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, ui
 	
 	memcpy(newData, data, size);
 	
-	obj->blobs = realloc(obj->blobs, sizeof(uint8_t *) * (obj->count + 1));
+	obj->blobs = realloc(obj->blobs, sizeof(as6502_object_blob) * (obj->count + 1));
 	if (!obj->blobs) {
 		die("blobs realloc in as6502_addBlobToObject");
 	}
