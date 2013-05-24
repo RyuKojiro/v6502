@@ -9,6 +9,6 @@
 #ifndef v6502_common_h
 #define v6502_common_h
 
-void die(const char *reason);
+__attribute((noreturn)) void die(const char *reason);
 
 #endif
