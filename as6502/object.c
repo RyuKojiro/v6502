@@ -15,11 +15,15 @@
 // Object Lifecycle
 as6502_object *as6502_createObject() {
 	as6502_object *obj = malloc(sizeof(as6502_object));
+	if (obj) {
+		obj->count = 0;
+		obj->blobs = NULL;
+		
+		return obj;
+	}
 	
-	obj->count = 0;
-	obj->blobs = NULL;
-	
-	return obj;
+	die("obj malloc in as6502_createObject");
+	return NULL;
 }
 
 void as6502_destroyObject(as6502_object *obj) {
@@ -28,6 +32,30 @@ void as6502_destroyObject(as6502_object *obj) {
 	}
 	free(obj->blobs);
 	free(obj);
+}
+
+as6502_object_context *as6502_createObjectContext() {
+	as6502_object_context *ctx = malloc(sizeof(as6502_object_context));
+	
+	if (ctx) {
+		ctx->obj = as6502_createObject();
+		ctx->currentBlob = 0;
+
+		if (ctx->obj) {
+			return ctx;
+		}
+		else {
+			die("obj malloc in as6502_createObjectContext");
+		}
+	}
+
+	die("ctx malloc in as6502_createObjectContext");
+	return NULL;
+}
+
+void as6502_destroyObjectContext(as6502_object_context *ctx) {
+	as6502_destroyObject(ctx->obj);
+	free(ctx);
 }
 
 // Object Accessors
