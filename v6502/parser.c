@@ -649,7 +649,6 @@ static int _valueLengthInChars(const char *string) {
 void v6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *string) {
 	char workString[80];
 	uint16_t result;
-	int base;
 	
 	// Remove all whitespace, #'s, *'s, high ascii, and parenthesis, also, truncate at comma
 	int i = 0;
@@ -666,33 +665,31 @@ void v6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *st
 	// Check first char to determine base
 	switch (workString[0]) {
 		case '$': { // Hex
-			base = 16;
 			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 2) ? YES : NO;
 			}
+			result = strtol(workString + 1, NULL, 16);
 		} break;
 		case '%': { // Binary
-			base = 2;
 			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 8) ? YES : NO;
 			}
+			result = strtol(workString + 1, NULL, 2);
 		} break;
 		case '0': { // Octal
-			base = 8;
 			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
 			}
+			result = strtol(workString, NULL, 8);
 		} break;
 		default: { // Decimal
-			base = 10;
 			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
 			}
+			result = strtol(workString, NULL, 10);
 		} break;
 	}
 	
-	result = strtol(workString + 1, NULL, base);
-
 	if (result > 0xFF && wide) {
 		// Octal and decimal split digits
 		*wide = YES;
@@ -732,7 +729,7 @@ static int _isEndOfString(const char *c) {
 	return YES;
 }
 
-static int _isDigit(char c) {
+int v6502_isDigit(char c) {
 	if ((c >= 'a' && c <= 'f') ||
 		(c >= 'A' && c <= 'F') ||
 		(c >= '0' && c <= '9')) {
@@ -796,8 +793,8 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
 			}
 			else {
-				if ( (_isDigit(cur[0]) && _isDigit(cur[1]) && _isDigit(cur[2])) || // Octal
-					(cur[0] == '$' && _isDigit(cur[1]) && _isDigit(cur[2])) ) { // Hex
+				if ( (v6502_isDigit(cur[0]) && v6502_isDigit(cur[1]) && v6502_isDigit(cur[2])) || // Octal
+					(cur[0] == '$' && v6502_isDigit(cur[1]) && v6502_isDigit(cur[2])) ) { // Hex
 					return v6502_address_mode_relative;
 				}
 				else {
@@ -805,7 +802,7 @@ v6502_address_mode v6502_addressModeForLine(const char *string) {
 						return v6502_address_mode_implied;
 					}
 					else {
-						if (!_isDigit(*cur)) {
+						if (!v6502_isDigit(*cur)) {
 							return v6502_address_mode_symbol;
 						}
 						else {

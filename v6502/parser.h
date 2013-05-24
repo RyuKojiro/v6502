@@ -46,4 +46,7 @@ void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v650
 int v6502_instructionLengthForAddressMode(v6502_address_mode mode);
 void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len);
 
+// Parsing assistance
+int v6502_isDigit(char c);
+
 #endif
