@@ -9,42 +9,53 @@
 #include "codegen.h"
 #include "parser.h"
 #include "linectl.h"
+#include "symbols.h"
 
 #include <string.h>
 #include <stdlib.h>
 
 static size_t _lengthOfValue(char *start) {
-	
+	size_t i;
+	for (i = 0; start[i]; i++) {
+		if (!v6502_isDigit(start[i])) {
+			return i;
+		}
+	}
+	return i;
 }
 
 void as6502_resolveArithmetic(char *line, size_t len) {
-	char *cur, start;
+	char *cur, *start;
 	size_t clause = 0;
-	uint16_t left, right;
+	uint16_t left, right, result;
 	uint8_t high, low;
 	
 	// Check for addition
-	cur = memchr(line, '+', len);
+	cur = strnchr(line, '+', len);
 	if (cur) {
-		v6502_valueForString(&high, &low, NULL, cur + 1);
+		// Get right hand side
+		cur++;
+		v6502_valueForString(&high, &low, NULL, cur);
 		right = (high << 8) | low;
 		
+		// Get left hand side
 		// FIXME: This currently relies on the first space found in reverse
 		// being separate from the arithmetic clause, and a delimeter for the
 		// left hand value. Not sure if this is proper if whitespace is allowed
 		// in between operators and values.
-		cur = rev_strnchr(line, cur, ' ');
-		v6502_valueForString(&high, &low, NULL, cur + 1);
+		start = rev_strnchr(line, cur, ' ') + 1;
+		v6502_valueForString(&high, &low, NULL, start);
 		left = (high << 8) | low;
 		
 		// Solve
-		left += right;
+		result = left + right;
+		clause = (cur + _lengthOfValue(cur)) - start;
 	}
 	
 	
 	// Put resolved value in
 	if (clause) {
-		//as6502
+		//as6502_replaceSymbolInLineAtLocationWithText(line, len, start, <#const char *symbol#>, <#const char *text#>);
 	}
 }
 
