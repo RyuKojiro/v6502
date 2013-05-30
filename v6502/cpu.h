@@ -19,13 +19,19 @@
 /** @struct */
 /** @brief Virtual CPU Object */
 typedef struct {
-	uint16_t pc;	// program counter
-	uint8_t ac;		// accumulator
-	uint8_t x;		// X register
-	uint8_t y;		// Y register
-	uint8_t sr;		// Status register
-	uint8_t sp;		// Stack Pointer
-	
+	/** @brief Program counter (16-bit) */
+	uint16_t pc;
+	/** @brief Accumulator (8-bit) */
+	uint8_t ac;
+	/** @brief X register (8-bit) */
+	uint8_t x;
+	/** @brief Y register (8-bit) */
+	uint8_t y;
+	/** @brief Status register (8-bit) */
+	uint8_t sr;
+	/** @brief Stack Pointer (8-bit) */
+	uint8_t sp;
+	/** @brief Virtual Memory */
 	v6502_memory *memory;
 } v6502_cpu;
 
@@ -248,12 +254,17 @@ typedef enum {
 } v6502_cpu_status;
 
 // CPU object lifecycle
+/** @brief Create a v6502_cpu */
 v6502_cpu *v6502_createCPU(void);
+/** @brief Destroy a v6502_cpu */
 void v6502_destroyCPU(v6502_cpu *cpu);
 
 // Execution
+/** @brief Execute an instruction on a v6502_cpu */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
+/** @brief Single step a v6502_cpu */
 void v6502_step(v6502_cpu *cpu);
+/** @brief Hardware reset a v6502_cpu */
 void v6502_reset(v6502_cpu *cpu);
 
 #endif

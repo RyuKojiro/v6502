@@ -14,17 +14,24 @@
 /** @struct */
 /** @brief Virtual Memory Object */
 typedef struct {
+	/** @brief Memory accessible as a byte-array */
 	uint8_t *bytes;
+	/** @brief Byte-length of memory object */
 	uint16_t size;
 } v6502_memory;
 
 // Memory Lifecycle
+/** @brief Create v6502_memory */
 v6502_memory *v6502_createMemory(uint16_t size);
+/** @brief Destroy v6502_memory */
 void v6502_destroyMemory(v6502_memory *memory);
+/** @brief Load a binary blob of expansion ROM into a given v6502_memory */
 void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size);
 
 // Memory Access
+/** @brief Map an address in v6502_memory */
 uint8_t *v6502_map(v6502_memory *memory, uint16_t offset);
+/** @brief Convert a raw byte to it's signed value */
 signed int v6502_signedValueOfByte(uint8_t byte);
 
 #endif
