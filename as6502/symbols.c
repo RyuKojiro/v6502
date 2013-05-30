@@ -171,7 +171,7 @@ void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsig
 	free(symbol);
 }
 
-static void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, const char *symbol, const char *text) {
+void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, const char *symbol, const char *text) {
 	size_t symLen = strlen(symbol);
 	size_t txtLen = strlen(text);
 	long difference = txtLen - symLen;

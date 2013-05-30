@@ -50,4 +50,7 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name);
 void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset);
 void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len);
 
+// Symbol Replacement
+void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, const char *symbol, const char *text);
+
 #endif
