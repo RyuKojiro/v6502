@@ -1,5 +1,5 @@
 //
-//  symbols.h
+/** @file symbols.h */
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/05/05.
@@ -12,7 +12,7 @@
 #include <stdint.h>
 
 // Types
-// TODO: union?
+// TODO: unionize these structs?
 typedef struct _as6502_label {
 	struct _as6502_label *next;
 	unsigned long line;

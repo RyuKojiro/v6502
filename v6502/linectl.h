@@ -1,5 +1,5 @@
 //
-//  linectl.h
+/** @file linectl.h */
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/05/05.

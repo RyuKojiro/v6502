@@ -1,5 +1,5 @@
 //
-//  cpu.h
+/** @file cpu.h */
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/03/28.

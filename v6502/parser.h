@@ -1,5 +1,5 @@
 //
-//  parser.h
+/** @file parser.h */
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/03/30.

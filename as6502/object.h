@@ -1,5 +1,5 @@
 //
-//  object.h
+/** @file object.h */
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/05/05.

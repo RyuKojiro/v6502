@@ -1,5 +1,5 @@
 //
-//  codegen.h
+/** @file codegen.h */
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/05/21.

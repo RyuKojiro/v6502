@@ -1,5 +1,5 @@
 //
-//  mem.h
+/** @file mem.h */
 //  v6502
 //
 //  Created by Daniel Loffgren on H.25/03/28.
