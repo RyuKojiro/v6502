@@ -34,19 +34,33 @@ typedef enum {
 	v6502_address_mode_zeropage_y = 12
 } v6502_address_mode;
 
-// Instruction Transliteration
+/** @defgroup parser_translit Instruction Transliteration */
+/**@{*/
+/** @brief Returns the string representation of an instruction */
 const char *v6502_stringForInstruction(uint16_t instruction);
+/** @brief Returns the v6502_opcode for a given instruction string at a specified v6502_address_mode */
 v6502_opcode v6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode);
+/** @brief Returns the v6502_address_mode for a given instruction string by analyzing the operands */
 v6502_address_mode v6502_addressModeForLine(const char *string);
+/** @brief Returns the string representation of an v6502_address_mode */
 void v6502_stringForAddressMode(char *out, v6502_address_mode mode);
+/**@}*/
 
-// Line Based Parsing
+/** @defgroup parser_line Line Based Parsing */
+/**@{*/
+/** @brief Determines the numeric value of a literal regardless of base */
 void v6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *string);
+/** @brief Completely parses a line of text to extract the instruction and v6502_address_mode */
 void v6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len);
+/** @brief Returns the byte-length of a given v6502_address_mode */
 int v6502_instructionLengthForAddressMode(v6502_address_mode mode);
+/** @brief Executes a symbol-free line of assembly on a specified v6502_cpu */
 void v6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len);
+/**@}*/
 
-// Parsing assistance
+/** @defgroup parser_help Parsing assistance */
+/**@{*/
 int v6502_isDigit(char c);
+/**@}*/
 
 #endif

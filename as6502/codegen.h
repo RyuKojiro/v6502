@@ -11,7 +11,12 @@
 
 #include <stdio.h>
 
+/** @defgroup codegen Code Generation Functions */
+/**@{*/
+/** @brief Resolves arithmetical operations down to their literal result */
 void as6502_resolveArithmetic(char *line, size_t len);
+/** @brief Replaces variable declarations with the instructions needed to initialize a variable without altering the current running state of the CPU */
 int as6502_resolveVariableDeclaration(char *line, size_t len);
+/**@}*/
 
 #endif
