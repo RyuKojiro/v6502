@@ -29,6 +29,8 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	size_t clause = 0;
 	uint16_t left, right, result;
 	uint8_t high, low;
+	char resultString[7];
+	char *clauseString;
 	
 	// Check for addition
 	cur = strnchr(line, '+', len);
@@ -43,7 +45,7 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 		// being separate from the arithmetic clause, and a delimeter for the
 		// left hand value. Not sure if this is proper if whitespace is allowed
 		// in between operators and values.
-		start = rev_strnchr(line, cur, ' ') + 1;
+		start = rev_strnspc(line, cur) + 1;
 		v6502_valueForString(&high, &low, NULL, start);
 		left = (high << 8) | low;
 		
@@ -55,7 +57,10 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	
 	// Put resolved value in
 	if (clause) {
-		//as6502_replaceSymbolInLineAtLocationWithText(line, len, start, <#const char *symbol#>, <#const char *text#>);
+		clauseString = malloc(clause + 1);
+		snprintf(resultString, 7, "$%04x", result);
+		as6502_replaceSymbolInLineAtLocationWithText(line, len, start, clauseString, resultString);
+		free(clauseString);
 	}
 }
 

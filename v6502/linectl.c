@@ -70,6 +70,15 @@ char *trimheadchar(char *str, char token) {
 	return str;
 }
 
+char *rev_strnspc(char *str, char *start) {
+	for (/* start */; start > str; start--) {
+		if (isspace(*start)) {
+			return start;
+		}
+	}
+	return NULL;
+}
+
 char *rev_strnchr(char *str, char *start, char chr) {
 	for (/* start */; start > str; start--) {
 		if (*start == chr) {

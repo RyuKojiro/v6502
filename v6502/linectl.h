@@ -29,6 +29,9 @@ char *trimhead(char *str);
 // Safely trim head til first encounter of token char from the head end
 char *trimheadchar(char *str, char token);
 
+// Reverse search string for space, safely
+char *rev_strnspc(char *str, char *start);
+
 // Reverse search string for character, safely
 char *rev_strnchr(char *str, char *start, char chr);
 
