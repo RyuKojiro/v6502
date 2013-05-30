@@ -12,17 +12,23 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/** @struct */
+/** @brief A single blob of typeless object data */
 typedef struct {
 	uint16_t start;
 	uint16_t len;
 	uint8_t *data;
 } as6502_object_blob;
 
+/** @struct */
+/** @brief The assembler's representation of an object file in memory */
 typedef struct {
 	int count;
 	as6502_object_blob *blobs;
 } as6502_object;
 
+/** @struct */
+/** @brief A running context that can be kept to build an object file procedurally */
 typedef struct {
 	as6502_object *obj;
 	int currentBlob;

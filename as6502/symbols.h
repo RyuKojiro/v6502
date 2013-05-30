@@ -13,6 +13,8 @@
 
 // Types
 // TODO: unionize these structs?
+/** @struct */
+/** @brief The representation of a label in a symbol table */
 typedef struct _as6502_label {
 	struct _as6502_label *next;
 	unsigned long line;
@@ -20,6 +22,8 @@ typedef struct _as6502_label {
 	uint16_t address;
 } as6502_label;
 
+/** @struct */
+/** @brief The representation of a variable in a symbol table */
 typedef struct _as6502_var {
 	struct _as6502_var *next;
 	unsigned long line;
@@ -28,6 +32,8 @@ typedef struct _as6502_var {
 	uint8_t init;
 } as6502_var;
 
+/** @struct */
+/** @brief The assembler's per-object symbol table structure, which holds all symbols (labels and variables.) */
 typedef struct {
 	int labelCount;
 	int varCount;

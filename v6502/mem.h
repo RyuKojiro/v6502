@@ -11,7 +11,8 @@
 
 #include <stdint.h>
 
-// Memory Object
+/** @struct */
+/** @brief Virtual Memory Object */
 typedef struct {
 	uint8_t *bytes;
 	uint16_t size;

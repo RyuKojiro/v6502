@@ -16,7 +16,8 @@
 
 #include "mem.h"
 
-// CPU Object
+/** @struct */
+/** @brief Virtual CPU Object */
 typedef struct {
 	uint16_t pc;	// program counter
 	uint8_t ac;		// accumulator
