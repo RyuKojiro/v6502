@@ -83,3 +83,9 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, ui
 	
 	obj->count++;
 }
+
+
+// Contextual Object Mutators
+void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char *line, size_t len) {
+	
+}

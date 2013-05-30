@@ -46,7 +46,6 @@ static void assembleFile(FILE *in, FILE *out) {
 	currentLineNum = 1;
 	int newline;
 	as6502_symbol_table *table = as6502_createSymbolTable();
-	as6502_object *obj = as6502_createObject();
 	
 	// First pass, build symbol table
 	do {
@@ -77,6 +76,9 @@ static void assembleFile(FILE *in, FILE *out) {
 	address = 0;
 	currentLineNum = 1;
 	
+	// Prepare object structure
+	as6502_object_context *ctx = as6502_createObjectContext();
+	
 	// Final pass, parse file to bitcode
 	do {
 		newline = NO;
@@ -96,6 +98,11 @@ static void assembleFile(FILE *in, FILE *out) {
 		
 		// Check for Variable Declarations and Arithmetic
 		as6502_resolveArithmetic(line, MAX_LINE_LEN);
+		
+		// Handle dot directives
+		if (line[0] == '.') {
+			as6502_processObjectDirectiveForLine(ctx, line, MAX_LINE_LEN);
+		}
 		
 		// Trim leading whitespace
 		trimmedLine = trimhead(line);
@@ -123,9 +130,9 @@ static void assembleFile(FILE *in, FILE *out) {
 		}
 	} while (!feof(in));
 	
-	as6502_writeObjectToFile(obj, out);
+	as6502_writeObjectToFile(ctx->obj, out);
 	
-	as6502_destroyObject(obj);
+	as6502_destroyObjectContext(ctx);
 	as6502_destroySymbolTable(table);
 }
 
