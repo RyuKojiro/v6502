@@ -30,8 +30,8 @@ typedef struct _as6502_var {
 
 typedef struct {
 	int labelCount;
-	as6502_label *first_label;
 	int varCount;
+	as6502_label *first_label;
 	as6502_var *first_var;
 } as6502_symbol_table;
 
