@@ -131,7 +131,7 @@ int main(int argc, const char * argv[])
 				
 				// Make sure we don't go out of bounds either direction
 				uint8_t high, low;
-				v6502_valueForString(&high, &low, NULL, command);
+				as6502_valueForString(&high, &low, NULL, command);
 				uint16_t start = (high << 8) | low;
 				
 				if (start <= 0x10) {
@@ -153,7 +153,7 @@ int main(int argc, const char * argv[])
 			printf("Unknown Command - %s\n", command);
 		}
 		else if (command[0] != ';') {
-			v6502_executeAsmLineOnCPU(cpu, command, strlen(command));
+			as6502_executeAsmLineOnCPU(cpu, command, strlen(command));
 		}
 	}
 	
