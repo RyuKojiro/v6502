@@ -221,7 +221,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 		if (cur) {
 			if (!isspace(cur[-1]) && cur[-1] != '(') {
 				// Partial symbol match
-				return;
+				continue;
 			}
 			
 			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
@@ -245,7 +245,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 		else if (cur) {
 			if (!isspace(cur[-1])) {
 				// Partial symbol match
-				return;
+				continue;
 			}
 			
 			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
