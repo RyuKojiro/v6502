@@ -18,7 +18,8 @@ as6502_object *as6502_createObject() {
 	as6502_object *obj = malloc(sizeof(as6502_object));
 	if (obj) {
 		obj->count = 0;
-		obj->blobs = NULL;
+		obj->blobs = malloc(sizeof(as6502_object_blob));
+		bzero(obj->blobs, sizeof(as6502_object_blob));
 		
 		return obj;
 	}
@@ -64,23 +65,13 @@ void as6502_writeObjectToFile(as6502_object *obj, FILE *file) {
 	// TODO: object file writeout
 }
 
-void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, uint8_t *data) {
-	size_t size = sizeof(uint8_t) * len;
-	uint8_t *newData = malloc(size);
-	if (!newData) {
-		die("data malloc in as6502_addBlobToObject");
-	}
-	
-	memcpy(newData, data, size);
-	
+void as6502_addBlobToObject(as6502_object *obj, uint16_t start) {	
 	obj->blobs = realloc(obj->blobs, sizeof(as6502_object_blob) * (obj->count + 1));
 	if (!obj->blobs) {
 		die("blobs realloc in as6502_addBlobToObject");
 	}
 	
-	obj->blobs[obj->count].data = newData;
 	obj->blobs[obj->count].start = start;
-	obj->blobs[obj->count].len = len;
 	
 	obj->count++;
 }
@@ -101,15 +92,20 @@ void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte) {
 
 // Contextual Object Mutators
 void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char *line, size_t len) {
-	if (len >= 3) {
+	if (len <= 3) {
 		return;
 	}
 
-	if (!strncmp(line + 1, "org", 3)) {
+	if (!strncasecmp(line + 1, "org", 3)) {
 		// start new blob
-		as6502_addBlobToObject(ctx->obj, as6502_valueForString(NULL, line + 5), 0, NULL);
+		as6502_addBlobToObject(ctx->obj, as6502_valueForString(NULL, line + 5));
+		ctx->currentBlob = ctx->obj->count - 1;
 	}
-	if (!strncmp(line + 1, "byte", 4)) {
+	if (!strncasecmp(line + 1, "end", 3)) {
+		// revert to top blob
+		ctx->currentBlob = 0;
+	}
+	if (!strncasecmp(line + 1, "byte", 4)) {
 		// convert byte and append to current blob
 		uint8_t low;
 		as6502_byteValuesForString(NULL, &low, NULL, line + 5);
