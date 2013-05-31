@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h> // as6502_printSymbolTable
+#include <ctype.h> // isspace
 
 #include "symbols.h"
 #include "common.h"
@@ -210,6 +211,11 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	for (as6502_symbol *this = table->first_var; this; this = this->next) {
 		cur = strstr(line, this->name);
 		if (cur) {
+			if (!isspace(cur[-1]) && cur[-1] != '(') {
+				// Partial symbol match
+				return;
+			}
+			
 			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
 			snprintf(addrString, 7, width ? "$%04x" : "$%02x", this->address);
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
@@ -221,6 +227,11 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, "");
 		}
 		else if (cur) {
+			if (!isspace(cur[-1])) {
+				// Partial symbol match
+				return;
+			}
+			
 			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
 			snprintf(addrString, 7, width ? "$%04x" : "$%02x", this->address);
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
