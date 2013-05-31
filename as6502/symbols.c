@@ -198,11 +198,22 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 	memcpy(loc, text, txtLen);
 }
 
+static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *line, size_t len, char *symbol) {
+	char *trimmed = trimhead(line);
+	len -= trimmed - line;
+	
+	if (trimmed[0] == 'b' || trimmed[0] == 'B' || symbol[-1] == '(' || strnchr(line, ',', len)) {
+		return 0;
+	}
+	return 1;
+}
+
 void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len) {
 	// FIXME: This needs to be smart about address formation, based on address mode
 	// This is absurdly inefficient, but works, given the current symbol table implementation
 	char *cur;
 	char addrString[7];
+	int width;
 	
 	// Ensure termination for strstr
 	line[len - 1] = '\0';
@@ -210,7 +221,8 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	for (as6502_symbol *this = table->first_var; this; this = this->next) {
 		cur = strstr(line, this->name);
 		if (cur) {
-			snprintf(addrString, 7, "$%04x", this->address);
+			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
+			snprintf(addrString, 7, width ? "$%04x" : "$%02x", this->address);
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
 		}
 	}
@@ -220,7 +232,8 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, "");
 		}
 		else if (cur) {
-			snprintf(addrString, 7, "$%04x", this->address);
+			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
+			snprintf(addrString, 7, width ? "$%04x" : "$%02x", this->address);
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
 		}
 	}	
