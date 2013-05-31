@@ -650,6 +650,10 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 	char workString[80];
 	uint16_t result;
 	
+	if (!string) {
+		return 0;
+	}
+	
 	// Remove all whitespace, #'s, *'s, high ascii, and parenthesis, also, truncate at comma
 	int i = 0;
 	for (const char *cur = string; *cur; cur++) {
