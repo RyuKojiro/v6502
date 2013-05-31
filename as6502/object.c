@@ -98,3 +98,7 @@ void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char
 		// convert byte and append to current blob
 	}
 }
+
+as6502_object_blob *as6502_currentBlobInContext(as6502_object_context *ctx) {
+	return ctx->obj->blobs[ctx->currentBlob];
+}

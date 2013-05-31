@@ -65,6 +65,8 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, ui
 /**@{*/
 /** @brief Automatically processes any dot directive in a given line and updates an as6502_object_context */
 void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char *line, size_t len);
+/** @brief Get the current blob for a given as6502_object_context */
+as6502_object_blob *as6502_currentBlobInContext(as6502_object_context *ctx);
 /**@}*/
 
 #endif
