@@ -200,7 +200,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 
 static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *line, size_t len, char *symbol) {
 	char *trimmed = trimhead(line);
-	len -= trimmed - line;
+	//len -= trimmed - line;
 	
 	if (trimmed[0] == 'b' || trimmed[0] == 'B') {
 		return 0;
