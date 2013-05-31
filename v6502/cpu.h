@@ -253,18 +253,22 @@ typedef enum {
 	v6502_cpu_status_negative	= 128,
 } v6502_cpu_status;
 
-// CPU object lifecycle
+/** @defgroup cpu_lifecycle CPU Object Lifecycle */
+/**@{*/
 /** @brief Create a v6502_cpu */
 v6502_cpu *v6502_createCPU(void);
 /** @brief Destroy a v6502_cpu */
 void v6502_destroyCPU(v6502_cpu *cpu);
+/**@}*/
 
-// Execution
+/** @defgroup cpu_exec Instruction Execution */
+/**@{*/
 /** @brief Execute an instruction on a v6502_cpu */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
 /** @brief Single step a v6502_cpu */
 void v6502_step(v6502_cpu *cpu);
 /** @brief Hardware reset a v6502_cpu */
 void v6502_reset(v6502_cpu *cpu);
+/**@}*/
 
 #endif
