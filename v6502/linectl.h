@@ -40,7 +40,7 @@ const char *rev_strnspc(const char *stop, const char *start);
 /** @param[in] start The location in the string to start searching backwards from */
 /** @param[in] stop The earliest location in the string to search up to, usually the beginning of the string */
 /** @param[in] chr The character to look for */
-const char *rev_strnchr(const char *str, const char *start, const char chr);
+const char *rev_strnchr(const char *stop, const char *start, const char chr);
 
 /** @brief Safely search potentially unterminated string for character */
 const char *strnchr(const char *str, char chr, size_t len);
