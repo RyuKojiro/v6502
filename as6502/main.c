@@ -36,16 +36,37 @@ void as6502_warn(const char *warning) {
 	}
 }
 
+static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t len) {
+	uint8_t opcode, low, high;
+	int addrLen;
+	as6502_address_mode mode;
+
+	as6502_instructionForLine(&opcode, &low, &high, &mode, line, len);
+	addrLen = as6502_instructionLengthForAddressMode(mode);
+	
+	// TODO: Write machine code to object, not directly to file
+	if (addrLen >= 1) {
+		as6502_appendByteToBlob(blob, opcode);
+	}
+	if (addrLen >= 2) {
+		as6502_appendByteToBlob(blob, low);
+	}
+	if (addrLen >= 3) {
+		as6502_appendByteToBlob(blob, high);
+	}
+	
+	return addrLen;
+}
+
 static void assembleFile(FILE *in, FILE *out) {
 	char line[MAX_LINE_LEN];
 	char *trimmedLine;
-	uint8_t opcode, low, high;
 	as6502_address_mode mode;
 	uint16_t address = 0;
-	int addrLen;
 	currentLineNum = 1;
 	int newline;
 	as6502_symbol_table *table = as6502_createSymbolTable();
+	size_t lineLen;
 	
 	// First pass, build symbol table
 	do {
@@ -109,21 +130,9 @@ static void assembleFile(FILE *in, FILE *out) {
 		trimmedLine = trimhead(line);
 		
 		// Assemble whatever is left
-		if (strlen(trimmedLine)) {
-			as6502_instructionForLine(&opcode, &low, &high, &mode, trimmedLine, strlen(trimmedLine));
-			addrLen = as6502_instructionLengthForAddressMode(mode);
-			
-			// TODO: Write machine code to object, not directly to file
-			if (addrLen >= 1) {
-				fwrite(&opcode , 1, 1, out);
-			}
-			if (addrLen >= 2) {
-				fwrite(&low , 1, 1, out);
-			}
-			if (addrLen >= 3) {
-				fwrite(&high , 1, 1, out);
-			}
-			address += addrLen;
+		lineLen = strlen(trimmedLine);
+		if (lineLen) {
+			address += assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen);
 		}
 		
 		// Check if we are on the next line yet
