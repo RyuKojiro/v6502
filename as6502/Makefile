@@ -1,7 +1,7 @@
 #CC=		clang
 PROG=	as6502
 SRCS=	main.c symbols.c object.c common.c\
-	../v6502/parser.c ../v6502/cpu.c ../v6502/mem.c ../v6502/linectl.c
+	parser.c ../v6502/cpu.c ../v6502/mem.c ../v6502/linectl.c
 #LIB=	-lncurses
 OBJS=	$(SRCS:.c=.o)
 CFLAGS=	-c -Wall -std=c99
