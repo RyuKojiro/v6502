@@ -28,7 +28,6 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	char *cur, *start;
 	size_t clause = 0;
 	uint16_t left, right, result;
-	uint8_t high, low;
 	char resultString[7];
 	char *clauseString;
 	
@@ -37,8 +36,7 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	if (cur) {
 		// Get right hand side
 		cur++;
-		as6502_valueForString(&high, &low, NULL, cur);
-		right = (high << 8) | low;
+		right = as6502_valueForString(NULL, cur);
 		
 		// Get left hand side
 		// FIXME: This currently relies on the first space found in reverse
@@ -46,8 +44,7 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 		// left hand value. Not sure if this is proper if whitespace is allowed
 		// in between operators and values.
 		start = rev_strnspc(line, cur) + 1;
-		as6502_valueForString(&high, &low, NULL, start);
-		left = (high << 8) | low;
+		left = as6502_valueForString(NULL, start);
 		
 		// Solve
 		result = left + right;

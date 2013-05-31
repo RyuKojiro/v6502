@@ -11,6 +11,7 @@
 
 #include "object.h"
 #include "common.h"
+#include "parser.h"
 
 // Object Lifecycle
 as6502_object *as6502_createObject() {
@@ -106,9 +107,13 @@ void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char
 
 	if (!strncmp(line + 1, "org", 3)) {
 		// start new blob
+		as6502_addBlobToObject(ctx->obj, as6502_valueForString(NULL, line + 5), 0, NULL);
 	}
 	if (!strncmp(line + 1, "byte", 4)) {
 		// convert byte and append to current blob
+		uint8_t low;
+		as6502_byteValuesForString(NULL, &low, NULL, line + 5);
+		as6502_appendByteToBlob(as6502_currentBlobInContext(ctx), low);
 	}
 }
 

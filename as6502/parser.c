@@ -646,7 +646,7 @@ static int _valueLengthInChars(const char *string) {
 	return i;
 }
 
-void as6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *string) {
+uint16_t as6502_valueForString(int *wide, const char *string) {
 	char workString[80];
 	uint16_t result;
 	
@@ -694,6 +694,13 @@ void as6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *s
 		// Octal and decimal split digits
 		*wide = YES;
 	}
+	
+	return result;
+}
+
+void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string) {
+	uint16_t result = as6502_valueForString(wide, string);
+
 	if (low) {
 		*low = result & 0xFF;
 	}
@@ -788,7 +795,7 @@ as6502_address_mode as6502_addressModeForLine(const char *string) {
 			return _incrementModeByFoundRegister(as6502_address_mode_indirect, cur);
 		default: { // Relative, Absolute, or Implied
 			// TODO: Better byte length determination, this doesn't tell shit
-			as6502_valueForString(NULL, NULL, &wide, cur);
+			as6502_byteValuesForString(NULL, NULL, &wide, cur);
 			if (wide) {
 				return _incrementModeByFoundRegister(as6502_address_mode_absolute, cur);
 			}
@@ -874,7 +881,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, as6
 	
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
-		as6502_valueForString(high, low, NULL, string + 3);
+		as6502_byteValuesForString(high, low, NULL, string + 3);
 	}
 	
 	free(string);
