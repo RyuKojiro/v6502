@@ -84,6 +84,12 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, ui
 	obj->count++;
 }
 
+void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte) {
+	uint16_t newSize = blob->len + 1;
+	blob->data = realloc(blob->data, newSize);
+	blob->data[newSize - 1] = byte;
+	blob->len = newSize;
+}
 
 // Contextual Object Mutators
 void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char *line, size_t len) {
@@ -100,5 +106,5 @@ void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char
 }
 
 as6502_object_blob *as6502_currentBlobInContext(as6502_object_context *ctx) {
-	return ctx->obj->blobs[ctx->currentBlob];
+	return &(ctx->obj->blobs[ctx->currentBlob]);
 }

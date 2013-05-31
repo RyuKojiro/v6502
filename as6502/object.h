@@ -59,6 +59,8 @@ void as6502_destroyObjectContext(as6502_object_context *ctx);
 void as6502_writeObjectToFile(as6502_object *obj, FILE *file);
 /** @brief Creates an as6502_object_blob and adds it to an as6502_object */
 void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, uint8_t *data);
+/** @brief Appends a single byte to an as6502_object_blob */
+void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte);
 /**@}*/
 
 /** @defgroup obj_access Contextual Object Mutators */
