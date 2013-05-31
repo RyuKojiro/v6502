@@ -44,7 +44,7 @@ as6502_address_mode as6502_addressModeForLine(const char *string);
 void as6502_stringForAddressMode(char *out, as6502_address_mode mode);
 /**@}*/
 
-/** @defgroup parser_line Line Based Parsing */
+/** @defgroup parser_line Line Based Assembly Parsing */
 /**@{*/
 /** @brief Determines the numeric value of a literal regardless of base */
 void as6502_valueForString(uint8_t *high, uint8_t *low, int *wide, const char *string);

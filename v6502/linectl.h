@@ -11,7 +11,7 @@
 
 #include <sys/types.h>
 
-/** @defgroup linectl Line Manipulation Functions */
+/** @defgroup linectl String Manipulation Functions */
 /**@{*/
 /** @brief Destructively trim trailing whitespace with NUL */
 void trimtaild(char *str);
