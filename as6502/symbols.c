@@ -198,7 +198,7 @@ static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *l
 	return 1;
 }
 
-void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len) {
+void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, int caseSensitive) {
 	// FIXME: This needs to be smart about address formation, based on address mode
 	// This is absurdly inefficient, but works, given the current symbol table implementation
 	char *cur;
@@ -209,7 +209,15 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	line[len - 1] = '\0';
 	
 	for (as6502_symbol *this = table->first_var; this; this = this->next) {
-		cur = strstr(line, this->name);
+		// Search for symbol
+		if (caseSensitive) {
+			cur = strstr(line, this->name);
+		}
+		else {
+			cur = strcasestr(line, this->name);
+		}
+		
+		// Swap in address
 		if (cur) {
 			if (!isspace(cur[-1]) && cur[-1] != '(') {
 				// Partial symbol match
@@ -222,7 +230,15 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 		}
 	}
 	for (as6502_symbol *this = table->first_label; this; this = this->next) {
-		cur = strstr(line, this->name);
+		// Search for symbol
+		if (caseSensitive) {
+			cur = strstr(line, this->name);
+		}
+		else {
+			cur = strcasestr(line, this->name);
+		}
+
+		// Swap in address
 		if (cur == line) {
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, "");
 		}
