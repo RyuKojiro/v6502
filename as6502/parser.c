@@ -847,8 +847,12 @@ int as6502_instructionLengthForAddressMode(as6502_address_mode mode) {
 }
 
 void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, as6502_address_mode *mode, const char *line, size_t len) {
-	char *string = malloc(len);
-
+	char *string = malloc(len + 1); // Malloc an extra char in case the passed in len does not include a null
+	if (!string) {
+		v6502_fault("Could not allocate work buffer for line");
+		return;
+	}
+	
 	// Use stack if required storage is not passed in
 	if (!mode) {
 		as6502_address_mode _mode;
@@ -860,7 +864,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, as6
 		opcode = &_opcode;
 	}
 	
-	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string, all in one shot (mangling text?)
+	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string, all in one shot
 	size_t i = 0;
 	int o = 0;
 	int charEncountered = NO;
