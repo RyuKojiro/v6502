@@ -16,7 +16,7 @@
 /** @brief The representation of a label in a symbol table */
 typedef struct _as6502_label {
 	/** @brief The next variable in the linked list */
-	struct _as6502_var *next;
+	struct _as6502_label *next;
 	/** @brief The line number of the symbol in the source file */
 	unsigned long line;
 	/** @brief The symbol name */
