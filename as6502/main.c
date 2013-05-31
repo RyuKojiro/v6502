@@ -128,9 +128,13 @@ static void assembleFile(FILE *in, FILE *out) {
 		
 		// Trim leading whitespace
 		trimmedLine = trimhead(line);
-		
-		// Assemble whatever is left
 		lineLen = strlen(trimmedLine);
+
+		if (as6502_resolveVariableDeclaration(table, as6502_currentBlobInContext(ctx), assembleLine, trimmedLine, lineLen)) {
+			continue;
+		}
+
+		// Assemble whatever is left
 		if (lineLen) {
 			address += assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen);
 		}

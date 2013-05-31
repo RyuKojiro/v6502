@@ -9,7 +9,6 @@
 #include "codegen.h"
 #include "parser.h"
 #include "linectl.h"
-#include "symbols.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -61,13 +60,41 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	}
 }
 
-int as6502_resolveVariableDeclaration(char *line, size_t len) {
-	// This will take 1 line in and output 4 lines
-	// e.g.	 IN: var1 = $ff
-	//		OUT:	pha
-	//				lda #$ff
-	//				sta var1
-	//				pla
+int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context, as6502_lineCallback cb, const char *line, size_t len) {
+	/** This will take 1 line in and output 4 lines
+	 * e.g.	 IN: var1 = $ff
+	 *		OUT:	pha;
+	 *				lda #$ff;
+	 *				sta var1;
+	 *				pla;
+	 */
+	uint8_t initialValue;
+	char buf[9];
+	uint8_t address;
 	
-	return NO;
+	if (!strnchr(line, '=', len)) {
+		// No assignments on the line
+		return NO;
+	}
+	
+	const char *cur = rev_strnspc(line + len - 1, line);
+	if (!cur) {
+		// Couldn't find a space
+		return NO;
+	}
+	as6502_byteValuesForString(NULL, &initialValue, NULL, cur + 1);
+	
+	address = as6502_addressForVar(table, line);
+	
+	cb(context, "pha", 4);
+	
+	snprintf(buf, 9, "lda #$%02x", initialValue);
+	cb(context, buf, 9);
+	
+	snprintf(buf, 9, "sta $%04x", address);
+	cb(context, buf, 9);
+
+	cb(context, "pla", 4);
+
+	return YES;
 }
