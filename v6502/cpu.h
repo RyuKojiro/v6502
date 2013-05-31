@@ -253,7 +253,7 @@ typedef enum {
 	v6502_cpu_status_negative	= 128,
 } v6502_cpu_status;
 
-/** @defgroup cpu_lifecycle CPU Object Lifecycle */
+/** @defgroup cpu_lifecycle CPU Lifecycle Functions */
 /**@{*/
 /** @brief Create a v6502_cpu */
 v6502_cpu *v6502_createCPU(void);

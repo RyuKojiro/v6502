@@ -20,7 +20,7 @@ typedef struct {
 	uint16_t size;
 } v6502_memory;
 
-/** @defgroup mem_lifecycle Memory Lifecycle */
+/** @defgroup mem_lifecycle Memory Lifecycle Functions */
 /**@{*/
 /** @brief Create v6502_memory */
 v6502_memory *v6502_createMemory(uint16_t size);
