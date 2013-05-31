@@ -32,13 +32,13 @@ char *trimhead(char *str);
 char *trimheadchar(char *str, char token);
 
 /** @brief Reverse search string for space, safely */
-char *rev_strnspc(char *str, char *start);
+const char *rev_strnspc(const char *str, const char *start);
 
 /** @brief Reverse search string for character, safely */
-char *rev_strnchr(char *str, char *start, char chr);
+const char *rev_strnchr(const char *str, const char *start, const char chr);
 
 /** @brief Safely search potentially unterminated string for character */
-char *strnchr(char *str, char chr, size_t len);
+const char *strnchr(const char *str, char chr, size_t len);
 /**@}*/
 
 #endif
