@@ -40,7 +40,7 @@ static void assembleFile(FILE *in, FILE *out) {
 	char line[MAX_LINE_LEN];
 	char *trimmedLine;
 	uint8_t opcode, low, high;
-	v6502_address_mode mode;
+	as6502_address_mode mode;
 	uint16_t address = 0;
 	int addrLen;
 	currentLineNum = 1;
@@ -62,8 +62,8 @@ static void assembleFile(FILE *in, FILE *out) {
 		}
 		
 		// Increment offset
-		mode = v6502_addressModeForLine(line);
-		address += v6502_instructionLengthForAddressMode(mode);
+		mode = as6502_addressModeForLine(line);
+		address += as6502_instructionLengthForAddressMode(mode);
 		
 		// Check if we are on the next line yet
 		if (newline) {
@@ -109,8 +109,8 @@ static void assembleFile(FILE *in, FILE *out) {
 		
 		// Assemble whatever is left
 		if (strlen(trimmedLine)) {
-			v6502_instructionForLine(&opcode, &low, &high, &mode, trimmedLine, strlen(trimmedLine));
-			addrLen = v6502_instructionLengthForAddressMode(mode);
+			as6502_instructionForLine(&opcode, &low, &high, &mode, trimmedLine, strlen(trimmedLine));
+			addrLen = as6502_instructionLengthForAddressMode(mode);
 			
 			// TODO: Write machine code to object, not directly to file
 			switch (addrLen) {

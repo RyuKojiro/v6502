@@ -17,7 +17,7 @@
 static size_t _lengthOfValue(char *start) {
 	size_t i;
 	for (i = 0; start[i]; i++) {
-		if (!v6502_isDigit(start[i])) {
+		if (!as6502_isDigit(start[i])) {
 			return i;
 		}
 	}
@@ -37,7 +37,7 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	if (cur) {
 		// Get right hand side
 		cur++;
-		v6502_valueForString(&high, &low, NULL, cur);
+		as6502_valueForString(&high, &low, NULL, cur);
 		right = (high << 8) | low;
 		
 		// Get left hand side
@@ -46,7 +46,7 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 		// left hand value. Not sure if this is proper if whitespace is allowed
 		// in between operators and values.
 		start = rev_strnspc(line, cur) + 1;
-		v6502_valueForString(&high, &low, NULL, start);
+		as6502_valueForString(&high, &low, NULL, start);
 		left = (high << 8) | low;
 		
 		// Solve
