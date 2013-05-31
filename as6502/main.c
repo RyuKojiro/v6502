@@ -114,13 +114,14 @@ static void assembleFile(FILE *in, FILE *out) {
 			addrLen = as6502_instructionLengthForAddressMode(mode);
 			
 			// TODO: Write machine code to object, not directly to file
-			switch (addrLen) {
-				case 1:
-					fwrite(&opcode , 1, 1, out);
-				case 2:
-					fwrite(&low , 1, 1, out);
-				case 3:
-					fwrite(&high , 1, 1, out);
+			if (addrLen >= 1) {
+				fwrite(&opcode , 1, 1, out);
+			}
+			if (addrLen >= 2) {
+				fwrite(&low , 1, 1, out);
+			}
+			if (addrLen >= 3) {
+				fwrite(&high , 1, 1, out);
 			}
 			address += addrLen;
 		}
