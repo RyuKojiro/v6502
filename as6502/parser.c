@@ -854,7 +854,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, as6
 	}
 	
 	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string, all in one shot (mangling text?)
-	int i = 0;
+	size_t i = 0;
 	int o = 0;
 	int charEncountered = NO;
 	for(; line[i] && i < len; i++){
