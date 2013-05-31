@@ -19,7 +19,7 @@ void trimtaild(char *str);
 /** @brief Destructively tail trim at first encounter of token char from the tail end */
 void trimtailchard(char *str, char token);
 
-/** @brief Destructively tail trim at first encounter of token char from the head end */
+/** @brief Destructively tail trim at first encounter of whitespace from the head end */
 void trimgreedytaild(char *str);
 
 /** @brief Destructively tail trim at first encounter of token char from the head end */
