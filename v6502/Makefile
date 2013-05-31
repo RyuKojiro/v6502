@@ -1,6 +1,7 @@
 CC=clang
 PROG=	v6502
-SRCS=	main.c parser.c core.c cpu.c mem.c linectl.c
+SRCS=	main.c ../as6502/parser.c core.c cpu.c mem.c linectl.c
+INCLUDE+=	-I../as6502/ -I../v6502/
 #LIB= -lncurses
 CFLAGS=	-Wall -Wswitch-enum
 
