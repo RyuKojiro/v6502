@@ -77,7 +77,7 @@ int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context,
 		return NO;
 	}
 	
-	const char *cur = rev_strnspc(line + len - 1, line);
+	const char *cur = rev_strnspc(line, line + len - 1);
 	if (!cur) {
 		// Couldn't find a space
 		return NO;
