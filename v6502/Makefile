@@ -3,7 +3,7 @@ PROG=	v6502
 SRCS=	main.c ../as6502/parser.c core.c cpu.c mem.c linectl.c
 INCLUDE+=	-I../as6502/ -I../v6502/
 #LIB= -lncurses
-CFLAGS=	-Wall -Wswitch-enum
+CFLAGS=	-Wall
 
 $(PROG): $(SRCS)
 	$(CC) $(LIB) $(INCLUDE) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $(PROG)
