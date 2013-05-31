@@ -70,8 +70,8 @@ char *trimheadchar(char *str, char token) {
 	return str;
 }
 
-const char *rev_strnspc(const char *str, const char *start) {
-	for (/* start */; str > start; start--) {
+const char *rev_strnspc(const char *stop, const char *start) {
+	for (/* start */; start > stop; start--) {
 		if (isspace(*start)) {
 			return start;
 		}
@@ -79,8 +79,8 @@ const char *rev_strnspc(const char *str, const char *start) {
 	return NULL;
 }
 
-const char *rev_strnchr(const char *str, const char *start, const char chr) {
-	for (/* start */; start > str; start--) {
+const char *rev_strnchr(const char *stop, const char *start, const char chr) {
+	for (/* start */; start > stop; start--) {
 		if (*start == chr) {
 			return start;
 		}
