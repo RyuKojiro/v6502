@@ -87,5 +87,14 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, ui
 
 // Contextual Object Mutators
 void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char *line, size_t len) {
-	
+	if (len >= 3) {
+		return;
+	}
+
+	if (!strncmp(line + 1, "org", 3)) {
+		// start new blob
+	}
+	if (!strncmp(line + 1, "byte", 4)) {
+		// convert byte and append to current blob
+	}
 }

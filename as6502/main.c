@@ -102,6 +102,7 @@ static void assembleFile(FILE *in, FILE *out) {
 		// Handle dot directives
 		if (line[0] == '.') {
 			as6502_processObjectDirectiveForLine(ctx, line, MAX_LINE_LEN);
+			continue;
 		}
 		
 		// Trim leading whitespace
