@@ -74,18 +74,12 @@ void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, cons
 	memcpy(label->name, name, len);
 
 	// Add it to the table
-	if (!table->first_label) {
-		label->next = NULL;
-		table->first_label = label;
-	}
-	else {
-		for (as6502_symbol *this = table->first_label; this; this = this->next) {
-			if (!this->next || strlen(this->next->name) < strlen(name)) {
-				as6502_symbol *next = this->next;
-				this->next = label;
-				label->next = next;
-				return;
-			}
+	for (as6502_symbol **this = &table->first_label;; this = &((*this)->next)) {
+		if (!*this || strlen((*this)->name) < strlen(name)) {
+			as6502_symbol *next = *this;
+			*this = label;
+			label->next = next;
+			return;
 		}
 	}
 }
@@ -136,18 +130,12 @@ void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const 
 	memcpy(var->name, name, len);
 	
 	// Add it to the table
-	if (!table->first_var) {
-		var->next = NULL;
-		table->first_var = var;
-	}
-	else {
-		for (as6502_symbol *this = table->first_var; this; this = this->next) {
-			if (!this->next || strlen(this->next->name) < strlen(name)) {
-				as6502_symbol *next = this->next;
-				this->next = var;
-				var->next = next;
-				return;
-			}
+	for (as6502_symbol **this = &table->first_var;; this = &((*this)->next)) {
+		if (!*this || strlen((*this)->name) < strlen(name)) {
+			as6502_symbol *next = *this;
+			*this = var;
+			var->next = next;
+			return;
 		}
 	}
 }
