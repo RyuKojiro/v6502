@@ -11,7 +11,6 @@
 
 #include <stdint.h>
 
-// TODO: unionize these structs?
 /** @struct */
 /** @brief An individual symbol in a symbol table */
 typedef struct _as6502_symbol {
