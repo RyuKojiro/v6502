@@ -85,8 +85,15 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start, uint16_t len, ui
 }
 
 void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte) {
+	if (!blob) {
+		die("Null blob in as6502_appendByteToBlob");
+	}
+	
 	uint16_t newSize = blob->len + 1;
 	blob->data = realloc(blob->data, newSize);
+	if (!blob->data) {
+		die("blobs realloc in as6502_appendByteToBlob");
+	}
 	blob->data[newSize - 1] = byte;
 	blob->len = newSize;
 }
