@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E64198E617373A5A00D0EE25 /* as6502_xcode.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = E64198E517373A5A00D0EE25 /* as6502_xcode.1 */; };
 		E64198EA17373A6000D0EE25 /* symbols.c in Sources */ = {isa = PBXBuildFile; fileRef = E677B2881737338300A3B9E8 /* symbols.c */; };
 		E64198EB17373A6200D0EE25 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E666A8121715D1C000EDBF95 /* main.c */; };
-		E64198EC17373A8400D0EE25 /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E677B28E1737359300A3B9E8 /* linectl.c */; };
 		E64198EE17373AE000D0EE25 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E64198EF17373AE500D0EE25 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
+		E6A4808C17583605005ABE54 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
 		E6BDA952174FD23D0092B614 /* codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = E670DCFA174CA15300F95400 /* codegen.c */; };
 		E6FE6FB217376FCD00B4D249 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* common.c */; };
 		E6FE6FB5173773B500B4D249 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB4173773B500B4D249 /* object.c */; };
@@ -25,7 +24,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				E64198E617373A5A00D0EE25 /* as6502_xcode.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -33,8 +31,6 @@
 
 /* Begin PBXFileReference section */
 		E64198E117373A5A00D0EE25 /* as6502-xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "as6502-xcode"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E64198E317373A5A00D0EE25 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		E64198E517373A5A00D0EE25 /* as6502_xcode.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = as6502_xcode.1; sourceTree = "<group>"; };
 		E64198F017374A4000D0EE25 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = object.h; path = as6502/object.h; sourceTree = "<group>"; };
 		E64B300E170D59B700DAB63C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		E65212A91704B90D009CE919 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
@@ -54,13 +50,13 @@
 		E670DCFA174CA15300F95400 /* codegen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = codegen.c; path = as6502/codegen.c; sourceTree = "<group>"; };
 		E677B2881737338300A3B9E8 /* symbols.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = symbols.c; path = as6502/symbols.c; sourceTree = "<group>"; };
 		E677B2891737338300A3B9E8 /* symbols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = symbols.h; path = as6502/symbols.h; sourceTree = "<group>"; };
-		E677B28E1737359300A3B9E8 /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linectl.c; sourceTree = "<group>"; };
-		E677B291173735DB00A3B9E8 /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linectl.h; sourceTree = "<group>"; };
 		E677B29C1737397800A3B9E8 /* as6502 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = as6502; path = as6502/as6502; sourceTree = "<group>"; };
 		E677B29D1737399B00A3B9E8 /* v6502 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = v6502; path = v6502/v6502; sourceTree = "<group>"; };
 		E6A079101737321800E0027B /* NOTES */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTES; sourceTree = "<group>"; };
 		E6A4808A1758355A005ABE54 /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = as6502/parser.c; sourceTree = "<group>"; };
 		E6A4808B1758355A005ABE54 /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = as6502/parser.h; sourceTree = "<group>"; };
+		E6B33F1B1759748C00F0D8C2 /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = as6502/linectl.c; sourceTree = "<group>"; };
+		E6B33F1C1759748C00F0D8C2 /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = as6502/linectl.h; sourceTree = "<group>"; };
 		E6FE6FB117376FCD00B4D249 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = common.c; path = as6502/common.c; sourceTree = "<group>"; };
 		E6FE6FB317376FEB00B4D249 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = as6502/common.h; sourceTree = "<group>"; };
 		E6FE6FB4173773B500B4D249 /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = object.c; path = as6502/object.c; sourceTree = "<group>"; };
@@ -77,22 +73,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E64198E217373A5A00D0EE25 /* as6502-xcode */ = {
-			isa = PBXGroup;
-			children = (
-				E64198E317373A5A00D0EE25 /* main.c */,
-				E64198E517373A5A00D0EE25 /* as6502_xcode.1 */,
-			);
-			path = "as6502-xcode";
-			sourceTree = "<group>";
-		};
 		E652129D1704B90D009CE919 = {
 			isa = PBXGroup;
 			children = (
 				E6A079101737321800E0027B /* NOTES */,
 				E666A8111715D1A800EDBF95 /* as6502 */,
 				E65212A81704B90D009CE919 /* v6502 */,
-				E64198E217373A5A00D0EE25 /* as6502-xcode */,
 				E65212A71704B90D009CE919 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,8 +105,6 @@
 				E65212B71704BAED009CE919 /* mem.h */,
 				E65212B81704BC42009CE919 /* core.c */,
 				E65212BA1704BC4B009CE919 /* core.h */,
-				E677B28E1737359300A3B9E8 /* linectl.c */,
-				E677B291173735DB00A3B9E8 /* linectl.h */,
 			);
 			path = v6502;
 			sourceTree = "<group>";
@@ -128,6 +112,8 @@
 		E666A8111715D1A800EDBF95 /* as6502 */ = {
 			isa = PBXGroup;
 			children = (
+				E6B33F1B1759748C00F0D8C2 /* linectl.c */,
+				E6B33F1C1759748C00F0D8C2 /* linectl.h */,
 				E6A4808A1758355A005ABE54 /* parser.c */,
 				E6A4808B1758355A005ABE54 /* parser.h */,
 				E666A8131715D1C000EDBF95 /* Makefile */,
@@ -257,12 +243,12 @@
 			files = (
 				E64198EA17373A6000D0EE25 /* symbols.c in Sources */,
 				E64198EB17373A6200D0EE25 /* main.c in Sources */,
-				E64198EC17373A8400D0EE25 /* linectl.c in Sources */,
 				E6BDA952174FD23D0092B614 /* codegen.c in Sources */,
 				E64198EE17373AE000D0EE25 /* cpu.c in Sources */,
 				E64198EF17373AE500D0EE25 /* mem.c in Sources */,
 				E6FE6FB217376FCD00B4D249 /* common.c in Sources */,
 				E6FE6FB5173773B500B4D249 /* object.c in Sources */,
+				E6A4808C17583605005ABE54 /* parser.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
