@@ -816,8 +816,7 @@ as6502_address_mode as6502_addressModeForLine(const char *string) {
 				return _incrementModeByFoundRegister(as6502_address_mode_absolute, cur);
 			}
 			else {
-				if ( (as6502_isDigit(cur[0]) && as6502_isDigit(cur[1]) && as6502_isDigit(cur[2])) || // Octal
-					(cur[0] == '$' && as6502_isDigit(cur[1]) && as6502_isDigit(cur[2])) ) { // Hex
+				if (as6502_isNumber(cur)) {
 					return as6502_address_mode_relative;
 				}
 				else {
@@ -825,7 +824,7 @@ as6502_address_mode as6502_addressModeForLine(const char *string) {
 						return as6502_address_mode_implied;
 					}
 					else {
-						if (!as6502_isDigit(*cur)) {
+						if (!as6502_isNumber(cur)) {
 							return as6502_address_mode_symbol;
 						}
 						else {
