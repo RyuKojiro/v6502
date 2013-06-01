@@ -12,6 +12,7 @@
 		E64198EE17373AE000D0EE25 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E64198EF17373AE500D0EE25 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
 		E6A4808C17583605005ABE54 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
+		E6B33F1D175974DB00F0D8C2 /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
 		E6BDA952174FD23D0092B614 /* codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = E670DCFA174CA15300F95400 /* codegen.c */; };
 		E6FE6FB217376FCD00B4D249 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* common.c */; };
 		E6FE6FB5173773B500B4D249 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB4173773B500B4D249 /* object.c */; };
@@ -187,6 +188,19 @@
 			passBuildSettingsInEnvironment = 1;
 			productName = v6502;
 		};
+		E6B33F1E17597E9300F0D8C2 /* Doxygen */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E6B33F1F17597E9300F0D8C2 /* Build configuration list for PBXLegacyTarget "Doxygen" */;
+			buildPhases = (
+			);
+			buildToolPath = /Applications/Doxygen.app/Contents/Resources/doxygen;
+			dependencies = (
+			);
+			name = Doxygen;
+			passBuildSettingsInEnvironment = 1;
+			productName = Doxygen;
+		};
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
@@ -232,6 +246,7 @@
 				E666A83A17169D9A00EDBF95 /* as6502-test */,
 				E677B298173738E100A3B9E8 /* v6502 */,
 				E64198E017373A5A00D0EE25 /* as6502-xcode */,
+				E6B33F1E17597E9300F0D8C2 /* Doxygen */,
 			);
 		};
 /* End PBXProject section */
@@ -245,6 +260,7 @@
 				E64198EB17373A6200D0EE25 /* main.c in Sources */,
 				E6BDA952174FD23D0092B614 /* codegen.c in Sources */,
 				E64198EE17373AE000D0EE25 /* cpu.c in Sources */,
+				E6B33F1D175974DB00F0D8C2 /* linectl.c in Sources */,
 				E64198EF17373AE500D0EE25 /* mem.c in Sources */,
 				E6FE6FB217376FCD00B4D249 /* common.c in Sources */,
 				E6FE6FB5173773B500B4D249 /* object.c in Sources */,
@@ -399,6 +415,27 @@
 			};
 			name = Release;
 		};
+		E6B33F2017597E9300F0D8C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E6B33F2117597E9300F0D8C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -446,6 +483,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		E6B33F1F17597E9300F0D8C2 /* Build configuration list for PBXLegacyTarget "Doxygen" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6B33F2017597E9300F0D8C2 /* Debug */,
+				E6B33F2117597E9300F0D8C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

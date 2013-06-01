@@ -14,6 +14,7 @@
 #include "object.h"
 #include "symbols.h"
 
+/** @brief A line-based callback for code generation functions that emit multiple lines of code */
 typedef uint16_t (* as6502_lineCallback)(as6502_object_blob *blob, const char *line, size_t len);
 
 /** @defgroup codegen Code Generation Functions */

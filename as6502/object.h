@@ -63,7 +63,7 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start);
 void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte);
 /**@}*/
 
-/** @defgroup obj_access Contextual Object Mutators */
+/** @defgroup obj_mutate Contextual Object Mutators */
 /**@{*/
 /** @brief Automatically processes any dot directive in a given line and updates an as6502_object_context */
 void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char *line, size_t len);

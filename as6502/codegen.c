@@ -61,7 +61,7 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 }
 
 int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context, as6502_lineCallback cb, const char *line, size_t len) {
-	/** This will take 1 line in and output 4 lines
+	/* This will take 1 line in and output 4 lines
 	 * e.g.	 IN: var1 = $ff
 	 *		OUT:	pha;
 	 *				lda #$ff;
