@@ -1,6 +1,11 @@
-==================================== as6502 ====================================
+/**
+\mainpage
+\subpage as
 
-NOTES:
+\subpage vm
+
+\page as Assembler
+\section notes Notes
 
 When assembling from stdin, label parsing and dereferencing is not supported.
 This is because the labels are all determined in advance on a first pass that
@@ -8,20 +13,21 @@ only cares about instruction size, and then the second pass actually begins
 converting the assembly to machine code, while dereferencing the labels along
 the way via the pre-built table.
 
-DESIGN:
+\section design Design
 
-Pass 1:
+- Pass 1:
 	Reference calculation; conversion of variable names and labels to addresses.
 
-Pass 2: (Final) (Only pass when using stdin)
+- Pass 2: (Final) (Only pass when using stdin)
 	Handling of dot-prefix lines. Allocation of .data blocks, .words, .org.
 	Conversion of instructions to machine code.
 
-TODO:
+\section todo To-Do
 
 * test.s:8: error: Invalid opcode '.org $e000'
 	Needs to support . prefixed lines for special things like data, org, etc.
 * test.s:54: error: Invalid opcode ';	as the first non-prime'
 	Should ignore comment lines
 	
-================================================================================
+\page vm Virtual Machine
+*/
