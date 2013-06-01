@@ -749,6 +749,18 @@ int as6502_isDigit(char c) {
 	return NO;
 }
 
+int as6502_isNumber(char *c) {
+	// Hex
+	if (c[0] == '$' && as6502_isDigit(c[2])) {
+		return YES;
+	}
+	// Oct/Dec
+	if ((c[0] >= '0' && c[0] <= '9')) {
+		return YES;
+	}
+	return NO;
+}
+
 as6502_address_mode as6502_addressModeForLine(const char *string) {
 	/* 
 	 √ OPC			....	implied

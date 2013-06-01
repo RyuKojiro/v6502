@@ -60,7 +60,10 @@ void as6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len);
 
 /** @defgroup parser_help Parsing assistance */
 /**@{*/
+/** @brief Tests a single character for the possibility of being a hex/oct/dec digit */
 int as6502_isDigit(char c);
+/** @brief Determines whether or not a token is a number literal */
+int as6502_isNumber(char *c);
 /**@}*/
 
 #endif
