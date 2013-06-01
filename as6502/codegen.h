@@ -1,4 +1,5 @@
 //
+/** @brief Assembly language generation, optimization, and manipulation functionality */
 /** @file codegen.h */
 //  v6502
 //

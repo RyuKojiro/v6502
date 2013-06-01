@@ -1,4 +1,5 @@
 //
+/** @brief Assembly language parsing functionality */
 /** @file parser.h */
 //  v6502
 //

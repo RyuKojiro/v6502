@@ -1,4 +1,5 @@
 //
+/** @brief Symbol table management */
 /** @file symbols.h */
 //  v6502
 //

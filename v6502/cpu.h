@@ -1,4 +1,5 @@
 //
+/** @brief Virtual CPU */
 /** @file cpu.h */
 //  v6502
 //

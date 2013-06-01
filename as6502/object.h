@@ -1,4 +1,5 @@
 //
+/** @brief Binary object management */
 /** @file object.h */
 //  v6502
 //
