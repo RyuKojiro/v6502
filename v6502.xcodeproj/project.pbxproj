@@ -58,6 +58,7 @@
 		E6A4808B1758355A005ABE54 /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = as6502/parser.h; sourceTree = "<group>"; };
 		E6B33F1B1759748C00F0D8C2 /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = as6502/linectl.c; sourceTree = "<group>"; };
 		E6B33F1C1759748C00F0D8C2 /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = as6502/linectl.h; sourceTree = "<group>"; };
+		E6B33F221759821E00F0D8C2 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
 		E6FE6FB117376FCD00B4D249 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = common.c; path = as6502/common.c; sourceTree = "<group>"; };
 		E6FE6FB317376FEB00B4D249 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = as6502/common.h; sourceTree = "<group>"; };
 		E6FE6FB4173773B500B4D249 /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = object.c; path = as6502/object.c; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 		E652129D1704B90D009CE919 = {
 			isa = PBXGroup;
 			children = (
+				E6B33F221759821E00F0D8C2 /* Doxyfile */,
 				E6A079101737321800E0027B /* NOTES */,
 				E666A8111715D1A800EDBF95 /* as6502 */,
 				E65212A81704B90D009CE919 /* v6502 */,
