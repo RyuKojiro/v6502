@@ -131,7 +131,7 @@ int main(int argc, const char * argv[])
 				
 				// Make sure we don't go out of bounds either direction
 				uint8_t high, low;
-				as6502_valueForString(&high, &low, NULL, command);
+				as6502_byteValuesForString(&high, &low, NULL, command);
 				uint16_t start = (high << 8) | low;
 				
 				if (start <= 0x10) {
