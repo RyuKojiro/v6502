@@ -74,7 +74,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 
 /** @defgroup sym_rep Symbol Replacement */
 /**@{*/
-void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, const char *symbol, const char *text);
+void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, char *symbol, const char *text);
 /**@}*/
 
 #endif
