@@ -817,7 +817,7 @@ as6502_address_mode as6502_addressModeForLine(const char *string) {
 			}
 			else {
 				if (as6502_isNumber(cur)) {
-					return as6502_address_mode_relative;
+					return _incrementModeByFoundRegister(as6502_address_mode_relative, cur);
 				}
 				else {
 					if (_isEndOfString(cur)) {
