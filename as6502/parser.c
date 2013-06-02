@@ -32,7 +32,7 @@
 static v6502_opcode _addrModeError(const char *op, as6502_address_mode mode) {
 	char e[MAX_ERROR_LEN];
 	char m[12];
-	int depth = 0;
+	size_t depth = 0;
 	
 	if (mode == as6502_address_mode_symbol) {
 		strncpy(e, kUnknownSymbolErrorText, MIN(sizeof(kUnknownSymbolErrorText), MAX_ERROR_LEN - depth));
@@ -56,7 +56,7 @@ static v6502_opcode _addrModeError(const char *op, as6502_address_mode mode) {
 
 static v6502_opcode _opError(const char *op, const char *error) {
 	char e[MAX_ERROR_LEN];	
-	int depth = 0;
+	size_t depth = 0;
 	
 	strncpy(e, error, MIN(strlen(error) + 1, MAX_ERROR_LEN - depth));
 	depth += sizeof(kForOperationErrorText);
@@ -857,6 +857,7 @@ int as6502_instructionLengthForAddressMode(as6502_address_mode mode) {
 			return 3;
 		case as6502_address_mode_symbol:
 		case as6502_address_mode_unknown:
+		default:
 			return 0;
 	}
 }
