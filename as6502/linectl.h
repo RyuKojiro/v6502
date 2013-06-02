@@ -1,5 +1,5 @@
 //
-/** @brief Portable per-line string manipulation functionality */
+/** @brief Portable per-line string manipulation */
 /** @file linectl.h */
 //  v6502
 //
