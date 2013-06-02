@@ -13,7 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-static size_t _lengthOfValue(char *start) {
+static size_t _lengthOfValue(const char *start) {
 	size_t i;
 	for (i = 0; start[i]; i++) {
 		if (!as6502_isDigit(start[i])) {
@@ -24,7 +24,8 @@ static size_t _lengthOfValue(char *start) {
 }
 
 void as6502_resolveArithmetic(char *line, size_t len) {
-	char *cur, *start;
+	const char *cur;
+	char *start;
 	size_t clause = 0;
 	uint16_t left, right, result;
 	char resultString[7];
