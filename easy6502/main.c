@@ -10,8 +10,7 @@
 #include "mem.h"
 
 #include "video.h"
-
-#include <unistd.h>		// usleep
+#include "state.h"
 
 /*
  Notes:
@@ -37,8 +36,13 @@ int main(int argc, const char * argv[])
 	
 	v6502_reset(cpu);
 	while (!faulted) {
-		usleep(10000);
+		// Update keypress byte, hold for clock cycle, and refresh random byte
+		stateCycle(cpu->memory);
+		
+		// Processor time
 		v6502_step(cpu);
+		
+		// Refresh Video
 		updateVideo(cpu->memory, scr);
 	}
 
