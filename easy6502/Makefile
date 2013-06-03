@@ -1,8 +1,8 @@
 CC=clang
-PROG=	v6502
-SRCS=	main.c ../as6502/parser.c core.c cpu.c mem.c ../as6502/linectl.c
-INCLUDE+=	-I../as6502/ -I../v6502/
-#LIB= -lncurses
+PROG=	easy6502
+SRCS=	main.c video.c ../v6502/cpu.c ../v6502/mem.c
+INCLUDE+=	-I../v6502/
+LIB= -lcurses
 CFLAGS=	-Wall
 
 $(PROG): $(SRCS)

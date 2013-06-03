@@ -6,7 +6,12 @@
 //  Copyright (c) 平成25年 Hello-Channel, LLC. All rights reserved.
 //
 
-#define MAX(a, b)	(a > b ? a : b)
+#include "video.h"
+
+#include <stdint.h>
+
+#define MAX(a, b)		(a > b ? a : b)
+#define VIDEO_OFFSET	0x200
 
 /*
  $0: Black
@@ -32,9 +37,16 @@ WINDOW *initVideo() {
 }
 
 void updateVideo(v6502_memory *mem, WINDOW *win) {
-	for (int x = 0; x < MAX(getmaxx(win), 32); x++) {
-		for (int y = 0; y < MAX(getmaxy(win), 32); y++) {
-			//
+	int w = MAX(getmaxx(win), 32);
+	int h = MAX(getmaxy(win), 32);
+	uint8_t byte;
+
+	for (int x = 0; x < w; x++) {
+		for (int y = 0; y < h; y++) {
+			byte = mem->bytes[x * w + y + VIDEO_OFFSET];
+			if (byte) {
+				mvwaddch(win, x, y, byte);
+			}
 		}
 	}
 	

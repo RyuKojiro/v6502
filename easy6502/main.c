@@ -11,6 +11,8 @@
 
 #include "video.h"
 
+#include <unistd.h>		// usleep
+
 /*
  Notes:
  
@@ -35,6 +37,7 @@ int main(int argc, const char * argv[])
 	
 	v6502_reset(cpu);
 	while (!faulted) {
+		usleep(10000);
 		v6502_step(cpu);
 		updateVideo(cpu->memory, scr);
 	}
