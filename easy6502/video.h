@@ -6,9 +6,14 @@
 //  Copyright (c) 平成25年 Hello-Channel, LLC. All rights reserved.
 //
 
-#ifndef v6502_video_h
-#define v6502_video_h
+#include <curses.h>
 
+#include "mem.h"
 
+#ifndef easy6502_video_h
+#define easy6502_video_h
+
+WINDOW *initVideo();
+void updateVideo(v6502_memory *mem, WINDOW *win);
 
 #endif

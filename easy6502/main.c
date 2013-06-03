@@ -31,12 +31,12 @@ int main(int argc, const char * argv[])
 {
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(2048);
+	WINDOW *scr = initVideo();
 	
 	v6502_reset(cpu);
-	
 	while (!faulted) {
 		v6502_step(cpu);
-		updateVideo(cpu->memory);
+		updateVideo(cpu->memory, scr);
 	}
 
 	v6502_destroyMemory(cpu->memory);
