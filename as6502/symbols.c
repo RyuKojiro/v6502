@@ -191,7 +191,7 @@ static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *l
 	char *trimmed = trimhead(line);
 	//len -= trimmed - line;
 	
-	if (trimmed[0] == 'b' || trimmed[0] == 'B' || symbol[-1] == '(') {
+	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || symbol[-1] == '(') {
 		return 0;
 	}
 
