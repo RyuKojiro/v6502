@@ -14,6 +14,9 @@
 #define VIDEO_OFFSET	0x200
 
 /*
+ Memory locations $200 to $5ff map to the screen pixels. Different values will
+ draw different colour pixels. The colours are:
+
  $0: Black
  $1: White
  $2: Red
@@ -33,7 +36,18 @@
 */
 
 WINDOW *initVideo() {
-	return initscr();
+	WINDOW *win = initscr();
+	noecho();
+	return win;
+}
+
+char hex(uint8_t b) {
+	b &= 0x0F;
+	
+	if (b < 0x0A) {
+		return b + '0';
+	}
+	return b + 'A';
 }
 
 void updateVideo(v6502_memory *mem, WINDOW *win) {
@@ -45,7 +59,8 @@ void updateVideo(v6502_memory *mem, WINDOW *win) {
 		for (int y = 0; y < h; y++) {
 			byte = mem->bytes[x * w + y + VIDEO_OFFSET];
 			if (byte) {
-				mvwaddch(win, x, y, byte);
+				move(x, y);
+				addch(hex(byte));
 			}
 		}
 	}
