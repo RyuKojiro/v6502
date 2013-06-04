@@ -29,11 +29,7 @@ void v6502_fault(const char *e) {
 static FILE *logFile;
 static unsigned long cycle;
 
-static void logCpuStatus(v6502_cpu *cpu) {
-	if (!logFile) {
-		logFile = fopen("easy6502.log", "w");
-	}
-	
+static void logCpuStatus(v6502_cpu *cpu) {	
 	fprintf(logFile, "Cycle #%lu\n", cycle);
 	
 	fprintf(logFile, "Status Register: %c%c%c%c%c%c%c%c\n",
@@ -48,6 +44,25 @@ static void logCpuStatus(v6502_cpu *cpu) {
 	fprintf(logFile, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sr = 0x%02x, sp = 0x%02x\nMEM %p: memsize = %hu (0x%04x)\n\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
 }
 
+void broken() {
+	mvaddnstr(2, 2, "BREAK", 5);
+	while (getch() != KEY_ENTER) {}
+}
+
+void loadProgram(v6502_memory *mem, const char *fname) {
+	FILE *f = fopen(fname, "r");
+	uint8_t byte;
+	uint8_t offset = 0;
+	
+	while (fread(&byte, 1, 1, f)) {
+		mem->bytes[0x600 + (offset++)] = byte;
+	}
+	
+	fprintf(logFile, "Loaded ROM of %d bytes\n\n", offset);
+	
+	fclose(f);
+}
+
 int main(int argc, const char * argv[])
 {
 	v6502_cpu *cpu = v6502_createCPU();
@@ -55,7 +70,12 @@ int main(int argc, const char * argv[])
 	WINDOW *scr = initVideo();
 	initState();
 	
-	// TODO: Load program code into memory
+	if (!logFile) {
+		logFile = fopen("easy6502.log", "w");
+	}
+
+	// Load program code into memory
+	loadProgram(cpu->memory, "easy_test.o");
 	
 	v6502_reset(cpu);
 	while (!faulted) {
@@ -71,6 +91,7 @@ int main(int argc, const char * argv[])
 		
 		// Exit on break
 		if (cpu->sr & v6502_cpu_status_break) {
+			broken();
 			break;
 		}
 
