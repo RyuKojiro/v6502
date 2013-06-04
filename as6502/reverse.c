@@ -278,6 +278,60 @@ void as6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
 	}
 }
 
-void as6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low) {
+void as6502_stringForOperand(char *string, size_t len, as6502_address_mode mode, uint8_t high, uint8_t low) {
+	switch (mode) {
+		case as6502_address_mode_accumulator: {
+			strncpy(string, "A", len);
+		} return;
+		case as6502_address_mode_implied: {
+			if (len) {
+				string[0] = '\0';
+			}
+		} return;
+		case as6502_address_mode_immediate: {
+			snprintf(string, len, "#$%02x", low);
+		} return;
+		case as6502_address_mode_zeropage: {
+			snprintf(string, len, "*$%02x", low);
+		} return;
+		case as6502_address_mode_zeropage_x: {
+			snprintf(string, len, "#$%02x,X", low);
+		} return;
+		case as6502_address_mode_zeropage_y: {
+			snprintf(string, len, "#$%02x,Y", low);
+		} return;
+		case as6502_address_mode_relative: {
+			snprintf(string, len, "$%02x", low);
+		} return;
+		case as6502_address_mode_absolute: {
+			snprintf(string, len, "$%02x%02x", high, low);
+		} return;
+		case as6502_address_mode_absolute_x: {
+			snprintf(string, len, "$%02x%02x,X", high, low);
+		} return;
+		case as6502_address_mode_absolute_y: {
+			snprintf(string, len, "$%02x%02x,Y", high, low);
+		} return;
+		case as6502_address_mode_indirect: {
+			snprintf(string, len, "($%02x%02x)", high, low);
+		} return;
+		case as6502_address_mode_indirect_x: {
+			snprintf(string, len, "($%02x,X)", low);
+		} return;
+		case as6502_address_mode_indirect_y: {
+			snprintf(string, len, "($%02x),Y", low);
+		} return;
+		case as6502_address_mode_symbol:
+		case as6502_address_mode_unknown:
+		default:
+			return;
+	}
+}
 
+void as6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low) {
+	as6502_stringForOpcode(string, len, opcode);
+	string[3] = ' ';
+	string += 4;
+	len -= 4;
+	as6502_stringForOperand(string, len, <#as6502_address_mode mode#>, high, low);
 }

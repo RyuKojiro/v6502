@@ -12,7 +12,10 @@
 #include <stdio.h>
 
 #include "cpu.h"
+#include "parser.h"
 
+void as6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode);
+void as6502_stringForOperand(char *string, size_t len, as6502_address_mode opcode, uint8_t high, uint8_t low);
 void as6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low);
 
 #endif
