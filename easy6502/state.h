@@ -11,6 +11,7 @@
 
 #include "mem.h"
 
+void initState();
 void stateCycle(v6502_memory *mem);
 
 #endif

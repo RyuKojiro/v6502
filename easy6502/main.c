@@ -14,10 +14,7 @@
 
 /*
  Notes:
- 
- Memory location $fe contains a new random byte on every instruction.
- Memory location $ff contains the ascii code of the last key pressed.
- 
+  
  Memory locations $200 to $5ff map to the screen pixels. Different values will
  draw different colour pixels. The colours are:
  */
@@ -33,6 +30,9 @@ int main(int argc, const char * argv[])
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(2048);
 	WINDOW *scr = initVideo();
+	initState();
+	
+	// TODO: Load program code into memory
 	
 	v6502_reset(cpu);
 	while (!faulted) {
