@@ -62,7 +62,8 @@ void as6502_destroyObjectContext(as6502_object_context *ctx) {
 
 // Object Accessors
 void as6502_writeObjectToFile(as6502_object *obj, FILE *file) {
-	// TODO: object file writeout
+	// TODO: Proper object file writeout
+	fwrite(obj->blobs[0].data, 1, obj->blobs[0].len, file);
 }
 
 void as6502_addBlobToObject(as6502_object *obj, uint16_t start) {	
