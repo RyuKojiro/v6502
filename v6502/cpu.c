@@ -162,7 +162,7 @@ int v6502_instructionLengthForOpcode(v6502_opcode opcode) {
 		return 3;
 	}
 	
-	if (((opcode & 0x0F) == 0x01) && ((opcode & 0x10) || ((opcode & 0xF0) > 0x80))) {
+	if (((opcode & 0x0F) == 0x00) && ((opcode & 0x10) || ((opcode & 0xF0) > 0x80))) {
 		return 2;
 	}
 	
