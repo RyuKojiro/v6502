@@ -25,6 +25,29 @@ void v6502_fault(const char *e) {
 	faulted++;
 }
 
+
+static FILE *logFile;
+static unsigned long cycle;
+
+static void logCpuStatus(v6502_cpu *cpu) {
+	if (!logFile) {
+		logFile = fopen("easy6502.log", "w");
+	}
+	
+	fprintf(logFile, "Cycle #%lu\n", cycle);
+	
+	fprintf(logFile, "Status Register: %c%c%c%c%c%c%c%c\n",
+			cpu->sr & v6502_cpu_status_negative ? 'N' : '-',
+			cpu->sr & v6502_cpu_status_overflow ? 'V' : '-',
+			cpu->sr & v6502_cpu_status_ignored ? 'X' : '-',
+			cpu->sr & v6502_cpu_status_break ? 'B' : '-',
+			cpu->sr & v6502_cpu_status_decimal ? 'D' : '-',
+			cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
+			cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
+			cpu->sr & v6502_cpu_status_carry ? 'C' : '-');
+	fprintf(logFile, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sr = 0x%02x, sp = 0x%02x\nMEM %p: memsize = %hu (0x%04x)\n\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
+}
+
 int main(int argc, const char * argv[])
 {
 	v6502_cpu *cpu = v6502_createCPU();
@@ -41,11 +64,22 @@ int main(int argc, const char * argv[])
 		
 		// Processor time
 		v6502_step(cpu);
+				
+		// Debug Logging
+		logCpuStatus(cpu);
+		cycle++;
 		
+		// Exit on break
+		if (cpu->sr & v6502_cpu_status_break) {
+			break;
+		}
+
 		// Refresh Video
 		updateVideo(cpu->memory, scr);
 	}
 
+	fclose(logFile);
+	
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
 }
