@@ -21,13 +21,29 @@ the way via the pre-built table.
 - Pass 2: (Final) (Only pass when using stdin)
 	Handling of dot-prefix lines. Allocation of .data blocks, .words, .org.
 	Conversion of instructions to machine code.
-
-\section todo To-Do
-
-* test.s:8: error: Invalid opcode '.org $e000'
-	Needs to support . prefixed lines for special things like data, org, etc.
-* test.s:54: error: Invalid opcode ';	as the first non-prime'
-	Should ignore comment lines
 	
 \page vm Virtual Machine
+
+The simplest implementation of a v6502 instance is as follows:
+
+\code
+#include "cpu.h"
+#include "mem.h"
+
+int main(int argc, const char * argv[])
+{
+	v6502_cpu *cpu = v6502_createCPU();
+	cpu->memory = v6502_createMemory(2048);
+	
+	v6502_reset(cpu);
+	
+	while (1) {
+		v6502_step(cpu);
+	}
+
+	v6502_destroyMemory(cpu->memory);
+	v6502_destroyCPU(cpu);
+}
+\endcode
+
 */
