@@ -264,6 +264,8 @@ void v6502_destroyCPU(v6502_cpu *cpu);
 
 /** @defgroup cpu_exec Instruction Execution */
 /**@{*/
+/** @brief Return the byte-length of an instruction based on the opcode */
+int v6502_instructionLengthForOpcode(v6502_opcode opcode);
 /** @brief Execute an instruction on a v6502_cpu */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
 /** @brief Single step a v6502_cpu */

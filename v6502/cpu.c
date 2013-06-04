@@ -145,8 +145,32 @@ void v6502_destroyCPU(v6502_cpu *cpu) {
 #pragma mark -
 #pragma mark CPU Runtime
 
+int v6502_instructionLengthForOpcode(v6502_opcode opcode) {
+	if (((opcode & 0x0F) > 0x00) && ((opcode & 0x0F) < 0x07)) {
+		return 2;
+	}
+	
+	if ((opcode & 0x0F) > 0x0B) {
+		return 3;
+	}
+	
+	if (((opcode & 0x0F) == 0x09) && (opcode & 0x10)) {
+		return 3;
+	}
+	
+	if (opcode == v6502_opcode_jsr) {
+		return 3;
+	}
+	
+	if (((opcode & 0x0F) == 0x01) && ((opcode & 0x10) || ((opcode & 0xF0) > 0x80))) {
+		return 2;
+	}
+	
+	return 1;
+}
+
 void v6502_reset(v6502_cpu *cpu) {
-	cpu->pc = 0x0000;
+	cpu->pc = 0x0600;
 	cpu->ac = 0x00;
 	cpu->x  = 0x00;
 	cpu->y  = 0x00;
@@ -156,6 +180,7 @@ void v6502_reset(v6502_cpu *cpu) {
 
 void v6502_step(v6502_cpu *cpu) {
 	v6502_execute(cpu, *v6502_map(cpu->memory, cpu->pc), *v6502_map(cpu->memory, cpu->pc + 1), *v6502_map(cpu->memory, cpu->pc + 2));
+	cpu->pc += v6502_instructionLengthForOpcode(*v6502_map(cpu->memory, cpu->pc));
 }
 
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
@@ -166,9 +191,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->sr |= v6502_cpu_status_break;
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
-		case v6502_opcode_nop: {
-			cpu->pc++;
-		} return;
+		case v6502_opcode_nop:
+			return;
 		case v6502_opcode_clc: {
 			cpu->sr &= ~v6502_cpu_status_carry;
 		} return;
