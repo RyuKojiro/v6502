@@ -39,7 +39,7 @@ void as6502_warn(const char *warning) {
 static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t len) {
 	uint8_t opcode, low, high;
 	int addrLen;
-	as6502_address_mode mode;
+	v6502_address_mode mode;
 
 	as6502_instructionForLine(&opcode, &low, &high, &mode, line, len);
 	addrLen = as6502_instructionLengthForAddressMode(mode);
@@ -61,7 +61,7 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 static void assembleFile(FILE *in, FILE *out) {
 	char line[MAX_LINE_LEN];
 	char *trimmedLine;
-	as6502_address_mode mode;
+	v6502_address_mode mode;
 	uint16_t address = 0;
 	currentLineNum = 1;
 	int newline;

@@ -254,6 +254,25 @@ typedef enum {
 	v6502_cpu_status_negative	= 128,
 } v6502_cpu_status;
 
+// Address Modes
+typedef enum {
+	v6502_address_mode_symbol = -2,		// Added for external code, like assemblers
+	v6502_address_mode_unknown = -1,
+	v6502_address_mode_implied = 0,		// Or none
+	v6502_address_mode_accumulator = 1,
+	v6502_address_mode_immediate = 2,
+	v6502_address_mode_absolute = 3,
+	v6502_address_mode_absolute_x = 4,
+	v6502_address_mode_absolute_y = 5,
+	v6502_address_mode_indirect = 6,
+	v6502_address_mode_indirect_x = 7,
+	v6502_address_mode_indirect_y = 8,
+	v6502_address_mode_relative = 9,
+	v6502_address_mode_zeropage = 10,
+	v6502_address_mode_zeropage_x = 11,
+	v6502_address_mode_zeropage_y = 12
+} v6502_address_mode;
+
 /** @defgroup cpu_lifecycle CPU Lifecycle Functions */
 /**@{*/
 /** @brief Create a v6502_cpu */
@@ -266,6 +285,8 @@ void v6502_destroyCPU(v6502_cpu *cpu);
 /**@{*/
 /** @brief Return the byte-length of an instruction based on the opcode */
 int v6502_instructionLengthForOpcode(v6502_opcode opcode);
+/** @brief Return the v6502_address_mode of an instruction based on the opcode */
+v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode);
 /** @brief Execute an instruction on a v6502_cpu */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
 /** @brief Single step a v6502_cpu */
