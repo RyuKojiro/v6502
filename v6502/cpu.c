@@ -190,6 +190,7 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_tya:
 		case v6502_opcode_inx:
 		case v6502_opcode_iny:
+			return v6502_address_mode_implied;
 		case v6502_opcode_bcc:
 		case v6502_opcode_bcs:
 		case v6502_opcode_beq:
@@ -205,7 +206,7 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_pla:
 		case v6502_opcode_php:
 		case v6502_opcode_plp:
-			return v6502_address_mode_implied;
+			return v6502_address_mode_relative;
 		case v6502_opcode_asl_acc:
 		case v6502_opcode_lsr_acc:
 		case v6502_opcode_rol_acc:
