@@ -35,7 +35,8 @@
 #pragma mark -
 #pragma mark Memory Lifecycle
 
-/* This is actually much more compilcated than dereferencing an offset, in fact,
+/**
+ * This is actually much more compilcated than dereferencing an offset, in fact,
  * it is actually creating a reference to it. However, it is creating a mapped
  * pointer to whatever it is supposed to be pointing to. This is NOT safe for
  * larger than single byte access.
