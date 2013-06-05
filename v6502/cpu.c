@@ -355,6 +355,48 @@ void v6502_step(v6502_cpu *cpu) {
 }
 
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
+	uint8_t *value;
+	
+	switch (v6502_addressModeForOpcode(opcode)) {
+		case v6502_address_mode_accumulator: {
+			value = &(cpu->ac);
+		} break;
+		case v6502_address_mode_implied: {
+			value = &(cpu->ac);
+		} break;
+		case v6502_address_mode_immediate: {
+			value = &low;
+		} break;
+		case v6502_address_mode_zeropage: {
+			value = v6502_map(cpu->memory, low);
+		} break;
+		case v6502_address_mode_zeropage_x: {
+			value = v6502_map(cpu->memory, low + cpu->x);
+		} break;
+		case v6502_address_mode_zeropage_y:
+		case v6502_address_mode_relative:
+		case v6502_address_mode_absolute: {
+			value = v6502_map(cpu->memory, BOTH_BYTES);
+		} break;
+		case v6502_address_mode_absolute_x: {
+			value = v6502_map(cpu->memory, BOTH_BYTES + cpu->x);
+		} break;
+		case v6502_address_mode_absolute_y: {
+			value = v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
+		} break;
+		case v6502_address_mode_indirect:
+		case v6502_address_mode_indirect_x: {
+			value = v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x);
+		} break;
+		case v6502_address_mode_indirect_y: {
+			v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
+		} break;
+		case v6502_address_mode_symbol:
+		case v6502_address_mode_unknown:
+		default:
+			break;
+	}
+	
 	switch ((v6502_opcode)opcode) {
 		// Single Byte Instructions
 		case v6502_opcode_brk: {
@@ -483,30 +525,16 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 
 		// ADC
-		case v6502_opcode_adc_imm: {
-			_executeInPlaceADC(cpu, low);
-		} return;
-		case v6502_opcode_adc_zpg: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, low));
-		} return;
-		case v6502_opcode_adc_zpgx: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, low + cpu->x));
-		} return;
-		case v6502_opcode_adc_abs: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, BOTH_BYTES));
-		} return;
-		case v6502_opcode_adc_absx: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->x));
-		} return;
-		case v6502_opcode_adc_absy: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
-		} return;
-		case v6502_opcode_adc_indx: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
-		} return;
-		case v6502_opcode_adc_indy: {
-			_executeInPlaceADC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
-		} return;
+		case v6502_opcode_adc_imm:
+		case v6502_opcode_adc_zpg:
+		case v6502_opcode_adc_zpgx:
+		case v6502_opcode_adc_abs:
+		case v6502_opcode_adc_absx:
+		case v6502_opcode_adc_absy:
+		case v6502_opcode_adc_indx:
+		case v6502_opcode_adc_indy:
+			_executeInPlaceADC(cpu, *value);
+			return;
 
 		// AND
 		case v6502_opcode_and_imm: {
