@@ -631,212 +631,110 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		
 		// ORA
-		case v6502_opcode_ora_imm: {
-			_executeInPlaceORA(cpu, low);
-		} return;
-		case v6502_opcode_ora_zpg: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, low));
-		} return;
-		case v6502_opcode_ora_zpgx: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, low + cpu->x));
-		} return;
-		case v6502_opcode_ora_abs: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, BOTH_BYTES));
-		} return;
-		case v6502_opcode_ora_absx: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->x));
-		} return;
-		case v6502_opcode_ora_absy: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
-		} return;
-		case v6502_opcode_ora_indx: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
-		} return;
-		case v6502_opcode_ora_indy: {
-			_executeInPlaceORA(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
-		} return;
+		case v6502_opcode_ora_imm:
+		case v6502_opcode_ora_zpg:
+		case v6502_opcode_ora_zpgx:
+		case v6502_opcode_ora_abs:
+		case v6502_opcode_ora_absx:
+		case v6502_opcode_ora_absy:
+		case v6502_opcode_ora_indx:
+		case v6502_opcode_ora_indy:
+			_executeInPlaceORA(cpu, *operand);
+			return;
 			
 		// LDA
-		case v6502_opcode_lda_imm: {
-			cpu->ac = low;
-		}
-		case v6502_opcode_lda_zpg: {
-			cpu->ac = *v6502_map(cpu->memory, low);
-		} return;
-		case v6502_opcode_lda_zpgx: {
-			cpu->ac = *v6502_map(cpu->memory, low + cpu->x);
-		} return;
-		case v6502_opcode_lda_abs: {
-			cpu->ac = *v6502_map(cpu->memory, BOTH_BYTES);
-		} return;
-		case v6502_opcode_lda_absx: {
-			cpu->ac = *v6502_map(cpu->memory, BOTH_BYTES + cpu->x);
-		} return;
-		case v6502_opcode_lda_absy: {
-			cpu->ac = *v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
-		} return;
-		case v6502_opcode_lda_indx: { // ???: Not sure about these indirect operations
-			cpu->ac = *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x);
-		} return;
-		case v6502_opcode_lda_indy: {
-			cpu->ac = *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
-		} return;
+		case v6502_opcode_lda_imm:
+		case v6502_opcode_lda_zpg:
+		case v6502_opcode_lda_zpgx:
+		case v6502_opcode_lda_abs:
+		case v6502_opcode_lda_absx:
+		case v6502_opcode_lda_absy:
+		case v6502_opcode_lda_indx:
+		case v6502_opcode_lda_indy:
+			cpu->ac = *operand;
+			return;
 		
 		// LDX
-		case v6502_opcode_ldx_imm: {
-			cpu->x = low;
-		}
-		case v6502_opcode_ldx_zpg: {
-			cpu->x = *v6502_map(cpu->memory, low);
-		} return;
-		case v6502_opcode_ldx_zpgy: {
-			cpu->x = *v6502_map(cpu->memory, low + cpu->y);
-		} return;
-		case v6502_opcode_ldx_abs: {
-			cpu->x = *v6502_map(cpu->memory, BOTH_BYTES);
-		} return;
-		case v6502_opcode_ldx_absy: {
-			cpu->x = *v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
-		} return;
+		case v6502_opcode_ldx_imm:
+		case v6502_opcode_ldx_zpg:
+		case v6502_opcode_ldx_zpgy:
+		case v6502_opcode_ldx_abs:
+		case v6502_opcode_ldx_absy:
+			cpu->x = *operand;
+			return;
 
 		// LDY
-		case v6502_opcode_ldy_imm: {
-			cpu->y = low;
-		}
-		case v6502_opcode_ldy_zpg: {
-			cpu->y = *v6502_map(cpu->memory, low);
-		} return;
-		case v6502_opcode_ldy_zpgx: {
-			cpu->y = *v6502_map(cpu->memory, low + cpu->x);
-		} return;
-		case v6502_opcode_ldy_abs: {
-			cpu->y = *v6502_map(cpu->memory, BOTH_BYTES);
-		} return;
-		case v6502_opcode_ldy_absx: {
-			cpu->y = *v6502_map(cpu->memory, BOTH_BYTES + cpu->x);
-		} return;
+		case v6502_opcode_ldy_imm:
+		case v6502_opcode_ldy_zpg:
+		case v6502_opcode_ldy_zpgx:
+		case v6502_opcode_ldy_abs:
+		case v6502_opcode_ldy_absx:
+			cpu->y = *operand;
+			return;
 		
 		// LSR
-		case v6502_opcode_lsr_acc: {
-			_executeInPlaceLSR(cpu, &cpu->ac);
-		} return;
-		case v6502_opcode_lsr_zpg: {
-			_executeInPlaceLSR(cpu, &*v6502_map(cpu->memory, low));
-		} return;
-		case v6502_opcode_lsr_zpgx: {
-			_executeInPlaceLSR(cpu, &*v6502_map(cpu->memory, low + cpu->x));
-		} return;
-		case v6502_opcode_lsr_abs: {
-			_executeInPlaceLSR(cpu, &*v6502_map(cpu->memory, BOTH_BYTES));
-		} return;
-		case v6502_opcode_lsr_absx: {
-			_executeInPlaceLSR(cpu, &*v6502_map(cpu->memory, BOTH_BYTES + cpu->x));
-		} return;
+		case v6502_opcode_lsr_acc:
+		case v6502_opcode_lsr_zpg:
+		case v6502_opcode_lsr_zpgx:
+		case v6502_opcode_lsr_abs:
+		case v6502_opcode_lsr_absx:
+			_executeInPlaceLSR(cpu, operand);
+			return;
 
 		// ROL
-		case v6502_opcode_rol_acc: {
-			_executeInPlaceROL(cpu, &cpu->ac);
-		} return;
-		case v6502_opcode_rol_zpg: {
-			_executeInPlaceROL(cpu, &*v6502_map(cpu->memory, low));
-		} return;
-		case v6502_opcode_rol_zpgx: {
-			_executeInPlaceROL(cpu, &*v6502_map(cpu->memory, low + cpu->x));
-		} return;
-		case v6502_opcode_rol_abs: {
-			_executeInPlaceROL(cpu, &*v6502_map(cpu->memory, BOTH_BYTES));
-		} return;
-		case v6502_opcode_rol_absx: {
-			_executeInPlaceROL(cpu, &*v6502_map(cpu->memory, BOTH_BYTES + cpu->x));
-		} return;
+		case v6502_opcode_rol_acc:
+		case v6502_opcode_rol_zpg:
+		case v6502_opcode_rol_zpgx:
+		case v6502_opcode_rol_abs:
+		case v6502_opcode_rol_absx:
+			_executeInPlaceROL(cpu, operand);
+			return;
 
 		// ROR
-		case v6502_opcode_ror_acc: {
-			_executeInPlaceROR(cpu, &cpu->ac);
-		} return;
-		case v6502_opcode_ror_zpg: {
-			_executeInPlaceROR(cpu, &*v6502_map(cpu->memory, low));
-		} return;
-		case v6502_opcode_ror_zpgx: {
-			_executeInPlaceROR(cpu, &*v6502_map(cpu->memory, low + cpu->x));
-		} return;
-		case v6502_opcode_ror_abs: {
-			_executeInPlaceROR(cpu, &*v6502_map(cpu->memory, BOTH_BYTES));
-		} return;
-		case v6502_opcode_ror_absx: {
-			_executeInPlaceROR(cpu, &*v6502_map(cpu->memory, BOTH_BYTES + cpu->x));
-		} return;
+		case v6502_opcode_ror_acc:
+		case v6502_opcode_ror_zpg:
+		case v6502_opcode_ror_zpgx:
+		case v6502_opcode_ror_abs:
+		case v6502_opcode_ror_absx:
+			_executeInPlaceROR(cpu, operand);
+			return;
 
 		// SBC
-		case v6502_opcode_sbc_imm: {
-			_executeInPlaceSBC(cpu, low);
-		} return;
-		case v6502_opcode_sbc_zpg: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, low));
-		} return;
-		case v6502_opcode_sbc_zpgx: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, low + cpu->x));
-		} return;
-		case v6502_opcode_sbc_abs: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, BOTH_BYTES));
-		} return;
-		case v6502_opcode_sbc_absx: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->x));
-		} return;
-		case v6502_opcode_sbc_absy: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
-		} return;
-		case v6502_opcode_sbc_indx: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x));
-		} return;
-		case v6502_opcode_sbc_indy: {
-			_executeInPlaceSBC(cpu, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y));
-		} return;
+		case v6502_opcode_sbc_imm:
+		case v6502_opcode_sbc_zpg:
+		case v6502_opcode_sbc_zpgx:
+		case v6502_opcode_sbc_abs:
+		case v6502_opcode_sbc_absx:
+		case v6502_opcode_sbc_absy:
+		case v6502_opcode_sbc_indx:
+		case v6502_opcode_sbc_indy:
+			_executeInPlaceSBC(cpu, *operand);
+			return;
 
 		// STA
-		case v6502_opcode_sta_zpg: {
-			*v6502_map(cpu->memory, low) = cpu->ac;
-		} return;
-		case v6502_opcode_sta_zpgx: {
-			*v6502_map(cpu->memory, low + cpu->x) = cpu->ac;
-		} return;
-		case v6502_opcode_sta_abs: {
-			*v6502_map(cpu->memory, BOTH_BYTES) = cpu->ac;
-		} return;
-		case v6502_opcode_sta_absx: {
-			*v6502_map(cpu->memory, BOTH_BYTES + cpu->x) = cpu->ac;
-		} return;
-		case v6502_opcode_sta_absy: {
-			*v6502_map(cpu->memory, BOTH_BYTES + cpu->y) = cpu->ac;
-		} return;
-		case v6502_opcode_sta_indx: { // ???: Not sure about these indirect operations
-			*v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x) = cpu->ac;
-		} return;
-		case v6502_opcode_sta_indy: {
-			*v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES + cpu->y)) = cpu->ac;
-		} return;
+		case v6502_opcode_sta_zpg:
+		case v6502_opcode_sta_zpgx:
+		case v6502_opcode_sta_abs:
+		case v6502_opcode_sta_absx:
+		case v6502_opcode_sta_absy:
+		case v6502_opcode_sta_indx:
+		case v6502_opcode_sta_indy:
+			*operand = cpu->ac;
+			return;
 			
 		// STX
-		case v6502_opcode_stx_zpg: {
-			*v6502_map(cpu->memory, low) = cpu->x;
-		} return;
-		case v6502_opcode_stx_zpgy: {
-			*v6502_map(cpu->memory, low + cpu->y) = cpu->x;
-		} return;
-		case v6502_opcode_stx_abs: {
-			*v6502_map(cpu->memory, BOTH_BYTES) = cpu->x;
-		} return;
+		case v6502_opcode_stx_zpg:
+		case v6502_opcode_stx_zpgy:
+		case v6502_opcode_stx_abs:
+			*operand = cpu->x;
+			return;
 			
 		// STY
-		case v6502_opcode_sty_zpg: {
-			*v6502_map(cpu->memory, low) = cpu->y;
-		} return;
-		case v6502_opcode_sty_zpgx: {
-			*v6502_map(cpu->memory, low + cpu->x) = cpu->y;
-		} return;
-		case v6502_opcode_sty_abs: {
-			*v6502_map(cpu->memory, BOTH_BYTES) = cpu->y;
-		} return;
+		case v6502_opcode_sty_zpg:
+		case v6502_opcode_sty_zpgx:
+		case v6502_opcode_sty_abs:
+			*operand = cpu->y;
+			return;
 			
 		// Failure
 		default: {
