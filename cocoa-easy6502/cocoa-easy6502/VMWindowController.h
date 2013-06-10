@@ -23,4 +23,10 @@
 @property (nonatomic, retain) IBOutlet NSTextField *spField;
 @property (nonatomic, retain) IBOutlet NSTextField *srField;
 
+@property (nonatomic, retain) IBOutlet NSButton *toggleButton;
+
+- (IBAction)reset:(id)sender;
+- (IBAction)toggleRunning:(id)sender;
+- (IBAction)step:(id)sender;
+
 @end

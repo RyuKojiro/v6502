@@ -18,7 +18,7 @@ volatile static int faulted;
 
 @implementation VMWindowController
 @synthesize video;
-@synthesize pcField, acField, xField, yField, spField, srField;
+@synthesize pcField, acField, xField, yField, spField, srField, toggleButton;
 
 - (id)initWithWindow:(NSWindow *)window
 {
@@ -87,6 +87,26 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	}
 }
 
+- (IBAction)reset:(id)sender {
+	v6502_reset(cpu);
+}
+
+- (IBAction)toggleRunning:(id)sender {
+	if (faulted) {
+		[toggleButton setTitle:@"Halt"];
+		faulted = 0;
+		[self cycle];
+	}
+	else {
+		[toggleButton setTitle:@"Run"];
+		faulted++;
+	}
+}
+
+- (IBAction)step:(id)sender {
+	[self cycle];
+}
+
 - (void)windowDidLoad
 {
     [super windowDidLoad];
@@ -99,9 +119,8 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	// Load program code into memory
 	loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/easy6502/easy_test.o");
 	
-	// Start the cpu
+	// Reset the cpu, wait for user to start it
 	v6502_reset(cpu);
-	[self cycle];
 }
 
 @end
