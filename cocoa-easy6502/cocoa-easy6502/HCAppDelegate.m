@@ -9,17 +9,20 @@
 #import "HCAppDelegate.h"
 #import "VMWindowController.h"
 
-@implementation HCAppDelegate
+@implementation HCAppDelegate {
+	VMWindowController *vmwc;
+}
 
 - (void)dealloc
 {
+	[vmwc release];
     [super dealloc];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Insert code here to initialize your application
-	VMWindowController *vmwc = [[VMWindowController alloc] initWithWindowNibName:@"VMWindowController"];
+	vmwc = [[VMWindowController alloc] initWithWindowNibName:@"VMWindowController"];
 	[[vmwc window] display];
 }
 
