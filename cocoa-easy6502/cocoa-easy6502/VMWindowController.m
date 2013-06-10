@@ -47,7 +47,20 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 }
 
 - (void) update {
-	
+	[pcField setStringValue:[NSString stringWithFormat:@"0x%04x", cpu->pc]];
+	[acField setStringValue:[NSString stringWithFormat:@"0x%02x", cpu->ac]];
+	[xField setStringValue:[NSString stringWithFormat:@"0x%02x", cpu->x]];
+	[yField setStringValue:[NSString stringWithFormat:@"0x%02x", cpu->y]];
+	[spField setStringValue:[NSString stringWithFormat:@"0x%02x", cpu->sp]];
+	[srField setStringValue:[NSString stringWithFormat:@"%c%c%c%c%c%c%c%c\n",
+							 cpu->sr & v6502_cpu_status_negative ? 'N' : '-',
+							 cpu->sr & v6502_cpu_status_overflow ? 'V' : '-',
+							 cpu->sr & v6502_cpu_status_ignored ? 'X' : '-',
+							 cpu->sr & v6502_cpu_status_break ? 'B' : '-',
+							 cpu->sr & v6502_cpu_status_decimal ? 'D' : '-',
+							 cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
+							 cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
+							 cpu->sr & v6502_cpu_status_carry ? 'C' : '-']];
 }
 
 - (void) cycle {
