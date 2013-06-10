@@ -18,6 +18,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code here.
+		NSLayoutConstraint *square = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:0 toItem:self attribute:NSLayoutAttributeWidth multiplier:1 constant:0];
+		[self addConstraint:square];
     }
     
     return self;
@@ -95,9 +97,9 @@
 	uint8_t byte;
 	CGFloat scale = dirtyRect.size.width / 32.0f;
 	
-	for (int x = 0; x < dirtyRect.size.width; x++) {
-		for (int y = 0; y < dirtyRect.size.height; y++) {
-			byte = mem->bytes[x * (int)dirtyRect.size.width + y + VIDEO_OFFSET];
+	for (int x = 0; x < 32; x++) {
+		for (int y = 0; y < 32; y++) {
+			byte = mem->bytes[VIDEO_OFFSET + (x * 32) + y];
 			if (byte) {
 				[VMVideoView setColorForByte:byte];
 				NSRectFill(NSMakeRect(x * scale, y * scale, scale, scale));
