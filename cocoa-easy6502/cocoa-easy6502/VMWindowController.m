@@ -52,7 +52,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	[xField setStringValue:[NSString stringWithFormat:@"0x%02x", cpu->x]];
 	[yField setStringValue:[NSString stringWithFormat:@"0x%02x", cpu->y]];
 	[spField setStringValue:[NSString stringWithFormat:@"0x%02x", cpu->sp]];
-	[srField setStringValue:[NSString stringWithFormat:@"%c%c%c%c%c%c%c%c\n",
+	[srField setStringValue:[NSString stringWithFormat:@"%c%c%c%c%c%c%c%c",
 							 cpu->sr & v6502_cpu_status_negative ? 'N' : '-',
 							 cpu->sr & v6502_cpu_status_overflow ? 'V' : '-',
 							 cpu->sr & v6502_cpu_status_ignored ? 'X' : '-',
