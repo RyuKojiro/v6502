@@ -102,7 +102,7 @@
 			byte = mem->bytes[VIDEO_OFFSET + (x * 32) + y];
 			if (byte) {
 				[VMVideoView setColorForByte:byte];
-				NSRectFill(NSMakeRect(x * scale, y * scale, scale, scale));
+				NSRectFill(NSMakeRect(floor(x * scale), floor(y * scale), ceil(scale), ceil(scale)));
 			}
 		}
 	}
