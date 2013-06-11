@@ -115,6 +115,11 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	}
 	memory->size = size;
 	
+	// Zero memory
+	for (uint16_t i = 0; i < size; i++) {
+		memory->bytes[i] = 0x00;
+	}
+	
 	return memory;
 }
 
@@ -128,7 +133,7 @@ void v6502_destroyMemory(v6502_memory *memory) {
 
 signed int v6502_signedValueOfByte(uint8_t byte) {
 	if (byte & 0x80) {
-		return (0 - (byte & 0x7F));
+		return (0 - (0xFF - byte));
 	}
 	return byte;
 }
