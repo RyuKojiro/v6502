@@ -130,10 +130,10 @@
 	
 	for (int x = 0; x < 32; x++) {
 		for (int y = 0; y < 32; y++) {
-			byte = mem->bytes[VIDEO_OFFSET + (x * 32) + y];
+			byte = mem->bytes[VIDEO_OFFSET + (y * 32) + x];
 			if (byte) {
 				[VMVideoView setColorForByte:byte];
-				NSRectFill(NSMakeRect(floor(x * scale), floor(y * scale), ceil(scale), ceil(scale)));
+				NSRectFill(NSMakeRect(floor(x * scale), floor((31 - y) * scale), ceil(scale), ceil(scale)));
 			}
 		}
 	}
