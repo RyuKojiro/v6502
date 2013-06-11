@@ -15,4 +15,7 @@
 
 @property (readwrite) v6502_memory *mem;
 
+- (void) testPattern;
+- (void) resetVideoMemory;
+
 @end

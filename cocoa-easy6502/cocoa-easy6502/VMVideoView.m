@@ -50,38 +50,69 @@
 + (void)setColorForByte:(uint8_t)byte {
 	byte &= 0xf;
 	switch (byte) {
-		case 0: {
+		case 0x00: {
 			[[NSColor blackColor] setFill];
 		} return;
-		case 1: {
+		case 0x01: {
 			[[NSColor whiteColor] setFill];
 		} return;
-		case 2: {
+		case 0x02: {
 			[[NSColor redColor] setFill];
 		} return;
-		case 3: {
+		case 0x03: {
 			[[NSColor cyanColor] setFill];
 		} return;
-		case 4: {
+		case 0x04: {
 			[[NSColor purpleColor] setFill];
 		} return;
-		case 5: {
+		case 0x05: {
 			[[NSColor greenColor] setFill];
 		} return;
-		case 6: {
+		case 0x06: {
 			[[NSColor blueColor] setFill];
 		} return;
-		case 7: {
+		case 0x07: {
 			[[NSColor yellowColor] setFill];
 		} return;
-		case 8: {
+		case 0x08: {
 			[[NSColor orangeColor] setFill];
 		} return;
-		case 9: {
+		case 0x09: {
 			[[NSColor brownColor] setFill];
+		} return;
+		case 0x0a: {
+			[[NSColor colorWithDeviceRed:1.0f green:0.5f blue:0.5f alpha:1.0f] setFill];
+		} return;
+		case 0x0b: {
+			[[NSColor darkGrayColor] setFill];
+		} return;
+		case 0x0c: {
+			[[NSColor grayColor] setFill];
+		} return;
+		case 0x0d: {
+			[[NSColor colorWithDeviceRed:0.5f green:1.0f blue:0.5f alpha:1.0f] setFill];
+		} return;
+		case 0x0e: {
+			[[NSColor colorWithDeviceRed:0.5f green:0.5f blue:1.0f alpha:1.0f] setFill];
+		} return;
+		case 0x0f: {
+			[[NSColor lightGrayColor] setFill];
 		} return;
 		default:
 			break;
+	}
+}
+
+- (void) testPattern {
+	char v = 0;
+	for (uint16_t addr = VIDEO_OFFSET; addr < VIDEO_OFFSET + (32 * 32); addr++) {
+		mem->bytes[addr] = v++;
+	}
+}
+
+- (void) resetVideoMemory {
+	for (uint16_t addr = VIDEO_OFFSET; addr < VIDEO_OFFSET + (32 * 32); addr++) {
+		mem->bytes[addr] = 0;
 	}
 }
 
