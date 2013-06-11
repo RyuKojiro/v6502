@@ -356,6 +356,7 @@ void v6502_step(v6502_cpu *cpu) {
 
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 	uint8_t *operand;
+	uint8_t buf;
 	
 	switch (v6502_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_accumulator: {
@@ -389,10 +390,12 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			operand = v6502_map(cpu->memory, low);
 		} break;
 		case v6502_address_mode_indirect_x: {
-			operand = v6502_map(cpu->memory, *v6502_map(cpu->memory, BOTH_BYTES) + cpu->x);
+			operand = v6502_map(cpu->memory, low + cpu->x);
 		} break;
 		case v6502_address_mode_indirect_y: {
-			v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
+			buf = *v6502_map(cpu->memory, low);
+			buf += cpu->y;
+			operand = &buf;
 		} break;
 		case v6502_address_mode_symbol:
 		case v6502_address_mode_unknown:
