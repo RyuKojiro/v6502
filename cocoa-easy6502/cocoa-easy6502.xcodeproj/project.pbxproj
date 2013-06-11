@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E61607D21766AAE20087BA68 /* reverse.c in Sources */ = {isa = PBXBuildFile; fileRef = E61607D01766AAE20087BA68 /* reverse.c */; };
 		E6BC8294175E87FB00FD7B4A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BC8293175E87FB00FD7B4A /* Cocoa.framework */; };
 		E6BC829E175E87FB00FD7B4A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6BC829C175E87FB00FD7B4A /* InfoPlist.strings */; };
 		E6BC82A0175E87FB00FD7B4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC829F175E87FB00FD7B4A /* main.m */; };
@@ -28,6 +29,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E61607D01766AAE20087BA68 /* reverse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = reverse.c; path = ../as6502/reverse.c; sourceTree = "<group>"; };
+		E61607D11766AAE20087BA68 /* reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reverse.h; path = ../as6502/reverse.h; sourceTree = "<group>"; };
 		E6BC8290175E87FB00FD7B4A /* cocoa-easy6502.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cocoa-easy6502.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6BC8293175E87FB00FD7B4A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		E6BC8296175E87FB00FD7B4A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -160,6 +163,8 @@
 		E6BC82B7175E885E00FD7B4A /* as6502 */ = {
 			isa = PBXGroup;
 			children = (
+				E61607D01766AAE20087BA68 /* reverse.c */,
+				E61607D11766AAE20087BA68 /* reverse.h */,
 				E6BC82B8175E886E00FD7B4A /* linectl.c */,
 				E6BC82B9175E886E00FD7B4A /* linectl.h */,
 				E6BC82BA175E886E00FD7B4A /* parser.c */,
@@ -255,6 +260,7 @@
 				E6BC82CC175E89CA00FD7B4A /* core.c in Sources */,
 				E6BC82D0175E8C9100FD7B4A /* VMWindowController.m in Sources */,
 				E6BC82D4175E8DB900FD7B4A /* VMVideoView.m in Sources */,
+				E61607D21766AAE20087BA68 /* reverse.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,7 @@
 #import "VMWindowController.h"
 #import "cpu.h"
 #import "mem.h"
+#import "reverse.h"
 
 volatile static int faulted;
 
@@ -18,7 +19,7 @@ volatile static int faulted;
 
 @implementation VMWindowController
 @synthesize video;
-@synthesize pcField, acField, xField, yField, spField, srField, toggleButton;
+@synthesize pcField, acField, xField, yField, spField, srField, instructionField, toggleButton;
 
 - (id)initWithWindow:(NSWindow *)window
 {
@@ -61,6 +62,10 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 							 cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
 							 cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
 							 cpu->sr & v6502_cpu_status_carry ? 'C' : '-']];
+
+	char instruction[32];
+	as6502_stringForInstruction(instruction, 32, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 2], cpu->memory->bytes[cpu->pc + 1]);
+	[instructionField setStringValue:[NSString stringWithCString:instruction encoding:NSASCIIStringEncoding]];
 }
 
 - (void) cycle {
@@ -85,10 +90,19 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	if (!faulted) {
 		[self performSelector:_cmd withObject:nil afterDelay:0.1f];
 	}
+	else {
+		[toggleButton setTitle:@"Run"];
+	}
 }
 
 - (IBAction)reset:(id)sender {
 	v6502_reset(cpu);
+	[self update];
+}
+
+- (IBAction)testPattern:(id)sender {
+	[video testPattern];
+	[video setNeedsDisplay:YES];
 }
 
 - (IBAction)toggleRunning:(id)sender {
@@ -119,8 +133,11 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	// Load program code into memory
 	loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/easy6502/easy_test.o");
 	
-	// Reset the cpu, wait for user to start it
+	// Reset the cpu
 	v6502_reset(cpu);
+	
+	// Wait for user to start it
+	faulted = 1;
 }
 
 @end
