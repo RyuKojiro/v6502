@@ -38,7 +38,7 @@ static void v6502_fault(const char *reason) {
 void loadProgram(v6502_memory *mem, const char *fname) {
 	FILE *f = fopen(fname, "r");
 	uint8_t byte;
-	uint8_t offset = 0;
+	uint16_t offset = 0;
 	
 	while (fread(&byte, 1, 1, f)) {
 		mem->bytes[0x600 + (offset++)] = byte;
