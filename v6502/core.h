@@ -12,7 +12,6 @@
 #include "cpu.h"
 
 // Debugging
-void v6502_fault(const char *error);
 void v6502_printCpuState(v6502_cpu *cpu);
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len);
 

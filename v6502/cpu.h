@@ -34,6 +34,10 @@ typedef struct {
 	uint8_t sp;
 	/** @brief Virtual Memory */
 	v6502_memory *memory;
+	/** @brief Fault Callback Function */
+	void(*fault_callback)(void *context, const char *reason);
+	/** @brief Fault Callback Context */
+	void *fault_context;
 } v6502_cpu;
 
 // Instruction Set
@@ -293,6 +297,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
 void v6502_step(v6502_cpu *cpu);
 /** @brief Hardware reset a v6502_cpu */
 void v6502_reset(v6502_cpu *cpu);
+/** @brief Raise an exception on a v6502_cpu */
+#define v6502_fault(a)	if (cpu->fault_callback) { \
+							cpu->fault_callback(cpu->fault_context, a); \
+						} \
 /**@}*/
 
 #endif

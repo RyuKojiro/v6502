@@ -19,6 +19,10 @@ typedef struct {
 	uint8_t *bytes;
 	/** @brief Byte-length of memory object */
 	uint16_t size;
+	/** @brief Fault Callback Function */
+	void(*fault_callback)(void *context, const char *reason);
+	/** @brief Fault Callback Context */
+	void *fault_context;
 } v6502_memory;
 
 /** @defgroup mem_lifecycle Memory Lifecycle Functions */
@@ -37,6 +41,10 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 uint8_t *v6502_map(v6502_memory *memory, uint16_t offset);
 /** @brief Convert a raw byte to it's signed value */
 signed int v6502_signedValueOfByte(uint8_t byte);
+/** @brief Raise an exception regarding v6502_memory */
+#define v6502_mfault(a)	if (memory->fault_callback) { \
+							memory->fault_callback(memory->fault_context, a); \
+						} \
 /**@}*/
 
 #endif

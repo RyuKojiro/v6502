@@ -9,7 +9,6 @@
 #include <stdlib.h>
 
 #include "cpu.h"
-#include "core.h"
 
 #define	BOTH_BYTES									(high << 8 | low)
 #define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (~v6502_cpu_status_carry | (a >> 7)); \
@@ -131,10 +130,12 @@ static void _executeInPlaceBIT(v6502_cpu *cpu, uint8_t operand) {
 v6502_cpu *v6502_createCPU(void) {
 	// Allocate CPU Struct
 	v6502_cpu *cpu = malloc(sizeof(v6502_cpu));
-	if (!cpu) {
-		v6502_fault("CPU Allocation - Internal Structure");
-		return NULL;
+	
+	if (cpu) {
+		cpu->fault_callback = NULL;
+		cpu->fault_context = NULL;
 	}
+	
 	return cpu;
 }
 

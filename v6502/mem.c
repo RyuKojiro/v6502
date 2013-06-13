@@ -9,7 +9,6 @@
 #include <stdlib.h>
 
 #include "mem.h"
-#include "core.h"
 
 // Error Text
 #define kMemoryStructAllocErrorText		"Internal memory structure allocation"
@@ -44,11 +43,11 @@
 uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 	// Safety
 	if (!memory || !memory->bytes) {
-		v6502_fault(kMemoryStructErrorText);
+		v6502_mfault(kMemoryStructErrorText);
 		return NULL;
 	}
 	if (offset > memory->size) {
-		v6502_fault(kMemoryBoundsErrorText);
+		v6502_mfault(kMemoryBoundsErrorText);
 		return NULL;
 	}
 	
@@ -88,7 +87,7 @@ uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 		return &memory->bytes[offset];
 	}
 	
-	v6502_fault(kUnableToMapMemoryErrorText);
+	v6502_mfault(kUnableToMapMemoryErrorText);
 	return NULL;
 }
 
@@ -102,7 +101,7 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	// Allocate Memory Struct
 	v6502_memory *memory = malloc(sizeof(v6502_memory));
 	if (!memory) {
-		v6502_fault(kMemoryStructAllocErrorText);
+		v6502_mfault(kMemoryStructAllocErrorText);
 		return NULL;
 	}
 	
@@ -110,7 +109,7 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	memory->bytes = malloc(size);
 	if (!memory->bytes) {
 		free(memory);
-		v6502_fault(kMemoryBlobAllocErrorText);
+		v6502_mfault(kMemoryBlobAllocErrorText);
 		return NULL;
 	}
 	memory->size = size;
