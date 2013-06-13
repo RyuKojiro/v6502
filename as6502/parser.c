@@ -12,7 +12,6 @@
 
 #include "linectl.h"
 #include "parser.h"
-#include "core.h"
 
 #define MIN(a, b)	((a < b) ? a : b)
 
@@ -50,7 +49,7 @@ static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	strncat(e, op, MIN(strlen(op) + 1, MAX_ERROR_LEN - depth));
 	trimtaild(e);
 	strncat(e, "'", 2);
-	v6502_fault(e);
+	as6502_error(e);
 	return v6502_opcode_nop;
 }
 
@@ -63,7 +62,7 @@ static v6502_opcode _opError(const char *op, const char *error) {
 	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
 	trimtaild(e);
 	strncat(e, "'", 2);
-	v6502_fault(e);
+	as6502_error(e);
 	return v6502_opcode_nop;
 }
 
@@ -782,7 +781,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 	int wide;
 
 	if (!string) {
-		v6502_fault("Cannot determine address mode for null string");
+		as6502_error("Cannot determine address mode for null string");
 		return v6502_address_mode_unknown;
 	}
 	
@@ -865,7 +864,7 @@ int as6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len) {
 	char *string = malloc(len + 1); // Malloc an extra char in case the passed in len does not include a null
 	if (!string) {
-		v6502_fault("Could not allocate work buffer for line");
+		as6502_error("Could not allocate work buffer for line");
 		return;
 	}
 	

@@ -21,7 +21,7 @@
 static unsigned long currentLineNum;
 static const char *currentFileName;
 
-void v6502_fault(const char *error) {
+void as6502_error(const char *error) {
 	fprintf(stderr, "%s:%lu: error: ", currentFileName, currentLineNum);
 	fprintf(stderr, "%s", error);
 	if (error[strlen(error)] != '\n') {
