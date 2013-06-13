@@ -31,10 +31,6 @@ volatile static int faulted;
     return self;
 }
 
-static void v6502_fault(const char *reason) {
-	faulted++;
-}
-
 void loadProgram(v6502_memory *mem, const char *fname) {
 	FILE *f = fopen(fname, "r");
 	uint8_t byte;
@@ -88,7 +84,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	[video setNeedsDisplay:YES];
 	
 	if (!faulted) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.1f];
+		[self performSelector:_cmd withObject:nil afterDelay:0.000001f];
 	}
 	else {
 		[toggleButton setTitle:@"Run"];

@@ -17,12 +17,7 @@
 		E6BC82B4175E883600FD7B4A /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82B0175E883600FD7B4A /* cpu.c */; };
 		E6BC82B5175E883600FD7B4A /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82B2175E883600FD7B4A /* mem.c */; };
 		E6BC82C4175E886E00FD7B4A /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82B8175E886E00FD7B4A /* linectl.c */; };
-		E6BC82C5175E886E00FD7B4A /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82BA175E886E00FD7B4A /* parser.c */; };
-		E6BC82C6175E886E00FD7B4A /* codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82BD175E886E00FD7B4A /* codegen.c */; };
 		E6BC82C7175E886E00FD7B4A /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82BF175E886E00FD7B4A /* common.c */; };
-		E6BC82C8175E886E00FD7B4A /* symbols.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82C1175E886E00FD7B4A /* symbols.c */; };
-		E6BC82C9175E886E00FD7B4A /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82C3175E886E00FD7B4A /* object.c */; };
-		E6BC82CC175E89CA00FD7B4A /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82CB175E89CA00FD7B4A /* core.c */; };
 		E6BC82D0175E8C9100FD7B4A /* VMWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82CE175E8C9100FD7B4A /* VMWindowController.m */; };
 		E6BC82D1175E8C9100FD7B4A /* VMWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6BC82CF175E8C9100FD7B4A /* VMWindowController.xib */; };
 		E6BC82D4175E8DB900FD7B4A /* VMVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82D3175E8DB900FD7B4A /* VMVideoView.m */; };
@@ -50,18 +45,8 @@
 		E6BC82B3175E883600FD7B4A /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem.h; path = ../v6502/mem.h; sourceTree = "<group>"; };
 		E6BC82B8175E886E00FD7B4A /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = ../as6502/linectl.c; sourceTree = "<group>"; };
 		E6BC82B9175E886E00FD7B4A /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = ../as6502/linectl.h; sourceTree = "<group>"; };
-		E6BC82BA175E886E00FD7B4A /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = ../as6502/parser.c; sourceTree = "<group>"; };
-		E6BC82BB175E886E00FD7B4A /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = ../as6502/parser.h; sourceTree = "<group>"; };
-		E6BC82BC175E886E00FD7B4A /* codegen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = codegen.h; path = ../as6502/codegen.h; sourceTree = "<group>"; };
-		E6BC82BD175E886E00FD7B4A /* codegen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = codegen.c; path = ../as6502/codegen.c; sourceTree = "<group>"; };
 		E6BC82BE175E886E00FD7B4A /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = ../as6502/common.h; sourceTree = "<group>"; };
 		E6BC82BF175E886E00FD7B4A /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = common.c; path = ../as6502/common.c; sourceTree = "<group>"; };
-		E6BC82C0175E886E00FD7B4A /* symbols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = symbols.h; path = ../as6502/symbols.h; sourceTree = "<group>"; };
-		E6BC82C1175E886E00FD7B4A /* symbols.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = symbols.c; path = ../as6502/symbols.c; sourceTree = "<group>"; };
-		E6BC82C2175E886E00FD7B4A /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = object.h; path = ../as6502/object.h; sourceTree = "<group>"; };
-		E6BC82C3175E886E00FD7B4A /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = object.c; path = ../as6502/object.c; sourceTree = "<group>"; };
-		E6BC82CA175E89A100FD7B4A /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
-		E6BC82CB175E89CA00FD7B4A /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = core.c; sourceTree = "<group>"; };
 		E6BC82CD175E8C9100FD7B4A /* VMWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMWindowController.h; sourceTree = "<group>"; };
 		E6BC82CE175E8C9100FD7B4A /* VMWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMWindowController.m; sourceTree = "<group>"; };
 		E6BC82CF175E8C9100FD7B4A /* VMWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMWindowController.xib; sourceTree = "<group>"; };
@@ -126,8 +111,6 @@
 				E6BC82A6175E87FB00FD7B4A /* HCAppDelegate.m */,
 				E6BC82A8175E87FB00FD7B4A /* MainMenu.xib */,
 				E6BC829A175E87FB00FD7B4A /* Supporting Files */,
-				E6BC82CA175E89A100FD7B4A /* core.h */,
-				E6BC82CB175E89CA00FD7B4A /* core.c */,
 				E6BC82CD175E8C9100FD7B4A /* VMWindowController.h */,
 				E6BC82CE175E8C9100FD7B4A /* VMWindowController.m */,
 				E6BC82CF175E8C9100FD7B4A /* VMWindowController.xib */,
@@ -167,16 +150,8 @@
 				E61607D11766AAE20087BA68 /* reverse.h */,
 				E6BC82B8175E886E00FD7B4A /* linectl.c */,
 				E6BC82B9175E886E00FD7B4A /* linectl.h */,
-				E6BC82BA175E886E00FD7B4A /* parser.c */,
-				E6BC82BB175E886E00FD7B4A /* parser.h */,
-				E6BC82BC175E886E00FD7B4A /* codegen.h */,
-				E6BC82BD175E886E00FD7B4A /* codegen.c */,
 				E6BC82BE175E886E00FD7B4A /* common.h */,
 				E6BC82BF175E886E00FD7B4A /* common.c */,
-				E6BC82C0175E886E00FD7B4A /* symbols.h */,
-				E6BC82C1175E886E00FD7B4A /* symbols.c */,
-				E6BC82C2175E886E00FD7B4A /* object.h */,
-				E6BC82C3175E886E00FD7B4A /* object.c */,
 			);
 			name = as6502;
 			sourceTree = "<group>";
@@ -252,12 +227,7 @@
 				E6BC82B4175E883600FD7B4A /* cpu.c in Sources */,
 				E6BC82B5175E883600FD7B4A /* mem.c in Sources */,
 				E6BC82C4175E886E00FD7B4A /* linectl.c in Sources */,
-				E6BC82C5175E886E00FD7B4A /* parser.c in Sources */,
-				E6BC82C6175E886E00FD7B4A /* codegen.c in Sources */,
 				E6BC82C7175E886E00FD7B4A /* common.c in Sources */,
-				E6BC82C8175E886E00FD7B4A /* symbols.c in Sources */,
-				E6BC82C9175E886E00FD7B4A /* object.c in Sources */,
-				E6BC82CC175E89CA00FD7B4A /* core.c in Sources */,
 				E6BC82D0175E8C9100FD7B4A /* VMWindowController.m in Sources */,
 				E6BC82D4175E8DB900FD7B4A /* VMVideoView.m in Sources */,
 				E61607D21766AAE20087BA68 /* reverse.c in Sources */,
