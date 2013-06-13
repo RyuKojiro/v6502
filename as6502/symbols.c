@@ -148,6 +148,7 @@ void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsig
 	char *symbol = malloc(len);
 	strncpy(symbol, line, len);
 	trimgreedytaild(symbol); // symbol will only be the first phrase
+	trimtailchard(symbol, ':'); // If there is a colon, truncate there
 	
 	if (strchr(line, '=')) { // Variable
 		// TODO: allocate variable addresses
@@ -207,6 +208,11 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	
 	// Ensure termination for strstr
 	line[len - 1] = '\0';
+	
+	cur = strnchr(line, ':', len);
+	if (cur) {
+		as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, ":", "");
+	}
 	
 	for (as6502_symbol *this = table->first_var; this; this = this->next) {
 		// Search for symbol
