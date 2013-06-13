@@ -128,11 +128,18 @@ void v6502_destroyMemory(v6502_memory *memory) {
 }
 
 #pragma mark -
-#pragma mark Memory Access Functionality
+#pragma mark Signedness Management
 
-signed int v6502_signedValueOfByte(uint8_t byte) {
+int8_t v6502_signedValueOfByte(uint8_t byte) {
 	if (byte & 0x80) {
 		return (0 - (0xFF - byte));
 	}
 	return byte;
+}
+
+uint8_t v6502_byteValueOfSigned(int8_t i) {
+	if (i < 0) {
+		return (uint8_t)(0xff - i);
+	}
+	return (uint8_t)i;
 }

@@ -39,8 +39,10 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 /**@{*/
 /** @brief Map an address in v6502_memory */
 uint8_t *v6502_map(v6502_memory *memory, uint16_t offset);
-/** @brief Convert a raw byte to it's signed value */
-signed int v6502_signedValueOfByte(uint8_t byte);
+/** @brief Convert a raw byte to its signed value */
+int8_t v6502_signedValueOfByte(uint8_t byte);
+/** @brief Convert a signed value to its raw byte */
+uint8_t v6502_byteValueOfSigned(int8_t i);
 /** @brief Raise an exception regarding v6502_memory */
 #define v6502_mfault(a)	if (memory->fault_callback) { \
 							memory->fault_callback(memory->fault_context, a); \
