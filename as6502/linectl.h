@@ -32,6 +32,9 @@ char *trimhead(char *str);
 /** @brief Safely trim head til first encounter of token char from the head end */
 char *trimheadchar(char *str, char token);
 
+/** @brief Safely trim head til first encounter of whitespace from the head end */
+char *trimheadtospc(char *str);
+
 /** @brief Reverse search string for space, safely */
 /** @param[in] start The location in the string to start searching backwards from */
 /** @param[in] stop The earliest location in the string to search up to, usually the beginning of the string */

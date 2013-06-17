@@ -70,6 +70,14 @@ char *trimheadchar(char *str, char token) {
 	return str;
 }
 
+char *trimheadtospc(char *str) {
+	while (!isspace(*str)) {
+		str++;
+	}
+	
+	return str;
+}
+
 const char *rev_strnspc(const char *stop, const char *start) {
 	for (/* start */; start > stop; start--) {
 		if (isspace(*start)) {
