@@ -23,33 +23,33 @@ init:
 
 initSnake:
 	lda #2  ;start direction
-	sta $02
+	sta *$02
 	lda #4  ;start length
-	sta $03
+	sta *$03
 	lda #$11
-	sta $10
+	sta *$10
 	lda #$10
-	sta $12
+	sta *$12
 	lda #$0f
-	sta $14
+	sta *$14
 	lda #$04
-	sta $11
-	sta $13
-	sta $15
+	sta *$11
+	sta *$13
+	sta *$15
 	rts
 
 
 generateApplePosition:
 	;load a new random byte into $00
-	lda $fe
-	sta $00
+	lda *$fe
+	sta *$00
 
 	;load a new random number from 2 to 5 into $01
-	lda $fe
+	lda *$fe
 	and #$03 ;mask out lowest 2 bits
 	clc
 	adc #2
-	sta $01
+	sta *$01
 
 	rts
 
@@ -65,7 +65,7 @@ loop:
 
 
 readKeys:
-	lda $ff
+	lda *$ff
 	cmp #$77
 	beq upKey
 	cmp #$64
@@ -75,37 +75,37 @@ readKeys:
 	cmp #$61
 	beq leftKey
 	rts
-	upKey:
+upKey:
 	lda #4
-	bit $02
+	bit *$02
 	bne illegalMove
 
 	lda #1
-	sta $02
+	sta *$02
 	rts
-	rightKey:
+rightKey:
 	lda #8
-	bit $02
+	bit *$02
 	bne illegalMove
 
 	lda #2
-	sta $02
+	sta *$02
 	rts
-	downKey:
+downKey:
 	lda #1
-	bit $02
+	bit *$02
 	bne illegalMove
 
 	lda #4
-	sta $02
+	sta *$02
 	rts
-	leftKey:
+leftKey:
 	lda #2
-	bit $02
+	bit *$02
 	bne illegalMove
 
 	lda #8
-	sta $02
+	sta *$02
 	rts
 illegalMove:
 	rts
@@ -118,16 +118,16 @@ checkCollision:
 
 
 checkAppleCollision:
-	lda $00
-	cmp $10
+	lda *$00
+	cmp *$10
 	bne doneCheckingAppleCollision
-	lda $01
-	cmp $11
+	lda *$01
+	cmp *$11
 	bne doneCheckingAppleCollision
 
 	;eat apple
-	inc $03
-	inc $03 ;increase length
+	inc *$03
+	inc *$03 ;increase length
 	jsr generateApplePosition
 doneCheckingAppleCollision:
 	rts
@@ -136,19 +136,19 @@ doneCheckingAppleCollision:
 checkSnakeCollision:
 	ldx #2 ;start with second segment
 snakeCollisionLoop:
-	lda $10,x
-	cmp $10
+	lda *$10,x
+	cmp *$10
 	bne continueCollisionLoop
 
 maybeCollided:
-	lda $11,x
-	cmp $11
+	lda *$11,x
+	cmp *$11
 	beq didCollide
 
 continueCollisionLoop:
 	inx
 	inx
-	cpx $03          ;got to last section with no collision
+	cpx *$03          ;got to last section with no collision
 	beq didntCollide
 	jmp snakeCollisionLoop
 
@@ -159,59 +159,59 @@ didntCollide:
 
 
 updateSnake:
-	ldx $03 ;location of length
+	ldx *$03 ;location of length
 	dex
 	txa
 updateloop:
-	lda $10,x
-	sta $12,x
+	lda *$10,x
+	sta *$12,x
 	dex
 	bpl updateloop
 
-	lda $02
-	lsr
+	lda *$02
+	lsr A
 	bcs up
-	lsr
+	lsr A
 	bcs right
-	lsr
+	lsr A
 	bcs down
-	lsr
+	lsr A
 	bcs left
 up:
-	lda $10
+	lda *$10
 	sec
 	sbc #$20
-	sta $10
+	sta *$10
 	bcc upup
 	rts
 upup:
-	dec $11
+	dec *$11
 	lda #$1
-	cmp $11
+	cmp *$11
 	beq collision
 	rts
 right:
-	inc $10
+	inc *$10
 	lda #$1f
-	bit $10
+	bit *$10
 	beq collision
 	rts
 down:
-	lda $10
+	lda *$10
 	clc
 	adc #$20
-	sta $10
+	sta *$10
 	bcs downdown
 	rts
 downdown:
-	inc $11
+	inc *$11
 	lda #$6
-	cmp $11
+	cmp *$11
 	beq collision
 	rts
 left:
-	dec $10
-	lda $10
+	dec *$10
+	lda *$10
 	and #$1f
 	cmp #$1f
 	beq collision
@@ -222,7 +222,7 @@ collision:
 
 drawApple:
 	ldy #0
-	lda $fe
+	lda *$fe
 	sta ($00),y
 	rts
 
@@ -231,7 +231,7 @@ drawSnake:
 	ldx #0
 	lda #1
 	sta ($10,x)
-	ldx $03
+	ldx *$03
 	lda #0
 	sta ($10,x)
 	rts
@@ -239,7 +239,7 @@ drawSnake:
 
 spinWheels:
 	ldx #0
-	spinloop:
+spinloop:
 	nop
 	nop
 	dex
