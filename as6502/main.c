@@ -14,27 +14,10 @@
 #include "symbols.h"
 #include "object.h"
 #include "codegen.h"
+#include "error.h"
 
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
-
-static unsigned long currentLineNum;
-static const char *currentFileName;
-
-void as6502_error(const char *error) {
-	fprintf(stderr, "%s:%lu: error: ", currentFileName, currentLineNum);
-	fprintf(stderr, "%s", error);
-	if (error[strlen(error)] != '\n') {
-		fprintf(stderr, "\n");
-	}
-}
-
-void as6502_warn(const char *warning) {
-	fprintf(stderr, "%s:%lu: warning: %s", currentFileName, currentLineNum, warning);
-	if (warning[strlen(warning)] != '\n') {
-		fprintf(stderr, "\n");
-	}
-}
 
 static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t len) {
 	uint8_t opcode, low, high;
