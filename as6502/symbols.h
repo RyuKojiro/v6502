@@ -74,6 +74,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 
 /** @defgroup sym_rep Symbol Replacement */
 /**@{*/
+/** @brief Convenience function to replace a given string in another string, with its location already specified for performance */
 void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, char *symbol, const char *text);
 /**@}*/
 
