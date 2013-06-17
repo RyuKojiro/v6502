@@ -138,8 +138,9 @@ int8_t v6502_signedValueOfByte(uint8_t byte) {
 }
 
 uint8_t v6502_byteValueOfSigned(int8_t i) {
-	if (i < 0) {
-		return (uint8_t)(0xff - i);
-	}
+// TODO: Reliable portable implementation
+//	if (i < 0) {
+//		return (uint8_t)(0xff - i);
+//	}
 	return (uint8_t)i;
 }
