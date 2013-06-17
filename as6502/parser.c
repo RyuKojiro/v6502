@@ -795,6 +795,9 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 		return v6502_address_mode_unknown;
 	}
 	
+	// In case it wasn't trimmed beforehand
+	string = trimhead(string);
+	
 	// Skip opcode and whitespace to find first argument
 	for (cur = string + 3; isspace(*cur); cur++) {
 		if (*cur == '\0' || *cur == ';') {

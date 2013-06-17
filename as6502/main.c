@@ -85,9 +85,6 @@ static void assembleFile(FILE *in, FILE *out) {
 			trimmedLine = trimheadtospc(line);
 		}
 		
-		// Trim leading whitespace
-		trimmedLine = trimhead(trimmedLine);
-		
 		// Increment offset if there is an actual instruction line here
 		if (trimmedLine[0] && trimmedLine[0] != ';') {
 			mode = as6502_addressModeForLine(trimmedLine);
