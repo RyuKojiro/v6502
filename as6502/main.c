@@ -77,14 +77,22 @@ static void assembleFile(FILE *in, FILE *out) {
 		}
 		
 		// Check for symbols
-		trimmedLine = trimheadchar(line, '\n');
+		trimmedLine = trimheadchar(line, '\n'); // FIXME: Does this do anything at all?
 		if (isalnum(trimmedLine[0])) {
 			as6502_addSymbolForLine(table, line, currentLineNum, address);
+
+			// Trim any possible labels we encountered
+			trimmedLine = trimheadtospc(line);
 		}
 		
-		// Increment offset
-		mode = as6502_addressModeForLine(line);
-		address += as6502_instructionLengthForAddressMode(mode);
+		// Trim leading whitespace
+		trimmedLine = trimhead(trimmedLine);
+		
+		// Increment offset if there is an actual instruction line here
+		if (trimmedLine[0] && trimmedLine[0] != ';') {
+			mode = as6502_addressModeForLine(trimmedLine);
+			address += as6502_instructionLengthForAddressMode(mode);
+		}
 		
 		// Check if we are on the next line yet
 		if (newline) {
