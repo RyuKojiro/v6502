@@ -760,6 +760,16 @@ int as6502_isNumber(const char *c) {
 	return NO;
 }
 
+int _isBranchInstruction(const char *string) {
+	if (string[0] == 'b' || string[0] == 'B') {
+		if (strncasecmp(string, "bit", 3)) {
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
 v6502_address_mode as6502_addressModeForLine(const char *string) {
 	/* 
 	 √ OPC			....	implied
@@ -796,7 +806,13 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 	switch (*cur) {
 		case 'a': { // Accumulator (normalized)
 			if (isalnum(*(cur + 1))) {
-				return v6502_address_mode_symbol;
+				// For symbols, check to see if it is a branch instruction, if so, relative, if not, absolute
+				if (_isBranchInstruction(string)) {
+					return v6502_address_mode_relative;
+				}
+				else {
+					return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
+				}
 			}
 			else {
 				return v6502_address_mode_accumulator;
@@ -816,7 +832,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 			}
 			else {
 				if (as6502_isNumber(cur)) {
-					return _incrementModeByFoundRegister(v6502_address_mode_relative, cur);
+					return v6502_address_mode_relative;
 				}
 				else {
 					if (_isEndOfString(cur)) {
@@ -824,7 +840,12 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 					}
 					else {
 						if (!as6502_isNumber(cur)) {
-							return v6502_address_mode_symbol;
+							if (_isBranchInstruction(string)) {
+								return v6502_address_mode_relative;
+							}
+							else {
+								return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
+							}
 						}
 						else {
 							return v6502_address_mode_unknown;							
