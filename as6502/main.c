@@ -67,6 +67,7 @@ static void assembleFile(FILE *in, FILE *out) {
 	int newline;
 	as6502_symbol_table *table = as6502_createSymbolTable();
 	size_t lineLen;
+	int instructionLength;
 	
 	// First pass, build symbol table
 	do {
@@ -105,7 +106,7 @@ static void assembleFile(FILE *in, FILE *out) {
 	// Prepare object structure
 	as6502_object_context *ctx = as6502_createObjectContext();
 	
-	// Final pass, parse file to bitcode
+	// Final pass, convert source to object code
 	do {
 		newline = NO;
 		fgets(line, MAX_LINE_LEN, in);
@@ -141,8 +142,11 @@ static void assembleFile(FILE *in, FILE *out) {
 
 		// Assemble whatever is left
 		if (lineLen) {
-			address += assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen);
+			instructionLength = assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen);
+			address += instructionLength;
 		}
+		
+		
 		
 		// Check if we are on the next line yet
 		if (newline) {
