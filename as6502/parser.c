@@ -27,6 +27,8 @@
 #define kForOperationErrorText			"' invalid for operation '"
 #define kInvalidOpcodeErrorText			"Invalid opcode '"
 #define kUnknownSymbolErrorText			"Unknown symbol for operation '"
+#define kAddressModeNullStringErrorText	"Cannot determine address mode for null string"
+#define kLineMallocErrorText			"Could not allocate work buffer for line"
 
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char e[MAX_ERROR_LEN];
@@ -791,7 +793,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 	int wide;
 
 	if (!string) {
-		as6502_error("Cannot determine address mode for null string");
+		as6502_error(kAddressModeNullStringErrorText);
 		return v6502_address_mode_unknown;
 	}
 	
@@ -892,7 +894,7 @@ int as6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len) {
 	char *string = malloc(len + 1); // Malloc an extra char in case the passed in len does not include a null
 	if (!string) {
-		as6502_error("Could not allocate work buffer for line");
+		as6502_error(kLineMallocErrorText);
 		return;
 	}
 	
