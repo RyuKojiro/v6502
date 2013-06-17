@@ -20,7 +20,7 @@
 		E6B33F1D175974DB00F0D8C2 /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
 		E6BC8283175E5B3800FD7B4A /* reverse.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC8282175E5B3800FD7B4A /* reverse.c */; };
 		E6BDA952174FD23D0092B614 /* codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = E670DCFA174CA15300F95400 /* codegen.c */; };
-		E6FE6FB217376FCD00B4D249 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* common.c */; };
+		E6FE6FB217376FCD00B4D249 /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
 		E6FE6FB5173773B500B4D249 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB4173773B500B4D249 /* object.c */; };
 /* End PBXBuildFile section */
 
@@ -85,8 +85,8 @@
 		E6B33F221759821E00F0D8C2 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
 		E6BC8282175E5B3800FD7B4A /* reverse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = reverse.c; path = as6502/reverse.c; sourceTree = "<group>"; };
 		E6BC8284175E5B5400FD7B4A /* reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reverse.h; path = as6502/reverse.h; sourceTree = "<group>"; };
-		E6FE6FB117376FCD00B4D249 /* common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = common.c; path = as6502/common.c; sourceTree = "<group>"; };
-		E6FE6FB317376FEB00B4D249 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = as6502/common.h; sourceTree = "<group>"; };
+		E6FE6FB117376FCD00B4D249 /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = as6502/error.c; sourceTree = "<group>"; };
+		E6FE6FB317376FEB00B4D249 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = error.h; path = as6502/error.h; sourceTree = "<group>"; };
 		E6FE6FB4173773B500B4D249 /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = object.c; path = as6502/object.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,8 +175,8 @@
 				E666A8121715D1C000EDBF95 /* main.c */,
 				E670DCF9174C9FBC00F95400 /* codegen.h */,
 				E670DCFA174CA15300F95400 /* codegen.c */,
-				E6FE6FB317376FEB00B4D249 /* common.h */,
-				E6FE6FB117376FCD00B4D249 /* common.c */,
+				E6FE6FB317376FEB00B4D249 /* error.h */,
+				E6FE6FB117376FCD00B4D249 /* error.c */,
 				E677B2891737338300A3B9E8 /* symbols.h */,
 				E677B2881737338300A3B9E8 /* symbols.c */,
 				E64198F017374A4000D0EE25 /* object.h */,
@@ -347,7 +347,7 @@
 				E64198EE17373AE000D0EE25 /* cpu.c in Sources */,
 				E6B33F1D175974DB00F0D8C2 /* linectl.c in Sources */,
 				E64198EF17373AE500D0EE25 /* mem.c in Sources */,
-				E6FE6FB217376FCD00B4D249 /* common.c in Sources */,
+				E6FE6FB217376FCD00B4D249 /* error.c in Sources */,
 				E6FE6FB5173773B500B4D249 /* object.c in Sources */,
 				E6A4808C17583605005ABE54 /* parser.c in Sources */,
 				E6BC8283175E5B3800FD7B4A /* reverse.c in Sources */,
@@ -404,7 +404,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -441,6 +441,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;

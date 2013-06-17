@@ -10,7 +10,7 @@
 #include <string.h>
 
 #include "object.h"
-#include "common.h"
+#include "error.h"
 #include "parser.h"
 
 // Object Lifecycle
@@ -24,7 +24,7 @@ as6502_object *as6502_createObject() {
 		return obj;
 	}
 	
-	die("obj malloc in as6502_createObject");
+	as6502_fatal("obj malloc in as6502_createObject");
 	return NULL;
 }
 
@@ -47,11 +47,11 @@ as6502_object_context *as6502_createObjectContext() {
 			return ctx;
 		}
 		else {
-			die("obj malloc in as6502_createObjectContext");
+			as6502_fatal("obj malloc in as6502_createObjectContext");
 		}
 	}
 
-	die("ctx malloc in as6502_createObjectContext");
+	as6502_fatal("ctx malloc in as6502_createObjectContext");
 	return NULL;
 }
 
@@ -69,7 +69,7 @@ void as6502_writeObjectToFile(as6502_object *obj, FILE *file) {
 void as6502_addBlobToObject(as6502_object *obj, uint16_t start) {	
 	obj->blobs = realloc(obj->blobs, sizeof(as6502_object_blob) * (obj->count + 1));
 	if (!obj->blobs) {
-		die("blobs realloc in as6502_addBlobToObject");
+		as6502_fatal("blobs realloc in as6502_addBlobToObject");
 	}
 	
 	obj->blobs[obj->count].start = start;
@@ -79,13 +79,13 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start) {
 
 void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte) {
 	if (!blob) {
-		die("Null blob in as6502_appendByteToBlob");
+		as6502_fatal("Null blob in as6502_appendByteToBlob");
 	}
 	
 	uint16_t newSize = blob->len + 1;
 	blob->data = realloc(blob->data, newSize);
 	if (!blob->data) {
-		die("blobs realloc in as6502_appendByteToBlob");
+		as6502_fatal("blobs realloc in as6502_appendByteToBlob");
 	}
 	blob->data[newSize - 1] = byte;
 	blob->len = newSize;

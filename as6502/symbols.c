@@ -12,7 +12,7 @@
 #include <ctype.h> // isspace
 
 #include "symbols.h"
-#include "common.h"
+#include "error.h"
 #include "linectl.h"
 #include "parser.h"
 
@@ -66,7 +66,7 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
 	as6502_symbol *label = malloc(sizeof(as6502_symbol));
 	if (!label) {
-		die("label malloc in as6502_addLabelToTable");
+		as6502_fatal("label malloc in as6502_addLabelToTable");
 	}
 	label->line = line;
 	label->address = address;
@@ -74,7 +74,7 @@ void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, cons
 	size_t len = strlen(name) + 1;
 	label->name = malloc(len);
 	if (!label->name) {
-		die("label name malloc in as6502_addLabelToTable");
+		as6502_fatal("label name malloc in as6502_addLabelToTable");
 	}
 	memcpy(label->name, name, len);
 
@@ -122,7 +122,7 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
 void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
 	as6502_symbol *var = malloc(sizeof(as6502_symbol));
 	if (!var) {
-		die("var malloc in as6502_addVarToTable");
+		as6502_fatal("var malloc in as6502_addVarToTable");
 	}
 	var->line = line;
 	var->address = address;
@@ -130,7 +130,7 @@ void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const 
 	size_t len = strlen(name) + 1;
 	var->name = malloc(len);
 	if (!var->name) {
-		die("var name malloc in as6502_addVarToTable");
+		as6502_fatal("var name malloc in as6502_addVarToTable");
 	}
 	memcpy(var->name, name, len);
 	
@@ -184,7 +184,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 			}
 		}
 		else {
-			die(kDesymErrorText);
+			as6502_fatal(kDesymErrorText);
 		}
 	}
 	
