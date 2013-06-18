@@ -24,23 +24,25 @@ the way via the pre-built table.
 	
 \page vm Virtual Machine
 
-The simplest implementation of a v6502 instance is as follows:
+The simplest fault tolerant implementation of a v6502 instance is as follows:
 
 \code
 #include "cpu.h"
 #include "mem.h"
 
-volatile static int faulted;
-
-void v6502_fault(const char *e) {
-	faulted++;
+void fault(void *ctx, const char *e) {
+	((int)*ctx)++;
 }
 
 int main(int argc, const char * argv[])
 {
+	int faulted = 0;
+	
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(2048);
-	
+	cpu->fault_callback = fault;
+	cpu->fault_context = &faulted;
+
 	v6502_reset(cpu);
 	
 	while (!faulted) {
