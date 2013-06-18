@@ -12,6 +12,7 @@
 
 #include "linectl.h"
 #include "parser.h"
+#include "error.h"	// as6502_error
 
 #define MIN(a, b)	((a < b) ? a : b)
 
@@ -108,6 +109,9 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 		} return;
 		case v6502_address_mode_indirect_y: {
 			strncpy(out, "indirect+y", 11);
+		} return;
+		case v6502_address_mode_symbol: {
+			strncpy(out, "symbol", 7);
 		} return;
 		case v6502_address_mode_unknown:
 		default:
