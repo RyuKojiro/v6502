@@ -51,6 +51,21 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 		clause = (cur + _lengthOfValue(cur)) - start;
 	}
 	
+	// Check for subtraction
+	cur = strnchr(line, '-', len);
+	if (cur) {
+		// Get right hand side
+		cur++;
+		right = as6502_valueForString(NULL, cur);
+		
+		// Get left hand side
+		start = rev_strnspc(line, cur) + 1;
+		left = as6502_valueForString(NULL, start);
+		
+		// Solve
+		result = left - right;
+		clause = (cur + _lengthOfValue(cur)) - start;
+	}
 	
 	// Put resolved value in
 	if (clause) {
