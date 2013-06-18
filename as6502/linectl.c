@@ -11,6 +11,10 @@
 #include <string.h>
 #include <ctype.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wincompatible-pointer-types-discards-qualifiers"
+
 void trimtaild(char *str) {
 	char *cur = str + strlen(str) - 1;
 	while(cur > str && isspace(*cur)) {
@@ -54,7 +58,7 @@ void trimgreedytailchard(char *str, char token) {
 	}
 }
 
-char *trimhead(char *str) {
+char *trimhead(const char *str) {
 	while (isspace(*str)) {
 		str++;
 	}
@@ -78,7 +82,7 @@ char *trimheadtospc(char *str) {
 	return str;
 }
 
-const char *rev_strnspc(const char *stop, const char *start) {
+char *rev_strnspc(const char *stop, const char *start) {
 	for (/* start */; start > stop; start--) {
 		if (isspace(*start)) {
 			return start;
@@ -96,7 +100,7 @@ const char *rev_strnchr(const char *stop, const char *start, const char chr) {
 	return NULL;
 }
 
-const char *strnchr(const char *str, char chr, size_t len) {
+char *strnchr(const char *str, char chr, size_t len) {
 	for (size_t i = 0; str[i] && i < len; i++) {
 		if (str[i] == chr) {
 			return str + i;
@@ -104,3 +108,5 @@ const char *strnchr(const char *str, char chr, size_t len) {
 	}
 	return NULL;
 }
+
+#pragma GCC diagnostic pop

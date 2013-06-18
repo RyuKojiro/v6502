@@ -27,7 +27,7 @@ void trimgreedytaild(char *str);
 void trimgreedytailchard(char *str, char token);
 
 /** @brief Safely trim leading whitespace by pushing pointer */
-char *trimhead(char *str);
+char *trimhead(const char *str);
 
 /** @brief Safely trim head til first encounter of token char from the head end */
 char *trimheadchar(char *str, char token);
@@ -38,7 +38,7 @@ char *trimheadtospc(char *str);
 /** @brief Reverse search string for space, safely */
 /** @param[in] start The location in the string to start searching backwards from */
 /** @param[in] stop The earliest location in the string to search up to, usually the beginning of the string */
-const char *rev_strnspc(const char *stop, const char *start);
+char *rev_strnspc(const char *stop, const char *start);
 
 /** @brief Reverse search string for character, safely */
 /** @param[in] start The location in the string to start searching backwards from */
@@ -47,7 +47,7 @@ const char *rev_strnspc(const char *stop, const char *start);
 const char *rev_strnchr(const char *stop, const char *start, const char chr);
 
 /** @brief Safely search potentially unterminated string for character */
-const char *strnchr(const char *str, char chr, size_t len);
+char *strnchr(const char *str, char chr, size_t len);
 /**@}*/
 
 #endif
