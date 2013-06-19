@@ -97,11 +97,13 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 	}
 }
 
+/**
+ *	If there are allocation problems, v6502_createMemory will return NULL.
+ */
 v6502_memory *v6502_createMemory(uint16_t size) {
 	// Allocate Memory Struct
 	v6502_memory *memory = malloc(sizeof(v6502_memory));
 	if (!memory) {
-		v6502_mfault(kMemoryStructAllocErrorText);
 		return NULL;
 	}
 	
@@ -109,7 +111,6 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	memory->bytes = malloc(size);
 	if (!memory->bytes) {
 		free(memory);
-		v6502_mfault(kMemoryBlobAllocErrorText);
 		return NULL;
 	}
 	memory->size = size;
