@@ -187,9 +187,8 @@ int main(int argc, char * const argv[]) {
 	int printProcess = NO;
 	
 	// If no arguments
-	int bflag, ch;
+	int ch;
 	
-	bflag = 0;
 	while ((ch = getopt(argc, argv, "V")) != -1) {
 		switch (ch) {
 			case 'V':
