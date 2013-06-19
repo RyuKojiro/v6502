@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <unistd.h> // getopt
 
 #include "linectl.h"
 #include "parser.h"
@@ -175,10 +176,15 @@ static void outNameFromInName(char *out, int len, const char *in) {
 	out[++c] = '\0';
 }
 
-int main(int argc, const char * argv[]) {
+static void usage() {
+	fprintf(stderr, "usage: as6502 [-V] [file ...]\n");
+}
+
+int main(int argc, char * const argv[]) {
 	FILE *in;
 	FILE *out;
 	char outName[MAX_FILENAME_LEN];
+	int printProcess = NO;
 	
 	if (argc < 2) {
 		currentFileName = "stdin";
@@ -189,13 +195,29 @@ int main(int argc, const char * argv[]) {
 		assembleFile(stdin, stdout, NO);
 		return 0;
 	}
+	else {
+		int bflag, ch;
+		
+		bflag = 0;
+		while ((ch = getopt(argc, argv, "V")) != -1) {
+			switch (ch) {
+				case 'V':
+					printProcess = YES;
+					break;
+				case '?':
+				default:
+					usage();
+					return 0;
+			}
+		}
+	}
 	
-	for (int i = 1; i < argc; i++) {
+	for (int i = optind; i < argc; i++) {
 		in = fopen(argv[i], "r");
 		currentFileName = argv[i];
 		outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
 		out = fopen(outName, "w");
-		assembleFile(in, out, NO);
+		assembleFile(in, out, printProcess);
 		fclose(in);
 		fclose(out);
 	}
