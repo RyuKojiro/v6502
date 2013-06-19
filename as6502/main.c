@@ -186,40 +186,42 @@ int main(int argc, char * const argv[]) {
 	char outName[MAX_FILENAME_LEN];
 	int printProcess = NO;
 	
-	if (argc < 2) {
+	// If no arguments
+	int bflag, ch;
+	
+	bflag = 0;
+	while ((ch = getopt(argc, argv, "V")) != -1) {
+		switch (ch) {
+			case 'V':
+				printProcess = YES;
+				break;
+			case '?':
+			default:
+				usage();
+				return 0;
+		}
+	}
+
+	int i = optind;
+	
+	if (argc - i == 0) {
 		currentFileName = "stdin";
 		currentLineNum = 0;
 		
 		as6502_warn("Assembling from stdin does not support symbols");
 		
 		assembleFile(stdin, stdout, NO);
-		return 0;
 	}
 	else {
-		int bflag, ch;
-		
-		bflag = 0;
-		while ((ch = getopt(argc, argv, "V")) != -1) {
-			switch (ch) {
-				case 'V':
-					printProcess = YES;
-					break;
-				case '?':
-				default:
-					usage();
-					return 0;
-			}
+		for (/* i */; i < argc; i++) {
+			in = fopen(argv[i], "r");
+			currentFileName = argv[i];
+			outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
+			out = fopen(outName, "w");
+			assembleFile(in, out, printProcess);
+			fclose(in);
+			fclose(out);
 		}
-	}
-	
-	for (int i = optind; i < argc; i++) {
-		in = fopen(argv[i], "r");
-		currentFileName = argv[i];
-		outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
-		out = fopen(outName, "w");
-		assembleFile(in, out, printProcess);
-		fclose(in);
-		fclose(out);
 	}
 }
 
