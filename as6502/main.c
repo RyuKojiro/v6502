@@ -41,7 +41,7 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 	return addrLen;
 }
 
-static void assembleFile(FILE *in, FILE *out) {
+static void assembleFile(FILE *in, FILE *out, int printProcess) {
 	char line[MAX_LINE_LEN];
 	char *trimmedLine;
 	v6502_address_mode mode;
@@ -88,7 +88,7 @@ static void assembleFile(FILE *in, FILE *out) {
 	
 	// Prepare object structure
 	as6502_object_context *ctx = as6502_createObjectContext();
-	
+		
 	// Final pass, convert source to object code
 	do {
 		newline = NO;
@@ -127,9 +127,31 @@ static void assembleFile(FILE *in, FILE *out) {
 		if (lineLen) {
 			instructionLength = assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen);
 			address += instructionLength;
+			
+			if (printProcess) {
+				uint8_t opcode, low, high;
+				as6502_instructionForLine(&opcode, &low, &high, NULL, trimmedLine, lineLen);
+				
+				printf("0x%04x: ", address - instructionLength);
+				
+				switch (instructionLength) {
+					case 1: {
+						printf("%02x      ", opcode);
+					} break;
+					case 2: {
+						printf("%02x %02x   ", opcode, low);
+					} break;
+					case 3: {
+						printf("%02x %02x %02x", opcode, low, high);
+					} break;
+					default: {
+						printf("        ");
+					} break;
+				}
+				
+				printf(" - %4lu: %s\n", currentLineNum, trimmedLine);
+			}
 		}
-		
-		
 		
 		// Check if we are on the next line yet
 		if (newline) {
@@ -164,7 +186,7 @@ int main(int argc, const char * argv[]) {
 		
 		as6502_warn("Assembling from stdin does not support symbols");
 		
-		assembleFile(stdin, stdout);
+		assembleFile(stdin, stdout, NO);
 		return 0;
 	}
 	
@@ -173,7 +195,7 @@ int main(int argc, const char * argv[]) {
 		currentFileName = argv[i];
 		outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
 		out = fopen(outName, "w");
-		assembleFile(in, out);
+		assembleFile(in, out, NO);
 		fclose(in);
 		fclose(out);
 	}
