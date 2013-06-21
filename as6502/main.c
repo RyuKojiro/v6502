@@ -70,6 +70,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess) {
 		}
 		
 		// Increment offset if there is an actual instruction line here
+		trimmedLine = trimhead(trimmedLine);
 		if (trimmedLine[0] && trimmedLine[0] != ';') {
 			mode = as6502_addressModeForLine(trimmedLine);
 			address += as6502_instructionLengthForAddressMode(mode);
