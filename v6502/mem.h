@@ -44,7 +44,7 @@ int8_t v6502_signedValueOfByte(uint8_t byte);
 /** @brief Convert a signed value to its raw byte */
 uint8_t v6502_byteValueOfSigned(int8_t i);
 /** @brief Raise an exception regarding v6502_memory */
-#define v6502_mfault(a)	if (memory->fault_callback) { \
+#define v6502_mfault(a)	if (memory && memory->fault_callback) { \
 							memory->fault_callback(memory->fault_context, a); \
 						} \
 /**@}*/
