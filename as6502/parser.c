@@ -888,13 +888,13 @@ int as6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 		case v6502_address_mode_zeropage_x:
 		case v6502_address_mode_zeropage_y:
 		case v6502_address_mode_relative:
+		case v6502_address_mode_indirect_x:
+		case v6502_address_mode_indirect_y:
 			return 2;
 		case v6502_address_mode_absolute:
 		case v6502_address_mode_absolute_x:
 		case v6502_address_mode_absolute_y:
 		case v6502_address_mode_indirect:
-		case v6502_address_mode_indirect_x:
-		case v6502_address_mode_indirect_y:
 			return 3;
 		case v6502_address_mode_symbol:
 		case v6502_address_mode_unknown:
