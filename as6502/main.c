@@ -105,7 +105,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess) {
 		trimtaild(line);
 		
 		// Convert symbols to hard addresses from symbol table
-		as6502_desymbolicateLine(table, line, MAX_LINE_LEN, address, NO);
+		as6502_desymbolicateLine(table, line, MAX_LINE_LEN, 0x0600, address, NO);
 		
 		// Check for Variable Declarations and Arithmetic
 		as6502_resolveArithmetic(line, MAX_LINE_LEN);

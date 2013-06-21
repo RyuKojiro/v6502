@@ -213,7 +213,7 @@ static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *l
 	return 1;
 }
 
-void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t offset, int caseSensitive) {
+void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive) {
 	// FIXME: This needs to be smart about address formation, based on address mode
 	// This is absurdly inefficient, but works, given the current symbol table implementation
 	char *cur;
@@ -273,7 +273,12 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 			}
 			
 			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
-			snprintf(addrString, 7, width ? "$%04x" : "$%02x", v6502_byteValueOfSigned(this->address - offset));
+			if (width) {
+				snprintf(addrString, 7, "$%04x", pstart + this->address);
+			}
+			else {
+				snprintf(addrString, 5, "$%02x", v6502_byteValueOfSigned(this->address - offset));
+			}
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
 		}
 	}	
