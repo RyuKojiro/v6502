@@ -177,7 +177,7 @@ static void outNameFromInName(char *out, int len, const char *in) {
 }
 
 static void usage() {
-	fprintf(stderr, "usage: as6502 [-V] [file ...]\n");
+	fprintf(stderr, "usage: as6502 [-SW] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
@@ -189,11 +189,11 @@ int main(int argc, char * const argv[]) {
 	// If no arguments
 	int ch;
 	
-	while ((ch = getopt(argc, argv, "V")) != -1) {
+	while ((ch = getopt(argc, argv, "SW")) != -1) {
 		switch (ch) {
-			case 'V':
+			case 'S': {
 				printProcess = YES;
-				break;
+			} break;
 			case '?':
 			default:
 				usage();
