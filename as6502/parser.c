@@ -824,6 +824,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 	
 	// Check first character of argument, and byte length
 	switch (*cur) {
+		case 'A':
 		case 'a': { // Accumulator (normalized)
 			if (isalnum(*(cur + 1))) {
 				// For symbols, check to see if it is a branch instruction, if so, relative, if not, absolute
