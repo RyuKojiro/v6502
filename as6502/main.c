@@ -28,7 +28,6 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 	as6502_instructionForLine(&opcode, &low, &high, &mode, line, len);
 	addrLen = as6502_instructionLengthForAddressMode(mode);
 	
-	/** TODO: @todo Write machine code to object, not directly to file */
 	if (addrLen >= 1) {
 		as6502_appendByteToBlob(blob, opcode);
 	}
