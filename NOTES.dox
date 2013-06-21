@@ -5,6 +5,24 @@
 \subpage vm
 
 \page as Assembler
+\section usage Arguments and Usage
+
+as6502 [-SW] [\a file ...]
+
+Any number of files may be specified and they will all be assembled,
+individually. There currently is no linker in the v6502 stack, as6502 just
+outputs the raw binaries ready-to-execute. If no files are specified, as6502
+will assemble from stdin, line-buffered.
+
+- -S
+	
+	Dump assembly with binary results and addresses to stdout for verification
+	of what is being produced. \see \ref debug
+
+- -W
+	
+	Emit warnings where possible, and attempt to recover then continue assembly.
+
 \section notes Notes
 
 When assembling from stdin, label parsing and dereferencing is not supported.
@@ -15,13 +33,15 @@ the way via the pre-built table.
 
 \section design Design
 
-- Pass 1:
-	Reference calculation; conversion of variable names and labels to addresses.
+The assembler makes two passes over the source, and aims to be as efficient as
+possible, while still exposing powerful access to the assembly process.
 
-- Pass 2: (Final) (Only pass when using stdin)
-	Handling of dot-prefix lines. Allocation of .data blocks, .words, .org.
+-# Reference calculation; conversion of variable names and labels to addresses.
+	Preallocation of object blobs based on dot-prefixed directives.
+-# (Final) (Only pass when using stdin)
+	Population of dot-prefixed lines (e.g. Allocation of .data blocks, .words, .org.)
 	Conversion of instructions to machine code.
-	
+
 \section debug Debugging
 
 Debug output logging has been added to allow printing of the assembly process,
