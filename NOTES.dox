@@ -66,37 +66,35 @@ possible, while still exposing powerful access to the assembly process.
 
 -# Reference calculation; conversion of variable names and labels to addresses.
 	Preallocation of object blobs based on dot-prefixed directives.
--# (Final) (Only pass when using stdin)
-	Population of dot-prefixed lines (e.g. Allocation of .data blocks, .words, .org.)
+-# (Only pass when assembling from stdin)
+	Population of dot-prefixed lines (e.g. Filling <b>.data</b> blocks, assigning
+	<b>.word</b> values, etc.)
 	Conversion of instructions to machine code.
 
 \section debug Debugging
 
 Debug output logging has been added to allow printing of the assembly process,
-as it happens, the outlook is column oriented and can be seen below. The column
-headers have been added, and the middle 208 lines omitted for clarity.
+as it happens, the outlook is column oriented and can be seen below. Comment
+lines, or lines that contain no code or labels, are not printed. The column
+headers have been added, and the middle 170 lines omitted for clarity.
 
 \code
-Offset  Op Lo Hi   Line  Instruction
-------  -- -- --   ----  -----------
-0x0000: 20 03 00 -   15: jsr $0003
-0x0003: 20 38 00 -   16: jsr $0038
-0x0006: 20 04 00 -   19: jsr $0004
-0x0009: 20 1e 00 -   20: jsr $001e
-0x000c: 60       -   21: rts
-0x000d: a9 02    -   25: lda #2
-0x000f: 85 02    -   26: sta *$
-      … 208 lines ommitted …
-0x0128: a6 03    -  234: ldx *$03
-0x012a: a9 00    -  235: lda #0
-0x012c: 81 10 00 -  236: sta ($10,x)
-0x012f: 60       -  237: rts
-0x0130: a2 00    -  241: ldx #0
-0x0132: ea       -  243: nop
-0x0133: ea       -  244: nop
-0x0134: ca       -  245: dex
-0x0135: d0 0c    -  246: bne $0c
-0x0137: 60       -  247: rts
+Offset  Op Lo Hi   Line  Label / Instruction
+------  -- -- --   ----  -------------------
+0x0000: 20 03 00 -   15:  	jsr $0003
+0x0003: 20 38 00 -   16:  	jsr $0038
+0x0006:          -   18: init:
+0x0006: 20 04 00 -   19:  	jsr $0004
+0x0009: 20 1e 00 -   20:  	jsr $001e
+0x000c: 60       -   21:  	rts
+	… 170 lines ommitted …
+0x0130: a2 00    -  241:  	ldx #0
+0x0132:          -  230: drawSnake:
+0x0132: ea       -  243:  	nop
+0x0133: ea       -  244:  	nop
+0x0134: ca       -  245:  	dex
+0x0135: d0 0c    -  246:  	bne $0c
+0x0137: 60       -  247:  	rts
 \endcode
 
 \page vm Virtual Machine
