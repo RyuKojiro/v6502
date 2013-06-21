@@ -133,6 +133,11 @@ static void assembleFile(FILE *in, FILE *out, int printProcess) {
 				uint8_t opcode, low, high;
 				as6502_instructionForLine(&opcode, &low, &high, NULL, trimmedLine, lineLen);
 				
+				as6502_symbol *label = as6502_labelForAddress(table, address - instructionLength);
+				if (label) {
+					printf("0x%04x:          - %4lu: %s:\n", address - instructionLength, label->line, label->name);
+				}
+				
 				printf("0x%04x: ", address - instructionLength);
 				
 				switch (instructionLength) {
@@ -150,7 +155,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess) {
 					} break;
 				}
 				
-				printf(" - %4lu: %s\n", currentLineNum, trimmedLine);
+				printf(" - %4lu:  \t%s\n", currentLineNum, trimmedLine);
 			}
 		}
 		
