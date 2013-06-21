@@ -26,6 +26,10 @@
 													cpu->sr &= (_overflowCheck | ~v6502_cpu_status_overflow); \
 													cpu->sr |= (_overflowCheck & v6502_cpu_status_overflow); \
 
+#define kUnhandledInstructionErrorText				"Unhandled CPU Instruction"
+
+#define STACK_OFFSET								0x0100
+
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
 
@@ -196,6 +200,8 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_tya:
 		case v6502_opcode_inx:
 		case v6502_opcode_iny:
+		case v6502_opcode_rti:
+		case v6502_opcode_rts:
 			return v6502_address_mode_implied;
 		case v6502_opcode_bcc:
 		case v6502_opcode_bcs:
@@ -206,8 +212,6 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_bvc:
 		case v6502_opcode_bvs:
 		case v6502_opcode_jsr:
-		case v6502_opcode_rti:
-		case v6502_opcode_rts:
 		case v6502_opcode_pha:
 		case v6502_opcode_pla:
 		case v6502_opcode_php:
@@ -365,15 +369,14 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 	uint8_t buf;
 	
 	switch (v6502_addressModeForOpcode(opcode)) {
-		case v6502_address_mode_accumulator: {
-			operand = &(cpu->ac);
-		} break;
+		case v6502_address_mode_accumulator:
 		case v6502_address_mode_implied: {
 			operand = &(cpu->ac);
 		} break;
 		case v6502_address_mode_immediate: {
 			operand = &low;
 		} break;
+		case v6502_address_mode_indirect: /** FIXME: @bug indirect dereferencing */
 		case v6502_address_mode_zeropage: {
 			operand = v6502_map(cpu->memory, low);
 		} break;
@@ -392,9 +395,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_address_mode_absolute_y: {
 			operand = v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
 		} break;
-		case v6502_address_mode_indirect: {
-			operand = v6502_map(cpu->memory, low);
-		} break;
 		case v6502_address_mode_indirect_x: {
 			operand = v6502_map(cpu->memory, low + cpu->x);
 		} break;
@@ -403,12 +403,12 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			buf += cpu->y;
 			operand = &buf;
 		} break;
+		case v6502_address_mode_relative:
+			break;
 		case v6502_address_mode_symbol:
 		case v6502_address_mode_unknown:
-			return;
-		case v6502_address_mode_relative:
 		default:
-			break;
+			return;
 	}
 	
 	switch ((v6502_opcode)opcode) {
@@ -516,26 +516,29 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		
 		// Stack Instructions
 		case v6502_opcode_jsr: {
-			*v6502_map(cpu->memory, cpu->sp--) = cpu->pc;
+			/** TODO: @todo Which byte of the pc goes onto the stack first? */
+			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->pc;			// Low byte first
+			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = (cpu->pc >> 8);	// High byte second
 			cpu->pc = BOTH_BYTES;
 		} return;
 		case v6502_opcode_rti: {
 			/** TODO: @todo Interrupts (RTI/RTS) */
 		} return;
 		case v6502_opcode_rts: {
-			cpu->pc = *v6502_map(cpu->memory, ++cpu->sp);
+			cpu->pc = (cpu->memory->bytes[STACK_OFFSET + ++cpu->sp] << 8);
+			cpu->pc |= cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
 		} return;
 		case v6502_opcode_pha: {
-			*v6502_map(cpu->memory, cpu->sp--) = cpu->ac;
+			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->ac;
 		} return;
 		case v6502_opcode_pla: {
-			cpu->ac = *v6502_map(cpu->memory, ++cpu->sp);
+			cpu->ac = cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
 		} return;
 		case v6502_opcode_php: {
-			*v6502_map(cpu->memory, cpu->sp--) = cpu->sr;
+			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->sr;
 		} return;
 		case v6502_opcode_plp: {
-			cpu->sr = *v6502_map(cpu->memory, ++cpu->sp);
+			cpu->sr = cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
 		} return;
 
 		// ADC
@@ -747,7 +750,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			
 		// Failure
 		default: {
-			v6502_fault("Unhandled CPU Instruction");
+			v6502_fault(kUnhandledInstructionErrorText);
 		} return;
 	}
 }
