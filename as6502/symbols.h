@@ -56,6 +56,8 @@ void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, cons
 uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name);
 /** @brief Finds a label in a given as6502_symbol_table by name */
 as6502_symbol *as6502_labelForString(as6502_symbol_table *table, const char *name);
+/** @brief Finds a label in a given as6502_symbol_table by address */
+as6502_symbol *as6502_labelForAddress(as6502_symbol_table *table, uint16_t address);
 /** @brief Creates and adds a variable _as6502_symbol to a as6502_symbol_table */
 void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address);
 /** @brief Dereferences a variable by name to retrieve its address */

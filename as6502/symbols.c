@@ -97,7 +97,17 @@ as6502_symbol *as6502_labelForString(as6502_symbol_table *table, const char *nam
 		}
 	}
 	
-	return 0;
+	return NULL;
+}
+
+as6502_symbol *as6502_labelForAddress(as6502_symbol_table *table, uint16_t address) {
+	for (as6502_symbol *this = table->first_label; this; this = this->next) {
+		if (this->address == address) {
+			return this;
+		}
+	}
+	
+	return NULL;
 }
 
 uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
@@ -112,7 +122,7 @@ as6502_symbol *as6502_varForString(as6502_symbol_table *table, const char *name)
 		}
 	}
 	
-	return 0;
+	return NULL;
 }
 
 uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
