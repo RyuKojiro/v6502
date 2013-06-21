@@ -1,8 +1,36 @@
 /**
 \mainpage
-\subpage as
 
-\subpage vm
+The v6502 infrastructure currently consists of two major sections, and their API
+subsections:
+
+- \subpage as (as6502)
+	- \ref parser.h
+		- \ref parser_translit
+		- \ref parser_line
+		- \ref parser_help
+	- \ref linectl.h
+		- \ref linectl
+	- \ref codegen.h
+		- \ref codegen
+	- \ref error.h
+		- \ref as_error
+	- \ref symbols.h
+		- \ref sym_lifecycle
+		- \ref sym_access
+		- \ref sym_ez
+		- \ref sym_rep
+	- \ref object.h
+		- \ref obj_lifecycle
+		- \ref obj_access
+		- \ref obj_mutate
+- \subpage vm (v6502)
+	- \ref cpu.h
+		- \ref cpu_lifecycle
+		- \ref cpu_exec
+	- \ref mem.h
+		- \ref mem_lifecycle
+		- \ref mem_access
 
 \page as Assembler
 \section usage Arguments and Usage
@@ -21,7 +49,7 @@ will assemble from stdin, line-buffered.
 
 - -W
 	
-	Emit warnings where possible, and attempt to recover then continue assembly.
+	Emit warnings where possible, and attempt to recover, then continue assembly.
 
 \section notes Notes
 
@@ -93,7 +121,7 @@ int main(int argc, const char * argv[])
 	cpu->fault_context = &faulted;
 
 	v6502_reset(cpu);
-	
+
 	while (!faulted) {
 		v6502_step(cpu);
 	}
