@@ -12,13 +12,6 @@
 #include "video.h"
 #include "state.h"
 
-/*
- Notes:
-  
- Memory locations $200 to $5ff map to the screen pixels. Different values will
- draw different colour pixels. The colours are:
- */
-
 static int faulted;
 
 void v6502_fault(const char *e) {
@@ -75,7 +68,7 @@ int main(int argc, const char * argv[])
 	}
 
 	// Load program code into memory
-	loadProgram(cpu->memory, "easy_test.o");
+	loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/easy6502/easy_test.o");
 	
 	v6502_reset(cpu);
 	while (!faulted) {
