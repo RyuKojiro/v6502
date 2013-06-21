@@ -155,8 +155,13 @@ int v6502_instructionLengthForOpcode(v6502_opcode opcode) {
 		return 3;
 	}
 	
-	if (((opcode & 0x0F) == 0x09) && (opcode & 0x10)) {
-		return 3;
+	if ((opcode & 0x0F) == 0x09) { // low nibble is 9
+		if (opcode & 0x10) { // high nibble is odd
+			return 3;
+		}
+		else { // high nibble is even
+			return 2;
+		}
 	}
 	
 	if (opcode == v6502_opcode_jsr) {
@@ -515,7 +520,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->pc = BOTH_BYTES;
 		} return;
 		case v6502_opcode_rti: {
-			// TODO: Interrupts
+			/** TODO: @todo Interrupts (RTI/RTS) */
 		} return;
 		case v6502_opcode_rts: {
 			cpu->pc = *v6502_map(cpu->memory, ++cpu->sp);
