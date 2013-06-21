@@ -66,7 +66,7 @@ uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 		return &memory->bytes[offset];
 	}
 
-	// FIXME: Everything past here, is it mapped or just in memory?
+	/** FIXME: @bug Everything past here, is it mapped or just in memory? */
 	// APU registers
 	if (offset >= kMemoryStartAPURegisters && offset < kMemoryStartExpansionRom) {
 		return &memory->bytes[offset];
@@ -139,7 +139,7 @@ int8_t v6502_signedValueOfByte(uint8_t byte) {
 }
 
 uint8_t v6502_byteValueOfSigned(int8_t i) {
-// TODO: Reliable portable implementation
+/** TODO: @todo Reliable portable implementation */
 //	if (i < 0) {
 //		return (uint8_t)(0xff - i);
 //	}

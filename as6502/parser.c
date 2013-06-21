@@ -838,7 +838,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 		case '(': // Indirect
 			return _incrementModeByFoundRegister(v6502_address_mode_indirect, cur);
 		default: { // Relative, Absolute, or Implied
-			// TODO: Better byte length determination, this doesn't tell shit
+			/** TODO: @todo Better byte length determination, this doesn't tell shit */
 			as6502_byteValuesForString(NULL, NULL, &wide, cur);
 			if (wide) {
 				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);

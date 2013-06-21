@@ -39,10 +39,11 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 		right = as6502_valueForString(NULL, cur);
 		
 		// Get left hand side
-		// FIXME: This currently relies on the first space found in reverse
-		// being separate from the arithmetic clause, and a delimeter for the
-		// left hand value. Not sure if this is proper if whitespace is allowed
-		// in between operators and values.
+		/** FIXME: @bug This currently relies on the first space found in reverse
+		 * being separate from the arithmetic clause, and a delimeter for the
+		 * left hand value. Not sure if this is proper if whitespace is allowed
+		 * in between operators and values. 
+		 */
 		start = rev_strnspc(line, cur) + 1;
 		left = as6502_valueForString(NULL, start);
 		

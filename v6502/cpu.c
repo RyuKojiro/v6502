@@ -18,7 +18,7 @@
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
-// FIXME: (a > 0xFF) is always true with uint8_t
+/** FIXME: @bug (a > 0xFF) is always true with uint8_t */
 #define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_carry : 0);
 #define FLAG_OVERFLOW_PREPARE(a)					uint8_t _overflowCheck = a;
 #define FLAG_OVERFLOW_CHECK(a)						_overflowCheck ^= a; \

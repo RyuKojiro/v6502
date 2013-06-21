@@ -165,7 +165,7 @@ void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsig
 	trimtailchard(symbol, ':'); // If there is a colon, truncate there
 	
 	if (strchr(line, '=')) { // Variable
-		// TODO: allocate variable addresses
+		/** TODO: @todo allocate variable addresses */
 		as6502_addVarToTable(table, lineNumber, symbol, 0);
 	}
 	else { // Label
@@ -214,8 +214,9 @@ static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *l
 }
 
 void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive) {
-	// FIXME: This needs to be smart about address formation, based on address mode
-	// This is absurdly inefficient, but works, given the current symbol table implementation
+	/** FIXME: This needs to be smart about address formation, based on address mode
+	 * This is absurdly inefficient, but works, given the current symbol table implementation
+	 */
 	char *cur;
 	char addrString[7];
 	int width;

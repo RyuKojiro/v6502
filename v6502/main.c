@@ -72,7 +72,7 @@ static void getInput(char *command, int len) {
 			if (getch() == '\234') {
 				switch (getch()) {
 					case '\200': { // UP
-						// TODO: Delete x chars
+						/** TODO: @todo Delete x chars */
 						printf("%s", command);
 						fflush(stdout);
 						strncpy(buf + x, command, len - x);
@@ -80,7 +80,7 @@ static void getInput(char *command, int len) {
 					} break;
 					case '\201': { // DOWN
 						// Nothing so far
-						// TODO: Delete x chars
+						/** TODO: @todo Delete x chars */
 					} break;
 					default:
 						break;
