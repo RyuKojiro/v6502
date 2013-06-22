@@ -30,5 +30,6 @@
 - (IBAction)toggleRunning:(id)sender;
 - (IBAction)step:(id)sender;
 - (IBAction)testPattern:(id)sender;
+- (IBAction)dumpMemory:(id)sender;
 
 @end

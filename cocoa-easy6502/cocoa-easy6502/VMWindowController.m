@@ -117,6 +117,19 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	[self cycle];
 }
 
+- (IBAction)dumpMemory:(id)sender {
+	uint16_t end = 0x200;
+		
+	printf("      0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F\n");
+	for (uint16_t y = 0; y < end; y += 0x10) {
+		printf("%04x ", y);
+		for (uint16_t x = y; x <= y + 0x0F; x++) {
+			printf("%02x ", cpu->memory->bytes[x]);
+		}
+		printf("\n");
+	}
+}
+
 - (void)windowDidLoad
 {
     [super windowDidLoad];
@@ -127,7 +140,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	[video setMem:cpu->memory];
 	
 	// Load program code into memory
-	loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/easy6502/easy_test.o");
+	loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/easy6502/snake.o");
 	
 	// Reset the cpu
 	v6502_reset(cpu);
