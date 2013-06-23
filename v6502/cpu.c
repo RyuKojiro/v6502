@@ -211,7 +211,6 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_bpl:
 		case v6502_opcode_bvc:
 		case v6502_opcode_bvs:
-		case v6502_opcode_jsr:
 		case v6502_opcode_pha:
 		case v6502_opcode_pla:
 		case v6502_opcode_php:
@@ -256,6 +255,7 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_sta_abs:
 		case v6502_opcode_stx_abs:
 		case v6502_opcode_sty_abs:
+		case v6502_opcode_jsr:
 			return v6502_address_mode_absolute;
 		case v6502_opcode_adc_absx:
 		case v6502_opcode_and_absx:
@@ -524,6 +524,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->pc;			// Low byte first
 			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = (cpu->pc >> 8);	// High byte second
 			cpu->pc = BOTH_BYTES;
+			cpu->pc -= 3; // To compensate for post execution shift
 		} return;
 		case v6502_opcode_rti: {
 			/** TODO: @todo Interrupts (RTI/RTS) */
