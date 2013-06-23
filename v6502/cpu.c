@@ -360,8 +360,11 @@ void v6502_reset(v6502_cpu *cpu) {
 }
 
 void v6502_step(v6502_cpu *cpu) {
-	v6502_execute(cpu, *v6502_map(cpu->memory, cpu->pc), *v6502_map(cpu->memory, cpu->pc + 1), *v6502_map(cpu->memory, cpu->pc + 2));
-	cpu->pc += v6502_instructionLengthForOpcode(*v6502_map(cpu->memory, cpu->pc));
+	v6502_opcode opcode = *v6502_map(cpu->memory, cpu->pc);
+	uint8_t low = *v6502_map(cpu->memory, cpu->pc + 1);
+	uint8_t high = *v6502_map(cpu->memory, cpu->pc + 2);
+	v6502_execute(cpu, opcode, low, high);
+	cpu->pc += v6502_instructionLengthForOpcode(opcode);
 }
 
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
