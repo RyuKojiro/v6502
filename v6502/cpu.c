@@ -535,6 +535,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_rts: {
 			cpu->pc = (cpu->memory->bytes[STACK_OFFSET + ++cpu->sp] << 8);
 			cpu->pc |= cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
+			cpu->pc += 2; // To compensate for post execution shift ( - 1 rts, + 3 jsr )
 		} return;
 		case v6502_opcode_pha: {
 			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->ac;
