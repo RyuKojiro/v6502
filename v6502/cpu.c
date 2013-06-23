@@ -648,9 +648,11 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		// JMP
 		case v6502_opcode_jmp_abs: {
 			cpu->pc = BOTH_BYTES;
+			cpu->pc -= 3; // PC shift
 		} return;
 		case v6502_opcode_jmp_ind: {
 			cpu->pc = *v6502_map(cpu->memory, low);
+			cpu->pc -= 2; // PC shift
 		} return;
 		
 		// ORA
