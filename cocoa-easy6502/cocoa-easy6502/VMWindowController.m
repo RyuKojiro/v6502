@@ -19,7 +19,7 @@ volatile static int faulted;
 
 @implementation VMWindowController
 @synthesize video;
-@synthesize pcField, acField, xField, yField, spField, srField, instructionField, toggleButton;
+@synthesize pcField, acField, xField, yField, spField, srField, instructionField, logCheckBox, toggleButton;
 
 - (id)initWithWindow:(NSWindow *)window
 {
@@ -62,6 +62,10 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	char instruction[32];
 	as6502_stringForInstruction(instruction, 32, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 2], cpu->memory->bytes[cpu->pc + 1]);
 	[instructionField setStringValue:[NSString stringWithCString:instruction encoding:NSASCIIStringEncoding]];
+	
+	if ([logCheckBox state] == NSOnState) {
+		NSLog(@"0x%04x: %s", cpu->pc, instruction);
+	}
 }
 
 - (void) cycle {

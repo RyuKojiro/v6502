@@ -24,6 +24,8 @@
 @property (nonatomic, retain) IBOutlet NSTextField *srField;
 @property (nonatomic, retain) IBOutlet NSTextField *instructionField;
 
+@property (nonatomic, retain) IBOutlet NSButton *logCheckBox;
+
 @property (nonatomic, retain) IBOutlet NSButton *toggleButton;
 
 - (IBAction)reset:(id)sender;
