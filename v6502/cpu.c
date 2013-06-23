@@ -366,7 +366,7 @@ void v6502_step(v6502_cpu *cpu) {
 
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 	uint8_t *operand;
-	uint8_t buf;
+	uint16_t ref;
 	
 	switch (v6502_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_accumulator:
@@ -376,7 +376,11 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_address_mode_immediate: {
 			operand = &low;
 		} break;
-		case v6502_address_mode_indirect: /** FIXME: @bug indirect dereferencing */
+		case v6502_address_mode_indirect: {
+			ref = *v6502_map(cpu->memory, BOTH_BYTES); // Low byte first
+			ref |= *v6502_map(cpu->memory, BOTH_BYTES + 1) << 8; // High byte second
+			operand = v6502_map(cpu->memory, ref);
+		} break;
 		case v6502_address_mode_zeropage: {
 			operand = v6502_map(cpu->memory, low);
 		} break;
@@ -396,12 +400,12 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			operand = v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
 		} break;
 		case v6502_address_mode_indirect_x: {
-			operand = v6502_map(cpu->memory, low + cpu->x);
+			ref = *v6502_map(cpu->memory, low + cpu->x);
+			operand = v6502_map(cpu->memory, ref);
 		} break;
 		case v6502_address_mode_indirect_y: {
-			buf = *v6502_map(cpu->memory, low);
-			buf += cpu->y;
-			operand = &buf;
+			ref = *v6502_map(cpu->memory, low);
+			operand = v6502_map(cpu->memory, ref + cpu->y);
 		} break;
 		case v6502_address_mode_relative:
 			break;
