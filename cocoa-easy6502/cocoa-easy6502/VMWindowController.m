@@ -11,6 +11,8 @@
 #import "mem.h"
 #import "reverse.h"
 
+#import <HIToolbox/Events.h>
+
 volatile static int faulted;
 
 @interface VMWindowController ()
@@ -151,6 +153,25 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	
 	// Wait for user to start it
 	faulted = 1;
+}
+
+- (void) keyDown:(NSEvent *)theEvent {
+	switch ([theEvent keyCode]) {
+		case kVK_ANSI_W: {
+			cpu->memory->bytes[0xFF] = 'w';
+		} break;
+		case kVK_ANSI_A: {
+			cpu->memory->bytes[0xFF] = 'a';
+		} break;
+		case kVK_ANSI_S: {
+			cpu->memory->bytes[0xFF] = 's';
+		} break;
+		case kVK_ANSI_D: {
+			cpu->memory->bytes[0xFF] = 'd';
+		} break;
+		default:
+			break;
+	}
 }
 
 @end
