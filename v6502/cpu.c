@@ -449,12 +449,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 		case v6502_opcode_dex: {
-			cpu->x--;
-			FLAG_ZERO_WITH_RESULT(cpu->x);
+			_executeInPlaceDEC(cpu, &cpu->x);
 		} return;
 		case v6502_opcode_dey: {
-			cpu->y--;
-			FLAG_ZERO_WITH_RESULT(cpu->y);
+			_executeInPlaceDEC(cpu, &cpu->y);
 		} return;
 		case v6502_opcode_tax: {
 			cpu->x = cpu->ac;
