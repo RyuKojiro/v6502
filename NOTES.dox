@@ -24,6 +24,8 @@ subsections:
 		- \ref obj_lifecycle
 		- \ref obj_access
 		- \ref obj_mutate
+	- \ref reverse.h
+		- \ref rev
 - \subpage vm (v6502)
 	- \ref cpu.h
 		- \ref cpu_lifecycle
