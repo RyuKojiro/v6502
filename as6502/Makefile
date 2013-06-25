@@ -1,6 +1,6 @@
 #CC=		clang
 PROG=	as6502
-SRCS=	main.c symbols.c object.c error.c\
+SRCS=	main.c symbols.c object.c error.c codegen.c\
 	parser.c ../v6502/cpu.c ../v6502/mem.c linectl.c
 #LIB=	-lncurses
 OBJS=	$(SRCS:.c=.o)
