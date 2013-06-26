@@ -455,21 +455,27 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		case v6502_opcode_tax: {
 			cpu->x = cpu->ac;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_tay: {
 			cpu->y = cpu->ac;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_tsx: {
 			cpu->x = cpu->sp;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->sp);
 		} return;
 		case v6502_opcode_txa: {
 			cpu->ac = cpu->x;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_txs: {
 			cpu->sp = cpu->x;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->sp);
 		} return;
 		case v6502_opcode_tya: {
 			cpu->ac = cpu->y;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_inx: {
 			cpu->x++;
@@ -632,6 +638,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_eor_indx:
 		case v6502_opcode_eor_indy:
 			cpu->ac ^= *operand;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 			return;
 		
 		// INC
@@ -674,6 +681,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_lda_indx:
 		case v6502_opcode_lda_indy:
 			cpu->ac = *operand;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 		
 		// LDX
@@ -683,6 +691,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ldx_abs:
 		case v6502_opcode_ldx_absy:
 			cpu->x = *operand;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 
 		// LDY
@@ -692,6 +701,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ldy_abs:
 		case v6502_opcode_ldy_absx:
 			cpu->y = *operand;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 		
 		// LSR
@@ -742,6 +752,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sta_indx:
 		case v6502_opcode_sta_indy:
 			*operand = cpu->ac;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 			
 		// STX
@@ -749,6 +760,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_stx_zpgy:
 		case v6502_opcode_stx_abs:
 			*operand = cpu->x;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 			
 		// STY
@@ -756,6 +768,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sty_zpgx:
 		case v6502_opcode_sty_abs:
 			*operand = cpu->y;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 			
 		// Failure
