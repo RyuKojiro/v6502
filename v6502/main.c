@@ -19,6 +19,14 @@
 
 #define MAX_COMMAND_LEN		80
 
+static void fault(void *ctx, const char *error) {
+	fprintf(stderr, "fault: ");
+	fprintf(stderr, "%s", error);
+	if (error[strlen(error)] != '\n') {
+		fprintf(stderr, "\n");
+	}
+}
+
 static void popArg(char *str, size_t len) {
 	char *space = strchr(str, ' ');
 	if (!space) {
@@ -98,6 +106,7 @@ int main(int argc, const char * argv[])
 {
 	printf("Creating 1 virtual CPU…\n");
 	v6502_cpu *cpu = v6502_createCPU();
+	cpu->fault_callback = fault;
 	
 	printf("Allocating virtual memory of size 32k…\n");
 	cpu->memory = v6502_createMemory(0xFFFF);

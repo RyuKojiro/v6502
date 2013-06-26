@@ -12,14 +12,6 @@
 
 #include "core.h"
 
-void v6502_fault(const char *error) {
-	fprintf(stderr, "fault: ");
-	fprintf(stderr, "%s", error);
-	if (error[strlen(error)] != '\n') {
-		fprintf(stderr, "\n");
-	}
-}
-
 void v6502_printCpuState(v6502_cpu *cpu) {
 	fprintf(stderr, "Status Register: %c%c%c%c%c%c%c%c\n",
 			cpu->sr & v6502_cpu_status_negative ? 'N' : '-',
