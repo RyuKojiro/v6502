@@ -478,10 +478,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_inx: {
-			cpu->x++;
+			_executeInPlaceINC(cpu, &cpu->x);
 		} return;
 		case v6502_opcode_iny: {
-			cpu->y++;
+			_executeInPlaceINC(cpu, &cpu->y);
 		} return;
 
 		// Branch Instructions
