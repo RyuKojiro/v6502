@@ -11,20 +11,24 @@
 #include "cpu.h"
 
 #define	BOTH_BYTES									(high << 8 | low)
-#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= (~v6502_cpu_status_carry | (a >> 7)); \
+#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry; \
 													cpu->sr |= a >> 7;
-#define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry | a; \
-													cpu->sr |= v6502_cpu_status_carry & a;
+#define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry; \
+													cpu->sr |= a & v6502_cpu_status_carry;
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
 /** FIXME: @bug (a > 0xFF) is always true with uint8_t */
-#define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr |= ((a > 0xFF) ? v6502_cpu_status_carry : 0);
+#define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr &= ~v6502_cpu_status_carry; \
+													cpu->sr |= ((a >= 0x0100 || a < 0) ? v6502_cpu_status_carry : 0);
 #define FLAG_OVERFLOW_PREPARE(a)					uint8_t _overflowCheck = a;
 #define FLAG_OVERFLOW_CHECK(a)						_overflowCheck ^= a; \
 													_overflowCheck >>= 1; /* Shift to overflow flag position */ \
 													cpu->sr &= (_overflowCheck | ~v6502_cpu_status_overflow); \
 													cpu->sr |= (_overflowCheck & v6502_cpu_status_overflow); \
+
+#define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
+													FLAG_ZERO_WITH_RESULT(a);
 
 #define kUnhandledInstructionErrorText				"Unhandled CPU Instruction"
 
@@ -49,83 +53,74 @@ static void _executeInPlaceLSR(v6502_cpu *cpu, uint8_t *operand) {
 static void _executeInPlaceROL(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_CARRY_WITH_HIGH_BIT(*operand);
 	*operand = (*operand << 1) | (*operand >> 7);
-	FLAG_NEGATIVE_WITH_RESULT(*operand);
-	FLAG_ZERO_WITH_RESULT(*operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 }
 
 static void _executeInPlaceROR(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_CARRY_WITH_HIGH_BIT(*operand);
 	*operand = (*operand >> 1) | (*operand << 7);
-	FLAG_NEGATIVE_WITH_RESULT(*operand);
-	FLAG_ZERO_WITH_RESULT(*operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 }
 
 static void _executeInPlaceORA(v6502_cpu *cpu, uint8_t operand) {
 	cpu->ac |= operand;
-	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
-	FLAG_ZERO_WITH_RESULT(cpu->ac);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
 static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 	cpu->ac &= operand;
-	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
-	FLAG_ZERO_WITH_RESULT(cpu->ac);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_OVERFLOW_PREPARE(cpu->ac);
 	cpu->ac += operand;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->ac);
+	FLAG_CARRY_WITH_EXPRESSION(cpu->ac + operand);
 	FLAG_OVERFLOW_CHECK(cpu->ac);
-	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
-	FLAG_ZERO_WITH_RESULT(cpu->ac);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
 static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_OVERFLOW_PREPARE(cpu->ac);
 	cpu->ac -= operand;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->ac);
+	FLAG_CARRY_WITH_EXPRESSION(cpu->ac - operand);
 	FLAG_OVERFLOW_CHECK(cpu->ac);
-	FLAG_NEGATIVE_WITH_RESULT(cpu->ac);
-	FLAG_ZERO_WITH_RESULT(cpu->ac);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
 static void _executeInPlaceDEC(v6502_cpu *cpu, uint8_t *operand) {
 	(*operand)--;
-	FLAG_NEGATIVE_WITH_RESULT(*operand);
-	FLAG_ZERO_WITH_RESULT(*operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 }
 
 static void _executeInPlaceINC(v6502_cpu *cpu, uint8_t *operand) {
 	(*operand)++;
-	FLAG_NEGATIVE_WITH_RESULT(*operand);
-	FLAG_ZERO_WITH_RESULT(*operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 }
 
 static void _executeInPlaceCMP(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->ac - operand;
-	FLAG_NEGATIVE_WITH_RESULT(result);
-	FLAG_ZERO_WITH_RESULT(result);
+	FLAG_CARRY_WITH_EXPRESSION(cpu->ac - operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
 static void _executeInPlaceCPY(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->y - operand;
-	FLAG_NEGATIVE_WITH_RESULT(result);
-	FLAG_ZERO_WITH_RESULT(result);
+	FLAG_CARRY_WITH_EXPRESSION(cpu->y - operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
 static void _executeInPlaceCPX(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->x - operand;
-	FLAG_NEGATIVE_WITH_RESULT(result);
-	FLAG_ZERO_WITH_RESULT(result);
+	FLAG_CARRY_WITH_EXPRESSION(cpu->x - operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
 static void _executeInPlaceBIT(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->ac & operand;
 	cpu->sr &= ~v6502_cpu_status_overflow;
 	cpu->sr |= (result & v6502_cpu_status_overflow);
-	FLAG_NEGATIVE_WITH_RESULT(result);
-	FLAG_ZERO_WITH_RESULT(result);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
 #pragma mark -
