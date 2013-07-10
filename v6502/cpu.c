@@ -14,17 +14,16 @@
 #define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry; \
 													cpu->sr |= a >> 7;
 #define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry; \
-													cpu->sr |= a & v6502_cpu_status_carry;
+													cpu->sr |= (a & v6502_cpu_status_carry);
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
-#define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= ((a & 0x80) ? v6502_cpu_status_negative : 0);
-/** FIXME: @bug (a > 0xFF) is always true with uint8_t */
+#define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= (a & v6502_cpu_status_negative);
 #define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr &= ~v6502_cpu_status_carry; \
-													cpu->sr |= ((a >= 0x0100 || a < 0) ? v6502_cpu_status_carry : 0);
+													cpu->sr |= (((uint16_t)a >= 0x0100) ? v6502_cpu_status_carry : 0);
 #define FLAG_OVERFLOW_PREPARE(a)					uint8_t _overflowCheck = a;
 #define FLAG_OVERFLOW_CHECK(a)						_overflowCheck ^= a; \
 													_overflowCheck >>= 1; /* Shift to overflow flag position */ \
-													cpu->sr &= (_overflowCheck | ~v6502_cpu_status_overflow); \
+													cpu->sr &= v6502_cpu_status_overflow; \
 													cpu->sr |= (_overflowCheck & v6502_cpu_status_overflow); \
 
 #define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
@@ -40,8 +39,7 @@
 static void _executeInPlaceASL(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_CARRY_WITH_HIGH_BIT(*operand);
 	*operand <<= 1;
-	FLAG_NEGATIVE_WITH_RESULT(*operand);
-	FLAG_ZERO_WITH_RESULT(*operand);
+	FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 }
 
 static void _executeInPlaceLSR(v6502_cpu *cpu, uint8_t *operand) {
@@ -118,9 +116,9 @@ static void _executeInPlaceCPX(v6502_cpu *cpu, uint8_t operand) {
 
 static void _executeInPlaceBIT(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->ac & operand;
-	cpu->sr &= ~v6502_cpu_status_overflow;
-	cpu->sr |= (result & v6502_cpu_status_overflow);
-	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
+	cpu->sr &= ~(v6502_cpu_status_overflow | v6502_cpu_status_negative);
+	cpu->sr |= (operand & (v6502_cpu_status_overflow | v6502_cpu_status_negative));
+	FLAG_ZERO_WITH_RESULT(result);
 }
 
 #pragma mark -
@@ -367,8 +365,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 	uint16_t ref;
 	
 	switch (v6502_addressModeForOpcode(opcode)) {
-		case v6502_address_mode_accumulator:
-		case v6502_address_mode_implied: {
+		case v6502_address_mode_implied:
+		case v6502_address_mode_accumulator: {
 			operand = &(cpu->ac);
 		} break;
 		case v6502_address_mode_immediate: {
@@ -752,7 +750,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sta_indx:
 		case v6502_opcode_sta_indy:
 			*operand = cpu->ac;
-			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 			
 		// STX
@@ -760,7 +757,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_stx_zpgy:
 		case v6502_opcode_stx_abs:
 			*operand = cpu->x;
-			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 			
 		// STY
@@ -768,7 +764,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sty_zpgx:
 		case v6502_opcode_sty_abs:
 			*operand = cpu->y;
-			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 			return;
 			
 		// Failure
