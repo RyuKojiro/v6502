@@ -99,13 +99,13 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 			strncpy(out, "absolute", 9);
 		} return;
 		case v6502_address_mode_absolute_x: {
-			strncpy(out, "absolute+y", 11);
+			strncpy(out, "absolute+x", 11);
 		} return;
 		case v6502_address_mode_absolute_y: {
 			strncpy(out, "absolute+y", 11);
 		} return;
 		case v6502_address_mode_indirect_x: {
-			strncpy(out, "indirect+y", 11);
+			strncpy(out, "indirect+x", 11);
 		} return;
 		case v6502_address_mode_indirect_y: {
 			strncpy(out, "indirect+y", 11);
@@ -775,7 +775,7 @@ int as6502_isNumber(const char *c) {
 
 int _isBranchInstruction(const char *string) {
 	if (string[0] == 'b' || string[0] == 'B') {
-		if (strncasecmp(string, "bit", 3)) {
+		if (!asmeq(string, "bit")) {
 			return YES;
 		}
 	}
