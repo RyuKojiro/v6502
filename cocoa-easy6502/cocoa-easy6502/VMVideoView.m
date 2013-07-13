@@ -142,6 +142,8 @@
 		NSPoint selectedPoint = rawPointForAddress(selectedPixel);
 		NSRect rect = [self rectForRawPoint:selectedPoint];
 		[[NSColor magentaColor] setStroke];
+		[NSBezierPath setDefaultLineWidth:2.0f];
+		[NSBezierPath setDefaultLineJoinStyle:NSMiterLineJoinStyle];
 		[NSBezierPath strokeRect:rect];
 	}
 	
