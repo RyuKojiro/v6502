@@ -11,7 +11,7 @@
 #define VIDEO_OFFSET	0x0200
 
 @implementation VMVideoView
-@synthesize mem;
+@synthesize mem, selectedPixel, delegate;
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -181,6 +181,10 @@ static uint16_t addressForRawPoint(NSPoint rawPoint) {
 	NSPoint loc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	selectedPixel = addressForRawPoint([self rawPointForPointInView:loc]);
 	[self setNeedsDisplay:YES];
+	
+	if (delegate && [delegate respondsToSelector:@selector(update)]) {
+		[delegate update];
+	}
 }
 
 @end

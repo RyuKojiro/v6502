@@ -9,12 +9,21 @@
 #import <Cocoa/Cocoa.h>
 #import "mem.h"
 
+@protocol VMVideoViewDelegate <NSObject>
+
+- (void) update;
+
+@end
+
 @interface VMVideoView : NSView {
 	v6502_memory *mem;
 	uint16_t selectedPixel;
+	id <VMVideoViewDelegate> delegate;
 }
 
 @property (readwrite) v6502_memory *mem;
+@property (readonly) uint16_t selectedPixel;
+@property (nonatomic, assign) id <VMVideoViewDelegate> delegate;
 
 - (void) testPattern;
 - (void) resetVideoMemory;

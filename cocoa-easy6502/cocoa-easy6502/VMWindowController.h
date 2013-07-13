@@ -10,7 +10,7 @@
 #import "VMVideoView.h"
 #import "cpu.h"
 
-@interface VMWindowController : NSWindowController {
+@interface VMWindowController : NSWindowController <VMVideoViewDelegate> {
 	v6502_cpu *cpu;
 }
 
@@ -23,6 +23,7 @@
 @property (nonatomic, retain) IBOutlet NSTextField *spField;
 @property (nonatomic, retain) IBOutlet NSTextField *srField;
 @property (nonatomic, retain) IBOutlet NSTextField *instructionField;
+@property (nonatomic, retain) IBOutlet NSTextField *pixelField;
 
 @property (nonatomic, retain) IBOutlet NSButton *logCheckBox;
 

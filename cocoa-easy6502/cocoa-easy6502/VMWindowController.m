@@ -21,7 +21,7 @@ volatile static int faulted;
 
 @implementation VMWindowController
 @synthesize video;
-@synthesize pcField, acField, xField, yField, spField, srField, instructionField, logCheckBox, toggleButton;
+@synthesize pcField, acField, xField, yField, spField, srField, instructionField, logCheckBox, toggleButton, pixelField;
 
 - (id)initWithWindow:(NSWindow *)window
 {
@@ -61,6 +61,8 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 							 cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
 							 cpu->sr & v6502_cpu_status_carry ? 'C' : '-']];
 
+	[pixelField setStringValue:[NSString stringWithFormat:@"0x%02x", video.selectedPixel]];
+	
 	char instruction[32];
 	as6502_stringForInstruction(instruction, 32, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 2], cpu->memory->bytes[cpu->pc + 1]);
 	[instructionField setStringValue:[NSString stringWithCString:instruction encoding:NSASCIIStringEncoding]];
@@ -90,7 +92,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	[video setNeedsDisplay:YES];
 	
 	if (!faulted) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.000001f];
+		[self performSelector:_cmd withObject:nil afterDelay:0.0001f];
 	}
 	else {
 		[toggleButton setTitle:@"Run"];
@@ -144,6 +146,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(2048);
 	[video setMem:cpu->memory];
+	[video setDelegate:self];
 	
 	// Load program code into memory
 	loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/easy6502/snake.o");
