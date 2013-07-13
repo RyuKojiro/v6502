@@ -18,14 +18,14 @@
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= (a & v6502_cpu_status_negative);
-#define FLAG_CARRY_WITH_EXPRESSION(a)				cpu->sr &= ~v6502_cpu_status_carry; \
-													cpu->sr |= (((uint16_t)a >= 0x0100) ? v6502_cpu_status_carry : 0);
+/** If addition, b = operand, a = result, subtraction reverses it */
+#define FLAG_CARRY_WITH_COMPARISON(a, b)			cpu->sr &= ~v6502_cpu_status_carry; \
+													cpu->sr |= ((a < b) ? v6502_cpu_status_carry : 0);
 #define FLAG_OVERFLOW_PREPARE(a)					uint8_t _overflowCheck = a;
+/** Shift to overflow position and mask it in */
 #define FLAG_OVERFLOW_CHECK(a)						_overflowCheck ^= a; \
-													_overflowCheck >>= 1; /* Shift to overflow flag position */ \
-													cpu->sr &= v6502_cpu_status_overflow; \
-													cpu->sr |= (_overflowCheck & v6502_cpu_status_overflow); \
-
+													cpu->sr &= ~v6502_cpu_status_overflow; \
+													cpu->sr |= (_overflowCheck >> 1 & v6502_cpu_status_overflow);
 #define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
 													FLAG_ZERO_WITH_RESULT(a);
 
@@ -73,7 +73,7 @@ static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_OVERFLOW_PREPARE(cpu->ac);
 	cpu->ac += operand;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->ac + operand);
+	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
 	FLAG_OVERFLOW_CHECK(cpu->ac);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
@@ -81,7 +81,7 @@ static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_OVERFLOW_PREPARE(cpu->ac);
 	cpu->ac -= operand;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->ac - operand);
+	FLAG_CARRY_WITH_COMPARISON(operand, cpu->ac);
 	FLAG_OVERFLOW_CHECK(cpu->ac);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
@@ -98,19 +98,19 @@ static void _executeInPlaceINC(v6502_cpu *cpu, uint8_t *operand) {
 
 static void _executeInPlaceCMP(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->ac - operand;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->ac - operand);
+	FLAG_CARRY_WITH_COMPARISON(operand, result);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
 static void _executeInPlaceCPY(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->y - operand;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->y - operand);
+	FLAG_CARRY_WITH_COMPARISON(operand, result);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
 static void _executeInPlaceCPX(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t result = cpu->x - operand;
-	FLAG_CARRY_WITH_EXPRESSION(cpu->x - operand);
+	FLAG_CARRY_WITH_COMPARISON(operand, result);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
