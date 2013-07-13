@@ -11,6 +11,7 @@
 
 @interface VMVideoView : NSView {
 	v6502_memory *mem;
+	uint16_t selectedPixel;
 }
 
 @property (readwrite) v6502_memory *mem;
