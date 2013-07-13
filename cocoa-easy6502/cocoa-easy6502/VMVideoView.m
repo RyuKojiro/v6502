@@ -179,6 +179,10 @@ static uint16_t addressForRawPoint(NSPoint rawPoint) {
 	return NSMakeRect(floor(rawPoint.x * scale), floor((31 - rawPoint.y) * scale), ceil(scale), ceil(scale));
 }
 
+- (void) mouseDragged:(NSEvent *)theEvent {
+	[self mouseDown:theEvent];
+}
+
 - (void)mouseDown:(NSEvent *)theEvent {
 	NSPoint loc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	selectedPixel = addressForRawPoint([self rawPointForPointInView:loc]);
