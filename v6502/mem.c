@@ -11,9 +11,6 @@
 #include "mem.h"
 
 // Error Text
-#define kMemoryStructAllocErrorText		"Internal memory structure allocation"
-#define kMemoryBlobAllocErrorText		"Memory blob allocation"
-
 #define kUnableToMapMemoryErrorText		"Unable to map memory address"
 #define kMemoryStructErrorText			"Internal memory structure inconsitency"
 #define kMemoryBoundsErrorText			"Memory access out of bounds"
