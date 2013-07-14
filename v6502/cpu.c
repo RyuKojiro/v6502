@@ -86,30 +86,18 @@ static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
-static void _executeInPlaceDEC(v6502_cpu *cpu, uint8_t *operand) {
+static void _executeInPlaceDecrement(v6502_cpu *cpu, uint8_t *operand) {
 	(*operand)--;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 }
 
-static void _executeInPlaceINC(v6502_cpu *cpu, uint8_t *operand) {
+static void _executeInPlaceIncrement(v6502_cpu *cpu, uint8_t *operand) {
 	(*operand)++;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
 }
 
-static void _executeInPlaceCMP(v6502_cpu *cpu, uint8_t operand) {
-	uint8_t result = cpu->ac - operand;
-	FLAG_CARRY_WITH_COMPARISON(operand, result);
-	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
-}
-
-static void _executeInPlaceCPY(v6502_cpu *cpu, uint8_t operand) {
-	uint8_t result = cpu->y - operand;
-	FLAG_CARRY_WITH_COMPARISON(operand, result);
-	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
-}
-
-static void _executeInPlaceCPX(v6502_cpu *cpu, uint8_t operand) {
-	uint8_t result = cpu->x - operand;
+static void _executeInPlaceCompare(v6502_cpu *cpu, uint8_t *reg, uint8_t operand) {
+	uint8_t result = (*reg) - operand;
 	FLAG_CARRY_WITH_COMPARISON(operand, result);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
@@ -446,10 +434,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 		case v6502_opcode_dex: {
-			_executeInPlaceDEC(cpu, &cpu->x);
+			_executeInPlaceDecrement(cpu, &cpu->x);
 		} return;
 		case v6502_opcode_dey: {
-			_executeInPlaceDEC(cpu, &cpu->y);
+			_executeInPlaceDecrement(cpu, &cpu->y);
 		} return;
 		case v6502_opcode_tax: {
 			cpu->x = cpu->ac;
@@ -476,10 +464,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_inx: {
-			_executeInPlaceINC(cpu, &cpu->x);
+			_executeInPlaceIncrement(cpu, &cpu->x);
 		} return;
 		case v6502_opcode_iny: {
-			_executeInPlaceINC(cpu, &cpu->y);
+			_executeInPlaceIncrement(cpu, &cpu->y);
 		} return;
 
 		// Branch Instructions
@@ -601,21 +589,21 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_cmp_absy:
 		case v6502_opcode_cmp_indx:
 		case v6502_opcode_cmp_indy:
-			_executeInPlaceCMP(cpu, *operand);
+			_executeInPlaceCompare(cpu, &(cpu->ac), *operand);
 			return;
 		
 		// CPX
 		case v6502_opcode_cpx_imm:
 		case v6502_opcode_cpx_zpg:
 		case v6502_opcode_cpx_abs:
-			_executeInPlaceCPX(cpu, *operand);
+			_executeInPlaceCompare(cpu, &(cpu->x), *operand);
 			return;
 
 		// CPY
 		case v6502_opcode_cpy_imm:
 		case v6502_opcode_cpy_zpg:
 		case v6502_opcode_cpy_abs:
-			_executeInPlaceCPY(cpu, *operand);
+			_executeInPlaceCompare(cpu, &(cpu->y), *operand);
 			return;
 
 		// DEC
@@ -623,7 +611,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_dec_zpgx:
 		case v6502_opcode_dec_abs:
 		case v6502_opcode_dec_absx:
-			_executeInPlaceDEC(cpu, operand);
+			_executeInPlaceDecrement(cpu, operand);
 			return;
 
 		// EOR
@@ -644,7 +632,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_inc_zpgx:
 		case v6502_opcode_inc_abs:
 		case v6502_opcode_inc_absx:
-			_executeInPlaceINC(cpu, operand);
+			_executeInPlaceIncrement(cpu, operand);
 			return;
 
 		// JMP
