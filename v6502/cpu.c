@@ -533,6 +533,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		case v6502_opcode_pla: {
 			cpu->ac = cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
+			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_php: {
 			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->sr;
