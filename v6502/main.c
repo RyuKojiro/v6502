@@ -56,8 +56,68 @@ static void loadProgram(v6502_memory *mem, const char *fname) {
 	fclose(f);
 }
 
+static void run(v6502_cpu *cpu) {
+	cpu->sr &= ~v6502_cpu_status_break;
+	do {
+		v6502_step(cpu);
+	} while (!(cpu->sr & v6502_cpu_status_break));
+	printf("Encountered 'brk' at 0x%02x\n", cpu->pc - 1);
+}
+
+/** 0 is success, 1 is failure */
+static int handleDebugCommand(v6502_cpu *cpu, char *command) {
+	if (!strncmp(command, "help", 4)) {
+		printf("!cpu\t\t\tDisplays the current state of the CPU.\n"
+			   "!help\t\t\tDisplays this help.\n"
+			   "!peek <addr>\tDumps the memory at and around a given address.\n"
+			   "!quit\t\t\tExits v6502.\n"
+			   "!run\t\t\tContunuously steps the cpu until a 'brk' instruction is encountered.\n"
+			   "!step\t\t\tSteps the CPU once.\n"
+			   "Anything not starting with an exclamation point is interpreted as a assembly instruction.\n");
+		return 0;
+	}
+	if (!strncmp(command, "cpu", 3)) {
+		v6502_printCpuState(cpu);
+		return 0;
+	}
+	if (!strncmp(command, "step", 4)) {
+		v6502_step(cpu);
+		return 0;
+	}
+	if (!strncmp(command, "peek", 4)) {
+		popArg(command, MAX_COMMAND_LEN);
+		
+		// Make sure we don't go out of bounds either direction
+		uint8_t high, low;
+		as6502_byteValuesForString(&high, &low, NULL, command);
+		uint16_t start = (high << 8) | low;
+		
+		if (start <= 0x10) {
+			start = 0x00;
+		}
+		else if (start >= cpu->memory->size - 0x30) {
+			start = cpu->memory->size - 0x30;
+		}
+		else {
+			start -= 0x10;
+		}
+		
+		v6502_printMemoryRange(cpu->memory, start, 0x30);
+		return 0;
+	}
+	if (!strncmp(command, "quit", 4)) {
+		return 1;
+	}
+	if (!strncmp(command, "run", 3)) {
+		run(cpu);
+		return 0;
+	}
+	printf("Unknown Command - %s\n", command);
+	return 0;
+}
+
 int main(int argc, const char * argv[])
-{	
+{
 	currentFileName = "v6502";
 	
 	printf("Creating 1 virtual CPU…\n");
@@ -78,10 +138,7 @@ int main(int argc, const char * argv[])
 	}
 	
 	printf("Running…\n");
-	
-	do {
-		v6502_step(cpu);
-	} while (!(cpu->sr & v6502_cpu_status_break));
+	run(cpu);
 	
 	char command[MAX_COMMAND_LEN];
 	for (;;) {
@@ -98,39 +155,9 @@ int main(int argc, const char * argv[])
 		}
 
 		if (command[0] == '!') {
-			if (!strncmp(command + 1, "cpu", 3)) {
-				v6502_printCpuState(cpu);
-				continue;
-			}
-			if (!strncmp(command + 1, "step", 4)) {
-				v6502_step(cpu);
-				continue;
-			}
-			if (!strncmp(command + 1, "peek", 4)) {
-				popArg(command, MAX_COMMAND_LEN);
-				
-				// Make sure we don't go out of bounds either direction
-				uint8_t high, low;
-				as6502_byteValuesForString(&high, &low, NULL, command);
-				uint16_t start = (high << 8) | low;
-				
-				if (start <= 0x10) {
-					start = 0x00;
-				}
-				else if (start >= cpu->memory->size - 0x30) {
-					start = cpu->memory->size - 0x30;
-				}
-				else {
-					start -= 0x10;
-				}
-				
-				v6502_printMemoryRange(cpu->memory, start, 0x30);
-				continue;
-			}
-			if (!strncmp(command + 1, "quit", 4)) {
+			if (handleDebugCommand(cpu, command + 1)) {
 				break;
 			}
-			printf("Unknown Command - %s\n", command);
 		}
 		else if (command[0] != ';') {
 			as6502_executeAsmLineOnCPU(cpu, command, strlen(command));
