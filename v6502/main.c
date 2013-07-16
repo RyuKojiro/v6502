@@ -22,6 +22,8 @@
 #define MAX_COMMAND_LEN			80
 #define MAX_INSTRUCTION_LEN		32
 
+static int verbose;
+
 static void fault(void *ctx, const char *error) {
 	fprintf(stderr, "fault: ");
 	fprintf(stderr, "%s", error);
@@ -48,14 +50,6 @@ static void loadProgram(v6502_memory *mem, const char *fname) {
 	printf("Loaded %u bytes.\n", offset);
 	
 	fclose(f);
-}
-
-static void run(v6502_cpu *cpu) {
-	cpu->sr &= ~v6502_cpu_status_break;
-	do {
-		v6502_step(cpu);
-	} while (!(cpu->sr & v6502_cpu_status_break));
-	printf("Encountered 'brk' at 0x%02x\n", cpu->pc - 1);
 }
 
 static int printSingleInstruction(v6502_cpu *cpu, uint16_t address) {
@@ -86,6 +80,17 @@ static int printSingleInstruction(v6502_cpu *cpu, uint16_t address) {
 	return instructionLength;
 }
 
+static void run(v6502_cpu *cpu) {
+	cpu->sr &= ~v6502_cpu_status_break;
+	do {
+		if (verbose) {
+			printSingleInstruction(cpu, cpu->pc);
+		}
+		v6502_step(cpu);
+	} while (!(cpu->sr & v6502_cpu_status_break));
+	printf("Encountered 'brk' at 0x%02x\n", cpu->pc - 1);
+}
+
 /** 0 is success, 1 is exit */
 static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	if (!strncmp(command, "help", 4)) {
@@ -99,6 +104,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 			   "!reset\t\t\tResets the CPU.\n"
 			   "!mreset\t\t\tZeroes all memory.\n"
 			   "!step\t\t\tForcibly steps the CPU once.\n"
+			   "!v\t\t\tToggle verbose mode; prints each instruction as they are executed when running.\n"
 			   "Anything not starting with an exclamation point is interpreted as a assembly instruction.\n");
 		return 0;
 	}
@@ -189,6 +195,11 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	}
 	if (!strncmp(command, "mreset", 5)) {
 		bzero(cpu->memory->bytes, cpu->memory->size * sizeof(uint8_t));
+		return 0;
+	}
+	if (!strncmp(command, "v", 1)) {
+		printf("Verbose mode %s.\n", verbose ? "disabled" : "enabled");
+		verbose ^= 1;
 		return 0;
 	}
 	printf("Unknown Command - %s\n", command);
