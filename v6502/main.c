@@ -61,15 +61,32 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		printf("!cpu\t\t\tDisplays the current state of the CPU.\n"
 			   "!dis <addr>\tDisassemble ten instructions starting at a given address.\n"
 			   "!help\t\t\tDisplays this help.\n"
+			   "!load <file>\tLoad binary image into memory at 0x0600.\n"
 			   "!peek <addr>\tDumps the memory at and around a given address.\n"
 			   "!quit\t\t\tExits v6502.\n"
 			   "!run\t\t\tContunuously steps the cpu until a 'brk' instruction is encountered.\n"
+			   "!reset\t\t\tResets the CPU.\n"
+			   "!mreset\t\t\tZeroes all memory.\n"
 			   "!step\t\t\tForcibly steps the CPU once.\n"
 			   "Anything not starting with an exclamation point is interpreted as a assembly instruction.\n");
 		return 0;
 	}
 	if (!strncmp(command, "cpu", 3)) {
 		v6502_printCpuState(cpu);
+		return 0;
+	}
+	if (!strncmp(command, "load", 4)) {
+		command = trimheadtospc(command);
+		
+		if (command[0]) {
+			command++;
+		}
+		else {
+			return 0;
+		}
+		
+		trimtaild(command);
+		loadProgram(cpu->memory, command);
 		return 0;
 	}
 	if (!strncmp(command, "dis", 3)) {
@@ -156,6 +173,14 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	}
 	if (!strncmp(command, "run", 3)) {
 		run(cpu);
+		return 0;
+	}
+	if (!strncmp(command, "reset", 5)) {
+		v6502_reset(cpu);
+		return 0;
+	}
+	if (!strncmp(command, "mreset", 5)) {
+		bzero(cpu->memory->bytes, cpu->memory->size * sizeof(uint8_t));
 		return 0;
 	}
 	printf("Unknown Command - %s\n", command);
