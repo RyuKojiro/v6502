@@ -21,11 +21,6 @@
 /** If addition, b = operand, a = result, subtraction reverses it */
 #define FLAG_CARRY_WITH_COMPARISON(a, b)			cpu->sr &= ~v6502_cpu_status_carry; \
 													cpu->sr |= ((a < b) ? v6502_cpu_status_carry : 0);
-#define FLAG_OVERFLOW_PREPARE(a)					uint8_t _overflowCheck = a;
-/** Shift to overflow position and mask it in */
-#define FLAG_OVERFLOW_CHECK(a)						_overflowCheck ^= a; \
-													cpu->sr &= ~v6502_cpu_status_overflow; \
-													cpu->sr |= (_overflowCheck >> 1 & v6502_cpu_status_overflow);
 #define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
 													FLAG_ZERO_WITH_RESULT(a);
 
@@ -35,6 +30,18 @@
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
+
+static void FLAG_OVERFLOW_WITH_COMPARISON(v6502_cpu *cpu, uint8_t a, uint8_t b, uint8_t c) {
+	cpu->sr &= ~v6502_cpu_status_overflow;
+	// Input signs agree
+	if ((~(a ^ b)) & 0x80) {
+		cpu->sr |= (( (~(a ^ c)) & 0x80) ? 0 : v6502_cpu_status_overflow);
+	}
+	// Input signs disagree and total of absolute values exceeds 127 or -128
+	else {
+		//cpu->sr |= v6502_cpu_status_overflow;
+	}
+}
 
 static void _executeInPlaceASL(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_CARRY_WITH_HIGH_BIT(*operand);
@@ -71,19 +78,18 @@ static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 }
 
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
-	FLAG_OVERFLOW_PREPARE(cpu->ac);
+	uint8_t a = cpu->ac;
 	cpu->ac += operand;
+	FLAG_OVERFLOW_WITH_COMPARISON(cpu, a, operand, cpu->ac);
 	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
-	FLAG_OVERFLOW_CHECK(cpu->ac);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
 static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
-	uint8_t pre = cpu->ac;
-	FLAG_OVERFLOW_PREPARE(cpu->ac);
+	uint8_t a = cpu->ac;
 	cpu->ac -= operand;
-	FLAG_CARRY_WITH_COMPARISON(pre, cpu->ac);
-	FLAG_OVERFLOW_CHECK(cpu->ac);
+	FLAG_OVERFLOW_WITH_COMPARISON(cpu, a, (0 - (signed)operand), cpu->ac);
+	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
@@ -407,7 +413,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 	switch ((v6502_opcode)opcode) {
 		// Single Byte Instructions
 		case v6502_opcode_brk: {
-			cpu->sp -= 3;
+			/** @todo TODO: Should this prevent the automatic pc shift? */
 			cpu->sr |= v6502_cpu_status_break;
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
