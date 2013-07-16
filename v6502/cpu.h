@@ -255,7 +255,7 @@ typedef enum {
 	v6502_cpu_status_break		= 16,
 	v6502_cpu_status_ignored	= 32,
 	v6502_cpu_status_overflow	= 64,
-	v6502_cpu_status_negative	= 128,
+	v6502_cpu_status_negative	= 128
 } v6502_cpu_status;
 
 // Address Modes
@@ -300,7 +300,7 @@ void v6502_reset(v6502_cpu *cpu);
 /** @brief Raise an exception on a v6502_cpu */
 #define v6502_fault(a)	if (cpu->fault_callback) { \
 							cpu->fault_callback(cpu->fault_context, a); \
-						} \
+						}
 /**@}*/
 
 #endif
