@@ -38,8 +38,26 @@ static void popArg(char *str, size_t len) {
 	strncpy(str, space, MAX_COMMAND_LEN - diff);
 }
 
+static void loadProgram(v6502_memory *mem, const char *fname) {
+	FILE *f = fopen(fname, "r");
+	
+	if (!f) {
+		fprintf(stderr, "Could not read from \"%s\"!\n", fname);
+		return;
+	}
+	
+	uint8_t byte;
+	uint16_t offset = 0;
+	
+	while (fread(&byte, 1, 1, f)) {
+		mem->bytes[0x600 + (offset++)] = byte;
+	}
+	
+	fclose(f);
+}
+
 int main(int argc, const char * argv[])
-{
+{	
 	currentFileName = "v6502";
 	
 	printf("Creating 1 virtual CPU…\n");
@@ -49,8 +67,21 @@ int main(int argc, const char * argv[])
 	printf("Allocating 64k of virtual memory…\n");
 	cpu->memory = v6502_createMemory(0xFFFF);
 	
-	printf("Resetting CPU and dropping to interpreter…\n");
+	printf("Resetting CPU…\n");
 	v6502_reset(cpu);
+
+	// Check for a binary as an argument; if so, load and run it
+	if (argc > 1) {
+		const char *filename = argv[argc - 1];
+		printf("Loading binary image \"%s\" into memory…\n", filename);
+		loadProgram(cpu->memory, filename);
+	}
+	
+	printf("Running…\n");
+	
+	do {
+		v6502_step(cpu);
+	} while (!(cpu->sr & v6502_cpu_status_break));
 	
 	char command[MAX_COMMAND_LEN];
 	for (;;) {
