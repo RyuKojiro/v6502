@@ -16,6 +16,8 @@
 #include "core.h"
 #include "parser.h"
 #include "error.h"
+#include "reverse.h"
+#include "linectl.h"
 
 #define MAX_COMMAND_LEN		80
 
@@ -25,17 +27,6 @@ static void fault(void *ctx, const char *error) {
 	if (error[strlen(error)] != '\n') {
 		fprintf(stderr, "\n");
 	}
-}
-
-static void popArg(char *str, size_t len) {
-	char *space = strchr(str, ' ');
-	if (!space) {
-		return;
-	}
-	space++;
-
-	size_t diff = space - str;
-	strncpy(str, space, MAX_COMMAND_LEN - diff);
 }
 
 static void loadProgram(v6502_memory *mem, const char *fname) {
@@ -64,15 +55,16 @@ static void run(v6502_cpu *cpu) {
 	printf("Encountered 'brk' at 0x%02x\n", cpu->pc - 1);
 }
 
-/** 0 is success, 1 is failure */
+/** 0 is success, 1 is exit */
 static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	if (!strncmp(command, "help", 4)) {
 		printf("!cpu\t\t\tDisplays the current state of the CPU.\n"
+			   "!dis <addr>\tDisassemble ten instructions starting at a given address.\n"
 			   "!help\t\t\tDisplays this help.\n"
 			   "!peek <addr>\tDumps the memory at and around a given address.\n"
 			   "!quit\t\t\tExits v6502.\n"
 			   "!run\t\t\tContunuously steps the cpu until a 'brk' instruction is encountered.\n"
-			   "!step\t\t\tSteps the CPU once.\n"
+			   "!step\t\t\tForcibly steps the CPU once.\n"
 			   "Anything not starting with an exclamation point is interpreted as a assembly instruction.\n");
 		return 0;
 	}
@@ -80,12 +72,66 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		v6502_printCpuState(cpu);
 		return 0;
 	}
+	if (!strncmp(command, "dis", 3)) {
+		command = trimheadtospc(command);
+		
+		if (command[0]) {
+			command++;
+		}
+		else {
+			return 0;
+		}
+		
+		uint8_t high, low;
+		uint16_t start = 0x600;
+		if (command[0] && command[0] != '\n') {
+			as6502_byteValuesForString(&high, &low, NULL, command);
+			start = (high << 8) | low;
+		}
+		
+		char instruction[32];
+		int instructionLength;
+		for (int i = 0; i < 10; i++) {
+			as6502_stringForInstruction(instruction, 32, cpu->memory->bytes[start], cpu->memory->bytes[start + 2], cpu->memory->bytes[start + 1]);
+			instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[start]);
+			
+			printf("0x%04x: ", start);
+			
+			switch (instructionLength) {
+				case 1: {
+					printf("%02x      ", cpu->memory->bytes[start]);
+				} break;
+				case 2: {
+					printf("%02x %02x   ", cpu->memory->bytes[start], cpu->memory->bytes[start + 1]);
+				} break;
+				case 3: {
+					printf("%02x %02x %02x", cpu->memory->bytes[start], cpu->memory->bytes[start + 1], cpu->memory->bytes[start + 2]);
+				} break;
+				default: {
+					printf("        ");
+				} break;
+			}
+			
+			printf(" - %s\n", instruction);
+			
+			start += instructionLength;
+		}
+		
+		return 0;
+	}
 	if (!strncmp(command, "step", 4)) {
 		v6502_step(cpu);
 		return 0;
 	}
 	if (!strncmp(command, "peek", 4)) {
-		popArg(command, MAX_COMMAND_LEN);
+		command = trimheadtospc(command);
+		
+		if (command[0]) {
+			command++;
+		}
+		else {
+			return 0;
+		}
 		
 		// Make sure we don't go out of bounds either direction
 		uint8_t high, low;
