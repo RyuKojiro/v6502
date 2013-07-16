@@ -46,7 +46,7 @@ int main(int argc, const char * argv[])
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->fault_callback = fault;
 	
-	printf("Allocating virtual memory of size 32k…\n");
+	printf("Allocating 64k of virtual memory…\n");
 	cpu->memory = v6502_createMemory(0xFFFF);
 	
 	printf("Resetting CPU and dropping to interpreter…\n");
@@ -54,6 +54,8 @@ int main(int argc, const char * argv[])
 	
 	char command[MAX_COMMAND_LEN];
 	for (;;) {
+		currentLineNum++;
+		
 		printf("(0x%x) ", cpu->pc);
 		fflush(stdout);
 		
