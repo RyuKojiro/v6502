@@ -58,11 +58,39 @@ static void run(v6502_cpu *cpu) {
 	printf("Encountered 'brk' at 0x%02x\n", cpu->pc - 1);
 }
 
+static int printSingleInstruction(v6502_cpu *cpu, uint16_t address) {
+	char instruction[MAX_INSTRUCTION_LEN];
+	int instructionLength;
+	as6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[address], cpu->memory->bytes[address + 2], cpu->memory->bytes[address + 1]);
+	instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[address]);
+	
+	printf("0x%04x: ", address);
+	
+	switch (instructionLength) {
+		case 1: {
+			printf("%02x      ", cpu->memory->bytes[address]);
+		} break;
+		case 2: {
+			printf("%02x %02x   ", cpu->memory->bytes[address], cpu->memory->bytes[address + 1]);
+		} break;
+		case 3: {
+			printf("%02x %02x %02x", cpu->memory->bytes[address], cpu->memory->bytes[address + 1], cpu->memory->bytes[address + 2]);
+		} break;
+		default: {
+			printf("        ");
+		} break;
+	}
+	
+	printf(" - %s\n", instruction);
+	
+	return instructionLength;
+}
+
 /** 0 is success, 1 is exit */
 static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	if (!strncmp(command, "help", 4)) {
 		printf("!cpu\t\t\tDisplays the current state of the CPU.\n"
-			   "!dis <addr>\tDisassemble ten instructions starting at a given address.\n"
+			   "!dis <addr>\tDisassemble ten instructions starting at a given address, or the program counter if no address is specified.\n"
 			   "!help\t\t\tDisplays this help.\n"
 			   "!load <file>\tLoad binary image into memory at 0x0600.\n"
 			   "!peek <addr>\tDumps the memory at and around a given address.\n"
@@ -103,43 +131,20 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		}
 		
 		uint8_t high, low;
-		uint16_t start = 0x600;
+		uint16_t start = cpu->pc;
 		if (command[0] && command[0] != '\n') {
 			as6502_byteValuesForString(&high, &low, NULL, command);
 			start = (high << 8) | low;
 		}
 		
-		char instruction[MAX_INSTRUCTION_LEN];
-		int instructionLength;
 		for (int i = 0; i < 10; i++) {
-			as6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[start], cpu->memory->bytes[start + 2], cpu->memory->bytes[start + 1]);
-			instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[start]);
-			
-			printf("0x%04x: ", start);
-			
-			switch (instructionLength) {
-				case 1: {
-					printf("%02x      ", cpu->memory->bytes[start]);
-				} break;
-				case 2: {
-					printf("%02x %02x   ", cpu->memory->bytes[start], cpu->memory->bytes[start + 1]);
-				} break;
-				case 3: {
-					printf("%02x %02x %02x", cpu->memory->bytes[start], cpu->memory->bytes[start + 1], cpu->memory->bytes[start + 2]);
-				} break;
-				default: {
-					printf("        ");
-				} break;
-			}
-			
-			printf(" - %s\n", instruction);
-			
-			start += instructionLength;
+			start += printSingleInstruction(cpu, start);
 		}
 		
 		return 0;
 	}
 	if (!strncmp(command, "step", 4)) {
+		printSingleInstruction(cpu, cpu->pc);
 		v6502_step(cpu);
 		return 0;
 	}
