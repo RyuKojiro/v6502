@@ -79,9 +79,10 @@ static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 }
 
 static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
+	uint8_t pre = cpu->ac;
 	FLAG_OVERFLOW_PREPARE(cpu->ac);
 	cpu->ac -= operand;
-	FLAG_CARRY_WITH_COMPARISON(operand, cpu->ac);
+	FLAG_CARRY_WITH_COMPARISON(pre, cpu->ac);
 	FLAG_OVERFLOW_CHECK(cpu->ac);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
@@ -514,7 +515,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		
 		// Stack Instructions
 		case v6502_opcode_jsr: {
-			/** TODO: @todo Which byte of the pc goes onto the stack first? */
 			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->pc;			// Low byte first
 			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = (cpu->pc >> 8);	// High byte second
 			cpu->pc = BOTH_BYTES;
