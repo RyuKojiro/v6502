@@ -19,7 +19,8 @@
 #include "reverse.h"
 #include "linectl.h"
 
-#define MAX_COMMAND_LEN		80
+#define MAX_COMMAND_LEN			80
+#define MAX_INSTRUCTION_LEN		32
 
 static void fault(void *ctx, const char *error) {
 	fprintf(stderr, "fault: ");
@@ -43,6 +44,8 @@ static void loadProgram(v6502_memory *mem, const char *fname) {
 	while (fread(&byte, 1, 1, f)) {
 		mem->bytes[0x600 + (offset++)] = byte;
 	}
+	
+	printf("Loaded %u bytes.\n", offset);
 	
 	fclose(f);
 }
@@ -106,10 +109,10 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 			start = (high << 8) | low;
 		}
 		
-		char instruction[32];
+		char instruction[MAX_INSTRUCTION_LEN];
 		int instructionLength;
 		for (int i = 0; i < 10; i++) {
-			as6502_stringForInstruction(instruction, 32, cpu->memory->bytes[start], cpu->memory->bytes[start + 2], cpu->memory->bytes[start + 1]);
+			as6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[start], cpu->memory->bytes[start + 2], cpu->memory->bytes[start + 1]);
 			instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[start]);
 			
 			printf("0x%04x: ", start);
