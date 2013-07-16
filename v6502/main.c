@@ -190,7 +190,7 @@ int main(int argc, const char * argv[])
 	for (;;) {
 		currentLineNum++;
 		
-		printf("(0x%x) ", cpu->pc);
+		printf("(0x%04x) ", cpu->pc);
 		fflush(stdout);
 		
 		// getInput(command, MAX_COMMAND_LEN);
