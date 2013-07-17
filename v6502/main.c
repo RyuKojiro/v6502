@@ -94,17 +94,17 @@ static void run(v6502_cpu *cpu) {
 /** 0 is success, 1 is exit */
 static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	if (!strncmp(command, "help", 4)) {
-		printf("!cpu\t\t\tDisplays the current state of the CPU.\n"
-			   "!dis <addr>\tDisassemble ten instructions starting at a given address, or the program counter if no address is specified.\n"
-			   "!help\t\t\tDisplays this help.\n"
-			   "!load <file>\tLoad binary image into memory at 0x0600.\n"
-			   "!peek <addr>\tDumps the memory at and around a given address.\n"
-			   "!quit\t\t\tExits v6502.\n"
-			   "!run\t\t\tContunuously steps the cpu until a 'brk' instruction is encountered.\n"
-			   "!reset\t\t\tResets the CPU.\n"
-			   "!mreset\t\t\tZeroes all memory.\n"
-			   "!step\t\t\tForcibly steps the CPU once.\n"
-			   "!v\t\t\tToggle verbose mode; prints each instruction as they are executed when running.\n"
+		printf("!cpu         Displays the current state of the CPU.\n"
+			   "!dis <addr>  Disassemble ten instructions starting at a given address, or the program counter if no address is specified.\n"
+			   "!help        Displays this help.\n"
+			   "!load <file> Load binary image into memory at 0x0600.\n"
+			   "!peek <addr> Dumps the memory at and around a given address.\n"
+			   "!quit        Exits v6502.\n"
+			   "!run         Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
+			   "!reset       Resets the CPU.\n"
+			   "!mreset      Zeroes all memory.\n"
+			   "!step        Forcibly steps the CPU once.\n"
+			   "!v           Toggle verbose mode; prints each instruction as they are executed when running.\n"
 			   "Anything not starting with an exclamation point is interpreted as a assembly instruction.\n");
 		return 0;
 	}
