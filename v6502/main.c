@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "cpu.h"
 #include "mem.h"
@@ -23,6 +24,8 @@
 #define MAX_INSTRUCTION_LEN		32
 
 static int verbose;
+static volatile sig_atomic_t interrupt;
+static int resist;
 
 static void fault(void *ctx, const char *error) {
 	fprintf(stderr, "fault: ");
@@ -82,13 +85,24 @@ static int printSingleInstruction(v6502_cpu *cpu, uint16_t address) {
 
 static void run(v6502_cpu *cpu) {
 	cpu->sr &= ~v6502_cpu_status_break;
+	interrupt = 0;
+	
+	resist = YES;
 	do {
 		if (verbose) {
 			printSingleInstruction(cpu, cpu->pc);
 		}
 		v6502_step(cpu);
-	} while (!(cpu->sr & v6502_cpu_status_break));
-	printf("Encountered 'brk' at 0x%02x\n", cpu->pc - 1);
+	} while (!(cpu->sr & v6502_cpu_status_break) && !interrupt);
+	resist = NO;
+	
+	if (cpu->sr & v6502_cpu_status_break) {
+		printf("Encountered 'brk' at 0x%02x.\n", cpu->pc - 1);
+	}
+	
+	if (interrupt) {
+		printf("Recieved interrupt, CPU halted.\n");
+	}
 }
 
 /** 0 is success, 1 is exit */
@@ -206,9 +220,21 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	return 0;
 }
 
+void handleSignal(int signal) {
+	if (signal == SIGINT) {
+		interrupt++;
+	}
+	
+	if (!resist) {
+		exit(EXIT_SUCCESS);
+	}
+}
+
 int main(int argc, const char * argv[])
 {
 	currentFileName = "v6502";
+	
+	signal(SIGINT, handleSignal);
 	
 	printf("Creating 1 virtual CPU…\n");
 	v6502_cpu *cpu = v6502_createCPU();
