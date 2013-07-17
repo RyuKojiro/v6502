@@ -125,17 +125,17 @@ static int compareCommand(const char * restrict command, const char * restrict l
 /** return YES if handled */
 static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	if (compareCommand(command, "help")) {
-		printf("cpu         Displays the current state of the CPU.\n"
-			   "dis <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
-			   "help        Displays this help.\n"
-			   "load <file> Load binary image into memory at 0x0600.\n"
-			   "peek <addr> Dumps the memory at and around a given address.\n"
-			   "quit        Exits v6502.\n"
-			   "run         Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
-			   "reset       Resets the CPU.\n"
-			   "mreset      Zeroes all memory.\n"
-			   "step        Forcibly steps the CPU once.\n"
-			   "v           Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
+		printf("cpu                 Displays the current state of the CPU.\n"
+			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
+			   "help                Displays this help.\n"
+			   "load <file>         Load binary image into memory at 0x0600.\n"
+			   "peek <addr>         Dumps the memory at and around a given address.\n"
+			   "quit                Exits v6502.\n"
+			   "run                 Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
+			   "reset               Resets the CPU.\n"
+			   "mreset              Zeroes all memory.\n"
+			   "step                Forcibly steps the CPU once.\n"
+			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
 	}
 	if (compareCommand(command, "cpu")) {
@@ -156,7 +156,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		loadProgram(cpu->memory, command);
 		return YES;
 	}
-	if (compareCommand(command, "dis")) {
+	if (compareCommand(command, "disassemble")) {
 		command = trimheadtospc(command);
 		
 		if (command[0]) {
@@ -225,7 +225,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		bzero(cpu->memory->bytes, cpu->memory->size * sizeof(uint8_t));
 		return YES;
 	}
-	if (compareCommand(command, "v")) {
+	if (compareCommand(command, "verbose")) {
 		printf("Verbose mode %s.\n", verbose ? "disabled" : "enabled");
 		verbose ^= 1;
 		return YES;
