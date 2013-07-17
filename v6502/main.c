@@ -186,13 +186,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	}
 	if (compareCommand(command, "peek")) {
 		command = trimheadtospc(command);
-		
-		if (command[0]) {
-			command++;
-		}
-		else {
-			return YES;
-		}
+		command++;
 		
 		// Make sure we don't go out of bounds either direction
 		uint8_t high, low;
@@ -210,7 +204,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		}
 		
 		v6502_printMemoryRange(cpu->memory, start, 0x30);
-		return 0;
+		return YES;
 	}
 	if (compareCommand(command, "quit")) {
 		v6502_destroyMemory(cpu->memory);
