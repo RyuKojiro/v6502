@@ -108,7 +108,7 @@ static void run(v6502_cpu *cpu) {
 }
 
 static int compareCommand(const char * restrict command, const char * restrict literal) {
-	size_t len = strlen(literal);
+	size_t len = strlen(command);
 	for (size_t i = 0; i < len; i++) {
 		if (command[i] != literal[i] && command[i] != '\n' && command[i] != '\0') {
 			return NO;
