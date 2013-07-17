@@ -22,6 +22,8 @@
 
 #define MAX_COMMAND_LEN			80
 #define MAX_INSTRUCTION_LEN		32
+#define DISASSEMBLY_COUNT		10
+#define MEMORY_SIZE				0xFFFF
 
 static int verbose;
 static volatile sig_atomic_t interrupt;
@@ -119,7 +121,7 @@ static int compareCommand(const char * restrict command, const char * restrict l
 static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	if (compareCommand(command, "help")) {
 		printf("cpu         Displays the current state of the CPU.\n"
-			   "dis <addr>  Disassemble ten instructions starting at a given address, or the program counter if no address is specified.\n"
+			   "dis <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
 			   "help        Displays this help.\n"
 			   "load <file> Load binary image into memory at 0x0600.\n"
 			   "peek <addr> Dumps the memory at and around a given address.\n"
@@ -128,7 +130,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 			   "reset       Resets the CPU.\n"
 			   "mreset      Zeroes all memory.\n"
 			   "step        Forcibly steps the CPU once.\n"
-			   "v           Toggle verbose mode; prints each instruction as they are executed when running.\n");
+			   "v           Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
 	}
 	if (compareCommand(command, "cpu")) {
@@ -166,7 +168,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 			start = (high << 8) | low;
 		}
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < DISASSEMBLY_COUNT; i++) {
 			start += printSingleInstruction(cpu, start);
 		}
 		
@@ -175,7 +177,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 	if (compareCommand(command, "step")) {
 		printSingleInstruction(cpu, cpu->pc);
 		v6502_step(cpu);
-		return 1;
+		return YES;
 	}
 	if (compareCommand(command, "peek")) {
 		command = trimheadtospc(command);
@@ -252,8 +254,8 @@ int main(int argc, const char * argv[])
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->fault_callback = fault;
 	
-	printf("Allocating 64k of virtual memory…\n");
-	cpu->memory = v6502_createMemory(0xFFFF);
+	printf("Allocating %dk of virtual memory…\n", (MEMORY_SIZE + 1) / 1024);
+	cpu->memory = v6502_createMemory(MEMORY_SIZE);
 	
 	printf("Resetting CPU…\n");
 	v6502_reset(cpu);
@@ -288,10 +290,10 @@ int main(int argc, const char * argv[])
 			as6502_executeAsmLineOnCPU(cpu, command, strlen(command));
 		}
 	}
-	
+
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
 	
-    return 0;
+    return EXIT_FAILURE;
 }
 
