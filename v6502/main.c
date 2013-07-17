@@ -108,9 +108,14 @@ static void run(v6502_cpu *cpu) {
 }
 
 static int compareCommand(const char * restrict command, const char * restrict literal) {
-	size_t len = strlen(command);
-	for (size_t i = 0; i < len; i++) {
-		if (command[i] != literal[i] && command[i] != '\n' && command[i] != '\0') {
+	char cmd[MAX_COMMAND_LEN];
+	strncpy(cmd, command, MAX_COMMAND_LEN);
+	
+	trimgreedytaild(cmd);
+	
+	size_t len = strlen(cmd);
+	for (size_t i = 0; i < len && cmd[i]; i++) {
+		if (cmd[i] != literal[i]) {
 			return NO;
 		}
 	}
@@ -290,10 +295,8 @@ int main(int argc, const char * argv[])
 			as6502_executeAsmLineOnCPU(cpu, command, strlen(command));
 		}
 	}
-
-	v6502_destroyMemory(cpu->memory);
-	v6502_destroyCPU(cpu);
 	
+	// Cannot be executed
     return EXIT_FAILURE;
 }
 
