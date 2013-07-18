@@ -115,6 +115,10 @@ uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
 }
 
 as6502_symbol *as6502_varForString(as6502_symbol_table *table, const char *name) {
+	if (!table) {
+		return NULL;
+	}
+	
 	size_t len = strlen(name);
 	for (as6502_symbol *this = table->first_var; this; this = this->next) {
 		if (strncmp(this->name, name, len)) {
@@ -126,7 +130,13 @@ as6502_symbol *as6502_varForString(as6502_symbol_table *table, const char *name)
 }
 
 uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
-	return as6502_varForString(table, name)->address;
+	as6502_symbol *var = as6502_varForString(table, name);
+	
+	if (!var) {
+		return 0;
+	}
+	
+	return var->address;
 }
 
 void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
