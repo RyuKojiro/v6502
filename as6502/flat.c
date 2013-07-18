@@ -9,8 +9,9 @@
 #include <stdio.h>
 
 #include "flat.h"
+#include "error.h"
 
 void as6502_writeObjectToFlatFile(as6502_object *obj, FILE *file) {
-	/** TODO: @todo Proper object file writeout */
+	as6502_warn("Flat file object format will lose all symbol table data");
 	fwrite(obj->blobs[0].data, 1, obj->blobs[0].len, file);
 }
