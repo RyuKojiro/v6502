@@ -18,6 +18,13 @@
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= (a & v6502_cpu_status_negative);
+/** The first if statement checks if both operands' signs agree (since we are
+ normalized to addition at this point.) If they do, then the output sign must
+ also agree after calculation, or we have overflown; this is checked in the
+ following ternary. */
+#define FLAG_OVERFLOW_WITH_COMPARISON(a, b, c)		cpu->sr &= ~v6502_cpu_status_overflow; \
+													if ((~(a ^ b)) & 0x80) { cpu->sr |= (( (~(a ^ c)) & 0x80) ? 0 : v6502_cpu_status_overflow); }
+
 /** If addition, b = operand, a = result, subtraction reverses it */
 #define FLAG_CARRY_WITH_COMPARISON(a, b)			cpu->sr &= ~v6502_cpu_status_carry; \
 													cpu->sr |= ((a < b) ? v6502_cpu_status_carry : 0);
@@ -30,18 +37,6 @@
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
-
-static void FLAG_OVERFLOW_WITH_COMPARISON(v6502_cpu *cpu, uint8_t a, uint8_t b, uint8_t c) {
-	cpu->sr &= ~v6502_cpu_status_overflow;
-	// Input signs agree
-	if ((~(a ^ b)) & 0x80) {
-		cpu->sr |= (( (~(a ^ c)) & 0x80) ? 0 : v6502_cpu_status_overflow);
-	}
-	// Input signs disagree and total of absolute values exceeds 127 or -128
-	else {
-		//cpu->sr |= v6502_cpu_status_overflow;
-	}
-}
 
 static void _executeInPlaceASL(v6502_cpu *cpu, uint8_t *operand) {
 	FLAG_CARRY_WITH_HIGH_BIT(*operand);
@@ -80,7 +75,7 @@ static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t a = cpu->ac;
 	cpu->ac += operand;
-	FLAG_OVERFLOW_WITH_COMPARISON(cpu, a, operand, cpu->ac);
+	FLAG_OVERFLOW_WITH_COMPARISON(a, operand, cpu->ac);
 	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
@@ -88,7 +83,7 @@ static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t a = cpu->ac;
 	cpu->ac -= operand;
-	FLAG_OVERFLOW_WITH_COMPARISON(cpu, a, (0 - (signed)operand), cpu->ac);
+	FLAG_OVERFLOW_WITH_COMPARISON(a, (0 - (signed)operand), cpu->ac);
 	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
