@@ -171,6 +171,9 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 		}
 	} while (!feof(in));
 	
+	currentLineNum = 0;
+	
+	// Write out the object to whatever file format we were told
 	switch (format) {
 		case as6502_outputFormat_FlatFile: {
 			as6502_writeObjectToFlatFile(ctx->obj, out);
