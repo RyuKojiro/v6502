@@ -75,7 +75,7 @@ char *trimheadchar(char *str, char token) {
 }
 
 char *trimheadtospc(char *str) {
-	while (!isspace(*str)) {
+	while (*str && !isspace(*str)) {
 		str++;
 	}
 	
