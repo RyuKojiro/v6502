@@ -1,10 +1,13 @@
 AS=	../as6502
 PROG=	test.out
-SRCS=	test.s
+SRCS=	overflow.s
 ASFLAGS=	-S
 
-$(PROG):
+$(PROG): $(AS)
 	$(AS) $(ASFLAGS) $(SRCS)
+
+$(AS):
+	cd .. ; make
 
 clean:
 	rm -f $(PROG)
