@@ -111,8 +111,17 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 		trimtaild(line);
 		
 		// Convert symbols to hard addresses from symbol table
-		as6502_desymbolicateLine(table, line, MAX_LINE_LEN, 0x0600, address, NO);
+		as6502_desymbolicateLine(table, trimmedLine, MAX_LINE_LEN, 0x0600, address, NO);
 		
+		// Remove label clause
+		trimmedLine = trimheadtospc(line);
+		trimmedLine = trimhead(trimmedLine);
+		lineLen = strlen(trimmedLine);
+
+		if (lineLen == 0) {
+			continue;
+		}
+				
 		// Check for Variable Declarations and Arithmetic
 		as6502_resolveArithmetic(line, MAX_LINE_LEN);
 		
@@ -121,10 +130,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 			as6502_processObjectDirectiveForLine(ctx, line, MAX_LINE_LEN);
 			continue;
 		}
-		
-		// Trim leading whitespace
-		trimmedLine = trimhead(line);
-		lineLen = strlen(trimmedLine);
 
 		if (as6502_resolveVariableDeclaration(table, as6502_currentBlobInContext(ctx), assembleLine, trimmedLine, lineLen)) {
 			continue;
