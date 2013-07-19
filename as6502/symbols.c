@@ -191,7 +191,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 	long difference = txtLen - symLen;
 	
 	if (difference < 0) { // Shift string left
-		for (char *cur = loc + txtLen; *cur; cur++) {
+		for (char *cur = loc + txtLen; cur < line + len; cur++) {
 			cur[0] = cur[0 - difference];
 		}
 	}
