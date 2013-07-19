@@ -26,7 +26,7 @@ typedef enum {
 	as6502_outputFormat_FlatFile
 }as6502_outputFormat;
 
-static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t len) {
+static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t len, as6502_symbol_table *table, int printProcess) {
 	uint8_t opcode, low, high;
 	int addrLen;
 	v6502_address_mode mode;
@@ -43,6 +43,32 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 	if (addrLen >= 3) {
 		as6502_appendByteToBlob(blob, high);
 	}
+		
+	if (printProcess) {
+		as6502_symbol *label = as6502_labelForAddress(table, blob->len - addrLen);
+		if (label) {
+			printf("0x%04x:          - %4lu: %s:\n", blob->len - addrLen, label->line, label->name);
+		}
+		
+		printf("0x%04x: ", blob->len - addrLen);
+		
+		switch (addrLen) {
+			case 1: {
+				printf("%02x      ", opcode);
+			} break;
+			case 2: {
+				printf("%02x %02x   ", opcode, low);
+			} break;
+			case 3: {
+				printf("%02x %02x %02x", opcode, low, high);
+			} break;
+			default: {
+				printf("        ");
+			} break;
+		}
+		
+		printf(" - %4lu:  \t%s\n", currentLineNum, line);
+	}
 	
 	return addrLen;
 }
@@ -55,7 +81,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 	currentLineNum = 1;
 	int newline;
 	as6502_symbol_table *table = as6502_createSymbolTable();
-	size_t lineLen;
+	size_t lineLen, maxLen;
 	int instructionLength;
 	
 	// First pass, build symbol table
@@ -67,18 +93,20 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 		}
 		
 		// Check for symbols
-		trimmedLine = trimheadchar(line, '\n'); /** FIXME: @bug Does this do anything at all? */
+		trimmedLine = trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
+		lineLen = MAX_LINE_LEN - (trimmedLine - line);
 		if (isalnum(trimmedLine[0])) {
 			as6502_addSymbolForLine(table, line, currentLineNum, address);
 
 			// Trim any possible labels we encountered
-			trimmedLine = trimheadtospc(line);
+			trimmedLine = trimheadtospc(line, lineLen);
+			lineLen = MAX_LINE_LEN - (trimmedLine - line);
 		}
 		
 		// Increment offset if there is an actual instruction line here
-		trimmedLine = trimhead(trimmedLine);
+		trimmedLine = trimhead(trimmedLine, lineLen);
 		if (trimmedLine[0] && trimmedLine[0] != ';') {
-			mode = as6502_addressModeForLine(trimmedLine);
+			mode = as6502_addressModeForLine(trimmedLine, lineLen);
 			address += as6502_instructionLengthForAddressMode(mode);
 		}
 		
@@ -109,67 +137,34 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 		
 		// Trim trailing whitespace
 		trimtaild(line);
-		
-		// Convert symbols to hard addresses from symbol table
-		as6502_desymbolicateLine(table, trimmedLine, MAX_LINE_LEN, 0x0600, address, NO);
-		
-		// Remove label clause
-		trimmedLine = trimheadtospc(line);
-		trimmedLine = trimhead(trimmedLine);
-		lineLen = strlen(trimmedLine);
+		lineLen = strlen(line);
 
-		if (lineLen == 0) {
-			continue;
-		}
-				
-		// Check for Variable Declarations and Arithmetic
-		as6502_resolveArithmetic(line, MAX_LINE_LEN);
-		
 		// Handle dot directives
 		if (line[0] == '.') {
-			as6502_processObjectDirectiveForLine(ctx, line, MAX_LINE_LEN);
-			continue;
-		}
-
-		if (as6502_resolveVariableDeclaration(table, as6502_currentBlobInContext(ctx), assembleLine, trimmedLine, lineLen)) {
-			continue;
-		}
-
-		// Assemble whatever is left
-		if (lineLen) {
-			instructionLength = assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen);
-			address += instructionLength;
-			
-			if (printProcess) {
-				uint8_t opcode, low, high;
-				as6502_instructionForLine(&opcode, &low, &high, NULL, trimmedLine, lineLen);
-				
-				as6502_symbol *label = as6502_labelForAddress(table, address - instructionLength);
-				if (label) {
-					printf("0x%04x:          - %4lu: %s:\n", address - instructionLength, label->line, label->name);
-				}
-				
-				printf("0x%04x: ", address - instructionLength);
-				
-				switch (instructionLength) {
-					case 1: {
-						printf("%02x      ", opcode);
-					} break;
-					case 2: {
-						printf("%02x %02x   ", opcode, low);
-					} break;
-					case 3: {
-						printf("%02x %02x %02x", opcode, low, high);
-					} break;
-					default: {
-						printf("        ");
-					} break;
-				}
-				
-				printf(" - %4lu:  \t%s\n", currentLineNum, trimmedLine);
-			}
+			as6502_processObjectDirectiveForLine(ctx, line, lineLen);
 		}
 		
+		// Convert symbols to hard addresses from symbol table
+		as6502_desymbolicateLine(table, line, MAX_LINE_LEN, 0x0600, address, NO);
+		
+		// Check for Variable Declarations and Arithmetic
+		as6502_resolveArithmetic(line, MAX_LINE_LEN);
+
+		// TODO: @todo Handle Variable Declarations
+		// as6502_resolveVariableDeclaration(table, as6502_currentBlobInContext(ctx), assembleLine, trimmedLine, maxLen);
+		
+		// Remove label clause
+		trimmedLine = trimheadtospc(line, lineLen);
+		trimmedLine = trimhead(trimmedLine, lineLen - (trimmedLine - line));
+		lineLen = strlen(trimmedLine);
+		maxLen = MAX_LINE_LEN - (trimmedLine - line);
+		
+		// Assemble whatever is left, if anything
+		if (lineLen) {
+			instructionLength = assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen, table, printProcess);
+			address += instructionLength;
+		}
+				
 		// Check if we are on the next line yet
 		if (newline) {
 			currentLineNum++;
@@ -183,9 +178,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 		case as6502_outputFormat_FlatFile: {
 			as6502_writeObjectToFlatFile(ctx->obj, out);
 		} break;
-			
-		default:
-			break;
 	}
 	
 	as6502_destroyObjectContext(ctx);
@@ -203,7 +195,7 @@ static void outNameFromInName(char *out, int len, const char *in) {
 }
 
 static void usage() {
-	fprintf(stderr, "usage: as6502 [-SW] [-F format] [file ...]\n");
+	fprintf(stderr, "usage: as6502 [-SWw] [-F format] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {

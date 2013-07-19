@@ -783,7 +783,7 @@ int _isBranchInstruction(const char *string) {
 	return NO;
 }
 
-v6502_address_mode as6502_addressModeForLine(const char *string) {
+v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 	/* 
 	 √ OPC			....	implied
 	 √ OPC A		....	Accumulator
@@ -809,7 +809,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string) {
 	}
 	
 	// In case it wasn't trimmed beforehand
-	string = trimhead(string);
+	string = trimhead(string, len);
 	
 	if (!string[0]) {
 		return v6502_address_mode_unknown;
@@ -934,7 +934,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 	string[o] = '\0';
 	
 	// Determine address mode
-	*mode = as6502_addressModeForLine(string);
+	*mode = as6502_addressModeForLine(string, len);
 	
 	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line

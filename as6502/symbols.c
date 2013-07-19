@@ -213,7 +213,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 }
 
 static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *line, size_t len, char *symbol) {
-	char *trimmed = trimhead(line);
+	char *trimmed = trimhead(line, len);
 	//len -= trimmed - line;
 	
 	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || symbol[-1] == '(') {
@@ -235,7 +235,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	line[len - 1] = '\0';
 		
 	// Shift offset for pre-branch program counter shift
-	v6502_address_mode mode = as6502_addressModeForLine(line);
+	v6502_address_mode mode = as6502_addressModeForLine(line, len);
 	offset += as6502_instructionLengthForAddressMode(mode);
 	
 	for (as6502_symbol *this = table->first_var; this; this = this->next) {

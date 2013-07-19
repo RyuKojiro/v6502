@@ -58,28 +58,33 @@ void trimgreedytailchard(char *str, char token) {
 	}
 }
 
-char *trimhead(const char *str) {
-	while (isspace(*str)) {
-		str++;
+char *trimhead(const char *str, size_t len) {
+	char *newstr = str;
+	while (*newstr && isspace(*newstr) && (newstr < str + len)) {
+		newstr++;
 	}
 	
-	return str;
+	return newstr;
 }
 
-char *trimheadchar(char *str, char token) {
-	while (*str == token) {
-		str++;
+char *trimheadchar(char *str, char token, size_t len) {
+	char *newstr = str;
+	
+	while ((*newstr == token) && (newstr < str + len)) {
+		newstr++;
 	}
 	
-	return str;
+	return newstr;
 }
 
-char *trimheadtospc(char *str) {
-	while (*str && !isspace(*str)) {
-		str++;
+char *trimheadtospc(const char *str, size_t len) {
+	char *newstr = str;
+
+	while (*newstr && !isspace(*newstr) && (newstr < str + len)) {
+		newstr++;
 	}
 	
-	return str;
+	return newstr;
 }
 
 char *rev_strnspc(const char *stop, const char *start) {
