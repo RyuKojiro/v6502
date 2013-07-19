@@ -1,13 +1,22 @@
-AS=	../as6502
+AS=		as6502
+ASDIR=	../as6502
 PROG=	test.out
 SRCS=	overflow.s
 ASFLAGS=	-S
+VM=		v6502
+VMDIR=	../v6502
+
+test: $(PROG) $(VM)
+	$(VMDIR)/$(VM) $(PROG)
 
 $(PROG): $(AS)
-	$(AS) $(ASFLAGS) $(SRCS)
+	$(ASDIR)/$(AS) $(ASFLAGS) $(SRCS)
+
+$(VM):
+	cd $(VMDIR) ; make
 
 $(AS):
-	cd .. ; make
+	cd $(ASDIR) ; make
 
 clean:
 	rm -f $(PROG)
