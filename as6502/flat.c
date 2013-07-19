@@ -12,6 +12,8 @@
 #include "error.h"
 
 void as6502_writeObjectToFlatFile(as6502_object *obj, FILE *file) {
-	as6502_warn("Flat file object format will lose all symbol table data");
+	if (obj->count > 1) {
+		as6502_warn("Writing flat file with multiple segments will result in loss of object data");
+	}
 	fwrite(obj->blobs[0].data, 1, obj->blobs[0].len, file);
 }
