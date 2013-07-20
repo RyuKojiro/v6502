@@ -19,7 +19,8 @@
 #include "mem.h"
 #include "cpu.h"
 
-#define kDesymErrorText	"Could not shift string far enough while desymbolicating"
+#define kDesymbolicationErrorText	"Could not shift string far enough while desymbolicating"
+#define kDuplicateSymbolErrorText	"Duplicate symbol '%s' encountered"
 
 // Address Table Lifecycle Functions
 as6502_symbol_table *as6502_createSymbolTable() {
@@ -127,6 +128,9 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 	
 	// Add it to the table
 	for (as6502_symbol **this = &table->first_symbol;; this = &((*this)->next)) {
+		if (*this && !strncmp((*this)->name, name, len)) {
+			as6502_error(kDuplicateSymbolErrorText, name);
+		}
 		if (!*this || strlen((*this)->name) < strlen(name)) {
 			as6502_symbol *next = *this;
 			*this = sym;
@@ -178,7 +182,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 			}
 		}
 		else {
-			as6502_fatal(kDesymErrorText);
+			as6502_fatal(kDesymbolicationErrorText);
 		}
 	}
 	
