@@ -922,10 +922,9 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 	}
 	
 	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string, all in one shot
-	size_t i = 0;
 	int o = 0;
 	int charEncountered = NO;
-	for(; line[i] && i < len; i++){
+	for(size_t i = 0; line[i] && i <= len; i++){
 		if (!isspace(line[i]) || charEncountered) {
 			charEncountered = YES;
 			string[o++] = tolower(line[i]);
