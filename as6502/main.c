@@ -92,6 +92,9 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			newline = YES;
 		}
 		
+		// Truncate at comments
+		trimgreedytailchard(line, ';');
+		
 		// Check for symbols
 		trimmedLine = trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
 		lineLen = MAX_LINE_LEN - (trimmedLine - line);
