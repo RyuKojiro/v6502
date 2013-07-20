@@ -161,7 +161,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_resolveArithmetic(line, maxLen);
 		
 		// Convert symbols to hard addresses from symbol table
-		as6502_desymbolicateLine(table, line, maxLen, 0x0600, address, NO);
+		as6502_desymbolicateLine(table, trimmedLine, maxLen, 0x0600, address, NO);
 
 		// Assemble whatever is left, if anything
 		if (lineLen) {
