@@ -222,10 +222,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 		}
 
 		// Swap in address
-		if (this->type == as6502_symbol_type_label && cur == line) {
-			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, "");
-		}
-		else if (cur) {
+		if (cur) {
 			if (!isspace(cur[-1])) {
 				// Partial symbol match @todo Double check this logic
 				continue;
