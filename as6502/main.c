@@ -154,7 +154,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		// Remove label clause
 		trimmedLine = trimheadtospc(line, lineLen);
 		trimmedLine = trimhead(trimmedLine, lineLen - (trimmedLine - line));
-		lineLen = strlen(trimmedLine);
 		maxLen = MAX_LINE_LEN - (trimmedLine - line);
 
 		// Check for Variable Declarations and Arithmetic
@@ -162,6 +161,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		
 		// Convert symbols to hard addresses from symbol table
 		as6502_desymbolicateLine(table, trimmedLine, maxLen, 0x0600, address, NO);
+		lineLen = strlen(trimmedLine);
 
 		// Assemble whatever is left, if anything
 		if (lineLen) {
