@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "error.h"
 
@@ -20,9 +21,14 @@ __attribute((noreturn)) void as6502_fatal(const char *reason) {
 	exit(EXIT_FAILURE);
 }
 
-void as6502_error(const char *reason) {
+void as6502_error(const char *reason, ...) {
+	va_list ap;
+	va_start(ap, reason);
+	
 	fprintf(stderr, "%s:%lu: error: ", currentFileName, currentLineNum);
-	fprintf(stderr, "%s", reason);
+	vfprintf(stderr, reason, ap);
+	va_end(ap);
+
 	if (reason[strlen(reason)] != '\n') {
 		fprintf(stderr, "\n");
 	}

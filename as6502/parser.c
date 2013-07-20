@@ -26,7 +26,7 @@
 
 #define kBadAddressModeErrorText		"Address mode '"
 #define kForOperationErrorText			"' invalid for operation '"
-#define kInvalidOpcodeErrorText			"Invalid opcode '"
+#define kInvalidOpcodeFormatText		"Invalid opcode '%s'"
 #define kUnknownSymbolErrorText			"Unknown symbol for operation '"
 #define kAddressModeNullStringErrorText	"Cannot determine address mode for null string"
 #define kLineMallocErrorText			"Could not allocate work buffer for line"
@@ -122,7 +122,8 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 
 v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
 	if (strlen(string) < 3) {
-		return _opError(string, kInvalidOpcodeErrorText);
+		as6502_error(kInvalidOpcodeFormatText, string);
+		return v6502_opcode_nop;
 	}
 	
 	// Single-byte Instructions
@@ -641,7 +642,8 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 		}
 	}
 
-	return _opError(string, kInvalidOpcodeErrorText);
+	as6502_error(kInvalidOpcodeFormatText, string);
+	return v6502_opcode_nop;
 }
 
 static int _valueLengthInChars(const char *string) {
