@@ -20,7 +20,7 @@
 #include "cpu.h"
 
 #define kDesymbolicationErrorText	"Could not shift string far enough while desymbolicating"
-#define kDuplicateSymbolErrorText	"Duplicate symbol '%s' encountered"
+#define kDuplicateSymbolErrorText	"Encountered duplicate symbol declaration '%s'"
 
 // Address Table Lifecycle Functions
 as6502_symbol_table *as6502_createSymbolTable() {
