@@ -40,3 +40,16 @@ void as6502_warn(const char *reason) {
 		fprintf(stderr, "\n");
 	}
 }
+
+void as6502_note(int lineNumber, const char *reason, ...) {
+	va_list ap;
+	va_start(ap, reason);
+	
+	fprintf(stderr, "%s:%lu: note: ", currentFileName, lineNumber);
+	vfprintf(stderr, reason, ap);
+	va_end(ap);
+	
+	if (reason[strlen(reason)] != '\n') {
+		fprintf(stderr, "\n");
+	}
+}
