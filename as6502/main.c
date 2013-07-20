@@ -73,7 +73,7 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 	return addrLen;
 }
 
-static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFormat format) {
+static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, as6502_outputFormat format) {
 	char line[MAX_LINE_LEN];
 	char *trimmedLine;
 	v6502_address_mode mode;
@@ -116,6 +116,10 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 		}
 	} while (!feof(in));
 	
+	if (printTable) {
+		as6502_printSymbolTable(table);
+	}
+	
 	// Reset for pass 2
 	rewind(in);
 	address = 0;
@@ -123,7 +127,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, as6502_outputFor
 	
 	// Prepare object structure
 	as6502_object_context *ctx = as6502_createObjectContext();
-		
+	
 	// Final pass, convert source to object code
 	do {
 		newline = NO;
@@ -195,7 +199,7 @@ static void outNameFromInName(char *out, int len, const char *in) {
 }
 
 static void usage() {
-	fprintf(stderr, "usage: as6502 [-SWw] [-F format] [file ...]\n");
+	fprintf(stderr, "usage: as6502 [-STWw] [-F format] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
@@ -203,12 +207,13 @@ int main(int argc, char * const argv[]) {
 	FILE *out;
 	char outName[MAX_FILENAME_LEN];
 	int printProcess = NO;
+	int printTable = NO;
 	as6502_outputFormat format = as6502_outputFormat_FlatFile;
 	
 	// If no arguments
 	int ch;
 	
-	while ((ch = getopt(argc, argv, "SWF:")) != -1) {
+	while ((ch = getopt(argc, argv, "STWF:")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "flat", 4)) {
@@ -217,6 +222,9 @@ int main(int argc, char * const argv[]) {
 			} break;
 			case 'S': {
 				printProcess = YES;
+			} break;
+			case 'T': {
+				printTable = YES;
 			} break;
 			case '?':
 			default:
@@ -233,7 +241,7 @@ int main(int argc, char * const argv[]) {
 		
 		as6502_warn("Assembling from stdin does not support symbols");
 		
-		assembleFile(stdin, stdout, NO, format);
+		assembleFile(stdin, stdout, NO, NO, format);
 	}
 	else {
 		for (/* i */; i < argc; i++) {
@@ -241,7 +249,7 @@ int main(int argc, char * const argv[]) {
 			currentFileName = argv[i];
 			outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
 			out = fopen(outName, "w");
-			assembleFile(in, out, printProcess, format);
+			assembleFile(in, out, printProcess, printTable, format);
 			fclose(in);
 			fclose(out);
 		}
