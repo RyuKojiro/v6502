@@ -107,7 +107,7 @@ static void run(v6502_cpu *cpu) {
 	}
 }
 
-static int compareCommand(const char * restrict command, const char * restrict literal) {
+static int compareCommand(const char * command, const char * literal) {
 	char cmd[MAX_COMMAND_LEN];
 	strncpy(cmd, command, MAX_COMMAND_LEN);
 	
@@ -123,7 +123,7 @@ static int compareCommand(const char * restrict command, const char * restrict l
 }
 
 /** return YES if handled */
-static int handleDebugCommand(v6502_cpu *cpu, char *command) {
+static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 	if (compareCommand(command, "help")) {
 		printf("cpu                 Displays the current state of the CPU.\n"
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
@@ -143,7 +143,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		return YES;
 	}
 	if (compareCommand(command, "load")) {
-		command = trimheadtospc(command);
+		command = trimheadtospc(command, len);
 		
 		if (command[0]) {
 			command++;
@@ -157,7 +157,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		return YES;
 	}
 	if (compareCommand(command, "disassemble")) {
-		command = trimheadtospc(command);
+		command = trimheadtospc(command, len);
 		
 		if (command[0]) {
 			command++;
@@ -185,7 +185,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command) {
 		return YES;
 	}
 	if (compareCommand(command, "peek")) {
-		command = trimheadtospc(command);
+		command = trimheadtospc(command, len);
 		command++;
 		
 		// Make sure we don't go out of bounds either direction
@@ -282,7 +282,7 @@ int main(int argc, const char * argv[])
 			continue;
 		}
 
-		if (handleDebugCommand(cpu, command)) {
+		if (handleDebugCommand(cpu, command, MAX_COMMAND_LEN)) {
 			continue;
 		}
 		else if (command[0] != ';') {
