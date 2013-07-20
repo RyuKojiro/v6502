@@ -25,25 +25,16 @@
 as6502_symbol_table *as6502_createSymbolTable() {
 	as6502_symbol_table *table = malloc(sizeof(as6502_symbol_table));
 	
-	table->labelCount = 0;
-	table->first_label = NULL;
-	table->varCount = 0;
-	table->first_var = NULL;
+	table->symbolCount = 0;
+	table->first_symbol = NULL;
 	
 	return table;
 }
 
 void as6502_destroySymbolTable(as6502_symbol_table *table) {
-	as6502_symbol *next_var;
-	for (as6502_symbol *this = table->first_var; this; this = next_var) {
-		next_var = this->next;
-		free(this->name);
-		free(this);
-	}
-	
-	as6502_symbol *next_label;
-	for (as6502_symbol *this = table->first_label; this; this = next_label) {
-		next_label = this->next;
+	as6502_symbol *next;
+	for (as6502_symbol *this = table->first_symbol; this; this = next) {
+		next = this->next;
 		free(this->name);
 		free(this);
 	}
@@ -53,45 +44,33 @@ void as6502_destroySymbolTable(as6502_symbol_table *table) {
 
 void as6502_printSymbolTable(as6502_symbol_table *table) {
 	printf("Symbol table %p = {\n", table);
-	for (as6502_symbol *this = table->first_var; this; this = this->next) {
-		printf("\tVar { name = \"%s\", addr = 0x%x, next = %p }\n", this->name, this->address, this->next);
-	}
-	for (as6502_symbol *this = table->first_label; this; this = this->next) {
-		printf("\tLabel { name = \"%s\", addr = 0x%x, next = %p }\n", this->name, this->address, this->next);
+	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
+		char *type;
+		
+		switch (this->type) {
+			case as6502_symbol_type_unknown: {
+				type = "???";
+			} break;
+			case as6502_symbol_type_label: {
+				type = "Label";
+			} break;
+			case as6502_symbol_type_variable: {
+				type = "Var";
+			} break;
+		}
+		
+		printf("\t%s { name = \"%s\", addr = 0x%x, next = %p }\n", type, this->name, this->address, this->next);
 	}
 	printf("}\n");
 }
 
 // Symbol Table Accessors
-void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
-	as6502_symbol *label = malloc(sizeof(as6502_symbol));
-	if (!label) {
-		as6502_fatal("label malloc in as6502_addLabelToTable");
+as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *name) {
+	if (!table) {
+		return NULL;
 	}
-	label->line = line;
-	label->address = address;
-
-	size_t len = strlen(name) + 1;
-	label->name = malloc(len);
-	if (!label->name) {
-		as6502_fatal("label name malloc in as6502_addLabelToTable");
-	}
-	memcpy(label->name, name, len);
-
-	// Add it to the table
-	for (as6502_symbol **this = &table->first_label;; this = &((*this)->next)) {
-		if (!*this || strlen((*this)->name) < strlen(name)) {
-			as6502_symbol *next = *this;
-			*this = label;
-			label->next = next;
-			return;
-		}
-	}
-}
-
-as6502_symbol *as6502_labelForString(as6502_symbol_table *table, const char *name) {
 	size_t len = strlen(name);
-	for (as6502_symbol *this = table->first_label; this; this = this->next) {
+	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if (strncmp(this->name, name, len)) {
 			return this;
 		}
@@ -100,8 +79,8 @@ as6502_symbol *as6502_labelForString(as6502_symbol_table *table, const char *nam
 	return NULL;
 }
 
-as6502_symbol *as6502_labelForAddress(as6502_symbol_table *table, uint16_t address) {
-	for (as6502_symbol *this = table->first_label; this; this = this->next) {
+as6502_symbol *as6502_symbolForAddress(as6502_symbol_table *table, uint16_t address) {
+	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if (this->address == address) {
 			return this;
 		}
@@ -111,26 +90,17 @@ as6502_symbol *as6502_labelForAddress(as6502_symbol_table *table, uint16_t addre
 }
 
 uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
-	return as6502_labelForString(table, name)->address;
-}
-
-as6502_symbol *as6502_varForString(as6502_symbol_table *table, const char *name) {
-	if (!table) {
-		return NULL;
+	as6502_symbol *label = as6502_symbolForString(table, name);
+	
+	if (!label) {
+		return 0;
 	}
 	
-	size_t len = strlen(name);
-	for (as6502_symbol *this = table->first_var; this; this = this->next) {
-		if (strncmp(this->name, name, len)) {
-			return this;
-		}
-	}
-	
-	return NULL;
+	return label->address;
 }
 
 uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
-	as6502_symbol *var = as6502_varForString(table, name);
+	as6502_symbol *var = as6502_symbolForString(table, name);
 	
 	if (!var) {
 		return 0;
@@ -139,27 +109,28 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
 	return var->address;
 }
 
-void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address) {
-	as6502_symbol *var = malloc(sizeof(as6502_symbol));
-	if (!var) {
-		as6502_fatal("var malloc in as6502_addVarToTable");
+void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address, as6502_symbol_type type) {
+	as6502_symbol *sym = malloc(sizeof(as6502_symbol));
+	if (!sym) {
+		as6502_fatal("symbol malloc in as6502_addVarToTable");
 	}
-	var->line = line;
-	var->address = address;
+	sym->line = line;
+	sym->address = address;
+	sym->type = type;
 	
 	size_t len = strlen(name) + 1;
-	var->name = malloc(len);
-	if (!var->name) {
-		as6502_fatal("var name malloc in as6502_addVarToTable");
+	sym->name = malloc(len);
+	if (!sym->name) {
+		as6502_fatal("symbol name malloc in as6502_addVarToTable");
 	}
-	memcpy(var->name, name, len);
+	memcpy(sym->name, name, len);
 	
 	// Add it to the table
-	for (as6502_symbol **this = &table->first_var;; this = &((*this)->next)) {
+	for (as6502_symbol **this = &table->first_symbol;; this = &((*this)->next)) {
 		if (!*this || strlen((*this)->name) < strlen(name)) {
 			as6502_symbol *next = *this;
-			*this = var;
-			var->next = next;
+			*this = sym;
+			sym->next = next;
 			return;
 		}
 	}
@@ -168,6 +139,7 @@ void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const 
 // Easy Symbol Table Access
 
 void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset) {
+	as6502_symbol_type type;
 	size_t len = strlen(line) + 1;
 	char *symbol = malloc(len);
 	strncpy(symbol, line, len);
@@ -176,11 +148,13 @@ void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsig
 	
 	if (strchr(line, '=')) { // Variable
 		/** TODO: @todo allocate variable addresses */
-		as6502_addVarToTable(table, lineNumber, symbol, 0);
+		type = as6502_symbol_type_variable;
 	}
 	else { // Label
-		as6502_addLabelToTable(table, lineNumber, symbol, offset);
+		type = as6502_symbol_type_label;
 	}
+	
+	as6502_addSymbolToTable(table, lineNumber, symbol, offset, type);
 	
 	free(symbol);
 }
@@ -238,28 +212,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	v6502_address_mode mode = as6502_addressModeForLine(line, len);
 	offset += as6502_instructionLengthForAddressMode(mode);
 	
-	for (as6502_symbol *this = table->first_var; this; this = this->next) {
-		// Search for symbol
-		if (caseSensitive) {
-			cur = strstr(line, this->name);
-		}
-		else {
-			cur = strcasestr(line, this->name);
-		}
-		
-		// Swap in address
-		if (cur) {
-			if (!isspace(cur[-1]) && cur[-1] != '(') {
-				// Partial symbol match
-				continue;
-			}
-			
-			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
-			snprintf(addrString, 7, width ? "$%04x" : "$%02x", this->address);
-			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
-		}
-	}
-	for (as6502_symbol *this = table->first_label; this; this = this->next) {
+	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		// Search for symbol
 		if (caseSensitive) {
 			cur = strstr(line, this->name);
@@ -269,13 +222,18 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 		}
 
 		// Swap in address
-		if (cur == line) {
+		if (this->type == as6502_symbol_type_label && cur == line) {
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, "");
 		}
 		else if (cur) {
 			if (!isspace(cur[-1])) {
-				// Partial symbol match
+				// Partial symbol match @todo Double check this logic
 				continue;
+			}
+			
+			if (this->type == as6502_symbol_type_variable) {
+				offset = 0;
+				pstart = 0;
 			}
 			
 			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);

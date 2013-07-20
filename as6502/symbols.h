@@ -12,6 +12,12 @@
 
 #include <stdint.h>
 
+typedef enum {
+	as6502_symbol_type_unknown = 0,
+	as6502_symbol_type_label,
+	as6502_symbol_type_variable
+} as6502_symbol_type;
+
 /** @struct */
 /** @brief An individual symbol in a symbol table */
 typedef struct _as6502_symbol {
@@ -23,19 +29,17 @@ typedef struct _as6502_symbol {
 	char *name;
 	/** @brief The symbol's address */
 	uint16_t address;
+	/** @brief The symbol type */
+	as6502_symbol_type type;
 } as6502_symbol;
 
 /** @struct */
 /** @brief The assembler's per-object symbol table structure, which holds all symbols. */
 typedef struct {
-	/** @brief The number of labels in the symbol table */
-	int labelCount;
-	/** @brief The number of variables in the symbol table */
-	int varCount;
+	/** @brief The number of symbols in the symbol table */
+	long symbolCount;
 	/** @brief The head of the linked list of labels */
-	as6502_symbol *first_label;
-	/** @brief The head of the linked list of variable */
-	as6502_symbol *first_var;
+	as6502_symbol *first_symbol;
 } as6502_symbol_table;
 
 /** @defgroup sym_lifecycle Symbol Table Lifecycle Functions */
@@ -50,20 +54,16 @@ void as6502_printSymbolTable(as6502_symbol_table *table);
 
 /** @defgroup sym_access Symbol Table Accessors */
 /**@{*/
-/** @brief Creates and adds a label _as6502_symbol to a as6502_symbol_table */
-void as6502_addLabelToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address);
+/** @brief Finds a as6502_symbol in a given as6502_symbol_table by name */
+as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *name);
+/** @brief Finds a as6502_symbol in a given as6502_symbol_table by address */
+as6502_symbol *as6502_symbolForAddress(as6502_symbol_table *table, uint16_t address);
 /** @brief Dereferences a label by name to retrieve its address */
 uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name);
-/** @brief Finds a label in a given as6502_symbol_table by name */
-as6502_symbol *as6502_labelForString(as6502_symbol_table *table, const char *name);
-/** @brief Finds a label in a given as6502_symbol_table by address */
-as6502_symbol *as6502_labelForAddress(as6502_symbol_table *table, uint16_t address);
-/** @brief Creates and adds a variable _as6502_symbol to a as6502_symbol_table */
-void as6502_addVarToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address);
 /** @brief Dereferences a variable by name to retrieve its address */
 uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name);
-/** @brief Finds a variable in a given as6502_symbol_table by name */
-as6502_symbol *as6502_varForString(as6502_symbol_table *table, const char *name);
+/** @brief Creates and adds a as6502_symbol to a as6502_symbol_table */
+void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address, as6502_symbol_type type);
 /**@}*/
 
 /** @defgroup sym_ez Easy Symbol Table Interaction */

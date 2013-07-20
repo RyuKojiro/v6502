@@ -45,7 +45,7 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 	}
 		
 	if (printProcess) {
-		as6502_symbol *label = as6502_labelForAddress(table, blob->len - addrLen);
+		as6502_symbol *label = as6502_symbolForAddress(table, blob->len - addrLen);
 		if (label) {
 			printf("0x%04x:          - %4lu: %s:\n", blob->len - addrLen, label->line, label->name);
 		}
