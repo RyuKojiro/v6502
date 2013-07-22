@@ -278,6 +278,11 @@ int main(int argc, const char * argv[])
 		
 		fgets(command, MAX_COMMAND_LEN, stdin);
 		
+		if (feof(stdin)) {
+			printf("\n");
+			return EXIT_SUCCESS;
+		}
+			
 		if (command[0] == '\n') {
 			continue;
 		}
