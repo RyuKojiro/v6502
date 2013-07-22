@@ -270,7 +270,7 @@ int main(int argc, const char * argv[])
 	run(cpu);
 	
 	char command[MAX_COMMAND_LEN];
-	for (;;) {
+	while (!feof(stdin)) {
 		currentLineNum++;
 		
 		printf("(0x%04x) ", cpu->pc);
