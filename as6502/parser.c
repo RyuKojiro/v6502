@@ -14,58 +14,29 @@
 #include "parser.h"
 #include "error.h"	// as6502_error
 
-#define MIN(a, b)	((a < b) ? a : b)
-
 /* v6502_opcodeForStringAndMode is a huge function with very repetetive behavior.
  * In order to alleviate a lot of linear calls to strncmp(), asmeq() was created.
  * Much faster than strncmp, slower than a jump table?
  */
 #define asmeq(a, b) ((a[0] == b[0] && a[1] == b[1] && a[2] == b[2]) ? YES : NO)
 
-#define MAX_ERROR_LEN					255
-
-#define kBadAddressModeErrorText		"Address mode '"
-#define kForOperationErrorText			"' invalid for operation '"
+#define kBadAddressModeErrorText		"Address mode '%s' invalid for operation '%s'"
 #define kInvalidOpcodeFormatText		"Invalid opcode '%s'"
-#define kUnknownSymbolErrorText			"Unknown symbol for operation '"
+#define kUnknownSymbolErrorText			"Unknown symbol for operation '%s'"
 #define kAddressModeNullStringErrorText	"Cannot determine address mode for null string"
 #define kLineMallocErrorText			"Could not allocate work buffer for line"
 
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
-	char e[MAX_ERROR_LEN];
 	char m[12];
-	size_t depth = 0;
 	
 	if (mode == v6502_address_mode_symbol) {
-		strncpy(e, kUnknownSymbolErrorText, MIN(sizeof(kUnknownSymbolErrorText), MAX_ERROR_LEN - depth));
-		depth += sizeof(kUnknownSymbolErrorText);
+		as6502_error(kUnknownSymbolErrorText, op);
 	}
 	else {
 		as6502_stringForAddressMode(m, mode);
-		strncpy(e, kBadAddressModeErrorText, MIN(sizeof(kBadAddressModeErrorText), MAX_ERROR_LEN - depth));
-		depth += sizeof(kBadAddressModeErrorText);
-		strncat(e, m, MIN(12, MAX_ERROR_LEN - depth));
-		depth += 12;
-		strncat(e, kForOperationErrorText, MIN(sizeof(kForOperationErrorText), MAX_ERROR_LEN - depth));
-		depth += sizeof(kForOperationErrorText);
+		as6502_error(kBadAddressModeErrorText, m, op);
 	}
-	strncat(e, op, MIN(strlen(op) + 1, MAX_ERROR_LEN - depth));
-	trimtaild(e);
-	strncat(e, "'", 2);
-	as6502_error(e);
-	return v6502_opcode_nop;
-}
 
-static v6502_opcode _opError(const char *op, const char *error) {
-	char e[MAX_ERROR_LEN];	
-	size_t depth = 0;
-	
-	strncpy(e, error, MIN(strlen(error) + 1, MAX_ERROR_LEN - depth));
-	depth += sizeof(kForOperationErrorText);
-	strncat(e, op, MIN(strlen(op), MAX_ERROR_LEN - depth));
-	trimtaild(e);
-	strncat(e, "'", 2);
-	as6502_error(e);
 	return v6502_opcode_nop;
 }
 
@@ -927,7 +898,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 	int o = 0;
 	int charEncountered = NO;
 	for(size_t i = 0; line[i] && i <= len; i++){
-		if (!isspace(line[i]) || charEncountered) {
+		if (!isspace( line[i]) || charEncountered) {
 			charEncountered = YES;
 			string[o++] = tolower(line[i]);
 		}
@@ -943,7 +914,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 	
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
-		as6502_byteValuesForString(high, low, NULL, string + 3);
+		as6502_byteValuesForString(high, low, NULL, string + 4);
 	}
 	
 	free(string);
