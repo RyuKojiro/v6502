@@ -11,9 +11,8 @@
 #include <string.h>
 #include <ctype.h>
 
-#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-qual"
-#pragma GCC diagnostic ignored "-Wincompatible-pointer-types-discards-qualifiers"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types-discards-qualifiers"
 
 void trimtaild(char *str) {
 	char *cur = str + strlen(str) - 1;
@@ -106,7 +105,8 @@ const char *rev_strnchr(const char *stop, const char *start, const char chr) {
 }
 
 char *strnchr(const char *str, char chr, size_t len) {
-	for (size_t i = 0; str[i] && i < len; i++) {
+	size_t i;
+	for (i = 0; str[i] && i < len; i++) {
 		if (str[i] == chr) {
 			return str + i;
 		}
@@ -114,4 +114,5 @@ char *strnchr(const char *str, char chr, size_t len) {
 	return NULL;
 }
 
-#pragma GCC diagnostic pop
+#pragma GCC diagnostic warning "-Wcast-qual"
+#pragma clang diagnostic warning "-Wincompatible-pointer-types-discards-qualifiers"
