@@ -29,13 +29,8 @@
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char m[12];
 	
-	if (mode == v6502_address_mode_symbol) {
-		as6502_error(kUnknownSymbolErrorText, op);
-	}
-	else {
-		as6502_stringForAddressMode(m, mode);
-		as6502_error(kBadAddressModeErrorText, m, op);
-	}
+	as6502_stringForAddressMode(m, mode);
+	as6502_error(kBadAddressModeErrorText, m, op);
 
 	return v6502_opcode_nop;
 }
@@ -243,6 +238,12 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 		else {
 			return _addrModeError(string, mode);
 		}
+	}
+	
+	// If it's an unresolved symbol, might as well not go any further
+	if (mode == v6502_address_mode_symbol) {
+		as6502_error(kUnknownSymbolErrorText, op);
+		return v6502_opcode_nop;
 	}
 	
 	// All of the rest
