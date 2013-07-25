@@ -41,7 +41,7 @@ void as6502_warn(const char *reason) {
 	}
 }
 
-void as6502_note(int lineNumber, const char *reason, ...) {
+void as6502_note(unsigned long lineNumber, const char *reason, ...) {
 	va_list ap;
 	va_start(ap, reason);
 	

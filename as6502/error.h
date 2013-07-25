@@ -24,7 +24,7 @@ void as6502_error(const char *reason, ...);
 /** @brief Called for code warnings detected during assembly, which don't prevent producing a binary */
 void as6502_warn(const char *reason);
 /** @brief Called for code notation which pertain to preceding errors or warnings, this can reference other code */
-void as6502_note(int lineNumber, const char *reason, ...);
+void as6502_note(unsigned long lineNumber, const char *reason, ...);
 /**@}*/
 
 #endif
