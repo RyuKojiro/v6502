@@ -37,21 +37,39 @@ subsections:
 \page as Assembler
 \section usage Arguments and Usage
 
-as6502 [-SW] [\a file ...]
+usage: as6502 [-STWw] [-F \a format] [\a file ...]
 
 Any number of files may be specified and they will all be assembled,
 individually. There currently is no linker in the v6502 stack, as6502 just
 outputs the raw binaries ready-to-execute. If no files are specified, as6502
 will assemble from stdin, line-buffered.
 
+- -F \a format
+	
+	Specify a \a format to produce as output for linking or execution.
+
+	Supported formats:
+
+	- flat - Root segment only, no symbol table, single execution unit ready to
+		be loaded into memory for running.
+	- aout - Traditional a.out OMAGIC object file format.
+	
 - -S
 	
 	Dump assembly with binary results and addresses to stdout for verification
 	of what is being produced. \see \ref debug
 
-- -W
+- -T
+
+	After first pass, dump a human readable representation of the symbol table.
+
+- -w
 	
 	Emit warnings where possible, and attempt to recover, then continue assembly.
+	
+- -W
+	
+	Treat warnings as errors.
 
 \section notes Notes
 
@@ -101,7 +119,82 @@ Offset  Op Lo Hi   Line  Label / Instruction
 
 \page vm Virtual Machine
 
-The simplest fault tolerant implementation of a v6502 instance is as follows:
+\section debugger Interactive VM
+
+The included v6502 executable that is built using the v6502 API provides an
+interactive debugger to a v6502 instance that allows arbitrary manipulation of
+the machine and loading of data into memory. The interpreter will accept any
+valid 6502 assembly as instructions to execute in-place without stepping the
+CPU. The prompt always displays the current program counter address in hex, when
+halted. When running the CPU can be interrupted with a SIGINT or ^C. Binary
+images can be specified as arguments prior to runtime and automatically run on
+start.
+
+The non-assembly commands are as follows:
+
+\verbatim
+cpu                 Displays the current state of the CPU.
+disassemble <addr>  Disassemble 10 instructions starting at a given address, or the program counter if no address is specified.
+help                Displays this help.
+load <file>         Load binary image into memory at 0x0600.
+peek <addr>         Dumps the memory at and around a given address.
+quit                Exits v6502.
+run                 Contunuously steps the cpu until a 'brk' instruction is encountered.
+reset               Resets the CPU.
+mreset              Zeroes all memory.
+step                Forcibly steps the CPU once.
+verbose             Toggle verbose mode; prints each instruction as they are executed when running.
+\endverbatim
+
+The command interpreter supports shortening of these commands as far as possible
+without being ambiguous. Ambiguous commands have an arbitrary priority based on
+usefulness.
+
+Example usage (debugging a binary):
+
+\verbatim
+Creating 1 virtual CPU…
+Allocating 64k of virtual memory…
+Resetting CPU…
+Loading binary image "overflow.o" into memory…
+Loaded 137 bytes.
+Running…
+Encountered 'brk' at 0x03.
+(0x0004) disass $0600
+0x0600: d8       - cld 
+0x0601: a9 01    - lda #$01
+0x0603: 8d 00 00 - sta $0000
+0x0606: a9 80    - lda #$80
+0x0608: 8d 00 00 - sta $0000
+0x060b: 8d 00 00 - sta $0000
+0x060e: a9 00    - lda #$00
+0x0610: 8d 00 00 - sta $0000
+0x0613: 8d 00 00 - sta $0000
+0x0616: a0 01    - ldy #$01
+(0x0004) v
+Verbose mode enabled.
+(0x0004) reset
+(0x0600) r
+0x0600: d8       - cld 
+0x0601: a9 01    - lda #$01
+0x0603: 8d 00 00 - sta $0000
+0x0606: a9 80    - lda #$80
+	… 20 lines ommitted …
+0x061d: f0 1f    - beq $1f
+0x063e: 60       - rts 
+0x0003: 00       - brk 
+Encountered 'brk' at 0x03.
+(0x0004) cpu
+Status Register: --XB-IZ-
+CPU 0x100103a90: pc = 0x0004, ac = 0x00, x = 0x01, y = 0x01, sr = 0x36, sp = 0x01
+MEM 0x100103ab0: memsize = 65535 (0xffff)
+(0x0004) 
+\endverbatim
+
+\section api API
+
+The simplest fault tolerant implementation of a v6502 instance, using the v6502
+API, is as follows:
 
 \code
 #include "cpu.h"
