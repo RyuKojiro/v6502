@@ -242,7 +242,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 	
 	// If it's an unresolved symbol, might as well not go any further
 	if (mode == v6502_address_mode_symbol) {
-		as6502_error(kUnknownSymbolErrorText, op);
+		as6502_error(kUnknownSymbolErrorText, string);
 		return v6502_opcode_nop;
 	}
 	
