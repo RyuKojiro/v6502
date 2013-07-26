@@ -12,7 +12,7 @@
 #include <ctype.h>
 
 #pragma GCC diagnostic ignored "-Wcast-qual"
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types-discards-qualifiers"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
 
 void trimtaild(char *str) {
 	char *cur = str + strlen(str) - 1;
@@ -115,4 +115,4 @@ char *strnchr(const char *str, char chr, size_t len) {
 }
 
 #pragma GCC diagnostic warning "-Wcast-qual"
-#pragma clang diagnostic warning "-Wincompatible-pointer-types-discards-qualifiers"
+#pragma clang diagnostic warning "-Wincompatible-pointer-types"
