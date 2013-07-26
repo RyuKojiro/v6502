@@ -61,7 +61,7 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 			} break;
 		}
 		
-		printf("\t%s { name = \"%s\", addr = 0x%x, next = %p, line = %d }\n", type, this->name, this->address, this->next, this->line);
+		printf("\t%s { name = \"%s\", addr = 0x%x, next = %p, line = %lu }\n", type, this->name, this->address, this->next, this->line);
 	}
 	printf("}\n");
 }
