@@ -145,7 +145,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 
 // Easy Symbol Table Access
 
-void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset) {
+as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation) {
 	as6502_symbol_type type;
 	size_t len = strlen(line) + 1;
 	char *symbol = malloc(len);
@@ -164,6 +164,8 @@ void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsig
 	as6502_addSymbolToTable(table, lineNumber, symbol, offset, type);
 	
 	free(symbol);
+	
+	return type;
 }
 
 void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, char *symbol, const char *text) {

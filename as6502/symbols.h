@@ -69,7 +69,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 /** @defgroup sym_ez Easy Symbol Table Interaction */
 /**@{*/
 /** @brief Automatically detects symbols in a given line, then creates and inserts them into a given as6502_symbol_table */
-void as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset);
+as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation);
 /** @brief Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses */
 void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive);
 /**@}*/

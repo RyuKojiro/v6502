@@ -119,6 +119,8 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	as6502_symbol_table *table = as6502_createSymbolTable();
 	size_t lineLen, maxLen;
 	int instructionLength;
+	// Variable storage will grow upwards, opposite the stack
+	uint16_t currentVarAddress = 0x200;
 	
 	// First pass, build symbol table
 	do {
@@ -135,7 +137,16 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		trimmedLine = trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
 		lineLen = MAX_LINE_LEN - (trimmedLine - line);
 		if (isalnum(trimmedLine[0])) {
-			as6502_addSymbolForLine(table, line, currentLineNum, address);
+			as6502_symbol_type type = as6502_addSymbolForLine(table, line, currentLineNum, address, currentVarAddress);
+			
+			if (type == as6502_symbol_type_variable) {
+				if (currentVarAddress >= 0x7FF) {
+					as6502_error("Maximum number of addressable variables exceeded.");
+				}
+				else {
+					currentVarAddress++;
+				}
+			}
 
 			// Trim any possible labels we encountered
 			trimmedLine = trimheadtospc(line, lineLen);
