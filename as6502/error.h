@@ -18,7 +18,7 @@ extern const char *currentFileName;
 /** @defgroup as_error Assembler Error Handling */
 /**@{*/
 /** @brief Called for fatal errors during assembly, such as internal memory failures */
-__attribute((noreturn)) void as6502_fatal(const char *reason);
+void as6502_fatal(const char *reason) __attribute((noreturn));
 /** @brief Called for code errors detected during assembly, which prevent producing a binary */
 void as6502_error(const char *reason, ...);
 /** @brief Called for code warnings detected during assembly, which don't prevent producing a binary */
