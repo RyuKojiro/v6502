@@ -136,7 +136,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		// Check for symbols
 		trimmedLine = trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
 		lineLen = MAX_LINE_LEN - (trimmedLine - line);
-		if (isalnum(trimmedLine[0])) {
+		if (trimmedLine && (isalnum(trimmedLine[0]) || trimmedLine[0] == '.')) {
 			as6502_symbol_type type = as6502_addSymbolForLine(table, line, currentLineNum, address, currentVarAddress);
 			
 			if (type == as6502_symbol_type_variable) {

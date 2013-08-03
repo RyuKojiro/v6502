@@ -148,12 +148,26 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation) {
 	as6502_symbol_type type;
 	size_t len = strlen(line) + 1;
-	char *symbol = malloc(len);
-	strncpy(symbol, line, len);
-	trimgreedytaild(symbol); // symbol will only be the first phrase
+	char *symbol_true = malloc(len);
+	strncpy(symbol_true, line, len);
+	char *symbol = symbol_true;
+	int isByte = NO;
+	
+	if (!strncasecmp(".byte", symbol, 5)) {
+		// .byte will only be the last phrase
+		symbol = trimheadtospc(symbol, len);
+		symbol = trimhead(symbol, len);
+		isByte = YES;
+	}
+	else  {
+		// Labels will only be the first phrase
+		trimgreedytaild(symbol);
+	}
+	
+	trimtaild(symbol);
 	trimtailchard(symbol, ':'); // If there is a colon, truncate there
 	
-	if (strchr(line, '=')) { // Variable
+	if (strchr(line, '=') || isByte) { // Variable
 		/** TODO: @todo allocate variable addresses */
 		type = as6502_symbol_type_variable;
 	}
@@ -163,7 +177,7 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	
 	as6502_addSymbolToTable(table, lineNumber, symbol, offset, type);
 	
-	free(symbol);
+	free(symbol_true);
 	
 	return type;
 }
