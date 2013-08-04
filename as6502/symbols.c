@@ -170,6 +170,7 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	if (strchr(line, '=') || isByte) { // Variable
 		/** TODO: @todo allocate variable addresses */
 		type = as6502_symbol_type_variable;
+		offset = varLocation;
 	}
 	else { // Label
 		type = as6502_symbol_type_label;
