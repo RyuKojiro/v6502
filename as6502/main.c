@@ -196,6 +196,12 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		// Handle dot directives
 		if (line[0] == '.') {
 			as6502_processObjectDirectiveForLine(ctx, line, lineLen);
+			
+			if (newline) {
+				currentLineNum++;
+			}
+			
+			continue;
 		}
 		
 		// TODO: @todo Handle Variable Declarations
