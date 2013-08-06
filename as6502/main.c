@@ -145,6 +145,12 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 				}
 				else {
 					currentVarAddress++;
+					
+					if (newline) {
+						currentLineNum++;
+					}
+					
+					continue;
 				}
 			}
 
