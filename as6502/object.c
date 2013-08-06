@@ -101,12 +101,6 @@ void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char
 		// revert to top blob
 		ctx->currentBlob = 0;
 	}
-	if (!strncasecmp(line + 1, "byte", 4)) {
-		// convert byte and append to current blob
-		uint8_t low;
-		as6502_byteValuesForString(NULL, &low, NULL, line + 5);
-		as6502_appendByteToBlob(as6502_currentBlobInContext(ctx), low);
-	}
 }
 
 as6502_object_blob *as6502_currentBlobInContext(as6502_object_context *ctx) {
