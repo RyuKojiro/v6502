@@ -243,6 +243,26 @@ void handleSignal(int signal) {
 	}
 }
 
+void sanitizeLine(char *command, size_t len) {
+	char *safeCommand = malloc(len);
+
+	size_t out = 0;
+	for (size_t in = 0; (in < len) && command[in]; in++) {
+		// Only allow printable ASCII
+		if (command[in] <= '~' && command[in] >= ' ') {
+			safeCommand[out++] = command[in];
+		}
+		
+		// Terminate at newline, excluding the newline char
+		if (command[in] == '\n') {
+			break;
+		}
+	}
+	safeCommand[out] = '\0';
+	
+	strncpy(command, safeCommand, out + 1);
+}
+
 int main(int argc, const char * argv[])
 {
 	currentFileName = "v6502";
@@ -277,13 +297,14 @@ int main(int argc, const char * argv[])
 		fflush(stdout);
 		
 		fgets(command, MAX_COMMAND_LEN, stdin);
+		sanitizeLine(command, MAX_COMMAND_LEN);
 		
 		if (feof(stdin)) {
 			printf("\n");
 			return EXIT_SUCCESS;
 		}
-			
-		if (command[0] == '\n') {
+		
+		if (command[0] == '\0') {
 			continue;
 		}
 
