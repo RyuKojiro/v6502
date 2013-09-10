@@ -673,7 +673,7 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 		} break;
 	}
 	
-	if (result > 0xFF && wide) {
+	if (result > BYTE_MAX && wide) {
 		// Octal and decimal split digits
 		*wide = YES;
 	}
@@ -685,7 +685,7 @@ void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const ch
 	uint16_t result = as6502_valueForString(wide, string);
 
 	if (low) {
-		*low = result & 0xFF;
+		*low = result & BYTE_MAX;
 	}
 
 	if (high) {

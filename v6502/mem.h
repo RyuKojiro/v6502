@@ -12,6 +12,8 @@
 
 #include <stdint.h>
 
+#define BYTE_MAX	0xFF
+
 /** @struct */
 /** @brief Virtual Memory Object */
 typedef struct {

@@ -34,6 +34,7 @@
 #define kUnhandledInstructionErrorText				"Unhandled CPU Instruction"
 
 #define STACK_OFFSET								0x0100
+#define PROGRAM_START								0x0600
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
@@ -334,12 +335,12 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 }
 
 void v6502_reset(v6502_cpu *cpu) {
-	cpu->pc = 0x0600;
-	cpu->ac = 0x00;
-	cpu->x  = 0x00;
-	cpu->y  = 0x00;
-	cpu->sr = 0x20;
-	cpu->sp = 0xFF;
+	cpu->pc = PROGRAM_START;
+	cpu->ac = 0;
+	cpu->x  = 0;
+	cpu->y  = 0;
+	cpu->sr = v6502_cpu_status_ignored;
+	cpu->sp = BYTE_MAX;
 }
 
 void v6502_step(v6502_cpu *cpu) {

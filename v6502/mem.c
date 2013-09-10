@@ -130,7 +130,7 @@ void v6502_destroyMemory(v6502_memory *memory) {
 
 int8_t v6502_signedValueOfByte(uint8_t byte) {
 	if (byte & 0x80) {
-		return (0 - (0xFF - byte));
+		return (0 - (BYTE_MAX - byte));
 	}
 	return byte;
 }
