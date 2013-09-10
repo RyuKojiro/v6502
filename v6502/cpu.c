@@ -83,9 +83,9 @@ static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 
 static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t a = cpu->ac;
-	cpu->ac -= operand;
-	FLAG_OVERFLOW_WITH_COMPARISON(a, (0 - (signed)operand), cpu->ac);
-	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
+	cpu->ac += operand ^ BYTE_MAX;
+	FLAG_OVERFLOW_WITH_COMPARISON(a, operand ^ BYTE_MAX, cpu->ac);
+	FLAG_CARRY_WITH_COMPARISON(cpu->ac, (operand ^ BYTE_MAX));
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
