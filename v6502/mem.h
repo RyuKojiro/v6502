@@ -12,6 +12,7 @@
 
 #include <stdint.h>
 
+/** @brief Maximum possible value of an 8-bit byte */
 #define BYTE_MAX	0xFF
 
 /** @struct */
