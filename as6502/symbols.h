@@ -12,6 +12,8 @@
 
 #include <stdint.h>
 
+/** @enum */
+/** @brief as6502_symbol Type */
 typedef enum {
 	as6502_symbol_type_unknown = 0,
 	as6502_symbol_type_label,

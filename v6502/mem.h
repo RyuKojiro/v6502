@@ -79,7 +79,7 @@ uint8_t v6502_byteValueOfSigned(int8_t i);
 /** @brief Raise an exception regarding v6502_memory */
 #define v6502_mfault(a)	if (memory && memory->fault_callback) { \
 							memory->fault_callback(memory->fault_context, a); \
-						} \
+						}
 /**@}*/
 
 #endif

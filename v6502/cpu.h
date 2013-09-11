@@ -40,7 +40,8 @@ typedef struct {
 	void *fault_context;
 } v6502_cpu;
 
-// Instruction Set
+/** @enum */
+/** @brief Instruction Set */
 typedef enum {
 	// Single Byte Instructions
 	v6502_opcode_brk		= 0x00,
@@ -245,7 +246,8 @@ typedef enum {
 
 } v6502_opcode;
 
-// Status Register Values
+/** @enum */
+/** @brief Status Register Flags */
 typedef enum {
 	v6502_cpu_status_carry		= 1,
 	v6502_cpu_status_zero		= 2,
@@ -257,7 +259,8 @@ typedef enum {
 	v6502_cpu_status_negative	= 128
 } v6502_cpu_status;
 
-// Address Modes
+/** @enum */
+/** @brief Address Modes */
 typedef enum {
 	v6502_address_mode_symbol = -2,		// Added for external code, like assemblers
 	v6502_address_mode_unknown = -1,

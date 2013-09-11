@@ -14,8 +14,15 @@
 
 #include "cpu.h"
 
+#ifndef YES
+/** @brief Boolean true */
 #define YES		1
+#endif
+
+#ifndef NO
+/** @brief Boolean false */
 #define NO		0
+#endif
 
 /** @defgroup parser_translit Instruction Transliteration */
 /**@{*/
