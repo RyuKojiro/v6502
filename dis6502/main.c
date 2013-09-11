@@ -62,10 +62,12 @@ static void disassembleFile(FILE *in, FILE *out) {
 					address = (blob->data[offset + 2] << 8 | blob->data[offset + 1]);
 				}
 				else {
-					address = 0x600 + offset + blob->data[offset + 1];
+						address = offset + 2 + v6502_signedValueOfByte(blob->data[offset + 1]);
 				}
 				
-				as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
+				if (!as6502_symbolForAddress(table, address)) {
+					as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
+				}
 			}
 			currentLineNum++;
 		}
@@ -73,13 +75,13 @@ static void disassembleFile(FILE *in, FILE *out) {
 		// Disassemble
 		currentLineNum = 0;
 		for (uint8_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
-			as6502_symbol *label = as6502_symbolForAddress(table, offset - 0x600);
+			as6502_symbol *label = as6502_symbolForAddress(table, offset);
 			if (label) {
 				fprintf(out, "%s:\n", label->name);
 			}
 			
 			as6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
-			fprintf(out, "%s\n", line);
+			fprintf(out, "\t%s\n", line);
 			currentLineNum++;
 		}
 	}
