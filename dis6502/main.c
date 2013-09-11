@@ -55,9 +55,7 @@ static void disassembleFile(FILE *in, FILE *out) {
 		currentLineNum = 0;
 		for (uint8_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
 			v6502_opcode opcode = blob->data[offset];
-			if (_isBranchOpcode(opcode)) {
-				snprintf(symbolName, MAX_SYM_LEN, "Label%d", currentLabel++);
-				
+			if (_isBranchOpcode(opcode)) {				
 				if (opcode == v6502_opcode_jmp_abs || opcode == v6502_opcode_jmp_ind || opcode == v6502_opcode_jsr) {
 					address = (blob->data[offset + 2] << 8 | blob->data[offset + 1]) - v6502_memoryStartProgram;
 				}
@@ -66,6 +64,7 @@ static void disassembleFile(FILE *in, FILE *out) {
 				}
 				
 				if (!as6502_symbolForAddress(table, address)) {
+					snprintf(symbolName, MAX_SYM_LEN, "Label%d", currentLabel++);
 					as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
 				}
 			}
