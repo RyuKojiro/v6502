@@ -17,3 +17,14 @@ void as6502_writeObjectToFlatFile(as6502_object *obj, FILE *file) {
 	}
 	fwrite(obj->blobs[0].data, 1, obj->blobs[0].len, file);
 }
+
+void as6502_readObjectFromFlatFile(as6502_object *obj, FILE *file) {
+	as6502_addBlobToObject(obj, 0);
+	as6502_object_blob *blob = &obj->blobs[0];
+	
+	uint8_t byte;
+	while (!feof(file)) {
+		fread(&byte, 1, 1, file);
+		as6502_appendByteToBlob(blob, byte);
+	}
+}

@@ -14,5 +14,7 @@
 
 /** @brief Writes an as6502_object directly to a flat file */
 void as6502_writeObjectToFlatFile(as6502_object *obj, FILE *file);
+/** @brief Read an as6502_object from a flat file */
+void as6502_readObjectFromFlatFile(as6502_object *obj, FILE *file);
 
 #endif
