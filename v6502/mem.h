@@ -12,6 +12,36 @@
 
 #include <stdint.h>
 
+/** @defgroup mem_boundaries Memory Boundary Definitions */
+/**@{*/
+
+// Memory Starts
+/** @brief Start of work memory available for general program use */
+#define v6502_memoryStartWorv6502_memory	0x0000
+/** @brief Start of memory reserved for CPU stack */
+#define v6502_memoryStartStack				0x0100
+/** @brief Start of program code memory region */
+#define v6502_memoryStartProgram			0x0600
+/** @brief Start of PPU registers for the RP2C02 chipset */
+#define v6502_memoryStartPPURegisters		0x2000
+/** @brief Start of APU registers for the RP2A03 chipset */
+#define v6502_memoryStartAPURegisters		0x4000
+/** @brief Start of memory mapped expansion ROM */
+#define v6502_memoryStartExpansionRom		0x4020
+/** @brief Start of SRAM backed memory region */
+#define v6502_memoryStartSRAM				0x6000
+/** @brief Start of memory mapped PRGROM */
+#define v6502_memoryStartPRGROM				0x8000
+/** @brief Maximum memory boundary */
+#define v6502_memoryStartCeiling			0xFFFF
+
+// Memory Blob Sizes
+/** @brief Size of work memory available for general program use */
+#define v6502_memorySizeWorkMemory			0x0800
+/** @brief Size of PPU registers for the RP2C02 chipset */
+#define v6502_memorySizePPURegisters		0x0008
+/**@}*/
+
 /** @brief Maximum possible value of an 8-bit byte */
 #define BYTE_MAX	0xFF
 

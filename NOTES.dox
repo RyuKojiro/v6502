@@ -31,6 +31,7 @@ subsections:
 		- \ref cpu_lifecycle
 		- \ref cpu_exec
 	- \ref mem.h
+		- \ref mem_boundaries
 		- \ref mem_lifecycle
 		- \ref mem_access
 

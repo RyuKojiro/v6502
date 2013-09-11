@@ -33,9 +33,6 @@
 
 #define kUnhandledInstructionErrorText				"Unhandled CPU Instruction"
 
-#define STACK_OFFSET								0x0100
-#define PROGRAM_START								0x0600
-
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
 
@@ -75,17 +72,9 @@ static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
 
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
 	uint8_t a = cpu->ac;
-	cpu->ac += operand;
+	cpu->ac += operand + ((cpu->sr & v6502_cpu_status_carry) ? 1 : 0);
 	FLAG_OVERFLOW_WITH_COMPARISON(a, operand, cpu->ac);
 	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
-	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
-}
-
-static void _executeInPlaceSBC(v6502_cpu *cpu, uint8_t operand) {
-	uint8_t a = cpu->ac;
-	cpu->ac += operand ^ BYTE_MAX;
-	FLAG_OVERFLOW_WITH_COMPARISON(a, operand ^ BYTE_MAX, cpu->ac);
-	FLAG_CARRY_WITH_COMPARISON(cpu->ac, (operand ^ BYTE_MAX));
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 }
 
@@ -335,7 +324,7 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 }
 
 void v6502_reset(v6502_cpu *cpu) {
-	cpu->pc = PROGRAM_START;
+	cpu->pc = v6502_memoryStartProgram;
 	cpu->ac = 0;
 	cpu->x  = 0;
 	cpu->y  = 0;
@@ -517,8 +506,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		
 		// Stack Instructions
 		case v6502_opcode_jsr: {
-			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->pc;			// Low byte first
-			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = (cpu->pc >> 8);	// High byte second
+			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = cpu->pc;			// Low byte first
+			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = (cpu->pc >> 8);	// High byte second
 			cpu->pc = BOTH_BYTES;
 			cpu->pc -= 3; // To compensate for post execution shift
 		} return;
@@ -526,22 +515,22 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			/** TODO: @todo Interrupts (RTI/RTS) */
 		} return;
 		case v6502_opcode_rts: {
-			cpu->pc = (cpu->memory->bytes[STACK_OFFSET + ++cpu->sp] << 8);
-			cpu->pc |= cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
+			cpu->pc = (cpu->memory->bytes[v6502_memoryStartStack + ++cpu->sp] << 8);
+			cpu->pc |= cpu->memory->bytes[v6502_memoryStartStack + ++cpu->sp];
 			cpu->pc += 2; // To compensate for post execution shift ( - 1 rts, + 3 jsr )
 		} return;
 		case v6502_opcode_pha: {
-			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->ac;
+			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = cpu->ac;
 		} return;
 		case v6502_opcode_pla: {
-			cpu->ac = cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
+			cpu->ac = cpu->memory->bytes[v6502_memoryStartStack + ++cpu->sp];
 			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_php: {
-			cpu->memory->bytes[STACK_OFFSET + cpu->sp--] = cpu->sr;
+			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = cpu->sr;
 		} return;
 		case v6502_opcode_plp: {
-			cpu->sr = cpu->memory->bytes[STACK_OFFSET + ++cpu->sp];
+			cpu->sr = cpu->memory->bytes[v6502_memoryStartStack + ++cpu->sp];
 		} return;
 
 		// ADC
@@ -729,7 +718,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sbc_absy:
 		case v6502_opcode_sbc_indx:
 		case v6502_opcode_sbc_indy:
-			_executeInPlaceSBC(cpu, *operand);
+			_executeInPlaceADC(cpu, *operand ^ BYTE_MAX);
 			return;
 
 		// STA

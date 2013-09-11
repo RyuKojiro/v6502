@@ -11,22 +11,9 @@
 #include "mem.h"
 
 // Error Text
-#define kUnableToMapMemoryErrorText		"Unable to map memory address"
-#define kMemoryStructErrorText			"Internal memory structure inconsitency"
-#define kMemoryBoundsErrorText			"Memory access out of bounds"
-
-// Memory Boundaries
-#define kMemoryStartWorkMemory			0x0000
-#define kMemoryStartPPURegisters		0x2000
-#define kMemoryStartAPURegisters		0x4000
-#define kMemoryStartExpansionRom		0x4020
-#define kMemoryStartSRAM				0x6000
-#define kMemoryStartPRGROM				0x8000
-#define kMemoryStartCeiling				0xFFFF
-
-// Memory Blob Sizes
-#define kMemorySizeWorkMemory			0x0800
-#define kMemorySizePPURegisters			0x0008
+#define v6502_unableToMapMemoryErrorTextv6502	"Unable to map memory address"
+#define v6502_memoryStructErrorText				"Internal memory structure inconsitency"
+#define v6502_memoryBoundsErrorText				"Memory access out of bounds"
 
 #pragma mark -
 #pragma mark Memory Lifecycle
@@ -40,57 +27,57 @@
 uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 	// Safety
 	if (!memory || !memory->bytes) {
-		v6502_mfault(kMemoryStructErrorText);
+		v6502_mfault(v6502_memoryStructErrorText);
 		return NULL;
 	}
 	if (offset > memory->size) {
-		v6502_mfault(kMemoryBoundsErrorText);
+		v6502_mfault(v6502_memoryBoundsErrorText);
 		return NULL;
 	}
 	
 	// Work memory, 0x07FF + 3 mirrors = 0x1FFF
-	if (offset < kMemoryStartPPURegisters) {
-		offset %= kMemorySizeWorkMemory;
+	if (offset < v6502_memoryStartPPURegisters) {
+		offset %= v6502_memorySizeWorkMemory;
 		
 		return &memory->bytes[offset];
 	}
 	
 	// PPU Registers
-	if (offset >= kMemoryStartPPURegisters && offset < kMemoryStartAPURegisters) {
-		offset %= kMemorySizePPURegisters;
-		offset += kMemoryStartPPURegisters;
+	if (offset >= v6502_memoryStartPPURegisters && offset < v6502_memoryStartAPURegisters) {
+		offset %= v6502_memorySizePPURegisters;
+		offset += v6502_memoryStartPPURegisters;
 		
 		return &memory->bytes[offset];
 	}
 
 	/** FIXME: @bug Everything past here, is it mapped or just in memory? */
 	// APU registers
-	if (offset >= kMemoryStartAPURegisters && offset < kMemoryStartExpansionRom) {
+	if (offset >= v6502_memoryStartAPURegisters && offset < v6502_memoryStartExpansionRom) {
 		return &memory->bytes[offset];
 	}
 
 	// Expansion ROM (Cartridge)
-	if (offset >= kMemoryStartExpansionRom && offset < kMemoryStartSRAM) {
+	if (offset >= v6502_memoryStartExpansionRom && offset < v6502_memoryStartSRAM) {
 		return &memory->bytes[offset];
 	}
 	
 	// SRAM
-	if (offset >= kMemoryStartSRAM && offset < kMemoryStartPRGROM) {
+	if (offset >= v6502_memoryStartSRAM && offset < v6502_memoryStartPRGROM) {
 		return &memory->bytes[offset];
 	}
 
 	// PRG ROM
-	if (offset >= kMemoryStartPRGROM && offset < kMemoryStartCeiling) {
+	if (offset >= v6502_memoryStartPRGROM && offset < v6502_memoryStartCeiling) {
 		return &memory->bytes[offset];
 	}
 	
-	v6502_mfault(kUnableToMapMemoryErrorText);
+	v6502_mfault(v6502_unableToMapMemoryErrorTextv6502);
 	return NULL;
 }
 
 void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size) {
 	for (uint16_t i = 0; i < size; i++) {
-		*v6502_map(memory, kMemoryStartExpansionRom + i) = rom[i];
+		*v6502_map(memory, v6502_memoryStartExpansionRom + i) = rom[i];
 	}
 }
 
@@ -129,9 +116,9 @@ void v6502_destroyMemory(v6502_memory *memory) {
 #pragma mark Signedness Management
 
 int8_t v6502_signedValueOfByte(uint8_t byte) {
-	if (byte & 0x80) {
-		return (0 - (BYTE_MAX - byte));
-	}
+//	if (byte & 0x80) {
+//		return (0 - (BYTE_MAX - byte));
+//	}
 	return byte;
 }
 
