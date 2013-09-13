@@ -17,7 +17,8 @@
 													cpu->sr |= (a & v6502_cpu_status_carry);
 #define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
-#define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr |= (a & v6502_cpu_status_negative);
+#define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr &= ~ v6502_cpu_status_negative; \
+													cpu->sr |= (a & v6502_cpu_status_negative)
 /** The first if statement checks if both operands' signs agree (since we are
  normalized to addition at this point.) If they do, then the output sign must
  also agree after calculation, or we have overflown; this is checked in the
