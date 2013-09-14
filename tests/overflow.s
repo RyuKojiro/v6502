@@ -1,3 +1,10 @@
+; Declare all variables
+.byte ERROR
+.byte S1
+.byte S2
+.byte U1
+.byte U2
+
 ; Demonstrate that the V flag works as described
 ;
 ; Returns with ERROR = 0 if the test passes, ERROR = 1 if the test fails
