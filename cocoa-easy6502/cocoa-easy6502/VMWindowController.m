@@ -84,18 +84,24 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	if (cpu->sr & v6502_cpu_status_break) {
 		return;
 	}
-	
-	// Update fields
-	[self update];
-	
-	// Refresh Video
-	[video setNeedsDisplay:YES];
-	
+			
 	if (!faulted) {
 		[self performSelector:_cmd withObject:nil afterDelay:0.0001f];
 	}
 	else {
 		[toggleButton setTitle:@"Run"];
+	}
+}
+
+- (void) refresh {
+	// Refresh Video
+	[video setNeedsDisplay:YES];
+	
+	// Update fields
+	[self update];
+
+	if (!faulted && !(cpu->sr & v6502_cpu_status_break)) {
+		[self performSelector:_cmd withObject:nil afterDelay:0.02f];
 	}
 }
 
@@ -114,6 +120,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 		[toggleButton setTitle:@"Halt"];
 		faulted = 0;
 		[self cycle];
+		[self refresh];
 	}
 	else {
 		[toggleButton setTitle:@"Run"];
@@ -123,6 +130,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 
 - (IBAction)step:(id)sender {
 	[self cycle];
+	[self refresh];
 }
 
 - (IBAction)dumpMemory:(id)sender {
