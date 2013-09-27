@@ -14,12 +14,6 @@
 #include "parser.h"
 #include "error.h"	// as6502_error
 
-/* v6502_opcodeForStringAndMode is a huge function with very repetetive behavior.
- * In order to alleviate a lot of linear calls to strncmp(), asmeq() was created.
- * Much faster than strncmp, slower than a jump table?
- */
-#define asmeq(a, b) ((a[0] == b[0] && a[1] == b[1] && a[2] == b[2]) ? YES : NO)
-
 #define kBadAddressModeErrorText		"Address mode '%s' invalid for operation '%s'"
 #define kInvalidOpcodeFormatText		"Invalid opcode '%s'"
 #define kUnknownSymbolErrorText			"Unknown symbol for operation '%s'"

@@ -24,6 +24,12 @@
 #define NO		0
 #endif
 
+/* v6502_opcodeForStringAndMode is a huge function with very repetetive behavior.
+ * In order to alleviate a lot of linear calls to strncmp(), asmeq() was created.
+ * Much faster than strncmp, slower than a jump table?
+ */
+#define asmeq(a, b) ((a[0] == b[0] && a[1] == b[1] && a[2] == b[2]) ? YES : NO)
+
 /** @defgroup parser_translit Instruction Transliteration */
 /**@{*/
 /** @brief Returns the v6502_opcode for a given instruction string at a specified v6502_address_mode */
