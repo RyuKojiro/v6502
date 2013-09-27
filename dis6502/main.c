@@ -80,6 +80,8 @@ static void disassembleFile(FILE *in, FILE *out) {
 			}
 			
 			as6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
+			as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
+			
 			fprintf(out, "\t%s\n", line);
 			currentLineNum++;
 		}
