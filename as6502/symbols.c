@@ -268,3 +268,44 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 		}
 	}	
 }
+
+int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, size_t len) {
+	line = trimhead(line, len);
+	
+	if (line[0] == 'b' || line[0] == 'B') {
+		if (!asmeq(line, "bit")) {
+			return (type == as6502_symbol_type_label);
+		}
+	}
+	
+	if (line[0] == 'j' || line[0] == 'J') {
+		return (type == as6502_symbol_type_label);
+	}
+	
+	// TODO: Variables
+	
+	return NO;
+}
+
+void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset) {
+	for (size_t cur = 0; line[cur] && cur < len; cur++) {
+		if (isspace(line[cur])) {
+			continue;
+		}
+		
+		uint16_t address = as6502_valueForString(NULL, line + cur);
+		as6502_symbol *symbol = as6502_symbolForAddress(table, address);
+		
+		if (symbol && _symbolTypeIsAppropriateForInstruction(symbol->type, line, len)) {
+			char buf[80];
+			
+			int x;
+			for (x = 0; line[cur + x] && !isspace(line[cur + x]); x++) {
+				buf[x] = line[cur + x];
+			}
+			buf[x + 1] = '\0';
+			
+			as6502_replaceSymbolInLineAtLocationWithText(line, len, line + cur, buf, symbol->name);
+		}
+	}
+}

@@ -72,8 +72,25 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 /**@{*/
 /** @brief Automatically detects symbols in a given line, then creates and inserts them into a given as6502_symbol_table */
 as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation);
-/** @brief Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses */
+
+/** @brief Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses
+	@param table The as6502_symbol_table to search
+	@param line The string to desymbolicate
+	@param len Useable length of the line in chars
+	@param pstart Program start address
+	@param offset Address of current line
+	@param caseSensitive Symbol search case sensitivity
+ */
 void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive);
+
+/** @brief Searches for addresses in a given line and replaces them with their symbols in a given symbol table
+	@param table The as6502_symbol_table to search
+	@param line The string to desymbolicate
+	@param len Useable length of the line in chars
+	@param pstart Program start address
+	@param offset Address of current line
+ */
+void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset);
 /**@}*/
 
 /** @defgroup sym_rep Symbol Replacement */
