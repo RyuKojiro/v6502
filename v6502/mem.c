@@ -41,11 +41,17 @@
 uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 	// Safety
 	if (!memory || !memory->bytes) {
-		v6502_mfault(v6502_memoryStructErrorText);
+		if (memory && memory->fault_callback) {
+			memory->fault_callback(memory->fault_context, v6502_memoryStructErrorText);
+		}
+		
 		return NULL;
 	}
 	if (offset > memory->size) {
-		v6502_mfault(v6502_memoryBoundsErrorText);
+		if (memory && memory->fault_callback) {
+			memory->fault_callback(memory->fault_context, v6502_memoryBoundsErrorText);
+		}
+		
 		return NULL;
 	}
 	
@@ -85,7 +91,10 @@ uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 		return &memory->bytes[offset];
 	}
 	
-	v6502_mfault(v6502_unableToMapMemoryErrorTextv6502);
+	if (memory && memory->fault_callback) {
+		memory->fault_callback(memory->fault_context, v6502_unableToMapMemoryErrorTextv6502);
+	}
+
 	return NULL;
 }
 

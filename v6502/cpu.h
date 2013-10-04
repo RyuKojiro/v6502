@@ -26,9 +26,6 @@
 #ifndef v6502_cpu_h
 #define v6502_cpu_h
 
-// Use this to work headless, ignoring faults
-//#define v6502_fault	(void)
-
 #include <stdint.h>
 
 #include "mem.h"
@@ -315,10 +312,6 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
 void v6502_step(v6502_cpu *cpu);
 /** @brief Hardware reset a v6502_cpu */
 void v6502_reset(v6502_cpu *cpu);
-/** @brief Raise an exception on a v6502_cpu */
-#define v6502_fault(a)	if (cpu->fault_callback) { \
-							cpu->fault_callback(cpu->fault_context, a); \
-						}
 /**@}*/
 
 #endif

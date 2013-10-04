@@ -46,7 +46,7 @@
 #define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
 													FLAG_ZERO_WITH_RESULT(a);
 
-#define kUnhandledInstructionErrorText				"Unhandled CPU Instruction"
+#define v6502_unhandledInstructionErrorText				"Unhandled CPU Instruction"
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
@@ -763,7 +763,9 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			
 		// Failure
 		default: {
-			v6502_fault(kUnhandledInstructionErrorText);
+			if (cpu->fault_callback) {
+				cpu->fault_callback(cpu->fault_context, v6502_unhandledInstructionErrorText);
+			}
 		} return;
 	}
 }
