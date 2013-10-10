@@ -6,7 +6,15 @@
 The v6502 infrastructure currently consists of two major sections, and their API
 subsections:
 
-- \subpage as (as6502)
+- \subpage vm (v6502)
+	- \ref cpu.h
+		- \ref cpu_lifecycle
+		- \ref cpu_exec
+	- \ref mem.h
+		- \ref mem_boundaries
+		- \ref mem_lifecycle
+		- \ref mem_access
+- \subpage as (as6502 / dis6502)
 	- \ref parser.h
 		- \ref parser_translit
 		- \ref parser_line
@@ -28,19 +36,13 @@ subsections:
 		- \ref obj_mutate
 	- \ref reverse.h
 		- \ref rev
-- \subpage vm (v6502)
-	- \ref cpu.h
-		- \ref cpu_lifecycle
-		- \ref cpu_exec
-	- \ref mem.h
-		- \ref mem_boundaries
-		- \ref mem_lifecycle
-		- \ref mem_access
+	- \ref flat.h
+	- \ref aout.h
 
 \section License
 
-The entire infrastructure is under the extremely permisssive MIT license. The
-exact license is as follows:
+The entire v6502 infrastructure is distributed under the MIT license. The exact
+license is as follows:
 
 \verbatim
 Copyright (c) 2013 Daniel Loffgren
@@ -64,7 +66,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 \endverbatim
 
-\page as Assembler
+\page as Assembler / Disassembler
 \section usage Arguments and Usage
 
 usage: as6502 [-STWw] [-F \a format] [\a file ...]
