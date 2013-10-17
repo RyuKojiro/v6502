@@ -302,24 +302,28 @@ int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, 
 }
 
 void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset) {
-	for (size_t cur = 0; line[cur] && cur < len; cur++) {
-		if (isspace(line[cur])) {
-			continue;
-		}
+	// Iterate through tokens
+	for (char *cur = line; *cur && ((size_t)(cur - line) < len); cur = (trimheadtospc(cur, len - (cur - line)) + 1)) {
 		
-		uint16_t address = as6502_valueForString(NULL, line + cur);
+		int wide;
+		uint16_t address = as6502_valueForString(&wide, cur);
 		as6502_symbol *symbol = as6502_symbolForAddress(table, address);
+		
+		// If we couldn't find one at that address, try a pstart offset symbol.
+		if (!symbol && wide) {
+			symbol = as6502_symbolForAddress(table, address - pstart);
+		}
 		
 		if (symbol && _symbolTypeIsAppropriateForInstruction(symbol->type, line, len)) {
 			char buf[80];
 			
 			int x;
-			for (x = 0; line[cur + x] && !isspace(line[cur + x]); x++) {
-				buf[x] = line[cur + x];
+			for (x = 0; cur[x] && !isspace(cur[x]); x++) {
+				buf[x] = cur[x];
 			}
 			buf[x + 1] = '\0';
 			
-			as6502_replaceSymbolInLineAtLocationWithText(line, len, line + cur, buf, symbol->name);
+			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, buf, symbol->name);
 		}
 	}
 }
