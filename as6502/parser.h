@@ -72,7 +72,7 @@ int as6502_instructionLengthForAddressMode(v6502_address_mode mode);
 void as6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len);
 /**@}*/
 
-/** @defgroup parser_help Parsing assistance */
+/** @defgroup parser_help Parsing Assistance */
 /**@{*/
 /** @brief Tests a single character for the possibility of being a hex/oct/dec digit */
 int as6502_isDigit(char c);

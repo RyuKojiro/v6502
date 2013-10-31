@@ -33,7 +33,7 @@
 
 // Memory Starts
 /** @brief Start of work memory available for general program use */
-#define v6502_memoryStartWorv6502_memory	0x0000
+#define v6502_memoryStartWorkMemory			0x0000
 /** @brief Start of memory reserved for CPU stack */
 #define v6502_memoryStartStack				0x0100
 /** @brief Start of program code memory region */
