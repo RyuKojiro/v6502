@@ -909,7 +909,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 	for(size_t i = 0; line[i] && i <= len; i++){
 		if (!isspace(CTYPE_CAST line[i]) || charEncountered) {
 			charEncountered = YES;
-			string[o++] = tolower(line[i]);
+			string[o++] = tolower(CTYPE_CAST line[i]);
 		}
 	}
 	string[o] = '\0';
