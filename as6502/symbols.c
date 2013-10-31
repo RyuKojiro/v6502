@@ -261,7 +261,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 
 		// Swap in address
 		if (cur) {
-			if (!isspace(cur[-1])) {
+			if (!isspace(CTYPE_CAST cur[-1])) {
 				// Partial symbol match @todo Double check this logic
 				continue;
 			}
@@ -318,7 +318,7 @@ void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, 
 			char buf[80];
 			
 			int x;
-			for (x = 0; cur[x] && !isspace(cur[x]); x++) {
+			for (x = 0; cur[x] && !isspace(CTYPE_CAST cur[x]); x++) {
 				buf[x] = cur[x];
 			}
 			buf[x + 1] = '\0';

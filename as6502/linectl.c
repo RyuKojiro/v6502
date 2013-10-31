@@ -30,7 +30,7 @@
 
 void trimtaild(char *str) {
 	char *cur = str + strlen(str) - 1;
-	while(cur > str && isspace(*cur)) {
+	while(cur > str && isspace(CTYPE_CAST *cur)) {
 		cur--;
 	}
 	
@@ -51,7 +51,7 @@ void trimtailchard(char *str, char token) {
 
 void trimgreedytaild(char *str) {
 	while (*str) {
-		if (isspace(*str)) {
+		if (isspace(CTYPE_CAST *str)) {
 			*str = '\0';
 			return;
 		}
@@ -73,7 +73,7 @@ void trimgreedytailchard(char *str, char token) {
 
 char *trimhead(const char *str, size_t len) {
 	char *newstr = str;
-	while (*newstr && isspace(*newstr) && (newstr < str + len)) {
+	while (*newstr && isspace(CTYPE_CAST *newstr) && (newstr < str + len)) {
 		newstr++;
 	}
 	
@@ -93,7 +93,7 @@ char *trimheadchar(char *str, char token, size_t len) {
 char *trimheadtospc(const char *str, size_t len) {
 	char *newstr = str;
 
-	while (*newstr && !isspace(*newstr) && (newstr < str + len)) {
+	while (*newstr && !isspace(CTYPE_CAST *newstr) && (newstr < str + len)) {
 		newstr++;
 	}
 	
@@ -102,7 +102,7 @@ char *trimheadtospc(const char *str, size_t len) {
 
 char *rev_strnspc(const char *stop, const char *start) {
 	for (/* start */; start > stop; start--) {
-		if (isspace(*start)) {
+		if (isspace(CTYPE_CAST *start)) {
 			return start;
 		}
 	}

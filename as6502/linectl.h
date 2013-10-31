@@ -28,6 +28,9 @@
 
 #include <sys/types.h>
 
+/** @brief <ctype.h> functions all expect int sized chars */
+#define CTYPE_CAST	(int)
+
 /** @defgroup linectl String Manipulation Functions */
 /**@{*/
 /** @brief Destructively trim trailing whitespace with NUL */

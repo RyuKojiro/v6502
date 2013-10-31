@@ -628,7 +628,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 
 static int _valueLengthInChars(const char *string) {
 	int i;
-	for (i = 0; string[i] && (isdigit(string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
+	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
 	
 	return i;
 }
@@ -644,7 +644,7 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 	// Remove all whitespace, #'s, *'s, high ascii, and parenthesis, also, truncate at comma
 	int i = 0;
 	for (const char *cur = string; *cur; cur++) {
-		if (!isspace(*cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')' && *cur < 0x7F && *cur != ';') {
+		if (!isspace(CTYPE_CAST *cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')' && *cur < 0x7F && *cur != ';') {
 			workString[i++] = *cur;
 		}
 		if (*cur == ',') {
@@ -727,7 +727,7 @@ static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode,
 
 static int _isEndOfString(const char *c) {
 	for (/* c */; *c; c++) {
-		if (!isspace(*c)) {
+		if (!isspace(CTYPE_CAST *c)) {
 			return NO;
 		}
 	}
@@ -798,7 +798,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 	}
 
 	// Skip opcode and whitespace to find first argument
-	for (cur = string + 3; isspace(*cur); cur++) {
+	for (cur = string + 3; isspace(CTYPE_CAST *cur); cur++) {
 		if (*cur == '\0' || *cur == ';') {
 			return v6502_address_mode_implied;
 		}
@@ -808,7 +808,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 	switch (*cur) {
 		case 'A':
 		case 'a': { // Accumulator (normalized)
-			if (isalnum(*(cur + 1))) {
+			if (isalnum(CTYPE_CAST *(cur + 1))) {
 				// For symbols, check to see if it is a branch instruction, if so, relative, if not, absolute
 				if (_isBranchInstruction(string)) {
 					return v6502_address_mode_relative;
@@ -907,7 +907,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 	int o = 0;
 	int charEncountered = NO;
 	for(size_t i = 0; line[i] && i <= len; i++){
-		if (!isspace( line[i]) || charEncountered) {
+		if (!isspace(CTYPE_CAST line[i]) || charEncountered) {
 			charEncountered = YES;
 			string[o++] = tolower(line[i]);
 		}
