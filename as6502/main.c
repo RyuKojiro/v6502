@@ -36,7 +36,7 @@
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
 
-#define kBadLiteralValueErrorText		"Invalid literal value or unresolved/undefined symbol '%s'"
+#define v6502_BadLiteralValueErrorText		"Invalid literal value or unresolved/undefined symbol '%s'"
 
 typedef enum {
 	as6502_outputFormat_FlatFile
@@ -77,7 +77,7 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 	v6502_address_mode mode;
 
 	if (line[3] && !isValidLiteral(line + 4, len - 4)) {
-		as6502_error(kBadLiteralValueErrorText, line + 4);
+		as6502_error(v6502_BadLiteralValueErrorText, line + 4);
 		/** TODO: @todo Should this short circuit the rest of the assembly for this line? */
 	}
 	

@@ -28,17 +28,17 @@
 #include "parser.h"
 #include "error.h"	// as6502_error
 
-#define kBadAddressModeErrorText		"Address mode '%s' invalid for operation '%s'"
-#define kInvalidOpcodeFormatText		"Invalid opcode '%s'"
-#define kUnknownSymbolErrorText			"Unknown symbol for operation '%s'"
-#define kAddressModeNullStringErrorText	"Cannot determine address mode for null string"
-#define kLineMallocErrorText			"Could not allocate work buffer for line"
+#define v6502_BadAddressModeErrorText			"Address mode '%s' invalid for operation '%s'"
+#define v6502_InvalidOpcodeFormatText			"Invalid opcode '%s'"
+#define v6502_UnknownSymbolErrorText			"Unknown symbol for operation '%s'"
+#define v6502_AddressModeNullStringErrorText	"Cannot determine address mode for null string"
+#define v6502_LineMallocErrorText				"Could not allocate work buffer for line"
 
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char m[12];
 	
 	as6502_stringForAddressMode(m, mode);
-	as6502_error(kBadAddressModeErrorText, m, op);
+	as6502_error(v6502_BadAddressModeErrorText, m, op);
 
 	return v6502_opcode_nop;
 }
@@ -96,7 +96,7 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 
 v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
 	if (strlen(string) < 3) {
-		as6502_error(kInvalidOpcodeFormatText, string);
+		as6502_error(v6502_InvalidOpcodeFormatText, string);
 		return v6502_opcode_nop;
 	}
 	
@@ -250,7 +250,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 	
 	// If it's an unresolved symbol, might as well not go any further
 	if (mode == v6502_address_mode_symbol) {
-		as6502_error(kUnknownSymbolErrorText, string);
+		as6502_error(v6502_UnknownSymbolErrorText, string);
 		return v6502_opcode_nop;
 	}
 	
@@ -622,7 +622,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 		}
 	}
 
-	as6502_error(kInvalidOpcodeFormatText, string);
+	as6502_error(v6502_InvalidOpcodeFormatText, string);
 	return v6502_opcode_nop;
 }
 
@@ -786,7 +786,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 	int wide;
 
 	if (!string) {
-		as6502_error(kAddressModeNullStringErrorText);
+		as6502_error(v6502_AddressModeNullStringErrorText);
 		return v6502_address_mode_unknown;
 	}
 	
@@ -888,7 +888,7 @@ int as6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len) {
 	char *string = malloc(len + 1); // Malloc an extra char in case the passed in len does not include a null
 	if (!string) {
-		as6502_error(kLineMallocErrorText);
+		as6502_error(v6502_LineMallocErrorText);
 		return;
 	}
 	
