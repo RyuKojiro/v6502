@@ -26,10 +26,12 @@
 #ifndef ld6502_ines_h
 #define ld6502_ines_h
 
-struct ines_properties {
-	//<#instance variables#>
-};
+#include "object.h"
 
-void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom);
+typedef struct {
+	int x;
+} ines_properties;
+
+void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties props);
 
 #endif

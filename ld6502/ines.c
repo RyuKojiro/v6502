@@ -21,23 +21,34 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
-#include "object.h"
+#include "ines.h"
 
-#define ines_magic				"NES\x1A"
-#define ines_magicLength		4
-#define ines_prgRomUnits		16384
-#define ines_chrRomUnits		8192
-#define ines_headerDataLength	12
+#define ines_16kUnits					16384
+#define ines_8kUnits					8192
 
-void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom) {
+#define ines_magic						"NES\x1A"
+#define ines_magicLength				4
+#define ines_headerDataLength			16
+#define ines_headerPrgRomSizeField16	4
+#define ines_headerChrRomSizeField		5
+#define ines_headerPrgRomSizeField8		8
+#define ines_headerZeroPaddingStart		11
+
+void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties props) {
 	// Write Header
 	char headerData[ines_headerDataLength];
 	
-	headerData[0] = prg_rom->len / ines_prgRomUnits;
-	headerData[1] = chr_rom->len / ines_chrRomUnits;
+	snprintf(headerData, ines_magicLength, ines_magic);
+	headerData[ines_headerPrgRomSizeField16] = prg_rom->len / ines_16kUnits;
+	headerData[ines_headerChrRomSizeField] = chr_rom->len / ines_8kUnits;
+	headerData[/* flags */ 6] = 0;
+	headerData[/* flags */ 7] = 0;
+	headerData[ines_headerPrgRomSizeField8] = prg_rom->len / ines_8kUnits;
+	headerData[/* flags */ 9] = 0;
+	headerData[/* flags */ 10] = 0;
+	bzero(headerData + ines_headerZeroPaddingStart, ines_headerDataLength - ines_headerZeroPaddingStart);
 	
-	
-	fwrite(ines_magic, ines_magicLength, 1, outfile);
 	fwrite(headerData, ines_headerDataLength, 1, outfile);
 }
