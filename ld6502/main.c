@@ -21,6 +21,8 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 
 #include "object.h"
 #include "error.h"
@@ -30,7 +32,11 @@
 
 #define MAX_FILENAME_LEN	255
 
-static void link(FILE *outfile, int numFiles, char * const files[]) {
+typedef enum {
+	ld6502_outputFormat_iNES
+} ld6502_outputFormat;
+
+static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const files[]) {
 	as6502_object *linkResult = as6502_createObject();
 	
 	// Read in a flat file as the only object
@@ -41,7 +47,7 @@ static void link(FILE *outfile, int numFiles, char * const files[]) {
 	// Create the property struct
 	ines_properties props;
 	
-	writeToINES(outfile, linkResult->blobs, NULL, &props);
+	writeToINES(outFile, linkResult->blobs, NULL, &props);
 	as6502_destroyObject(linkResult);
 }
 
@@ -50,12 +56,45 @@ static void usage() {
 }
 
 int main(int argc, char * const argv[]) {
-	const char *outName = "NEED GETOPTS";
+	ld6502_outputFormat format = ld6502_outputFormat_iNES;
+	char outName[MAX_FILENAME_LEN] = "out.nes";
+	char chrName[MAX_FILENAME_LEN] = "";
+	
+	int ch;
+	while ((ch = getopt(argc, argv, "o:C:F:")) != -1) {
+		switch (ch) {
+			case 'F': {
+				if (!strncmp(optarg, "ines", 4)) {
+					format = ld6502_outputFormat_iNES;
+				}
+			} break;
+			case 'o': {
+				strncpy(outName, optarg, MAX_FILENAME_LEN);
+			} break;
+			case 'C': {
+				strncpy(chrName, optarg, MAX_FILENAME_LEN);
+			} break;
+			case '?':
+			default:
+				usage();
+				return 0;
+		}
+	}
+	
+	argc -= optind;
+	argv += optind;
 	
 	FILE *out;
+	FILE *chrFile = NULL;
 	out = fopen(outName, "w");
 	currentFileName = outName;
-	link(out, argc, argv);
+
+	if (*chrName) {
+		chrFile = fopen(chrName, "r");
+	}
+	
+	linkObjects(out, chrFile, argc, argv);
+	fclose(chrFile);
 	fclose(out);
 }
 
