@@ -44,10 +44,15 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 	as6502_readObjectFromFlatFile(linkResult, flatFile);
 	fclose(flatFile);
 	
+	as6502_object *chrRom = NULL;
+	if (chrFile) {
+		as6502_readObjectFromFlatFile(chrRom, chrFile);
+	}
+	
 	// Create the property struct
 	ines_properties props;
 	
-	writeToINES(outFile, linkResult->blobs, NULL, &props);
+	writeToINES(outFile, &linkResult->blobs[0], &chrRom->blobs[0], &props);
 	as6502_destroyObject(linkResult);
 }
 
