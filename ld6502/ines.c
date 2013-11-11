@@ -36,10 +36,9 @@
 #define ines_headerPrgRomSizeField8		8
 #define ines_headerZeroPaddingStart		11
 
-void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties props) {
-	// Write Header
+void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props) {
+	// Create Header
 	char headerData[ines_headerDataLength];
-	
 	snprintf(headerData, ines_magicLength, ines_magic);
 	headerData[ines_headerPrgRomSizeField16] = prg_rom->len / ines_16kUnits;
 	headerData[ines_headerChrRomSizeField] = chr_rom->len / ines_8kUnits;
@@ -50,5 +49,12 @@ void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob 
 	headerData[/* flags */ 10] = 0;
 	bzero(headerData + ines_headerZeroPaddingStart, ines_headerDataLength - ines_headerZeroPaddingStart);
 	
+	// Write header
 	fwrite(headerData, ines_headerDataLength, 1, outfile);
+	
+	// Write PRG ROM
+	fwrite(prg_rom->data, prg_rom->len, 1, outfile);
+
+	// Write CHR ROM
+	fwrite(chr_rom->data, chr_rom->len, 1, outfile);
 }

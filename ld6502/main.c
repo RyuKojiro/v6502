@@ -22,11 +22,40 @@
 
 #include <stdio.h>
 
-int main(int argc, const char * argv[])
-{
+#include "object.h"
+#include "error.h"
+#include "flat.h"
+#include "symbols.h"
+#include "ines.h"
 
-	// insert code here...
-	printf("Hello, World!\n");
-    return 0;
+#define MAX_FILENAME_LEN	255
+
+static void link(FILE *outfile, int numFiles, char * const files[]) {
+	as6502_object *linkResult = as6502_createObject();
+	
+	// Read in a flat file as the only object
+	FILE *flatFile = fopen(files[numFiles - 1], "r");
+	as6502_readObjectFromFlatFile(linkResult, flatFile);
+	fclose(flatFile);
+	
+	// Create the property struct
+	ines_properties props;
+	
+	writeToINES(outfile, linkResult->blobs, NULL, &props);
+	as6502_destroyObject(linkResult);
+}
+
+static void usage() {
+	fprintf(stderr, "usage: ld6502 [-o out_file] [-F format] [-C chr_rom] [file ...]\n");
+}
+
+int main(int argc, char * const argv[]) {
+	const char *outName = "NEED GETOPTS";
+	
+	FILE *out;
+	out = fopen(outName, "w");
+	currentFileName = outName;
+	link(out, argc, argv);
+	fclose(out);
 }
 

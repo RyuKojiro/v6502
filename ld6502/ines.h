@@ -32,6 +32,6 @@ typedef struct {
 	int x;
 } ines_properties;
 
-void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties props);
+void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props);
 
 #endif
