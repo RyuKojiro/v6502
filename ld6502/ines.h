@@ -32,6 +32,10 @@ typedef struct {
 	int x;
 } ines_properties;
 
+/** @brief Take fully linked single flat as6502_object_blob of program code, a as6502_object_blob of the CHR ROM, and a struct of iNES ROM-specific ines_properties, and create an iNES ROM using them. */
 void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props);
+
+/** @brief Load an iNES ROM in, populate an ines_properties struct using the header data, and split the ROM into it's PRG and CHR ROMs. */
+void readFromINES(FILE *infile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props);
 
 #endif
