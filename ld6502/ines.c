@@ -25,6 +25,7 @@
 #include <stdlib.h>
 
 #include "ines.h"
+#include "parser.h"
 
 #define ines_16kUnits					16384
 #define ines_8kUnits					8192
@@ -36,6 +37,18 @@
 #define ines_headerChrRomSizeField8		5
 #define ines_headerPrgRomSizeField8		8
 #define ines_headerZeroPaddingStart		11
+
+int fileIsINES(FILE *infile) {
+	// Read Magic
+	char magic[ines_magicLength];
+	fread(magic, ines_magicLength, 1, infile);
+	
+	if (!strncmp(magic, ines_magic, ines_magicLength)) {
+		return YES;
+	}
+	
+	return NO;
+}
 
 void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props) {
 	// Create Header
@@ -65,15 +78,24 @@ void readFromINES(FILE *infile, as6502_object_blob *prg_rom, as6502_object_blob 
 	char headerData[ines_headerDataLength];
 	fread(headerData, ines_headerDataLength, 1, infile);
 	
-	// Read PRG ROM
-	prg_rom->len = headerData[ines_headerPrgRomSizeField8] * ines_8kUnits;
-	prg_rom->data = realloc(prg_rom->data, prg_rom->len);
-	fread(prg_rom->data, prg_rom->len, 1, infile);
+	if (prg_rom) {
+		// Read PRG ROM
+		if (headerData[ines_headerPrgRomSizeField8]) {
+			prg_rom->len = headerData[ines_headerPrgRomSizeField8] * ines_8kUnits;
+		}
+		else {
+			prg_rom->len = headerData[ines_headerPrgRomSizeField16] * ines_16kUnits;
+		}
+		
+		prg_rom->data = realloc(prg_rom->data, prg_rom->len);
+		fread(prg_rom->data, prg_rom->len, 1, infile);
+	}
 
-	// Read CHR ROM
-	chr_rom->len = headerData[ines_headerChrRomSizeField8] * ines_8kUnits;
-	chr_rom->data = realloc(chr_rom->data, chr_rom->len);
-	fread(chr_rom->data, chr_rom->len, 1, infile);
-
+	if (chr_rom) {
+		// Read CHR ROM
+		chr_rom->len = headerData[ines_headerChrRomSizeField8] * ines_8kUnits;
+		chr_rom->data = realloc(chr_rom->data, chr_rom->len);
+		fread(chr_rom->data, chr_rom->len, 1, infile);
+	}
 }
 
