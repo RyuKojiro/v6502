@@ -77,22 +77,26 @@ void readFromINES(FILE *infile, as6502_object_blob *prg_rom, as6502_object_blob 
 	// Read Header
 	char headerData[ines_headerDataLength];
 	fread(headerData, ines_headerDataLength, 1, infile);
+	uint16_t prgRomSize;
+	
+	// Try for 8k precision, if older format fallback to 16k
+	if (headerData[ines_headerPrgRomSizeField8]) {
+		prgRomSize = headerData[ines_headerPrgRomSizeField8] * ines_8kUnits;
+	}
+	else {
+		prgRomSize = headerData[ines_headerPrgRomSizeField16] * ines_16kUnits;
+	}
 	
 	if (prg_rom) {
 		// Read PRG ROM
-		if (headerData[ines_headerPrgRomSizeField8]) {
-			prg_rom->len = headerData[ines_headerPrgRomSizeField8] * ines_8kUnits;
-		}
-		else {
-			prg_rom->len = headerData[ines_headerPrgRomSizeField16] * ines_16kUnits;
-		}
-		
-		prg_rom->data = realloc(prg_rom->data, prg_rom->len);
-		fread(prg_rom->data, prg_rom->len, 1, infile);
+		prg_rom->len = prgRomSize;
+		prg_rom->data = realloc(prg_rom->data, prgRomSize);
+		fread(prg_rom->data, prgRomSize, 1, infile);
 	}
 
 	if (chr_rom) {
 		// Read CHR ROM
+		fseek(infile, prgRomSize, SEEK_SET); // If we didn't load PRG, or over-ran
 		chr_rom->len = headerData[ines_headerChrRomSizeField8] * ines_8kUnits;
 		chr_rom->data = realloc(chr_rom->data, chr_rom->len);
 		fread(chr_rom->data, chr_rom->len, 1, infile);
