@@ -21,16 +21,25 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 
 #include "object.h"
 #include "error.h"
-#include "flat.h"
 #include "reverse.h"
 #include "symbols.h"
+
+#include "flat.h"
+#include "ines.h"
 
 #define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80
 #define MAX_SYM_LEN			25
+
+typedef enum {
+	dis6502_inputFormat_None = 0,
+	dis6502_inputFormat_iNES,
+	dis6502_inputFormat_FlatFile
+} dis6502_inputFormat;
 
 static int _isBranchOpcode(v6502_opcode opcode) {
 	switch (opcode) {
@@ -51,14 +60,38 @@ static int _isBranchOpcode(v6502_opcode opcode) {
 	}
 }
 
-static void disassembleFile(FILE *in, FILE *out) {
+static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 	char line[MAX_LINE_LEN];
 	char symbolName[MAX_SYM_LEN];
 	int currentLabel = 1;
 	uint16_t address;
 	
 	as6502_object *obj = as6502_createObject();
-	as6502_readObjectFromFlatFile(obj, in);
+	
+	// Try to detect the file format if none is specified
+	if (format == dis6502_inputFormat_None && fileIsINES(in)) {
+		format = dis6502_inputFormat_iNES;
+	}
+	rewind(in);
+
+	// Give up and take it in flat
+	if (format == dis6502_inputFormat_None) {
+		format = dis6502_inputFormat_FlatFile;
+	}
+	
+	// Import object data
+	switch (format) {
+		case dis6502_inputFormat_FlatFile: {
+			as6502_readObjectFromFlatFile(obj, in);
+		} break;
+		case dis6502_inputFormat_iNES: {
+			as6502_addBlobToObject(obj, 0);
+			readFromINES(in, &obj->blobs[0], NULL, NULL);
+		} break;
+		case dis6502_inputFormat_None:
+			// Something has gone horribly wrong.
+			return;
+	}
 	
 	as6502_symbol_table *table = as6502_createSymbolTable();
 	
@@ -104,31 +137,47 @@ static void disassembleFile(FILE *in, FILE *out) {
 	as6502_destroyObject(obj);
 }
 
-static void outNameFromInName(char *out, int len, const char *in) {
-	int c;
-	for (c = 0; c < len && in[c] && in[c] != '.'; c++) {
-		out[c] = in[c];
-	}
-	out[c] = '.';
-	out[++c] = 's';
-	out[++c] = '\0';
-}
-
 static void usage() {
-	fprintf(stderr, "usage: dis6502 [file ...]\n");
+	fprintf(stderr, "usage: dis6502 [-o out_file] [-F format] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
 	FILE *in;
-	FILE *out;
-	char outName[MAX_FILENAME_LEN];
+	FILE *out = stdout;
+	dis6502_inputFormat format = dis6502_inputFormat_None;
+	char outName[MAX_FILENAME_LEN] = "";
 	
-	for (int i = 1; i < argc; i++) {
+	int ch;
+	while ((ch = getopt(argc, argv, "o:F:")) != -1) {
+		switch (ch) {
+			case 'F': {
+				if (!strncmp(optarg, "ines", 4)) {
+					format = dis6502_inputFormat_iNES;
+				}
+				if (!strncmp(optarg, "flat", 4)) {
+					format = dis6502_inputFormat_FlatFile;
+				}
+			} break;
+			case 'o': {
+				strncpy(outName, optarg, MAX_FILENAME_LEN);
+			} break;
+			case '?':
+			default:
+				usage();
+				return 0;
+		}
+	}
+	
+	argc -= optind;
+	argv += optind;
+	
+	for (int i = 0; i < argc; i++) {
 		in = fopen(argv[i], "r");
 		currentFileName = argv[i];
-		outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
-		out = fopen(outName, "w");
-		disassembleFile(in, out);
+		if (*outName) {
+			out = fopen(outName, "w");
+		}
+		disassembleFile(in, out, format);
 		fclose(in);
 		fclose(out);
 	}
