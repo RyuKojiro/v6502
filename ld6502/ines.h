@@ -28,8 +28,16 @@
 
 #include "object.h"
 
+/** @brief An enum to denote possible NES video modes */
+typedef enum {
+	ines_videoMode_NTSC,
+	ines_videoMode_PAL
+}ines_videoMode;
+
+/** @brief All of the properties that get compiled into the four flag bytes in an iNES header */
 typedef struct {
-	int x;
+	/** @brief NTSC/PAL */
+	ines_videoMode videoMode;
 } ines_properties;
 
 /** @brief Tests the first four bytes of a file to see if it is has iNES magic. This function will not rewind, just in case the caller wants to start at something other than the beginning, or if given a stream that cannot be rewound. */
