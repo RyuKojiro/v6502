@@ -67,7 +67,7 @@ static void disassembleFile(FILE *in, FILE *out) {
 
 		// Build Symbol Table
 		currentLineNum = 0;
-		for (uint8_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
+		for (uint16_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
 			v6502_opcode opcode = blob->data[offset];
 			if (_isBranchOpcode(opcode)) {				
 				if (opcode == v6502_opcode_jmp_abs || opcode == v6502_opcode_jmp_ind || opcode == v6502_opcode_jsr) {
@@ -87,7 +87,7 @@ static void disassembleFile(FILE *in, FILE *out) {
 
 		// Disassemble
 		currentLineNum = 0;
-		for (uint8_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
+		for (uint16_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
 			as6502_symbol *label = as6502_symbolForAddress(table, offset);
 			if (label) {
 				fprintf(out, "%s:\n", label->name);
