@@ -1,4 +1,4 @@
-/** @brief iNES File Format Generator */
+/** @brief iNES file transformer */
 /** @file ines.h */
 
 /*
