@@ -161,7 +161,7 @@ possible, while still exposing powerful access to the assembly process.
 \section debug Debugging
 
 Debug output logging has been added to allow printing of the assembly process,
-as it happens, the outlook is column oriented and can be seen below. Comment
+as it happens, the output is column oriented and can be seen below. Comment
 lines, or lines that contain no code or labels, are not printed. The column
 headers have been added for clarity, and the middle 170 lines omitted for brevity.
 
