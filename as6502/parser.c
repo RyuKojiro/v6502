@@ -755,7 +755,7 @@ int as6502_isNumber(const char *c) {
 	return NO;
 }
 
-int _isBranchInstruction(const char *string) {
+int as6502_isBranchInstruction(const char *string) {
 	if (string[0] == 'b' || string[0] == 'B') {
 		if (!asmeq(string, "bit")) {
 			return YES;
@@ -810,7 +810,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 		case 'a': { // Accumulator (normalized)
 			if (isalnum(CTYPE_CAST *(cur + 1))) {
 				// For symbols, check to see if it is a branch instruction, if so, relative, if not, absolute
-				if (_isBranchInstruction(string)) {
+				if (as6502_isBranchInstruction(string)) {
 					return v6502_address_mode_relative;
 				}
 				else {
@@ -843,7 +843,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 					}
 					else {
 						if (!as6502_isNumber(cur)) {
-							if (_isBranchInstruction(string)) {
+							if (as6502_isBranchInstruction(string)) {
 								return v6502_address_mode_relative;
 							}
 							else {

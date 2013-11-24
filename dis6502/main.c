@@ -41,25 +41,6 @@ typedef enum {
 	dis6502_inputFormat_FlatFile
 } dis6502_inputFormat;
 
-static int _isBranchOpcode(v6502_opcode opcode) {
-	switch (opcode) {
-		case v6502_opcode_bcc:
-		case v6502_opcode_bcs:
-		case v6502_opcode_beq:
-		case v6502_opcode_bmi:
-		case v6502_opcode_bne:
-		case v6502_opcode_bpl:
-		case v6502_opcode_bvc:
-		case v6502_opcode_bvs:
-		case v6502_opcode_jmp_abs:
-		case v6502_opcode_jmp_ind:
-		case v6502_opcode_jsr:
-			return YES;
-		default:
-			return NO;
-	}
-}
-
 static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 	char line[MAX_LINE_LEN];
 	char symbolName[MAX_SYM_LEN];
@@ -102,7 +83,7 @@ static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 		currentLineNum = 0;
 		for (uint16_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
 			v6502_opcode opcode = blob->data[offset];
-			if (_isBranchOpcode(opcode)) {				
+			if (dis6502_isBranchOpcode(opcode)) {
 				if (opcode == v6502_opcode_jmp_abs || opcode == v6502_opcode_jmp_ind || opcode == v6502_opcode_jsr) {
 					address = (blob->data[offset + 2] << 8 | blob->data[offset + 1]) - v6502_memoryStartProgram;
 				}
@@ -126,7 +107,7 @@ static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 				fprintf(out, "%s:\n", label->name);
 			}
 			
-			as6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
+			dis6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
 			as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
 			
 			fprintf(out, "\t%s\n", line);

@@ -33,12 +33,14 @@
 
 /** @defgroup rev Instruction Disassembly */
 /**@{*/
+/** @brief Return YES if a given v6502_opcode reflects a branching instruction */
+int dis6502_isBranchOpcode(v6502_opcode opcode);
 /** @brief Get the string representation of an opcode */
-void as6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode);
+void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode);
 /** @brief Get the string representation of the operands in a given address mode */
-void as6502_stringForOperand(char *string, size_t len, v6502_address_mode opcode, uint8_t high, uint8_t low);
+void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode opcode, uint8_t high, uint8_t low);
 /** @brief Get the complete string representation of an instruction line */
-void as6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low);
+void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low);
 /**@}*/
 
 #endif

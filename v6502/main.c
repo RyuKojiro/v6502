@@ -74,7 +74,7 @@ static void loadProgram(v6502_memory *mem, const char *fname) {
 static int printSingleInstruction(v6502_cpu *cpu, uint16_t address) {
 	char instruction[MAX_INSTRUCTION_LEN];
 	int instructionLength;
-	as6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[address], cpu->memory->bytes[address + 2], cpu->memory->bytes[address + 1]);
+	dis6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[address], cpu->memory->bytes[address + 2], cpu->memory->bytes[address + 1]);
 	instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[address]);
 	
 	printf("0x%04x: ", address);

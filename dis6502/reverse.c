@@ -24,7 +24,26 @@
 
 #include <string.h>
 
-void as6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
+int dis6502_isBranchOpcode(v6502_opcode opcode) {
+	switch (opcode) {
+		case v6502_opcode_bcc:
+		case v6502_opcode_bcs:
+		case v6502_opcode_beq:
+		case v6502_opcode_bmi:
+		case v6502_opcode_bne:
+		case v6502_opcode_bpl:
+		case v6502_opcode_bvc:
+		case v6502_opcode_bvs:
+		case v6502_opcode_jmp_abs:
+		case v6502_opcode_jmp_ind:
+		case v6502_opcode_jsr:
+			return YES;
+		default:
+			return NO;
+	}
+}
+
+void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
 	switch (opcode) {
 		case v6502_opcode_brk:
 			strncpy(string, "brk", len);
@@ -292,7 +311,7 @@ void as6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
 	}
 }
 
-void as6502_stringForOperand(char *string, size_t len, v6502_address_mode mode, uint8_t high, uint8_t low) {
+void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode mode, uint8_t high, uint8_t low) {
 	switch (mode) {
 		case v6502_address_mode_accumulator: {
 			strncpy(string, "A", len);
@@ -342,10 +361,10 @@ void as6502_stringForOperand(char *string, size_t len, v6502_address_mode mode, 
 	}
 }
 
-void as6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low) {
-	as6502_stringForOpcode(string, len, opcode);
+void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low) {
+	dis6502_stringForOpcode(string, len, opcode);
 	string[3] = ' ';
 	string += 4;
 	len -= 4;
-	as6502_stringForOperand(string, len, v6502_addressModeForOpcode(opcode), high, low);
+	dis6502_stringForOperand(string, len, v6502_addressModeForOpcode(opcode), high, low);
 }

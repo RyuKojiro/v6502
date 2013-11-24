@@ -74,6 +74,8 @@ void as6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len);
 
 /** @defgroup parser_help Parsing Assistance */
 /**@{*/
+/** @brief Return YES if a given string reflects a branching instruction */
+int as6502_isBranchInstruction(const char *string);
 /** @brief Tests a single character for the possibility of being a hex/oct/dec digit */
 int as6502_isDigit(char c);
 /** @brief Determines whether or not a token is a number literal */
