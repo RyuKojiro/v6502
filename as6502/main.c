@@ -130,12 +130,13 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	uint16_t address = 0;
 	currentLineNum = 1;
 	int newline;
-	as6502_symbol_table *table = as6502_createSymbolTable();
 	size_t lineLen, maxLen;
 	int instructionLength;
-	// Variable storage will grow upwards, opposite the stack
-	uint16_t currentVarAddress = 0x200;
-	
+	uint16_t currentVarAddress = 0x200;	// Variable storage will grow upwards, opposite the stack
+	as6502_object *obj = as6502_createObject();
+	obj->table = as6502_createSymbolTable();
+	int currentBlob = 0;
+
 	// First pass, build symbol table
 	do {
 		newline = NO;
@@ -151,7 +152,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		trimmedLine = trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
 		lineLen = MAX_LINE_LEN - (trimmedLine - line);
 		if (trimmedLine && (isalnum(CTYPE_CAST trimmedLine[0]) || trimmedLine[0] == '.')) {
-			as6502_symbol_type type = as6502_addSymbolForLine(table, line, currentLineNum, address, currentVarAddress);
+			as6502_symbol_type type = as6502_addSymbolForLine(obj->table, line, currentLineNum, address, currentVarAddress);
 			
 			if (type == as6502_symbol_type_variable) {
 				if (currentVarAddress >= 0x7FF) {
@@ -187,17 +188,14 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	} while (!feof(in));
 	
 	if (printTable) {
-		as6502_printSymbolTable(table);
+		as6502_printSymbolTable(obj->table);
 	}
 	
 	// Reset for pass 2
 	rewind(in);
 	address = 0;
 	currentLineNum = 1;
-	
-	// Prepare object structure
-	as6502_object_context *ctx = as6502_createObjectContext();
-	
+		
 	// Final pass, convert source to object code
 	do {
 		newline = NO;
@@ -215,7 +213,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Handle dot directives
 		if (line[0] == '.') {
-			as6502_processObjectDirectiveForLine(ctx, line, lineLen);
+			as6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
 			
 			if (newline) {
 				currentLineNum++;
@@ -236,12 +234,12 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_resolveArithmetic(line, maxLen);
 		
 		// Convert symbols to hard addresses from symbol table
-		as6502_desymbolicateLine(table, trimmedLine, maxLen, 0x0600, address, NO);
+		as6502_desymbolicateLine(obj->table, trimmedLine, maxLen, 0x0600, address, NO);
 		lineLen = strlen(trimmedLine);
 
 		// Assemble whatever is left, if anything
 		if (lineLen) {
-			instructionLength = assembleLine(as6502_currentBlobInContext(ctx), trimmedLine, lineLen, table, printProcess);
+			instructionLength = assembleLine(&obj->blobs[currentBlob], trimmedLine, lineLen, obj->table, printProcess);
 			address += instructionLength;
 		}
 				
@@ -256,12 +254,12 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	// Write out the object to whatever file format we were told
 	switch (format) {
 		case as6502_outputFormat_FlatFile: {
-			as6502_writeObjectToFlatFile(ctx->obj, out);
+			as6502_writeObjectToFlatFile(obj, out);
 		} break;
 	}
 	
-	as6502_destroyObjectContext(ctx);
-	as6502_destroySymbolTable(table);
+	as6502_destroySymbolTable(obj->table);
+	as6502_destroyObject(obj);
 }
 
 static void outNameFromInName(char *out, int len, const char *in) {

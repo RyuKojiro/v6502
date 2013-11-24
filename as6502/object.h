@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "symbols.h"
+
 /** @struct */
 /** @brief A single blob of typeless object data */
 typedef struct {
@@ -43,20 +45,13 @@ typedef struct {
 /** @struct */
 /** @brief The assembler's representation of an object file in memory */
 typedef struct {
-	/** @brief The number of as6502_object_blob's */
-	int count;
+	/** @brief The as6502_symbol_table that contains all symbols that correspond to each of the attached blobs */
+	as6502_symbol_table *table;
 	/** @brief An array of as6502_object_blob's */
 	as6502_object_blob *blobs;
+	/** @brief The number of as6502_object_blob's */
+	int count;
 } as6502_object;
-
-/** @struct */
-/** @brief A running context that can be kept to build an object file procedurally */
-typedef struct {
-	/** @brief The as6502_object that a context refers to */
-	as6502_object *obj;
-	/** @brief The current blob in obj->blobs */
-	int currentBlob;
-} as6502_object_context;
 
 /** @defgroup obj_lifecycle Object Lifecycle Functions */
 /**@{*/
@@ -64,10 +59,6 @@ typedef struct {
 as6502_object *as6502_createObject();
 /** @brief Destroys an as6502_object */
 void as6502_destroyObject(as6502_object *obj);
-/** @brief Creates a new as6502_object_context */
-as6502_object_context *as6502_createObjectContext();
-/** @brief Destroys an as6502_object_context */
-void as6502_destroyObjectContext(as6502_object_context *ctx);
 /**@}*/
 
 /** @defgroup obj_access Object Accessors */
@@ -81,9 +72,7 @@ void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte);
 /** @defgroup obj_mutate Contextual Object Mutators */
 /**@{*/
 /** @brief Automatically processes any dot directive in a given line and updates an as6502_object_context */
-void as6502_processObjectDirectiveForLine(as6502_object_context *ctx, const char *line, size_t len);
-/** @brief Get the current blob for a given as6502_object_context */
-as6502_object_blob *as6502_currentBlobInContext(as6502_object_context *ctx);
+void as6502_processObjectDirectiveForLine(as6502_object *obj, int *currentBlob, const char *line, size_t len);
 /**@}*/
 
 #endif
