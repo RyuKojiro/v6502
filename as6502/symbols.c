@@ -67,15 +67,22 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 			case as6502_symbol_type_unknown: {
 				type = "???";
 			} break;
+			case as6502_symbol_type_label_unlinked:
 			case as6502_symbol_type_label: {
 				type = "Label";
 			} break;
+			case as6502_symbol_type_variable_unlinked:
 			case as6502_symbol_type_variable: {
 				type = "Var";
 			} break;
 		}
 		
-		printf("\t%s { name = \"%s\", addr = 0x%x, next = %p, line = %lu }\n", type, this->name, this->address, this->next, this->line);
+		if (as6502_symbolTypeIsLinked(this->type)) {
+			printf("\t%s { name = \"%s\", addr = 0x%x, next = %p, line = %lu }\n", type, this->name, this->address, this->next, this->line);
+		}
+		else {
+			printf("\t%s { name = \"%s\", not linked!, next = %p, line = %lu }\n", type, this->name, this->next, this->line);
+		}
 	}
 	printf("}\n");
 }
@@ -266,7 +273,7 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 				continue;
 			}
 			
-			if (this->type == as6502_symbol_type_variable) {
+			if (as6502_symbolTypeIsVariable(this->type)) {
 				offset = 0;
 				pstart = 0;
 			}
@@ -288,12 +295,12 @@ int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, 
 	
 	if (line[0] == 'b' || line[0] == 'B') {
 		if (!asmeq(line, "bit")) {
-			return (type == as6502_symbol_type_label);
+			return as6502_symbolTypeIsLabel(type);
 		}
 	}
 	
 	if (line[0] == 'j' || line[0] == 'J') {
-		return (type == as6502_symbol_type_label);
+		return as6502_symbolTypeIsLabel(type);
 	}
 	
 	// TODO: Variables

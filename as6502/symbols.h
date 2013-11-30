@@ -28,12 +28,22 @@
 
 #include <stdint.h>
 
+/** @brief Return YES if a given as6502_symbol_type has a high link bit */
+#define as6502_symbolTypeIsLinked(a)		(a | as6502_symbol_type_label)
+/** @brief Return YES if a given as6502_symbol_type is a label type, regardless of linkage */
+#define as6502_symbolTypeIsLabel(a)			(a == as6502_symbol_type_label || a == as6502_symbol_type_label_unlinked)
+/** @brief Return YES if a given as6502_symbol_type is a variable type, regardless of linkage */
+#define as6502_symbolTypeIsVariable(a)		(a == as6502_symbol_type_variable || a == as6502_symbol_type_variable_unlinked)
+
 /** @enum */
 /** @brief as6502_symbol Type */
+/** If you need to test type or linkage, use the provided macros. If for some reason you need to do more advanced manipulation of the type field: Label types are odd, variable types are even, so symbol type (regardless of linkage) can be tested with a simple or mask against the unlinked type that you want. For example: @code (type | as6502_symbol_type_variable_unlinked) == as6502_symbol_type_variable_unlinked @endcode Linkage can be tested by masking against the linkage you want, always using label, as it carries a type bit of zero. */
 typedef enum {
 	as6502_symbol_type_unknown = 0,
-	as6502_symbol_type_label,
-	as6502_symbol_type_variable
+	as6502_symbol_type_label = 2,
+	as6502_symbol_type_variable = 3,
+	as6502_symbol_type_label_unlinked = 4,
+	as6502_symbol_type_variable_unlinked = 5
 } as6502_symbol_type;
 
 /** @struct */

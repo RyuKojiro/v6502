@@ -154,7 +154,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		if (trimmedLine && (isalnum(CTYPE_CAST trimmedLine[0]) || trimmedLine[0] == '.')) {
 			as6502_symbol_type type = as6502_addSymbolForLine(obj->table, line, currentLineNum, address, currentVarAddress);
 			
-			if (type == as6502_symbol_type_variable) {
+			if (as6502_symbolTypeIsVariable(type)) {
 				if (currentVarAddress >= 0x7FF) {
 					as6502_error("Maximum number of addressable variables exceeded.");
 				}
