@@ -33,7 +33,6 @@
 
 #define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80
-#define MAX_SYM_LEN			25
 
 typedef enum {
 	dis6502_inputFormat_None = 0,
@@ -43,9 +42,6 @@ typedef enum {
 
 static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 	char line[MAX_LINE_LEN];
-	char symbolName[MAX_SYM_LEN];
-	int currentLabel = 1;
-	uint16_t address;
 	
 	as6502_object *obj = as6502_createObject();
 	
@@ -81,23 +77,7 @@ static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 
 		// Build Symbol Table
 		currentLineNum = 0;
-		for (uint16_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
-			v6502_opcode opcode = blob->data[offset];
-			if (dis6502_isBranchOpcode(opcode)) {
-				if (opcode == v6502_opcode_jmp_abs || opcode == v6502_opcode_jmp_ind || opcode == v6502_opcode_jsr) {
-					address = (blob->data[offset + 2] << 8 | blob->data[offset + 1]) - v6502_memoryStartProgram;
-				}
-				else {
-						address = offset + 2 + v6502_signedValueOfByte(blob->data[offset + 1]);
-				}
-				
-				if (!as6502_symbolForAddress(table, address)) {
-					snprintf(symbolName, MAX_SYM_LEN, "Label%d", currentLabel++);
-					as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
-				}
-			}
-			currentLineNum++;
-		}
+		dis6502_deriveSymbolsForObjectBlob(table, blob);
 
 		// Disassemble
 		currentLineNum = 0;

@@ -21,8 +21,12 @@
  */
 
 #include "reverse.h"
+#include "error.h"
 
 #include <string.h>
+
+/** @brief The maximum allowed buffer size for symbol names */
+#define dis6502_maximumSymbolNameLength		255
 
 int dis6502_isBranchOpcode(v6502_opcode opcode) {
 	switch (opcode) {
@@ -367,4 +371,34 @@ void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode,
 	string += 4;
 	len -= 4;
 	dis6502_stringForOperand(string, len, v6502_addressModeForOpcode(opcode), high, low);
+}
+
+void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, as6502_object_blob *blob) {
+	char symbolName[dis6502_maximumSymbolNameLength];
+	int currentLabel = 1;
+	uint16_t address;
+
+	for (uint16_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
+		v6502_opcode opcode = blob->data[offset];
+		if (dis6502_isBranchOpcode(opcode)) {
+			if (opcode == v6502_opcode_jmp_abs || opcode == v6502_opcode_jmp_ind || opcode == v6502_opcode_jsr) {
+				address = (blob->data[offset + 2] << 8 | blob->data[offset + 1]) - v6502_memoryStartProgram;
+			}
+			else {
+				address = offset + 2 + v6502_signedValueOfByte(blob->data[offset + 1]);
+			}
+			
+			if (!as6502_symbolForAddress(table, address)) {
+				snprintf(symbolName, dis6502_maximumSymbolNameLength, "Label%d", currentLabel++);
+				as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
+			}
+		}
+		currentLineNum++;
+	}
+}
+	
+void dis6502_deriveSymbolsForObject(as6502_object *object) {
+	for (int i = 0; i < object->count; i++) {
+		dis6502_deriveSymbolsForObjectBlob(object->table, &object->blobs[i]);
+	}
 }
