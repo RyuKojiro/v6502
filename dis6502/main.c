@@ -34,39 +34,33 @@
 #define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80
 
-typedef enum {
-	dis6502_inputFormat_None = 0,
-	dis6502_inputFormat_iNES,
-	dis6502_inputFormat_FlatFile
-} dis6502_inputFormat;
-
-static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
+static void disassembleFile(FILE *in, FILE *out, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
 	
 	ld6502_object *obj = ld6502_createObject();
 	
 	// Try to detect the file format if none is specified
-	if (format == dis6502_inputFormat_None && fileIsINES(in)) {
-		format = dis6502_inputFormat_iNES;
+	if (format == ld6502_file_type_None && fileIsINES(in)) {
+		format = ld6502_file_type_iNES;
 	}
 	rewind(in);
 
 	// Give up and take it in flat
-	if (format == dis6502_inputFormat_None) {
-		format = dis6502_inputFormat_FlatFile;
+	if (format == ld6502_file_type_None) {
+		format = ld6502_file_type_FlatFile;
 	}
 	
 	// Import object data
 	switch (format) {
-		case dis6502_inputFormat_FlatFile: {
+		case ld6502_file_type_FlatFile: {
 			as6502_readObjectFromFlatFile(obj, in);
 			dis6502_deriveSymbolsForObject(obj);
 		} break;
-		case dis6502_inputFormat_iNES: {
+		case ld6502_file_type_iNES: {
 			ld6502_addBlobToObject(obj, 0);
 			readFromINES(in, &obj->blobs[0], NULL, NULL);
 		} break;
-		case dis6502_inputFormat_None:
+		case ld6502_file_type_None:
 			// Something has gone horribly wrong.
 			return;
 	}
@@ -106,7 +100,7 @@ static void usage() {
 int main(int argc, char * const argv[]) {
 	FILE *in;
 	FILE *out = stdout;
-	dis6502_inputFormat format = dis6502_inputFormat_None;
+	ld6502_file_type format = ld6502_file_type_None;
 	char outName[MAX_FILENAME_LEN] = "";
 	
 	int ch;
@@ -114,10 +108,10 @@ int main(int argc, char * const argv[]) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "ines", 4)) {
-					format = dis6502_inputFormat_iNES;
+					format = ld6502_file_type_iNES;
 				}
 				if (!strncmp(optarg, "flat", 4)) {
-					format = dis6502_inputFormat_FlatFile;
+					format = ld6502_file_type_FlatFile;
 				}
 			} break;
 			case 'o': {

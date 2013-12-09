@@ -33,10 +33,6 @@
 
 #define MAX_FILENAME_LEN	255
 
-typedef enum {
-	ld6502_outputFormat_iNES
-} ld6502_outputFormat;
-
 static void loadObjectFromFile(ld6502_object *object, const char *fileName) {
 	
 }
@@ -92,7 +88,7 @@ static void usage() {
 }
 
 int main(int argc, char * const argv[]) {
-	ld6502_outputFormat format = ld6502_outputFormat_iNES;
+	ld6502_file_type format = ld6502_file_type_iNES;
 	char outName[MAX_FILENAME_LEN] = "out.nes";
 	char chrName[MAX_FILENAME_LEN] = "";
 	
@@ -101,7 +97,7 @@ int main(int argc, char * const argv[]) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "ines", 4)) {
-					format = ld6502_outputFormat_iNES;
+					format = ld6502_file_type_iNES;
 				}
 			} break;
 			case 'o': {

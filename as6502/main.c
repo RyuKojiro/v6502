@@ -38,10 +38,6 @@
 
 #define v6502_BadLiteralValueErrorText		"Invalid literal value or unresolved/undefined symbol '%s'"
 
-typedef enum {
-	as6502_outputFormat_FlatFile
-}as6502_outputFormat;
-
 // Figures out if the number is valid, or a stray symbol
 int isValidLiteral(const char *start, size_t len) {
 	if (!len || !start[0]) {
@@ -123,7 +119,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 	return addrLen;
 }
 
-static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, as6502_outputFormat format) {
+static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
 	char *trimmedLine;
 	v6502_address_mode mode;
@@ -253,7 +249,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	
 	// Write out the object to whatever file format we were told
 	switch (format) {
-		case as6502_outputFormat_FlatFile: {
+		case ld6502_file_type_FlatFile: {
 			as6502_writeObjectToFlatFile(obj, out);
 		} break;
 	}
@@ -282,7 +278,7 @@ int main(int argc, char * const argv[]) {
 	char outName[MAX_FILENAME_LEN];
 	int printProcess = NO;
 	int printTable = NO;
-	as6502_outputFormat format = as6502_outputFormat_FlatFile;
+	ld6502_file_type format = ld6502_file_type_FlatFile;
 	
 	// If no arguments
 	int ch;
@@ -291,7 +287,7 @@ int main(int argc, char * const argv[]) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "flat", 4)) {
-					format = as6502_outputFormat_FlatFile;
+					format = ld6502_file_type_FlatFile;
 				}
 			} break;
 			case 'S': {

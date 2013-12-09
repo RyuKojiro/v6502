@@ -53,6 +53,14 @@ typedef struct {
 	int count;
 } ld6502_object;
 
+/** @enum */
+/** @brief asdf */
+typedef enum {
+	ld6502_file_type_None = 0,
+	ld6502_file_type_iNES,
+	ld6502_file_type_FlatFile
+} ld6502_file_type;
+
 /** @defgroup obj_lifecycle Object Lifecycle Functions */
 /**@{*/
 /** @brief Creates a new ld6502_object */
