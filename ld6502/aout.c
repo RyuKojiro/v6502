@@ -24,6 +24,6 @@
 
 #include "aout.h"
 
-void as6502_writeObjectToAOFile(as6502_object *obj, FILE *file) {
+void as6502_writeObjectToAOFile(ld6502_object *obj, FILE *file) {
 	fwrite(obj->blobs[0].data, 1, obj->blobs[0].len, file);
 }

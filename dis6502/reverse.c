@@ -373,7 +373,7 @@ void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode,
 	dis6502_stringForOperand(string, len, v6502_addressModeForOpcode(opcode), high, low);
 }
 
-void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, as6502_object_blob *blob) {
+void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_object_blob *blob) {
 	char symbolName[dis6502_maximumSymbolNameLength];
 	int currentLabel = 1;
 	uint16_t address;
@@ -397,7 +397,7 @@ void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, as6502_objec
 	}
 }
 	
-void dis6502_deriveSymbolsForObject(as6502_object *object) {
+void dis6502_deriveSymbolsForObject(ld6502_object *object) {
 	for (int i = 0; i < object->count; i++) {
 		dis6502_deriveSymbolsForObjectBlob(object->table, &object->blobs[i]);
 	}

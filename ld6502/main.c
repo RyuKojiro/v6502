@@ -37,13 +37,13 @@ typedef enum {
 	ld6502_outputFormat_iNES
 } ld6502_outputFormat;
 
-static void loadObjectFromFile(as6502_object *object, const char *fileName) {
+static void loadObjectFromFile(ld6502_object *object, const char *fileName) {
 	
 }
 
 static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const files[]) {
-	as6502_object *linkResult = as6502_createObject();
-	as6502_object **objects = malloc(numFiles * sizeof(as6502_object *));
+	ld6502_object *linkResult = ld6502_createObject();
+	ld6502_object **objects = malloc(numFiles * sizeof(ld6502_object *));
 	
 	// Read in a flat file as the only object
 	FILE *flatFile = fopen(files[numFiles - 1], "r");
@@ -55,7 +55,7 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 		loadObjectFromFile(objects[o], files[o]);
 	}
 	
-	as6502_object *chrRom = NULL;
+	ld6502_object *chrRom = NULL;
 	if (chrFile) {
 		as6502_readObjectFromFlatFile(chrRom, chrFile);
 	}
@@ -66,7 +66,7 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 	
 	// Iterate thorugh unlinked objects
 	for (int o = 0; o < numFiles; o++) {
-		as6502_object *currentObject = objects[o];
+		ld6502_object *currentObject = objects[o];
 		for (as6502_symbol *currentSymbol = currentObject->table->first_symbol; currentSymbol; currentSymbol = currentSymbol->next) {
 			// Does symbol already exist in linkResult, if not, we know it doesn't exist on any objects before objects[o + 1]
 			
@@ -77,14 +77,14 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 	
 	/////////// CLEAN UP ///////////
 	for (int o = 0; o < numFiles; o++) {
-		as6502_destroyObject(objects[o]);
+		ld6502_destroyObject(objects[o]);
 	}
 	
 	// Create the property struct
 	ines_properties props;
 	
 	writeToINES(outFile, &linkResult->blobs[0], &chrRom->blobs[0], &props);
-	as6502_destroyObject(linkResult);
+	ld6502_destroyObject(linkResult);
 }
 
 static void usage() {

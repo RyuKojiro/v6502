@@ -50,7 +50,7 @@ int fileIsINES(FILE *infile) {
 	return NO;
 }
 
-void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props) {
+void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props) {
 	// Create Header
 	char headerData[ines_headerDataLength];
 	snprintf(headerData, ines_magicLength, ines_magic);
@@ -73,7 +73,7 @@ void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob 
 	fwrite(chr_rom->data, chr_rom->len, 1, outfile);
 }
 
-void readFromINES(FILE *infile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props) {
+void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props) {
 	// Read Header
 	char headerData[ines_headerDataLength];
 	fread(headerData, ines_headerDataLength, 1, infile);

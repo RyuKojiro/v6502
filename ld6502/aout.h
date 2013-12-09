@@ -28,9 +28,9 @@
 
 #include "object.h"
 
-/** @brief Writes an as6502_object directly to an a.out file */
-void as6502_writeObjectToAOFile(as6502_object *obj, FILE *file);
-/** @brief Read an as6502_object from an a.out file */
-void as6502_readObjectFromAOFile(as6502_object *obj, FILE *file);
+/** @brief Writes an ld6502_object directly to an a.out file */
+void as6502_writeObjectToAOFile(ld6502_object *obj, FILE *file);
+/** @brief Read an ld6502_object from an a.out file */
+void as6502_readObjectFromAOFile(ld6502_object *obj, FILE *file);
 
 #endif

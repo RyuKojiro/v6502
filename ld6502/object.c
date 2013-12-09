@@ -28,21 +28,21 @@
 #include "parser.h"
 
 // Object Lifecycle
-as6502_object *as6502_createObject() {
-	as6502_object *obj = malloc(sizeof(as6502_object));
+ld6502_object *ld6502_createObject() {
+	ld6502_object *obj = malloc(sizeof(ld6502_object));
 	if (obj) {
 		obj->count = 0;
-		obj->blobs = malloc(sizeof(as6502_object_blob));
-		bzero(obj->blobs, sizeof(as6502_object_blob));
+		obj->blobs = malloc(sizeof(ld6502_object_blob));
+		bzero(obj->blobs, sizeof(ld6502_object_blob));
 		
 		return obj;
 	}
 	
-	as6502_fatal("obj malloc in as6502_createObject");
+	as6502_fatal("obj malloc in ld6502_createObject");
 	return NULL;
 }
 
-void as6502_destroyObject(as6502_object *obj) {
+void ld6502_destroyObject(ld6502_object *obj) {
 	for (int i = 0; i < obj->count; i++) {
 		free(obj->blobs[i].data);
 	}
@@ -51,10 +51,10 @@ void as6502_destroyObject(as6502_object *obj) {
 }
 
 // Object Accessors
-void as6502_addBlobToObject(as6502_object *obj, uint16_t start) {	
-	obj->blobs = realloc(obj->blobs, sizeof(as6502_object_blob) * (obj->count + 1));
+void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start) {	
+	obj->blobs = realloc(obj->blobs, sizeof(ld6502_object_blob) * (obj->count + 1));
 	if (!obj->blobs) {
-		as6502_fatal("blobs realloc in as6502_addBlobToObject");
+		as6502_fatal("blobs realloc in ld6502_addBlobToObject");
 	}
 	
 	obj->blobs[obj->count].start = start;
@@ -62,29 +62,29 @@ void as6502_addBlobToObject(as6502_object *obj, uint16_t start) {
 	obj->count++;
 }
 
-void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte) {
+void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte) {
 	if (!blob) {
-		as6502_fatal("Null blob in as6502_appendByteToBlob");
+		as6502_fatal("Null blob in ld6502_appendByteToBlob");
 	}
 	
 	uint16_t newSize = blob->len + 1;
 	blob->data = realloc(blob->data, newSize);
 	if (!blob->data) {
-		as6502_fatal("blobs realloc in as6502_appendByteToBlob");
+		as6502_fatal("blobs realloc in ld6502_appendByteToBlob");
 	}
 	blob->data[newSize - 1] = byte;
 	blob->len = newSize;
 }
 
 // Contextual Object Mutators
-void as6502_processObjectDirectiveForLine(as6502_object *obj, int *currentBlob, const char *line, size_t len) {
+void ld6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len) {
 	if (len <= 3) {
 		return;
 	}
 
 	if (!strncasecmp(line + 1, "org", 3)) {
 		// start new blob
-		as6502_addBlobToObject(obj, as6502_valueForString(NULL, line + 5));
+		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, line + 5));
 		*currentBlob = obj->count - 1;
 	}
 	if (!strncasecmp(line + 1, "end", 3)) {

@@ -43,10 +43,10 @@ typedef struct {
 /** @brief Tests the first four bytes of a file to see if it is has iNES magic. This function will not rewind, just in case the caller wants to start at something other than the beginning, or if given a stream that cannot be rewound. */
 int fileIsINES(FILE *infile);
 
-/** @brief Take fully linked single flat as6502_object_blob of program code, a as6502_object_blob of the CHR ROM, and a struct of iNES ROM-specific ines_properties, and create an iNES ROM using them. */
-void writeToINES(FILE *outfile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props);
+/** @brief Take fully linked single flat ld6502_object_blob of program code, a ld6502_object_blob of the CHR ROM, and a struct of iNES ROM-specific ines_properties, and create an iNES ROM using them. */
+void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props);
 
 /** @brief Load an iNES ROM in, populate an ines_properties struct using the header data, and split the ROM into it's PRG and CHR ROMs. Pass NULL to any pointers whose results you don't care to recieve, and those steps will be skipped. */
-void readFromINES(FILE *infile, as6502_object_blob *prg_rom, as6502_object_blob *chr_rom, ines_properties *props);
+void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props);
 
 #endif

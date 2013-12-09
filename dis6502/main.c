@@ -43,7 +43,7 @@ typedef enum {
 static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 	char line[MAX_LINE_LEN];
 	
-	as6502_object *obj = as6502_createObject();
+	ld6502_object *obj = ld6502_createObject();
 	
 	// Try to detect the file format if none is specified
 	if (format == dis6502_inputFormat_None && fileIsINES(in)) {
@@ -63,7 +63,7 @@ static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 			dis6502_deriveSymbolsForObject(obj);
 		} break;
 		case dis6502_inputFormat_iNES: {
-			as6502_addBlobToObject(obj, 0);
+			ld6502_addBlobToObject(obj, 0);
 			readFromINES(in, &obj->blobs[0], NULL, NULL);
 		} break;
 		case dis6502_inputFormat_None:
@@ -74,7 +74,7 @@ static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 	as6502_symbol_table *table = as6502_createSymbolTable();
 	
 	for (int i = 0; i < obj->count; i++) {
-		as6502_object_blob *blob = &obj->blobs[i];
+		ld6502_object_blob *blob = &obj->blobs[i];
 
 		// Build Symbol Table
 		currentLineNum = 0;
@@ -96,7 +96,7 @@ static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 		}
 	}
 	
-	as6502_destroyObject(obj);
+	ld6502_destroyObject(obj);
 }
 
 static void usage() {

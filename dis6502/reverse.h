@@ -42,10 +42,10 @@ void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode);
 void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode opcode, uint8_t high, uint8_t low);
 /** @brief Get the complete string representation of an instruction line */
 void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low);
-/** @brief Create symbols in a as6502_symbol_table for all branch instructions in a given as6502_object_blob that do not already have corresponding entries. */
-void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, as6502_object_blob *blob);
-/** @brief Create symbols for all branch instructions that do not already have corresponding entries for all as6502_object_blobs in a given as6502_object. */
-void dis6502_deriveSymbolsForObject(as6502_object *obj);
+/** @brief Create symbols in a as6502_symbol_table for all branch instructions in a given ld6502_object_blob that do not already have corresponding entries. */
+void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_object_blob *blob);
+/** @brief Create symbols for all branch instructions that do not already have corresponding entries for all ld6502_object_blobs in a given ld6502_object. */
+void dis6502_deriveSymbolsForObject(ld6502_object *obj);
 /**@}*/
 
 #endif

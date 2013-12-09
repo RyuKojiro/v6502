@@ -23,8 +23,8 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef as6502_object_h
-#define as6502_object_h
+#ifndef ld6502_object_h
+#define ld6502_object_h
 
 #include <stdio.h>
 #include <stdint.h>
@@ -40,39 +40,39 @@ typedef struct {
 	uint16_t len;
 	/** @brief The data */
 	uint8_t *data;
-} as6502_object_blob;
+} ld6502_object_blob;
 
 /** @struct */
 /** @brief The assembler's representation of an object file in memory */
 typedef struct {
 	/** @brief The as6502_symbol_table that contains all symbols that correspond to each of the attached blobs */
 	as6502_symbol_table *table;
-	/** @brief An array of as6502_object_blob's */
-	as6502_object_blob *blobs;
-	/** @brief The number of as6502_object_blob's */
+	/** @brief An array of ld6502_object_blob's */
+	ld6502_object_blob *blobs;
+	/** @brief The number of ld6502_object_blob's */
 	int count;
-} as6502_object;
+} ld6502_object;
 
 /** @defgroup obj_lifecycle Object Lifecycle Functions */
 /**@{*/
-/** @brief Creates a new as6502_object */
-as6502_object *as6502_createObject();
-/** @brief Destroys an as6502_object */
-void as6502_destroyObject(as6502_object *obj);
+/** @brief Creates a new ld6502_object */
+ld6502_object *ld6502_createObject();
+/** @brief Destroys an ld6502_object */
+void ld6502_destroyObject(ld6502_object *obj);
 /**@}*/
 
 /** @defgroup obj_access Object Accessors */
 /**@{*/
-/** @brief Creates an empty as6502_object_blob and adds it to an as6502_object */
-void as6502_addBlobToObject(as6502_object *obj, uint16_t start);
-/** @brief Appends a single byte to an as6502_object_blob */
-void as6502_appendByteToBlob(as6502_object_blob *blob, uint8_t byte);
+/** @brief Creates an empty ld6502_object_blob and adds it to an ld6502_object */
+void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start);
+/** @brief Appends a single byte to an ld6502_object_blob */
+void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte);
 /**@}*/
 
 /** @defgroup obj_mutate Contextual Object Mutators */
 /**@{*/
-/** @brief Automatically processes any dot directive in a given line and updates an as6502_object_context */
-void as6502_processObjectDirectiveForLine(as6502_object *obj, int *currentBlob, const char *line, size_t len);
+/** @brief Automatically processes any dot directive in a given line and updates an ld6502_object_context */
+void ld6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len);
 /**@}*/
 
 #endif

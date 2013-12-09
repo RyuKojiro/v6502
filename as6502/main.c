@@ -71,7 +71,7 @@ int isValidLiteral(const char *start, size_t len) {
 	return YES;
 }
 
-static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t len, as6502_symbol_table *table, int printProcess) {
+static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t len, as6502_symbol_table *table, int printProcess) {
 	uint8_t opcode, low, high;
 	int addrLen;
 	v6502_address_mode mode;
@@ -85,13 +85,13 @@ static uint16_t assembleLine(as6502_object_blob *blob, const char *line, size_t 
 	addrLen = as6502_instructionLengthForAddressMode(mode);
 	
 	if (addrLen >= 1) {
-		as6502_appendByteToBlob(blob, opcode);
+		ld6502_appendByteToBlob(blob, opcode);
 	}
 	if (addrLen >= 2) {
-		as6502_appendByteToBlob(blob, low);
+		ld6502_appendByteToBlob(blob, low);
 	}
 	if (addrLen >= 3) {
-		as6502_appendByteToBlob(blob, high);
+		ld6502_appendByteToBlob(blob, high);
 	}
 		
 	if (printProcess) {
@@ -133,7 +133,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	size_t lineLen, maxLen;
 	int instructionLength;
 	uint16_t currentVarAddress = 0x200;	// Variable storage will grow upwards, opposite the stack
-	as6502_object *obj = as6502_createObject();
+	ld6502_object *obj = ld6502_createObject();
 	obj->table = as6502_createSymbolTable();
 	int currentBlob = 0;
 
@@ -213,7 +213,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Handle dot directives
 		if (line[0] == '.') {
-			as6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
+			ld6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
 			
 			if (newline) {
 				currentLineNum++;
@@ -259,7 +259,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	}
 	
 	as6502_destroySymbolTable(obj->table);
-	as6502_destroyObject(obj);
+	ld6502_destroyObject(obj);
 }
 
 static void outNameFromInName(char *out, int len, const char *in) {
