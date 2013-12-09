@@ -50,6 +50,10 @@ void ld6502_destroyObject(ld6502_object *obj) {
 	free(obj);
 }
 
+void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld6502_file_type type) {
+	
+}
+
 // Object Accessors
 void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start) {	
 	obj->blobs = realloc(obj->blobs, sizeof(ld6502_object_blob) * (obj->count + 1));

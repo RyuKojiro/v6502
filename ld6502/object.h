@@ -67,6 +67,8 @@ typedef enum {
 ld6502_object *ld6502_createObject();
 /** @brief Destroys an ld6502_object */
 void ld6502_destroyObject(ld6502_object *obj);
+/** @brief Creates an ld6502_object with the contents of an object file */
+void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld6502_file_type type);
 /**@}*/
 
 /** @defgroup obj_access Object Accessors */

@@ -33,10 +33,6 @@
 
 #define MAX_FILENAME_LEN	255
 
-static void loadObjectFromFile(ld6502_object *object, const char *fileName) {
-	
-}
-
 static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const files[]) {
 	ld6502_object *linkResult = ld6502_createObject();
 	ld6502_object **objects = malloc(numFiles * sizeof(ld6502_object *));
@@ -48,7 +44,7 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 	
 	///////////// LOAD /////////////
 	for (int o = 0; o < numFiles; o++) {
-		loadObjectFromFile(objects[o], files[o]);
+		ld6502_loadObjectFromFile(objects[o], files[o], ld6502_file_type_None);
 	}
 	
 	ld6502_object *chrRom = NULL;
