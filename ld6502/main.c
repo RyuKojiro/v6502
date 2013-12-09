@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "object.h"
 #include "error.h"
@@ -36,17 +37,47 @@ typedef enum {
 	ld6502_outputFormat_iNES
 } ld6502_outputFormat;
 
+static void loadObjectFromFile(as6502_object *object, const char *fileName) {
+	
+}
+
 static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const files[]) {
 	as6502_object *linkResult = as6502_createObject();
+	as6502_object **objects = malloc(numFiles * sizeof(as6502_object *));
 	
 	// Read in a flat file as the only object
 	FILE *flatFile = fopen(files[numFiles - 1], "r");
 	as6502_readObjectFromFlatFile(linkResult, flatFile);
 	fclose(flatFile);
 	
+	///////////// LOAD /////////////
+	for (int o = 0; o < numFiles; o++) {
+		loadObjectFromFile(objects[o], files[o]);
+	}
+	
 	as6502_object *chrRom = NULL;
 	if (chrFile) {
 		as6502_readObjectFromFlatFile(chrRom, chrFile);
+	}
+	
+	///////////// LINK /////////////
+	// Iterate through symbol table, copy all objects into a new single flat object until all unlinked symbols are resolved, if any symbols cannot be found, error.
+	// Also make sure to consolidate all symbol tables into a singular master table that has all symbols.
+	
+	// Iterate thorugh unlinked objects
+	for (int o = 0; o < numFiles; o++) {
+		as6502_object *currentObject = objects[o];
+		for (as6502_symbol *currentSymbol = currentObject->table->first_symbol; currentSymbol; currentSymbol = currentSymbol->next) {
+			// Does symbol already exist in linkResult, if not, we know it doesn't exist on any objects before objects[o + 1]
+			
+			// If not, copy required symbol, otherwise change symbol address
+		}
+		
+	}
+	
+	/////////// CLEAN UP ///////////
+	for (int o = 0; o < numFiles; o++) {
+		as6502_destroyObject(objects[o]);
 	}
 	
 	// Create the property struct
