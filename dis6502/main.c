@@ -60,6 +60,7 @@ static void disassembleFile(FILE *in, FILE *out, dis6502_inputFormat format) {
 	switch (format) {
 		case dis6502_inputFormat_FlatFile: {
 			as6502_readObjectFromFlatFile(obj, in);
+			dis6502_deriveSymbolsForObject(obj);
 		} break;
 		case dis6502_inputFormat_iNES: {
 			as6502_addBlobToObject(obj, 0);

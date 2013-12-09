@@ -24,7 +24,6 @@
 
 #include "flat.h"
 #include "error.h"
-#include "reverse.h"
 
 void as6502_writeObjectToFlatFile(as6502_object *obj, FILE *file) {
 	if (obj->count > 1) {
@@ -42,6 +41,4 @@ void as6502_readObjectFromFlatFile(as6502_object *obj, FILE *file) {
 		fread(&byte, 1, 1, file);
 		as6502_appendByteToBlob(blob, byte);
 	}
-	
-	dis6502_deriveSymbolsForObject(obj);
 }
