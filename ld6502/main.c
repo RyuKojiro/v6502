@@ -64,7 +64,6 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 			
 			// If not, copy required symbol, otherwise change symbol address
 		}
-		
 	}
 	
 	/////////// CLEAN UP ///////////

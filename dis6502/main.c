@@ -34,36 +34,11 @@
 #define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80
 
-static void disassembleFile(FILE *in, FILE *out, ld6502_file_type format) {
+static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
 	
 	ld6502_object *obj = ld6502_createObject();
-	
-	// Try to detect the file format if none is specified
-	if (format == ld6502_file_type_None && fileIsINES(in)) {
-		format = ld6502_file_type_iNES;
-	}
-	rewind(in);
-
-	// Give up and take it in flat
-	if (format == ld6502_file_type_None) {
-		format = ld6502_file_type_FlatFile;
-	}
-	
-	// Import object data
-	switch (format) {
-		case ld6502_file_type_FlatFile: {
-			as6502_readObjectFromFlatFile(obj, in);
-			dis6502_deriveSymbolsForObject(obj);
-		} break;
-		case ld6502_file_type_iNES: {
-			ld6502_addBlobToObject(obj, 0);
-			readFromINES(in, &obj->blobs[0], NULL, NULL);
-		} break;
-		case ld6502_file_type_None:
-			// Something has gone horribly wrong.
-			return;
-	}
+	ld6502_loadObjectFromFile(obj, in, format);
 	
 	as6502_symbol_table *table = as6502_createSymbolTable();
 	
@@ -98,7 +73,6 @@ static void usage() {
 }
 
 int main(int argc, char * const argv[]) {
-	FILE *in;
 	FILE *out = stdout;
 	ld6502_file_type format = ld6502_file_type_None;
 	char outName[MAX_FILENAME_LEN] = "";
@@ -128,13 +102,11 @@ int main(int argc, char * const argv[]) {
 	argv += optind;
 	
 	for (int i = 0; i < argc; i++) {
-		in = fopen(argv[i], "r");
 		currentFileName = argv[i];
 		if (*outName) {
 			out = fopen(outName, "w");
 		}
-		disassembleFile(in, out, format);
-		fclose(in);
+		disassembleFile(argv[i], out, format);
 		fclose(out);
 	}
 }

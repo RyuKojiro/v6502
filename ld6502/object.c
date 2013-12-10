@@ -26,6 +26,10 @@
 #include "object.h"
 #include "error.h"
 #include "parser.h"
+#include "reverse.h"
+
+#include "flat.h"
+#include "ines.h"
 
 // Object Lifecycle
 ld6502_object *ld6502_createObject() {
@@ -51,7 +55,33 @@ void ld6502_destroyObject(ld6502_object *obj) {
 }
 
 void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld6502_file_type type) {
+	FILE *in = fopen(fileName, "r");
 	
+	// Try to detect the file format if none is specified
+	if (type == ld6502_file_type_None && fileIsINES(in)) {
+		type = ld6502_file_type_iNES;
+	}
+	rewind(in);
+	
+	// Give up and take it in flat
+	if (type == ld6502_file_type_None) {
+		type = ld6502_file_type_FlatFile;
+	}
+	
+	// Import object data
+	switch (type) {
+		case ld6502_file_type_FlatFile: {
+			as6502_readObjectFromFlatFile(object, in);
+			dis6502_deriveSymbolsForObject(object);
+		} break;
+		case ld6502_file_type_iNES: {
+			ld6502_addBlobToObject(object, 0);
+			readFromINES(in, &object->blobs[0], NULL, NULL);
+		} break;
+		case ld6502_file_type_None:
+			// Something has gone horribly wrong.
+			return;
+	}
 }
 
 // Object Accessors
