@@ -13,6 +13,7 @@
 		E622936E175D435300AD2866 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E622936F175D435600AD2866 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
 		E62293D8175DB40400AD2866 /* state.c in Sources */ = {isa = PBXBuildFile; fileRef = E62293D7175DB40400AD2866 /* state.c */; };
+		E628C8A4188FBB61007C9FC8 /* ines.c in Sources */ = {isa = PBXBuildFile; fileRef = E640F6D4182D94FD00A4C6A5 /* ines.c */; };
 		E62A16F9184975250023433E /* reverse.c in Sources */ = {isa = PBXBuildFile; fileRef = E640F6BD182C180500A4C6A5 /* reverse.c */; };
 		E640E22317DFDD93009C0718 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E640E21217DFD81B009C0718 /* main.c */; };
 		E640E22517DFDE8E009C0718 /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
@@ -548,6 +549,7 @@
 				E62A16F9184975250023433E /* reverse.c in Sources */,
 				E6817C331855672A008A58A9 /* object.c in Sources */,
 				E6817C341855672D008A58A9 /* flat.c in Sources */,
+				E628C8A4188FBB61007C9FC8 /* ines.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
