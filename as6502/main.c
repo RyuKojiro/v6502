@@ -38,24 +38,51 @@
 
 #define v6502_BadLiteralValueErrorText		"Invalid literal value or unresolved/undefined symbol '%s'"
 
+// This macro is only for use inside of isValidLiteral
+#define advanceOverCharIfPresent(ch)		if (start[0] == ch) { \
+												start++; \
+												len--; \
+											}
+
+
 // Figures out if the number is valid, or a stray symbol
+// TODO: @todo make these actually throw the errors, so that the error is more specific, and more helpful, rather than being more generic
 int isValidLiteral(const char *start, size_t len) {
 	if (!len || !start[0]) {
 		return YES;
 	}
 	
-	// First skip any parens, immediate, or hex markers
-	if (start[0] == '(' || start[0] == '#' || start[0] == '$') {
-		start++;
-		len--;
-	}
-	if (start[0] == '$') {
-		start++;
-		len--;
-	}
+	// First skip any parens, immediate, zeropage, or hex markers
+	// NOTE: The order of these is significant in that immediate values can not be indirectly referenced (follow a parens), dollar signs cannot come before any of the other symbols, etc.
+	// TODO: @todo parenthesis tracking to make sure they line up properly
+	advanceOverCharIfPresent('#');
+	advanceOverCharIfPresent('(');
+	advanceOverCharIfPresent('*');
+	advanceOverCharIfPresent('$');
 	
 	// Must be valid hex, oct, dec
 	for (size_t i = 0; start[i] && (i < len); i++) {
+		// NOTE: The order of these if statements is critically important, it determines the priority of each character during validation
+		if (start[i] == ';') {
+			// The rest are comments
+			break;
+		}
+
+		if (start[i] == ')') {
+			continue;
+		}
+
+		if (start[i] == ',') {
+			// Now look for a register starting after the comma
+			for (i++; start[i] && (i < len); i++) {
+				if(!isspace(start[i]) && !(start[i] == 'x' || start[i] == 'y' || start[i] == 'X' || start[i] == 'Y' || start[i] == ')')) {
+					return NO;
+				}
+			}
+			
+			break;
+		}
+
 		if (!(start[i] >= '0' && start[i] <= '9') &&
 			!(start[i] >= 'a' && start[i] <= 'f') &&
 			!(start[i] >= 'A' && start[i] <= 'F') ) {
