@@ -38,6 +38,7 @@
 		E6817C32185566B1008A58A9 /* flat.c in Sources */ = {isa = PBXBuildFile; fileRef = E6817C291855658B008A58A9 /* flat.c */; };
 		E6817C331855672A008A58A9 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = E6817C2B1855658B008A58A9 /* object.c */; };
 		E6817C341855672D008A58A9 /* flat.c in Sources */ = {isa = PBXBuildFile; fileRef = E6817C291855658B008A58A9 /* flat.c */; };
+		E68C9A3E193FA00300AD9E00 /* libedit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A3D193FA00300AD9E00 /* libedit.dylib */; };
 		E6A4808C17583605005ABE54 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
 		E6B33F1D175974DB00F0D8C2 /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
 		E6BDA952174FD23D0092B614 /* codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = E670DCFA174CA15300F95400 /* codegen.c */; };
@@ -56,6 +57,7 @@
 		E6FB94B9179114410053EB7E /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
 		E6FB94BA179114440053EB7E /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
 		E6FE6FB217376FCD00B4D249 /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
+		E6FF8996193FA292000DD391 /* libtermcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6FF8995193FA292000DD391 /* libtermcap.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -155,6 +157,7 @@
 		E6817C2B1855658B008A58A9 /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = object.c; sourceTree = "<group>"; };
 		E6817C2C1855658B008A58A9 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
 		E68821CD175DBC2300BA1FE2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = easy6502/Makefile; sourceTree = SOURCE_ROOT; };
+		E68C9A3D193FA00300AD9E00 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = /usr/lib/libedit.dylib; sourceTree = "<absolute>"; };
 		E6A079101737321800E0027B /* NOTES.dox */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTES.dox; sourceTree = "<group>"; };
 		E6A4808A1758355A005ABE54 /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = as6502/parser.c; sourceTree = "<group>"; };
 		E6A4808B1758355A005ABE54 /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = as6502/parser.h; sourceTree = "<group>"; };
@@ -164,6 +167,7 @@
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6FE6FB117376FCD00B4D249 /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = as6502/error.c; sourceTree = "<group>"; };
 		E6FE6FB317376FEB00B4D249 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = error.h; path = as6502/error.h; sourceTree = "<group>"; };
+		E6FF8995193FA292000DD391 /* libtermcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtermcap.dylib; path = /usr/lib/libtermcap.dylib; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +203,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6FF8996193FA292000DD391 /* libtermcap.dylib in Frameworks */,
+				E68C9A3E193FA00300AD9E00 /* libedit.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +286,7 @@
 				E622934C175BB52900AD2866 /* easy6502 */,
 				E61D402B1799B5A1009BA763 /* Tests */,
 				E640E21417DFD828009C0718 /* Documentation */,
+				E6FF899A193FA645000DD391 /* Libraries */,
 				E65212A71704B90D009CE919 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -287,13 +294,8 @@
 		E65212A71704B90D009CE919 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E677B29D1737399B00A3B9E8 /* v6502 */,
-				E677B29C1737397800A3B9E8 /* as6502 */,
-				E64198E117373A5A00D0EE25 /* as6502 */,
-				E622934B175BB52900AD2866 /* easy6502 */,
-				E6FB94AB1791140B0053EB7E /* v6502 */,
-				E640E21917DFDCC9009C0718 /* dis6502 */,
-				E640F6D9182D95B600A4C6A5 /* ld6502 */,
+				E6FF8999193FA628000DD391 /* make */,
+				E6FF8998193FA615000DD391 /* xcodebuild */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -332,6 +334,36 @@
 				E677B2881737338300A3B9E8 /* symbols.c */,
 			);
 			name = as6502;
+			sourceTree = "<group>";
+		};
+		E6FF8998193FA615000DD391 /* xcodebuild */ = {
+			isa = PBXGroup;
+			children = (
+				E64198E117373A5A00D0EE25 /* as6502 */,
+				E622934B175BB52900AD2866 /* easy6502 */,
+				E6FB94AB1791140B0053EB7E /* v6502 */,
+				E640E21917DFDCC9009C0718 /* dis6502 */,
+				E640F6D9182D95B600A4C6A5 /* ld6502 */,
+			);
+			name = xcodebuild;
+			sourceTree = "<group>";
+		};
+		E6FF8999193FA628000DD391 /* make */ = {
+			isa = PBXGroup;
+			children = (
+				E677B29D1737399B00A3B9E8 /* v6502 */,
+				E677B29C1737397800A3B9E8 /* as6502 */,
+			);
+			name = make;
+			sourceTree = "<group>";
+		};
+		E6FF899A193FA645000DD391 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				E6FF8995193FA292000DD391 /* libtermcap.dylib */,
+				E68C9A3D193FA00300AD9E00 /* libedit.dylib */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

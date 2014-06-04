@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <histedit.h>
 
 #include "cpu.h"
 #include "mem.h"
@@ -42,6 +43,7 @@
 static int verbose;
 static volatile sig_atomic_t interrupt;
 static int resist;
+static v6502_cpu *cpu;
 
 static void fault(void *ctx, const char *error) {
 	fprintf(stderr, "fault: ");
@@ -257,24 +259,10 @@ void handleSignal(int signal) {
 	}
 }
 
-void sanitizeLine(char *command, size_t len) {
-	char *safeCommand = malloc(len);
-
-	size_t out = 0;
-	for (size_t in = 0; (in < len) && command[in]; in++) {
-		// Only allow printable ASCII
-		if (command[in] <= '~' && command[in] >= ' ') {
-			safeCommand[out++] = command[in];
-		}
-		
-		// Terminate at newline, excluding the newline char
-		if (command[in] == '\n') {
-			break;
-		}
-	}
-	safeCommand[out] = '\0';
-	
-	strncpy(command, safeCommand, out + 1);
+const char * prompt() {
+	static char prompt[10];
+	snprintf(prompt, 10, "(0x%04x) ", cpu->pc);
+	return prompt;
 }
 
 int main(int argc, const char * argv[])
@@ -284,7 +272,7 @@ int main(int argc, const char * argv[])
 	signal(SIGINT, handleSignal);
 	
 	printf("Creating 1 virtual CPU…\n");
-	v6502_cpu *cpu = v6502_createCPU();
+	cpu = v6502_createCPU();
 	cpu->fault_callback = fault;
 	
 	printf("Allocating %dk of virtual memory…\n", (MEMORY_SIZE + 1) / 1024);
@@ -303,20 +291,32 @@ int main(int argc, const char * argv[])
 	printf("Running…\n");
 	run(cpu);
 	
-	char command[MAX_COMMAND_LEN];
+	int commandLen;
+	HistEvent ev;
+	History *hist = history_init();
+	history(hist, &ev, H_SETSIZE, 100);
+	
+	EditLine *el = el_init(currentFileName, stdin, stdout, stderr);
+	el_set(el, EL_PROMPT, &prompt);
+	el_set(el, EL_SIGNAL, SIGWINCH);
+	el_set(el, EL_EDITOR, "emacs");
+	el_set(el, EL_HIST, history, hist);
+	
+	char *command = NULL;
 	while (!feof(stdin)) {
 		currentLineNum++;
 		
-		printf("(0x%04x) ", cpu->pc);
-		fflush(stdout);
-		
-		fgets(command, MAX_COMMAND_LEN, stdin);
-		sanitizeLine(command, MAX_COMMAND_LEN);
-		
-		if (feof(stdin)) {
-			printf("\n");
-			return EXIT_SUCCESS;
+		const char *in = el_gets(el, &commandLen);
+		if (!in) {
+			break;
 		}
+		
+		history(hist, &ev, H_ENTER, in);
+		command = realloc(command, commandLen + 1);
+		memcpy(command, in, commandLen);
+		
+		// Trim newline, always the last char
+		command[commandLen - 1] = '\0';
 		
 		if (command[0] == '\0') {
 			continue;
@@ -330,7 +330,10 @@ int main(int argc, const char * argv[])
 		}
 	}
 	
-	// Cannot be executed
-    return EXIT_FAILURE;
+	history_end(hist);
+	el_end(el);
+	free(command);
+	printf("\n");
+    return EXIT_SUCCESS;
 }
 
