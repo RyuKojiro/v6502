@@ -1,6 +1,6 @@
 AS=		as6502
 ASDIR=	../as6502
-PROG=	test.out
+PROG=	overflow.o
 SRCS=	overflow.s
 ASFLAGS=	-S
 VM=		v6502
