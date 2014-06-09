@@ -54,11 +54,11 @@ void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	// Create Header
 	char headerData[ines_headerDataLength];
 	snprintf(headerData, ines_magicLength, ines_magic);
-	headerData[ines_headerPrgRomSizeField16] = prg_rom->len / ines_16kUnits;
-	headerData[ines_headerChrRomSizeField8] = chr_rom->len / ines_8kUnits;
+	headerData[ines_headerPrgRomSizeField16] = (prg_rom ? prg_rom->len : 0) / ines_16kUnits;
+	headerData[ines_headerChrRomSizeField8] = (chr_rom ? chr_rom->len : 0) / ines_8kUnits;
 	headerData[/* flags */ 6] = 0;
 	headerData[/* flags */ 7] = 0;
-	headerData[ines_headerPrgRomSizeField8] = prg_rom->len / ines_8kUnits;
+	headerData[ines_headerPrgRomSizeField8] = (prg_rom ? prg_rom->len : 0) / ines_8kUnits;
 	headerData[/* flags */ 9] = 0;
 	headerData[/* flags */ 10] = 0;
 	bzero(headerData + ines_headerZeroPaddingStart, ines_headerDataLength - ines_headerZeroPaddingStart);
@@ -67,10 +67,14 @@ void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	fwrite(headerData, ines_headerDataLength, 1, outfile);
 	
 	// Write PRG ROM
-	fwrite(prg_rom->data, prg_rom->len, 1, outfile);
+	if (prg_rom) {
+		fwrite(prg_rom->data, prg_rom->len, 1, outfile);
+	}
 
 	// Write CHR ROM
-	fwrite(chr_rom->data, chr_rom->len, 1, outfile);
+	if (chr_rom) {
+		fwrite(chr_rom->data, chr_rom->len, 1, outfile);
+	}
 }
 
 void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props) {
