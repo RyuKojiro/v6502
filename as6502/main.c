@@ -32,6 +32,7 @@
 #include "error.h"
 
 #include "flat.h"
+#include "ines.h"
 
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
@@ -276,8 +277,15 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	
 	// Write out the object to whatever file format we were told
 	switch (format) {
+		case ld6502_file_type_None:
 		case ld6502_file_type_FlatFile: {
 			as6502_writeObjectToFlatFile(obj, out);
+		} break;
+		case ld6502_file_type_iNES: {
+			ines_properties props;
+			props.videoMode = ines_videoMode_NTSC;
+			
+			writeToINES(out, &(obj->blobs[0]), NULL, &props);
 		} break;
 	}
 	
@@ -296,7 +304,7 @@ static void outNameFromInName(char *out, int len, const char *in) {
 }
 
 static void usage() {
-	fprintf(stderr, "usage: as6502 [-STWw] [-F format] [file ...]\n");
+	fprintf(stderr, "usage: as6502 [-STW] [-F format] [-o outfile] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
@@ -307,14 +315,19 @@ int main(int argc, char * const argv[]) {
 	int printTable = NO;
 	ld6502_file_type format = ld6502_file_type_FlatFile;
 	
+	outName[0] = '\0';
+	
 	// If no arguments
 	int ch;
 	
-	while ((ch = getopt(argc, argv, "STWF:")) != -1) {
+	while ((ch = getopt(argc, argv, "STWF:o:")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "flat", 4)) {
 					format = ld6502_file_type_FlatFile;
+				}
+				if (!strncmp(optarg, "ines", 4)) {
+					format = ld6502_file_type_iNES;
 				}
 			} break;
 			case 'S': {
@@ -322,6 +335,9 @@ int main(int argc, char * const argv[]) {
 			} break;
 			case 'T': {
 				printTable = YES;
+			} break;
+			case 'o': {
+				strncpy(outName, optarg, MAX_FILENAME_LEN);
 			} break;
 			case '?':
 			default:
@@ -344,7 +360,9 @@ int main(int argc, char * const argv[]) {
 		for (/* i */; i < argc; i++) {
 			in = fopen(argv[i], "r");
 			currentFileName = argv[i];
-			outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
+			if (!outName[0]) {
+				outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
+			}
 			out = fopen(outName, "w");
 			assembleFile(in, out, printProcess, printTable, format);
 			fclose(in);
