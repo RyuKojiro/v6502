@@ -29,7 +29,7 @@
 
 #include "cpu.h"
 #include "mem.h"
-#include "core.h"
+#include "log.h"
 #include "parser.h"
 #include "error.h"
 #include "reverse.h"
