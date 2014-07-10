@@ -1,3 +1,6 @@
+/** @brief Virtual Machine Logging */
+/** @file log.h */
+
 /*
  * Copyright (c) 2013 Daniel Loffgren
  *
@@ -25,8 +28,12 @@
 
 #include "cpu.h"
 
-// Debugging
+/** @defgroup log VM State Logging */
+/**@{*/
+/** @brief Prints the current states and values of the CPU's registers. */
 void v6502_printCpuState(v6502_cpu *cpu);
+/** @brief Neatly prints a 52 column wide hex dump of a specified memory range. */
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len);
+/**@}*/
 
 #endif
