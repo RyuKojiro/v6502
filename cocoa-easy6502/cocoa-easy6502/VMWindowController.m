@@ -64,7 +64,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	[pixelField setStringValue:[NSString stringWithFormat:@"0x%02x", video.selectedPixel]];
 	
 	char instruction[32];
-	as6502_stringForInstruction(instruction, 32, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 2], cpu->memory->bytes[cpu->pc + 1]);
+	dis6502_stringForInstruction(instruction, 32, cpu->memory->bytes[cpu->pc], cpu->memory->bytes[cpu->pc + 2], cpu->memory->bytes[cpu->pc + 1]);
 	[instructionField setStringValue:[NSString stringWithCString:instruction encoding:NSASCIIStringEncoding]];
 	
 	if ([logCheckBox state] == NSOnState) {
