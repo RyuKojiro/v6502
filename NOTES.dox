@@ -70,7 +70,7 @@ IN THE SOFTWARE.
 \endverbatim
 
 \page dis Disassembler
-\section usage Arguments and Usage
+\section dis_usage Arguments and Usage
 
 usage: dis6502 [-o \a out_file] [-F \a format] [\a file ...]
 
@@ -93,7 +93,7 @@ individually.
 	- ines - The iNES ROM format, which is the de facto standard for compiled
 		NES ROMS.
 
-\section notes Notes
+\section dis_notes Notes
 
 Depending on how well engineered/accurate the ROM/header information is in an
 NES ROM, the program code may overrun into the CHR ROM, or might have padding
@@ -102,7 +102,7 @@ alignment.)
 
 \page ld Linker
 \page as Assembler
-\section usage Arguments and Usage
+\section ld_usage Arguments and Usage
 
 usage: as6502 [-STWw] [-F \a format] [\a file ...]
 
@@ -138,7 +138,7 @@ are specified, as6502 will assemble from stdin, line-buffered.
 	
 	Treat warnings as errors.
 
-\section notes Notes
+\section ld_notes Notes
 
 When assembling from stdin, label parsing and dereferencing is not supported.
 This is because the labels are all determined in advance on a first pass that
