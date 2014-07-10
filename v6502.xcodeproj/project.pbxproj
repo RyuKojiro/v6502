@@ -495,7 +495,7 @@
 		E652129E1704B90D009CE919 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Hello-Channel, LLC";
 			};
 			buildConfigurationList = E65212A11704B90D009CE919 /* Build configuration list for PBXProject "v6502" */;
@@ -748,6 +748,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lcurses";
 				WARNING_CFLAGS = "-Weverything";
 			};
