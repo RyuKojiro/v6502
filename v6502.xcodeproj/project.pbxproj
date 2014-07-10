@@ -49,10 +49,11 @@
 		E6D6B8931830B94C00DF9DF8 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E6D6B8941830B95600DF9DF8 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
 		E6D8AC12182F7BBC0037B81A /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
+		E6EE9EA01948FD6E0088B705 /* breakpoint.c in Sources */ = {isa = PBXBuildFile; fileRef = E6EE9E9F1948FD6E0088B705 /* breakpoint.c */; };
 		E6FB94B4179114230053EB7E /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212A91704B90D009CE919 /* main.c */; };
 		E6FB94B5179114230053EB7E /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E6FB94B6179114230053EB7E /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
-		E6FB94B7179114230053EB7E /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B81704BC42009CE919 /* core.c */; };
+		E6FB94B7179114230053EB7E /* log.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B81704BC42009CE919 /* log.c */; };
 		E6FB94B81791143D0053EB7E /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
 		E6FB94B9179114410053EB7E /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
 		E6FB94BA179114440053EB7E /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
@@ -139,8 +140,8 @@
 		E65212B41704B935009CE919 /* cpu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
 		E65212B51704BAE7009CE919 /* mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mem.c; sourceTree = "<group>"; };
 		E65212B71704BAED009CE919 /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
-		E65212B81704BC42009CE919 /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = core.c; sourceTree = "<group>"; };
-		E65212BA1704BC4B009CE919 /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
+		E65212B81704BC42009CE919 /* log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = log.c; sourceTree = "<group>"; };
+		E65212BA1704BC4B009CE919 /* log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		E666A8121715D1C000EDBF95 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = as6502/main.c; sourceTree = "<group>"; };
 		E666A8131715D1C000EDBF95 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = as6502/Makefile; sourceTree = "<group>"; };
 		E666A8231715E50E00EDBF95 /* as6502.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; name = as6502.1; path = as6502/as6502.1; sourceTree = "<group>"; };
@@ -164,6 +165,8 @@
 		E6B33F1B1759748C00F0D8C2 /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = as6502/linectl.c; sourceTree = "<group>"; };
 		E6B33F1C1759748C00F0D8C2 /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = as6502/linectl.h; sourceTree = "<group>"; };
 		E6B33F221759821E00F0D8C2 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
+		E6EE9E9F1948FD6E0088B705 /* breakpoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = breakpoint.c; sourceTree = "<group>"; };
+		E6EE9EA11948FD7A0088B705 /* breakpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breakpoint.h; sourceTree = "<group>"; };
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6FE6FB117376FCD00B4D249 /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = as6502/error.c; sourceTree = "<group>"; };
 		E6FE6FB317376FEB00B4D249 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = error.h; path = as6502/error.h; sourceTree = "<group>"; };
@@ -310,8 +313,10 @@
 				E65212B41704B935009CE919 /* cpu.h */,
 				E65212B51704BAE7009CE919 /* mem.c */,
 				E65212B71704BAED009CE919 /* mem.h */,
-				E65212B81704BC42009CE919 /* core.c */,
-				E65212BA1704BC4B009CE919 /* core.h */,
+				E65212B81704BC42009CE919 /* log.c */,
+				E65212BA1704BC4B009CE919 /* log.h */,
+				E6EE9E9F1948FD6E0088B705 /* breakpoint.c */,
+				E6EE9EA11948FD7A0088B705 /* breakpoint.h */,
 			);
 			path = v6502;
 			sourceTree = "<group>";
@@ -593,11 +598,12 @@
 				E6FB94BA179114440053EB7E /* error.c in Sources */,
 				E6FB94B9179114410053EB7E /* linectl.c in Sources */,
 				E6FB94B81791143D0053EB7E /* parser.c in Sources */,
+				E6EE9EA01948FD6E0088B705 /* breakpoint.c in Sources */,
 				E6FB94B4179114230053EB7E /* main.c in Sources */,
 				E6FB94B5179114230053EB7E /* cpu.c in Sources */,
 				E6FB94B6179114230053EB7E /* mem.c in Sources */,
 				E640F6BF182C180500A4C6A5 /* reverse.c in Sources */,
-				E6FB94B7179114230053EB7E /* core.c in Sources */,
+				E6FB94B7179114230053EB7E /* log.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
