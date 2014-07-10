@@ -209,9 +209,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E6BC828F175E87FB00FD7B4A /* cocoa-easy6502 */ = {
+		E6BC828F175E87FB00FD7B4A /* v6502-cez */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E6BC82AD175E87FB00FD7B4A /* Build configuration list for PBXNativeTarget "cocoa-easy6502" */;
+			buildConfigurationList = E6BC82AD175E87FB00FD7B4A /* Build configuration list for PBXNativeTarget "v6502-cez" */;
 			buildPhases = (
 				E6BC828C175E87FB00FD7B4A /* Sources */,
 				E6BC828D175E87FB00FD7B4A /* Frameworks */,
@@ -221,7 +221,7 @@
 			);
 			dependencies = (
 			);
-			name = "cocoa-easy6502";
+			name = "v6502-cez";
 			productName = "cocoa-easy6502";
 			productReference = E6BC8290175E87FB00FD7B4A /* cocoa-easy6502.app */;
 			productType = "com.apple.product-type.application";
@@ -248,7 +248,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E6BC828F175E87FB00FD7B4A /* cocoa-easy6502 */,
+				E6BC828F175E87FB00FD7B4A /* v6502-cez */,
 			);
 		};
 /* End PBXProject section */
@@ -421,7 +421,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E6BC82AD175E87FB00FD7B4A /* Build configuration list for PBXNativeTarget "cocoa-easy6502" */ = {
+		E6BC82AD175E87FB00FD7B4A /* Build configuration list for PBXNativeTarget "v6502-cez" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E6BC82AE175E87FB00FD7B4A /* Debug */,
