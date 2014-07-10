@@ -9,9 +9,11 @@
 	<key>commit</key>
 	<string>a6af16d03e62e9b34da1be1098affa7b56d9838b</string>
 	<key>fonts</key>
-	<array/>
+	<array>
+		<string>OCRAStd</string>
+	</array>
 	<key>length</key>
-	<integer>582594</integer>
+	<integer>922971</integer>
 	<key>version</key>
 	<integer>37</integer>
 </dict>
