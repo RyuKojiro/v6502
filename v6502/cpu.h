@@ -312,6 +312,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
 void v6502_step(v6502_cpu *cpu);
 /** @brief Hardware reset a v6502_cpu */
 void v6502_reset(v6502_cpu *cpu);
+/** @brief Send an NMI to a v6502_cpu */
+void v6502_nmi(v6502_cpu *cpu);
 /**@}*/
 
 #endif

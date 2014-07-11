@@ -338,6 +338,10 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 	}
 }
 
+void v6502_nmi(v6502_cpu *cpu) {
+	cpu->pc = v6502_map(cpu->memory, v6502_memoryVectorNMILow) | (v6502_map(cpu->memory, v6502_memoryVectorNMIHigh) << 8);
+}
+
 void v6502_reset(v6502_cpu *cpu) {
 	cpu->pc = v6502_map(cpu->memory, v6502_memoryVectorResetLow) | (v6502_map(cpu->memory, v6502_memoryVectorResetHigh) << 8);
 	cpu->ac = 0;
