@@ -33,6 +33,5 @@ void v6502_destroyBreakpointList(v6502_breakpoint_list *list);
 void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint16_t address);
 void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t address);
 int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint16_t address);
-void v6502_printBreakpointList(v6502_breakpoint_list *list);
 
 #endif

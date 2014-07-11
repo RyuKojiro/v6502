@@ -79,7 +79,3 @@ void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t addres
 	}
 }
 
-void v6502_printBreakpointList(v6502_breakpoint_list *list) {
-
-}
-

@@ -55,3 +55,16 @@ void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) 
 		printf("\n");
 	}
 }
+
+void v6502_printBreakpointList(v6502_breakpoint_list *list) {
+	if (list->count == 0) {
+		printf("No breakpoints set.\n");
+		return;
+	}
+	
+	printf("Breakpoints set:\n");
+	for (size_t i = 0; i < list->count; i++) {
+		printf("breakpoint #%zu: 0x%04x\n", i, list->breakpoints[i]);
+	}
+}
+

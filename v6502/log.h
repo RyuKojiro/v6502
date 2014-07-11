@@ -27,6 +27,7 @@
 #define v6502_core_h
 
 #include "cpu.h"
+#include "breakpoint.h"
 
 /** @defgroup log VM State Logging */
 /**@{*/
@@ -34,6 +35,8 @@
 void v6502_printCpuState(v6502_cpu *cpu);
 /** @brief Neatly prints a 52 column wide hex dump of a specified memory range. */
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len);
+/** @brief Neatly prints the contents of a v6502_breakpoint_list. */
+void v6502_printBreakpointList(v6502_breakpoint_list *list);
 /**@}*/
 
 #endif
