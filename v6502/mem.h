@@ -58,6 +58,8 @@
 #define v6502_memorySizeWorkMemory			0x0800
 /** @brief Size of PPU registers for the RP2C02 chipset */
 #define v6502_memorySizePPURegisters		0x0008
+/** @brief Size of the six interrupt vector bytes (Hint: It's six.) */
+#define v6502_memorySizeInterruptVectors	v6502_memoryStartCeiling - v6502_memoryStartInterruptVectors
 
 // Vector Locations
 /** @brief The low byte location of the NMI vector stored in the v6502_memory::interrupt_vectors */
@@ -89,7 +91,7 @@ typedef struct {
 	/** @brief Fault Callback Context */
 	void *fault_context;
 	/** @brief The three 16-bit (two 8-byte) interrupt vectors starting at address v6502_memoryVectorNMILow */
-	uint8_t interrupt_vectors[v6502_memoryStartCeiling - v6502_memoryStartInterruptVectors];
+	uint8_t interrupt_vectors[v6502_memorySizeInterruptVectors];
 } v6502_memory;
 
 /** @defgroup mem_lifecycle Memory Lifecycle Functions */
