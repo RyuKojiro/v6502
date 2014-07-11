@@ -76,7 +76,7 @@ int isValidLiteral(const char *start, size_t len) {
 		if (start[i] == ',') {
 			// Now look for a register starting after the comma
 			for (i++; start[i] && (i < len); i++) {
-				if(!isspace((int)start[i]) && !(start[i] == 'x' || start[i] == 'y' || start[i] == 'X' || start[i] == 'Y' || start[i] == ')')) {
+				if(!isspace(CTYPE_CAST start[i]) && !(start[i] == 'x' || start[i] == 'y' || start[i] == 'X' || start[i] == 'Y' || start[i] == ')')) {
 					return NO;
 				}
 			}
