@@ -398,6 +398,10 @@ void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_objec
 }
 	
 void dis6502_deriveSymbolsForObject(ld6502_object *object) {
+	if(!object->table) {
+		object->table = as6502_createSymbolTable();
+	}
+
 	for (int i = 0; i < object->count; i++) {
 		dis6502_deriveSymbolsForObjectBlob(object->table, &object->blobs[i]);
 	}
