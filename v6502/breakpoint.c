@@ -62,7 +62,7 @@ int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint8_t address) {
 	return NO;
 }
 
-void v6502_removieBreakpointFromList(v6502_breakpoint_list *list, uint8_t address) {
+void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint8_t address) {
 	size_t loc = (locationOfBreakpointInList(list, address) - list->breakpoints) / sizeof(uint8_t);
 	
 	if (loc) {

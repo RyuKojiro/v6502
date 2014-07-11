@@ -31,7 +31,7 @@ typedef struct {
 v6502_breakpoint_list *v6502_createBreakPointList(void);
 void v6502_destroyBreakPointList(v6502_breakpoint_list *list);
 void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint8_t address);
-void v6502_removieBreakpointFromList(v6502_breakpoint_list *list, uint8_t address);
+void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint8_t address);
 int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint8_t address);
 
 #endif
