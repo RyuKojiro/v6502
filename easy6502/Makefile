@@ -1,4 +1,3 @@
-CC=clang
 PROG=	easy6502
 SRCS=	main.c state.c video.c ../v6502/cpu.c ../v6502/mem.c
 INCLUDE+=	-I../v6502/

@@ -1,4 +1,3 @@
-CC=	clang
 PROG=	dis6502
 SRCS=	main.c ../as6502/symbols.c ../ld6502/object.c ../dis6502/reverse.c \
 	../as6502/parser.c ../v6502/cpu.c ../v6502/mem.c ../as6502/linectl.c \
