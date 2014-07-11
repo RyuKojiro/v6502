@@ -107,6 +107,14 @@ static void run(v6502_cpu *cpu) {
 	cpu->sr &= ~v6502_cpu_status_break;
 	interrupt = 0;
 	
+	// Step once if we are starting from a breakpoint, so that we don't hit it again
+	if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
+		if (verbose) {
+			printSingleInstruction(cpu, cpu->pc);
+		}
+		v6502_step(cpu);
+	}
+
 	resist = YES;
 	do {
 		if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
@@ -175,9 +183,11 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			// Toggle breakpoint
 			if (v6502_breakpointIsInList(breakpoint_list, address)) {
 				v6502_removeBreakpointFromList(breakpoint_list, address);
+				printf("Removed breakpoint 0x%04x.\n", address);
 			}
 			else {
 				v6502_addBreakpointToList(breakpoint_list, address);
+				printf("Added breakpoint 0x%04x.\n", address);
 			}
 		}
 		else {
