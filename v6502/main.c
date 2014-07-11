@@ -296,24 +296,24 @@ int main(int argc, const char * argv[])
 	
 	signal(SIGINT, handleSignal);
 	
-	printf("Creating 1 virtual CPU…\n");
+	printf("Creating 1 virtual CPU...\n");
 	cpu = v6502_createCPU();
 	cpu->fault_callback = fault;
 	
-	printf("Allocating %dk of virtual memory…\n", (MEMORY_SIZE + 1) / 1024);
+	printf("Allocating %dk of virtual memory...\n", (MEMORY_SIZE + 1) / 1024);
 	cpu->memory = v6502_createMemory(MEMORY_SIZE);
 	
-	printf("Resetting CPU…\n");
+	printf("Resetting CPU...\n");
 	v6502_reset(cpu);
 
 	// Check for a binary as an argument; if so, load and run it
 	if (argc > 1) {
 		const char *filename = argv[argc - 1];
-		printf("Loading binary image \"%s\" into memory…\n", filename);
+		printf("Loading binary image \"%s\" into memory...\n", filename);
 		loadProgram(cpu->memory, filename);
 	}
 	
-	printf("Running…\n");
+	printf("Running...\n");
 	run(cpu);
 	
 	int commandLen;
