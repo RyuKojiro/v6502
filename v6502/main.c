@@ -109,6 +109,11 @@ static void run(v6502_cpu *cpu) {
 	
 	resist = YES;
 	do {
+		if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
+			printf("Hit breakpoint at 0x%02x.\n", cpu->pc);
+			return;
+		}
+		
 		if (verbose) {
 			printSingleInstruction(cpu, cpu->pc);
 		}
@@ -315,6 +320,11 @@ int main(int argc, const char * argv[])
 		loadProgram(cpu->memory, filename);
 	}
 	
+	/* An empty breakpoint list must be created even before first run, since 
+	 * breakpoint checks are made during all calls to run()
+	 */
+	breakpoint_list = v6502_createBreakpointList();
+
 	printf("Running...\n");
 	run(cpu);
 	
@@ -329,8 +339,6 @@ int main(int argc, const char * argv[])
 	el_set(el, EL_EDITOR, "emacs");
 	el_set(el, EL_HIST, history, hist);
 	
-	breakpoint_list = v6502_createBreakpointList();
-
 	char *command = NULL;
 	while (!feof(stdin)) {
 		currentLineNum++;
