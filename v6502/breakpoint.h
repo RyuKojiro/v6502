@@ -24,15 +24,15 @@
 #define v6502_breakpoint_h
 
 typedef struct {
-	uint8_t *breakpoints;
+	uint16_t *breakpoints;
 	size_t count;
 } v6502_breakpoint_list;
 
 v6502_breakpoint_list *v6502_createBreakpointList(void);
 void v6502_destroyBreakpointList(v6502_breakpoint_list *list);
-void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint8_t address);
-void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint8_t address);
-int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint8_t address);
+void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint16_t address);
+void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t address);
+int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint16_t address);
 void v6502_printBreakpointList(v6502_breakpoint_list *list);
 
 #endif

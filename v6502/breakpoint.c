@@ -44,17 +44,17 @@ void v6502_destroyBreakpointList(v6502_breakpoint_list *list) {
 	free(list);
 }
 
-void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint8_t address) {
+void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint16_t address) {
 	assert(list);
 
 	if (!v6502_breakpointIsInList(list, address)) {
-		list->breakpoints = realloc(list->breakpoints, sizeof(uint8_t) * (list->count + 1));
+		list->breakpoints = realloc(list->breakpoints, sizeof(address) * (list->count + 1));
 		list->breakpoints[list->count] = address;
 		list->count++;
 	}
 }
 
-static uint8_t *locationOfBreakpointInList(v6502_breakpoint_list *list, uint8_t address) {
+static uint16_t *locationOfBreakpointInList(v6502_breakpoint_list *list, uint16_t address) {
 	assert(list);
 
 	for (size_t i = 0; i < list->count; i++) {
@@ -65,14 +65,14 @@ static uint8_t *locationOfBreakpointInList(v6502_breakpoint_list *list, uint8_t 
 	return NULL;
 }
 
-int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint8_t address) {
+int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint16_t address) {
 	return (int)locationOfBreakpointInList(list, address);
 }
 
-void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint8_t address) {
+void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t address) {
 	assert(list);
 
-	size_t loc = (locationOfBreakpointInList(list, address) - list->breakpoints) / sizeof(uint8_t);
+	size_t loc = (locationOfBreakpointInList(list, address) - list->breakpoints) / sizeof(address);
 	
 	if (loc) {
 		//<#statements#>
