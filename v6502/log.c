@@ -64,7 +64,7 @@ void v6502_printBreakpointList(v6502_breakpoint_list *list) {
 	
 	printf("Breakpoints set:\n");
 	for (size_t i = 0; i < list->count; i++) {
-		printf("breakpoint #%zu: 0x%04x\n", i, list->breakpoints[i]);
+		printf("Breakpoint #%zu: 0x%04x\n", i, list->breakpoints[i]);
 	}
 }
 
