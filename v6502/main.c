@@ -161,6 +161,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
 			   "help                Displays this help.\n"
 			   "load <file>         Load binary image into memory at 0x0600.\n"
+			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
 			   "peek <addr>         Dumps the memory at and around a given address.\n"
 			   "quit                Exits v6502.\n"
 			   "run                 Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
@@ -198,6 +199,10 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 	}
 	if (compareCommand(command, "cpu")) {
 		v6502_printCpuState(cpu);
+		return YES;
+	}
+	if (compareCommand(command, "nmi")) {
+		v6502_nmi(cpu);
 		return YES;
 	}
 	if (compareCommand(command, "load")) {
