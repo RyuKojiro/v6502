@@ -160,6 +160,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			   "cpu                 Displays the current state of the CPU.\n"
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
 			   "help                Displays this help.\n"
+			   "iv <type> <addr>    Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.\n"
 			   "load <file>         Load binary image into memory at 0x0600.\n"
 			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
 			   "peek <addr>         Dumps the memory at and around a given address.\n"
@@ -202,6 +203,46 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 	}
 	if (compareCommand(command, "nmi")) {
 		v6502_nmi(cpu);
+		return YES;
+	}
+	if (compareCommand(command, "iv")) {
+		command = trimheadtospc(command, len);
+		command++;
+		
+		uint16_t vector_address = 0;
+		
+		// Determine IV address based on vector type
+		if (compareCommand(command, "nmi")) {
+			vector_address = v6502_memoryVectorNMILow;
+		}
+		else if (compareCommand(command, "reset")) {
+			vector_address = v6502_memoryVectorResetLow;
+		}
+		else if (compareCommand(command, "interrupt")) {
+			vector_address = v6502_memoryVectorInterruptLow;
+		}
+		else {
+			printf("Unknown vector type. Valid types are nmi, reset, interrupt.\n");
+			return YES;
+		}
+		
+		// Set or display IV based on what was set
+		command = trimheadtospc(command, len);
+		
+		if (command[0]) {
+			command++;
+
+			uint8_t low, high;
+			as6502_byteValuesForString(&high, &low, NULL, command);
+
+			*v6502_map(cpu->memory, vector_address) = low;
+			*v6502_map(cpu->memory, vector_address + 1) = high;
+		}
+		else {
+			// Low first, little endian
+			uint16_t value = *v6502_map(cpu->memory, vector_address) | (*v6502_map(cpu->memory, vector_address + 1) << 8);
+			printf("0x%04x\n", value);
+		}
 		return YES;
 	}
 	if (compareCommand(command, "load")) {
