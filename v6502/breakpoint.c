@@ -24,7 +24,7 @@
 #include "breakpoint.h"
 #include "parser.h"
 
-v6502_breakpoint_list *v6502_createBreakPointList(void) {
+v6502_breakpoint_list *v6502_createBreakpointList(void) {
 	v6502_breakpoint_list *result = malloc(sizeof(v6502_breakpoint_list));
 	
 	result->breakpoints = NULL;
@@ -33,7 +33,7 @@ v6502_breakpoint_list *v6502_createBreakPointList(void) {
 	return result;
 }
 
-void v6502_destroyBreakPointList(v6502_breakpoint_list *list) {
+void v6502_destroyBreakpointList(v6502_breakpoint_list *list) {
 	free(list->breakpoints);
 	free(list);
 }
@@ -69,3 +69,8 @@ void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint8_t address
 		//<#statements#>
 	}
 }
+
+void v6502_printBreakpointList(v6502_breakpoint_list *list) {
+
+}
+
