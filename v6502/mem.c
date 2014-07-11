@@ -21,6 +21,7 @@
  */
 
 #include <stdlib.h>
+#include <assert.h>
 
 #include "mem.h"
 
@@ -39,6 +40,8 @@
  * larger than single byte access.
  */
 uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
+	assert(memory);
+	
 	// Safety
 	if (!memory || !memory->bytes) {
 		if (memory && memory->fault_callback) {
@@ -104,6 +107,8 @@ uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 }
 
 void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size) {
+	assert(memory);
+
 	for (uint16_t i = 0; i < size; i++) {
 		*v6502_map(memory, v6502_memoryStartExpansionRom + i) = rom[i];
 	}
@@ -136,6 +141,10 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 }
 
 void v6502_destroyMemory(v6502_memory *memory) {
+	if (!memory) {
+		return;
+	}
+	
 	free(memory->bytes);
 	free(memory);
 }
