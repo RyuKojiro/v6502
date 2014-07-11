@@ -48,6 +48,8 @@
 #define v6502_memoryStartSRAM				0x6000
 /** @brief Start of memory mapped PRGROM */
 #define v6502_memoryStartPRGROM				0x8000
+/** @brief Start of memory mapped interrupt vectors */
+#define v6502_memoryStartInterruptVectors	0xFFFA
 /** @brief Maximum memory boundary */
 #define v6502_memoryStartCeiling			0xFFFF
 
@@ -58,17 +60,17 @@
 #define v6502_memorySizePPURegisters		0x0008
 
 // Vector Locations
-/** @brief The low byte location of the v6502_memory::nmi_vector */
+/** @brief The low byte location of the NMI vector stored in the v6502_memory::interrupt_vectors */
 #define v6502_memoryVectorNMILow			0xFFFA
-/** @brief The high byte location of the v6502_memory::nmi_vector */
+/** @brief The high byte location of the NMI vector stored in the v6502_memory::interrupt_vectors */
 #define v6502_memoryVectorNMIHigh			0xFFFB
-/** @brief The low byte location of the v6502_memory::reset_vector */
+/** @brief The low byte location of the reset vector stored in the v6502_memory::interrupt_vectors */
 #define v6502_memoryVectorResetLow			0xFFFC
-/** @brief The high byte location of the v6502_memory::reset_vector */
+/** @brief The high byte location of the reset vector stored in the v6502_memory::interrupt_vectors */
 #define v6502_memoryVectorResetHigh			0xFFFD
-/** @brief The low byte location of the v6502_memory::interrupt_vector */
+/** @brief The low byte location of the normal interrupt vector stored in the v6502_memory::interrupt_vectors */
 #define v6502_memoryVectorInterruptLow		0xFFFE
-/** @brief The high byte location of the v6502_memory::interrupt_vector */
+/** @brief The high byte location of the normal interrupt vector stored in the v6502_memory::interrupt_vectors */
 #define v6502_memoryVectorInterruptHigh		0xFFFF
 /**@}*/
 
@@ -86,12 +88,8 @@ typedef struct {
 	void(*fault_callback)(void *context, const char *reason);
 	/** @brief Fault Callback Context */
 	void *fault_context;
-	/** @brief NMI Vector, mapped by mem.c to v6502_memoryVectorNMILow and v6502_memoryVectorNMIHigh. */
-	uint16_t nmi_vector;
-	/** @brief Reset Vector, mapped by mem.c to $FFFC (low) and $FFFD (high). */
-	uint16_t reset_vector;
-	/** @brief Interrupt Vector, mapped by mem.c to $FFFE (low) and $FFFF (high). */
-	uint16_t interrupt_vector;
+	/** @brief The three 16-bit (two 8-byte) interrupt vectors starting at address v6502_memoryVectorNMILow */
+	uint8_t interrupt_vectors[v6502_memoryStartCeiling - v6502_memoryStartInterruptVectors];
 } v6502_memory;
 
 /** @defgroup mem_lifecycle Memory Lifecycle Functions */

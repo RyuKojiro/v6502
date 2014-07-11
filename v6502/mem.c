@@ -87,8 +87,13 @@ uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 	}
 
 	// PRG ROM
-	if (offset >= v6502_memoryStartPRGROM && offset < v6502_memoryStartCeiling) {
+	if (offset >= v6502_memoryStartPRGROM && offset < v6502_memoryStartInterruptVectors) {
 		return &memory->bytes[offset];
+	}
+
+	// Interrupt Vectors
+	if (offset >= v6502_memoryStartInterruptVectors && offset < v6502_memoryStartCeiling) {
+		return &memory->interrupt_vectors[offset - v6502_memoryStartInterruptVectors];
 	}
 	
 	if (memory && memory->fault_callback) {
