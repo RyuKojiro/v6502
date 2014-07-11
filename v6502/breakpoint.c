@@ -21,6 +21,8 @@
  */
 
 #include <stdlib.h>
+#include <assert.h>
+
 #include "breakpoint.h"
 #include "parser.h"
 
@@ -34,11 +36,17 @@ v6502_breakpoint_list *v6502_createBreakpointList(void) {
 }
 
 void v6502_destroyBreakpointList(v6502_breakpoint_list *list) {
+	if (!list) {
+		return;
+	}
+	
 	free(list->breakpoints);
 	free(list);
 }
 
 void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint8_t address) {
+	assert(list);
+
 	if (!v6502_breakpointIsInList(list, address)) {
 		list->breakpoints = realloc(list->breakpoints, sizeof(uint8_t) * (list->count + 1));
 		list->breakpoints[list->count] = address;
@@ -47,6 +55,8 @@ void v6502_addBreakpointToList(v6502_breakpoint_list *list, uint8_t address) {
 }
 
 static uint8_t *locationOfBreakpointInList(v6502_breakpoint_list *list, uint8_t address) {
+	assert(list);
+
 	for (size_t i = 0; i < list->count; i++) {
 		if (list->breakpoints[i] == address) {
 			return &list->breakpoints[i];
@@ -56,13 +66,12 @@ static uint8_t *locationOfBreakpointInList(v6502_breakpoint_list *list, uint8_t 
 }
 
 int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint8_t address) {
-	if (locationOfBreakpointInList(list, address)) {
-		return YES;
-	}
-	return NO;
+	return (int)locationOfBreakpointInList(list, address);
 }
 
 void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint8_t address) {
+	assert(list);
+
 	size_t loc = (locationOfBreakpointInList(list, address) - list->breakpoints) / sizeof(uint8_t);
 	
 	if (loc) {
