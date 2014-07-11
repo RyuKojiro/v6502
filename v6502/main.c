@@ -176,8 +176,10 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			}
 		}
 		else {
-			// List breakpoints
+			v6502_printBreakpointList(breakpoint_list);
 		}
+
+		return YES;
 	}
 	if (compareCommand(command, "cpu")) {
 		v6502_printCpuState(cpu);
@@ -327,6 +329,8 @@ int main(int argc, const char * argv[])
 	el_set(el, EL_EDITOR, "emacs");
 	el_set(el, EL_HIST, history, hist);
 	
+	breakpoint_list = v6502_createBreakpointList();
+
 	char *command = NULL;
 	while (!feof(stdin)) {
 		currentLineNum++;
@@ -355,6 +359,7 @@ int main(int argc, const char * argv[])
 		}
 	}
 	
+	v6502_destroyBreakpointList(breakpoint_list);
 	history_end(hist);
 	el_end(el);
 	free(command);
