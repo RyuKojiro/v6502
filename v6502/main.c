@@ -177,9 +177,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		if(command[0]) {
 			command++;
 			// Get address
-			uint8_t high, low;
-			as6502_byteValuesForString(&high, &low, NULL, command);
-			uint16_t address = (high << 8) | low;
+			uint16_t address = as6502_valueForString(NULL, command);
 			
 			// Toggle breakpoint
 			if (v6502_breakpointIsInList(breakpoint_list, address)) {
@@ -252,9 +250,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		command++;
 		
 		// Make sure we don't go out of bounds either direction
-		uint8_t high, low;
-		as6502_byteValuesForString(&high, &low, NULL, command);
-		uint16_t start = (high << 8) | low;
+		uint16_t start = as6502_valueForString(NULL, command);
 		
 		if (start <= 0x10) {
 			start = 0x00;
