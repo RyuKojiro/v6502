@@ -16,6 +16,8 @@ subsections:
 		- \ref mem_access
 	- \ref log.h
 		- \ref log
+	- \ref breakpoint.h
+		- \ref breakpoint
 - \subpage as (as6502)
 	- \ref parser.h
 		- \ref parser_translit
