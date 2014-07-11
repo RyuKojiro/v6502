@@ -2,8 +2,13 @@ AS=	as6502
 ASDIR=	as6502
 VM=	v6502
 VMDIR=	v6502
+DIS= dis6502
+DISDIR= dis6502
+LD= ld6502
+LDDIR= ld6502
+BINS= $(ASDIR)/$(AS) $(VMDIR)/$(VM) $(DISDIR)/$(DIS) $(LDDIR)/$(LD)
 
-all: $(ASDIR)/$(AS) $(VMDIR)/$(VM)
+all: $(BINS)
 
 $(VMDIR)/$(VM):
 	cd $(VMDIR) ; make
@@ -11,5 +16,11 @@ $(VMDIR)/$(VM):
 $(ASDIR)/$(AS):
 	cd $(ASDIR) ; make
 
+$(DISDIR)/$(DIS):
+	cd $(DISDIR) ; make
+
+$(LDDIR)/$(LD):
+	cd $(LDDIR) ; make
+
 clean:
-	rm -f $(ASDIR)/$(AS) $(VMDIR)/$(VM)
+	rm -f $(BINS)
