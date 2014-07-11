@@ -44,6 +44,7 @@ static int verbose;
 static volatile sig_atomic_t interrupt;
 static int resist;
 static v6502_cpu *cpu;
+static v6502_breakpoint_list *breakpoint_list;
 
 static void fault(void *ctx, const char *error) {
 	fprintf(stderr, "fault: ");
@@ -141,7 +142,8 @@ static int compareCommand(const char * command, const char * literal) {
 /** return YES if handled */
 static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 	if (compareCommand(command, "help")) {
-		printf("cpu                 Displays the current state of the CPU.\n"
+		printf("breakpoint <addr>   Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.\n"
+			   "cpu                 Displays the current state of the CPU.\n"
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
 			   "help                Displays this help.\n"
 			   "load <file>         Load binary image into memory at 0x0600.\n"
@@ -153,6 +155,28 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			   "step                Forcibly steps the CPU once.\n"
 			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
+	}
+	if (compareCommand(command, "breakpoint")) {
+		command = trimheadtospc(command, len);
+
+		if(command[0]) {
+			command++;
+			// Get address
+			uint8_t high, low;
+			as6502_byteValuesForString(&high, &low, NULL, command);
+			uint16_t address = (high << 8) | low;
+			
+			// Toggle breakpoint
+			if (v6502_breakpointIsInList(breakpoint_list, address)) {
+				v6502_removeBreakpointFromList(breakpoint_list, address);
+			}
+			else {
+				v6502_addBreakpointToList(breakpoint_list, address);
+			}
+		}
+		else {
+			// List breakpoints
+		}
 	}
 	if (compareCommand(command, "cpu")) {
 		v6502_printCpuState(cpu);
