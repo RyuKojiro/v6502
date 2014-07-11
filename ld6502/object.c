@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "object.h"
 #include "error.h"
@@ -47,6 +48,10 @@ ld6502_object *ld6502_createObject() {
 }
 
 void ld6502_destroyObject(ld6502_object *obj) {
+	if (!obj) {
+		return;
+	}
+	
 	for (int i = 0; i < obj->count; i++) {
 		free(obj->blobs[i].data);
 	}
@@ -55,6 +60,8 @@ void ld6502_destroyObject(ld6502_object *obj) {
 }
 
 void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld6502_file_type type) {
+	assert(object);
+	
 	FILE *in = fopen(fileName, "r");
 	
 	// Try to detect the file format if none is specified
@@ -86,6 +93,8 @@ void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld65
 
 // Object Accessors
 void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start) {	
+	assert(obj);
+	
 	obj->blobs = realloc(obj->blobs, sizeof(ld6502_object_blob) * (obj->count + 1));
 	if (!obj->blobs) {
 		as6502_fatal("blobs realloc in ld6502_addBlobToObject");
@@ -97,6 +106,8 @@ void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start) {
 }
 
 void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte) {
+	assert(blob);
+	
 	if (!blob) {
 		as6502_fatal("Null blob in ld6502_appendByteToBlob");
 	}
@@ -112,6 +123,8 @@ void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte) {
 
 // Contextual Object Mutators
 void ld6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len) {
+	assert(obj);
+	
 	if (len <= 3) {
 		return;
 	}
