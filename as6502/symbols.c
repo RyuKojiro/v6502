@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdio.h> // as6502_printSymbolTable
 #include <ctype.h> // isspace
+#include <assert.h>
 
 #include "symbols.h"
 #include "error.h"
@@ -48,6 +49,10 @@ as6502_symbol_table *as6502_createSymbolTable() {
 }
 
 void as6502_destroySymbolTable(as6502_symbol_table *table) {
+	if(!table) {
+		return;
+	}
+	
 	as6502_symbol *next;
 	for (as6502_symbol *this = table->first_symbol; this; this = next) {
 		next = this->next;
@@ -59,6 +64,11 @@ void as6502_destroySymbolTable(as6502_symbol_table *table) {
 }
 
 void as6502_printSymbolTable(as6502_symbol_table *table) {
+	if(!table) {
+		printf("Symbol table is NULL\n");
+		return;
+	}
+	
 	printf("Symbol table %p = {\n", table);
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		char *type;
@@ -89,9 +99,8 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 
 // Symbol Table Accessors
 as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *name) {
-	if (!table) {
-		return NULL;
-	}
+	assert(table);
+
 	size_t len = strlen(name);
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if (strncmp(this->name, name, len)) {
@@ -103,6 +112,8 @@ as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *na
 }
 
 as6502_symbol *as6502_symbolForAddress(as6502_symbol_table *table, uint16_t address) {
+	assert(table);
+
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if (this->address == address) {
 			return this;
@@ -113,6 +124,8 @@ as6502_symbol *as6502_symbolForAddress(as6502_symbol_table *table, uint16_t addr
 }
 
 uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
+	assert(table);
+
 	as6502_symbol *label = as6502_symbolForString(table, name);
 	
 	if (!label) {
@@ -123,6 +136,8 @@ uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
 }
 
 uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
+	assert(table);
+
 	as6502_symbol *var = as6502_symbolForString(table, name);
 	
 	if (!var) {
@@ -133,6 +148,8 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
 }
 
 void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address, as6502_symbol_type type) {
+	assert(table);
+
 	as6502_symbol *sym = malloc(sizeof(as6502_symbol));
 	if (!sym) {
 		as6502_fatal("symbol malloc in as6502_addVarToTable");
@@ -167,6 +184,8 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 // Easy Symbol Table Access
 
 as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation) {
+	assert(table);
+
 	as6502_symbol_type type;
 	size_t len = strlen(line) + 1;
 	char *symbol_true = malloc(len);
@@ -232,6 +251,8 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 }
 
 static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *line, size_t len, char *symbol) {
+	assert(table);
+
 	char *trimmed = trimhead(line, len);
 	//len -= trimmed - line;
 	
@@ -246,6 +267,8 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	/** FIXME: This needs to be smart about address formation, based on address mode
 	 * This is absurdly inefficient, but works, given the current symbol table implementation
 	 */
+	assert(table);
+
 	char *cur;
 	char addrString[7];
 	int width;
@@ -309,6 +332,8 @@ int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, 
 }
 
 void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset) {
+	assert(table);
+
 	// Iterate through tokens
 	for (char *cur = line; *cur && ((size_t)(cur - line) < len); cur = (trimheadtospc(cur, len - (cur - line)) + 1)) {
 		
