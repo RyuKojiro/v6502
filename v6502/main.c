@@ -34,6 +34,7 @@
 #include "error.h"
 #include "reverse.h"
 #include "linectl.h"
+#include "breakpoint.h"
 
 #define MAX_COMMAND_LEN			80
 #define MAX_INSTRUCTION_LEN		32
