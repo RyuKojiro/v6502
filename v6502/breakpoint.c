@@ -72,10 +72,16 @@ int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint16_t address) {
 void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t address) {
 	assert(list);
 
-	size_t loc = (locationOfBreakpointInList(list, address) - list->breakpoints) / sizeof(address);
+	uint16_t *loc = locationOfBreakpointInList(list, address);
 	
 	if (loc) {
-		//<#statements#>
+		// Shift the entire list down one
+		for (size_t i = ((loc - list->breakpoints) / sizeof(address)) + 1; i < list->count; i++) {
+			list->breakpoints[i - 1] = list->breakpoints[i];
+		}
+		
+		list->count--;
+		list->breakpoints = realloc(list->breakpoints, sizeof(address) * list->count);
 	}
 }
 
