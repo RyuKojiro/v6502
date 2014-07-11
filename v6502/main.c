@@ -163,6 +163,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			   "load <file>         Load binary image into memory at 0x0600.\n"
 			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
 			   "peek <addr>         Dumps the memory at and around a given address.\n"
+			   "poke <addr> <value> Sets the location in memory to the value specified.\n"
 			   "quit                Exits v6502.\n"
 			   "run                 Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
 			   "reset               Resets the CPU.\n"
@@ -249,9 +250,9 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		command = trimheadtospc(command, len);
 		command++;
 		
-		// Make sure we don't go out of bounds either direction
 		uint16_t start = as6502_valueForString(NULL, command);
 		
+		// Make sure we don't go out of bounds either direction
 		if (start <= 0x10) {
 			start = 0x00;
 		}
@@ -263,6 +264,32 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		}
 		
 		v6502_printMemoryRange(cpu->memory, start, 0x30);
+		return YES;
+	}
+	if (compareCommand(command, "poke")) {
+		command = trimheadtospc(command, len);
+		command++;
+		
+		// Make sure we don't go out of bounds either direction
+		uint16_t address = as6502_valueForString(NULL, command);
+		uint8_t value;
+		
+		command = trimheadtospc(command, len);
+		command++;
+		as6502_byteValuesForString(NULL, &value, NULL, command);
+		
+		// Make sure we don't go out of bounds either direction
+		if (address <= 0x10) {
+			address = 0x00;
+		}
+		else if (address >= cpu->memory->size - 0x30) {
+			address = cpu->memory->size - 0x30;
+		}
+		else {
+			address -= 0x10;
+		}
+		
+		*v6502_map(cpu->memory, address) = value;
 		return YES;
 	}
 	if (compareCommand(command, "quit")) {
