@@ -35,6 +35,7 @@
 #include "reverse.h"
 #include "linectl.h"
 #include "breakpoint.h"
+#include "textmode.h"
 
 #define MAX_COMMAND_LEN			80
 #define MAX_INSTRUCTION_LEN		32
@@ -46,6 +47,7 @@ static volatile sig_atomic_t interrupt;
 static int resist;
 static v6502_cpu *cpu;
 static v6502_breakpoint_list *breakpoint_list;
+static v6502_textmode_video *video;
 
 static void fault(void *ctx, const char *error) {
 	fprintf(stderr, "fault: ");
@@ -126,8 +128,11 @@ static void run(v6502_cpu *cpu) {
 			printSingleInstruction(cpu, cpu->pc);
 		}
 		v6502_step(cpu);
+		textMode_refreshVideo(video);
 	} while (!(cpu->sr & v6502_cpu_status_break) && !interrupt);
 	resist = NO;
+	
+	textMode_rest(video);
 	
 	if (cpu->sr & v6502_cpu_status_break) {
 		printf("Encountered 'brk' at 0x%02x.\n", cpu->pc - 1);
@@ -404,6 +409,9 @@ int main(int argc, const char * argv[])
 	 */
 	breakpoint_list = v6502_createBreakpointList();
 
+	printf("Starting Text Mode Video...\n");
+	video = textMode_create(cpu->memory);
+	
 	printf("Running...\n");
 	run(cpu);
 	
@@ -446,6 +454,7 @@ int main(int argc, const char * argv[])
 		}
 	}
 	
+	textMode_destroy(video);
 	v6502_destroyBreakpointList(breakpoint_list);
 	history_end(hist);
 	el_end(el);
