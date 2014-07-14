@@ -23,15 +23,21 @@
 #ifndef v6502_textmode_h
 #define v6502_textmode_h
 
-#include "memory.h"
+#include <curses.h>
+
+#include "mem.h"
+
+#define textMode_memoryStart	0x2000
 
 typedef struct {
-	
+	WINDOW *screen;
+	v6502_memory *memory;
 } v6502_textmode_video;
 
-v6502_textmode_video *textMode_create();
+v6502_textmode_video *textMode_create(v6502_memory *mem);
 void textMode_destroy(v6502_textmode_video *vid);
-void textMode_refreshVideo(v6502_memory *mem);
-void textMode_updateCharacter(v6502_memory *mem, int x, int y);
+void textMode_refreshVideo(v6502_textmode_video *vid);
+void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y);
+uint16_t textMode_addressForLocation(int x, int y);
 
 #endif

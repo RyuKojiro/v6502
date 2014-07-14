@@ -20,4 +20,35 @@
  * IN THE SOFTWARE.
  */
 
-#include <stdio.h>
+#include <stdlib.h>
+
+#include "textmode.h"
+
+v6502_textmode_video *textMode_create(v6502_memory *mem) {
+	v6502_textmode_video *vid = malloc(sizeof(v6502_textmode_video));
+	vid->screen = initscr();
+}
+
+void textMode_destroy(v6502_textmode_video *vid) {
+	endwin();
+	free(vid);
+}
+
+void textMode_refreshVideo(v6502_textmode_video *vid) {
+	for (int y = 0; y < 24; y++) {
+		for (int x = 0; x < 80; x++) {
+			textMode_updateCharacter(vid, x, y);
+		}
+	}
+}
+
+void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y) {
+	uint16_t address = textMode_addressForLocation(x, y);
+	wmove(vid->screen, x, y);
+	winsch(vid->screen, *v6502_map(vid->memory, address));
+}
+
+
+uint16_t textMode_addressForLocation(int x, int y) {
+	return textMode_memoryStart + ((y * 80) + x);
+}
