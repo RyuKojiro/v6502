@@ -26,7 +26,8 @@
 
 v6502_textmode_video *textMode_create(v6502_memory *mem) {
 	v6502_textmode_video *vid = malloc(sizeof(v6502_textmode_video));
-	vid->screen = initscr();
+	vid->memory = mem;
+	return vid;
 }
 
 void textMode_destroy(v6502_textmode_video *vid) {
@@ -35,6 +36,10 @@ void textMode_destroy(v6502_textmode_video *vid) {
 }
 
 void textMode_refreshVideo(v6502_textmode_video *vid) {
+	if (!vid->screen) {
+		vid->screen = initscr();
+	}
+	
 	for (int y = 0; y < 24; y++) {
 		for (int x = 0; x < 80; x++) {
 			textMode_updateCharacter(vid, x, y);
