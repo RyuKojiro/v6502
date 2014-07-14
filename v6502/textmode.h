@@ -36,6 +36,7 @@ typedef struct {
 
 v6502_textmode_video *textMode_create(v6502_memory *mem);
 void textMode_destroy(v6502_textmode_video *vid);
+void textMode_rest(v6502_textmode_video *vid);
 void textMode_refreshVideo(v6502_textmode_video *vid);
 void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y);
 uint16_t textMode_addressForLocation(int x, int y);

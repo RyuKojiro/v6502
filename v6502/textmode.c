@@ -35,6 +35,12 @@ void textMode_destroy(v6502_textmode_video *vid) {
 	free(vid);
 }
 
+void textMode_rest(v6502_textmode_video *vid) {
+	vid->screen = NULL;
+	endwin();
+}
+
+
 void textMode_refreshVideo(v6502_textmode_video *vid) {
 	if (!vid->screen) {
 		vid->screen = initscr();
