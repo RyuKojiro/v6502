@@ -306,7 +306,11 @@ void v6502_destroyCPU(v6502_cpu *cpu);
 int v6502_instructionLengthForOpcode(v6502_opcode opcode);
 /** @brief Return the v6502_address_mode of an instruction based on the opcode */
 v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode);
-/** @brief Execute an instruction on a v6502_cpu */
+/** @brief Execute an instruction on a v6502_cpu. */
+/** It is important to note that this does not alter the program counter, step
+ is required in order for that to happen. This is because some operations (like
+ the interrupt sequence) actually inject instructions directly into the cpu,
+ mid-execution.  */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high);
 /** @brief Single step a v6502_cpu */
 void v6502_step(v6502_cpu *cpu);
