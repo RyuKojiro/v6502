@@ -22,3 +22,14 @@
 ; This file is a sample of some assembly to interact with text mode video.
 ;
 
+start:
+	ora #$54	;	T
+	sta $2000
+	ora #$65	;	e
+	sta $2001
+	ora #$73	;	s
+	sta $2002
+	ora #$74	;	t
+	sta $2003
+
+	jmp start
