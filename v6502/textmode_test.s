@@ -23,13 +23,13 @@
 ;
 
 start:
-	ora #$54	;	T
+	lda #$54	;	T
 	sta $2000
-	ora #$65	;	e
+	lda #$65	;	e
 	sta $2001
-	ora #$73	;	s
+	lda #$73	;	s
 	sta $2002
-	ora #$74	;	t
+	lda #$74	;	t
 	sta $2003
 
 	jmp start
