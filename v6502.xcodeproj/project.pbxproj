@@ -169,6 +169,8 @@
 		E6B33F1B1759748C00F0D8C2 /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = as6502/linectl.c; sourceTree = "<group>"; };
 		E6B33F1C1759748C00F0D8C2 /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = as6502/linectl.h; sourceTree = "<group>"; };
 		E6B33F221759821E00F0D8C2 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
+		E6CD3C001975C602006E2E2B /* Chip.sketch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Chip.sketch; sourceTree = "<group>"; };
+		E6CD3C011975C602006E2E2B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		E6EE9E9F1948FD6E0088B705 /* breakpoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = breakpoint.c; sourceTree = "<group>"; };
 		E6EE9EA11948FD7A0088B705 /* breakpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breakpoint.h; sourceTree = "<group>"; };
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -260,6 +262,8 @@
 		E640E21417DFD828009C0718 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
+				E6CD3C001975C602006E2E2B /* Chip.sketch */,
+				E6CD3C011975C602006E2E2B /* logo.png */,
 				E6B33F221759821E00F0D8C2 /* Doxyfile */,
 				E6A079101737321800E0027B /* NOTES.dox */,
 			);
