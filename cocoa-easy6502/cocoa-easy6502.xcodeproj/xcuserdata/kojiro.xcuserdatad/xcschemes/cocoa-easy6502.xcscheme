@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E6BC828F175E87FB00FD7B4A"
-               BuildableName = "cocoa-easy6502.app"
-               BlueprintName = "cocoa-easy6502"
+               BuildableName = "v6502-cez.app"
+               BlueprintName = "v6502-cez"
                ReferencedContainer = "container:cocoa-easy6502.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E6BC828F175E87FB00FD7B4A"
-            BuildableName = "cocoa-easy6502.app"
-            BlueprintName = "cocoa-easy6502"
+            BuildableName = "v6502-cez.app"
+            BlueprintName = "v6502-cez"
             ReferencedContainer = "container:cocoa-easy6502.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -52,8 +52,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E6BC828F175E87FB00FD7B4A"
-            BuildableName = "cocoa-easy6502.app"
-            BlueprintName = "cocoa-easy6502"
+            BuildableName = "v6502-cez.app"
+            BlueprintName = "v6502-cez"
             ReferencedContainer = "container:cocoa-easy6502.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -70,8 +70,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E6BC828F175E87FB00FD7B4A"
-            BuildableName = "cocoa-easy6502.app"
-            BlueprintName = "cocoa-easy6502"
+            BuildableName = "v6502-cez.app"
+            BlueprintName = "v6502-cez"
             ReferencedContainer = "container:cocoa-easy6502.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
