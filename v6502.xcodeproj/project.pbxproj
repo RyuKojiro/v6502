@@ -40,6 +40,7 @@
 		E6817C341855672D008A58A9 /* flat.c in Sources */ = {isa = PBXBuildFile; fileRef = E6817C291855658B008A58A9 /* flat.c */; };
 		E68C9A3E193FA00300AD9E00 /* libedit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A3D193FA00300AD9E00 /* libedit.dylib */; };
 		E6A4808C17583605005ABE54 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
+		E6B04B621974855100F8690A /* textmode.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B04B5F1974855100F8690A /* textmode.c */; };
 		E6B33F1D175974DB00F0D8C2 /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
 		E6BDA952174FD23D0092B614 /* codegen.c in Sources */ = {isa = PBXBuildFile; fileRef = E670DCFA174CA15300F95400 /* codegen.c */; };
 		E6C77B601855585C009AB304 /* reverse.c in Sources */ = {isa = PBXBuildFile; fileRef = E640F6BD182C180500A4C6A5 /* reverse.c */; };
@@ -162,6 +163,9 @@
 		E6A079101737321800E0027B /* NOTES.dox */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTES.dox; sourceTree = "<group>"; };
 		E6A4808A1758355A005ABE54 /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = as6502/parser.c; sourceTree = "<group>"; };
 		E6A4808B1758355A005ABE54 /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = as6502/parser.h; sourceTree = "<group>"; };
+		E6B04B5E1974855100F8690A /* textmode_test.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = textmode_test.s; sourceTree = "<group>"; };
+		E6B04B5F1974855100F8690A /* textmode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = textmode.c; sourceTree = "<group>"; };
+		E6B04B601974855100F8690A /* textmode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textmode.h; sourceTree = "<group>"; };
 		E6B33F1B1759748C00F0D8C2 /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = as6502/linectl.c; sourceTree = "<group>"; };
 		E6B33F1C1759748C00F0D8C2 /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = as6502/linectl.h; sourceTree = "<group>"; };
 		E6B33F221759821E00F0D8C2 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
@@ -306,6 +310,9 @@
 		E65212A81704B90D009CE919 /* v6502 */ = {
 			isa = PBXGroup;
 			children = (
+				E6B04B5E1974855100F8690A /* textmode_test.s */,
+				E6B04B5F1974855100F8690A /* textmode.c */,
+				E6B04B601974855100F8690A /* textmode.h */,
 				E64B300E170D59B700DAB63C /* Makefile */,
 				E65212A91704B90D009CE919 /* main.c */,
 				E65212AB1704B90D009CE919 /* v6502.1 */,
@@ -599,6 +606,7 @@
 				E6FB94B9179114410053EB7E /* linectl.c in Sources */,
 				E6FB94B81791143D0053EB7E /* parser.c in Sources */,
 				E6EE9EA01948FD6E0088B705 /* breakpoint.c in Sources */,
+				E6B04B621974855100F8690A /* textmode.c in Sources */,
 				E6FB94B4179114230053EB7E /* main.c in Sources */,
 				E6FB94B5179114230053EB7E /* cpu.c in Sources */,
 				E6FB94B6179114230053EB7E /* mem.c in Sources */,
