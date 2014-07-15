@@ -67,8 +67,8 @@ uint8_t *v6502_map(v6502_memory *memory, uint16_t offset) {
 	
 	// PPU Registers
 	if (offset >= v6502_memoryStartPPURegisters && offset < v6502_memoryStartAPURegisters) {
-		offset %= v6502_memorySizePPURegisters;
-		offset += v6502_memoryStartPPURegisters;
+//		offset %= v6502_memorySizePPURegisters;
+//		offset += v6502_memoryStartPPURegisters;
 		
 		return &memory->bytes[offset];
 	}
