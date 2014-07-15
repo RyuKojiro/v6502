@@ -49,14 +49,19 @@ void textMode_refreshVideo(v6502_textmode_video *vid) {
 	for (int y = 0; y < 24; y++) {
 		for (int x = 0; x < 80; x++) {
 			textMode_updateCharacter(vid, x, y);
+			wrefresh(vid->screen);
 		}
 	}
 }
 
 void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y) {
 	uint16_t address = textMode_addressForLocation(x, y);
-	wmove(vid->screen, x, y);
-	winsch(vid->screen, *v6502_map(vid->memory, address));
+	char ch = *v6502_map(vid->memory, address);
+	
+	if (ch) {
+		wmove(vid->screen, y, x);
+		waddch(vid->screen, ch);
+	}
 }
 
 
