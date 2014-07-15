@@ -255,8 +255,10 @@ typedef enum {
 	// STY
 	v6502_opcode_sty_zpg	= 0x84,
 	v6502_opcode_sty_zpgx	= 0x94,
-	v6502_opcode_sty_abs	= 0x8C
+	v6502_opcode_sty_abs	= 0x8C,
 
+	// WAI
+	v6502_opcode_wai		= 0xCB
 } v6502_opcode;
 
 /** @enum */

@@ -312,6 +312,9 @@ void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
 		case v6502_opcode_sty_abs:
 			strncpy(string, "sty", len);
 			return;
+		case v6502_opcode_wai:
+			strncpy(string, "wai", len);
+			return;
 	}
 }
 

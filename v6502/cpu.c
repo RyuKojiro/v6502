@@ -21,6 +21,7 @@
  */
 
 #include <stdlib.h>
+#include <unistd.h>	// v6502_opcode_wai's sleep(3) call
 
 #include "cpu.h"
 
@@ -190,6 +191,7 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_iny:
 		case v6502_opcode_rti:
 		case v6502_opcode_rts:
+		case v6502_opcode_wai:
 			return v6502_address_mode_implied;
 		case v6502_opcode_bcc:
 		case v6502_opcode_bcs:
@@ -482,6 +484,9 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_iny: {
 			_executeInPlaceIncrement(cpu, &cpu->y);
 		} return;
+		case v6502_opcode_wai: {
+			sleep(1);
+		}
 
 		// Branch Instructions
 		case v6502_opcode_bcc: {
@@ -650,10 +655,22 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 
 		// JMP
 		case v6502_opcode_jmp_abs: {
+			if (BOTH_BYTES == cpu->pc) {
+				v6502_execute(cpu, v6502_opcode_wai, 0, 0);
+				cpu->pc -= 3; // PC shift
+				return;
+			}
+			
 			cpu->pc = BOTH_BYTES;
 			cpu->pc -= 3; // PC shift
 		} return;
 		case v6502_opcode_jmp_ind: {
+			if (*v6502_map(cpu->memory, low) == cpu->pc) {
+				v6502_execute(cpu, v6502_opcode_wai, 0, 0);
+				cpu->pc -= 2; // PC shift
+				return;
+			}
+
 			cpu->pc = *v6502_map(cpu->memory, low);
 			cpu->pc -= 2; // PC shift
 		} return;
