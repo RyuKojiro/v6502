@@ -41,6 +41,7 @@
 #define MAX_INSTRUCTION_LEN		32
 #define DISASSEMBLY_COUNT		10
 #define MEMORY_SIZE				0xFFFF
+#define ROM_LOAD_LOCATION		0x600
 
 static int verbose;
 static volatile sig_atomic_t interrupt;
@@ -69,7 +70,7 @@ static void loadProgram(v6502_memory *mem, const char *fname) {
 	uint16_t offset = 0;
 	
 	while (fread(&byte, 1, 1, f)) {
-		mem->bytes[0x600 + (offset++)] = byte;
+		mem->bytes[ROM_LOAD_LOCATION + (offset++)] = byte;
 	}
 	
 	printf("Loaded %u bytes.\n", offset);
@@ -394,16 +395,20 @@ int main(int argc, const char * argv[])
 	printf("Allocating %dk of virtual memory...\n", (MEMORY_SIZE + 1) / 1024);
 	cpu->memory = v6502_createMemory(MEMORY_SIZE);
 	
-	printf("Resetting CPU...\n");
-	v6502_reset(cpu);
-
 	// Check for a binary as an argument; if so, load and run it
 	if (argc > 1) {
 		const char *filename = argv[argc - 1];
 		printf("Loading binary image \"%s\" into memory...\n", filename);
 		loadProgram(cpu->memory, filename);
+		
+		// Make sure the reset vector is the same
+		*v6502_map(cpu->memory, v6502_memoryVectorResetLow) = ROM_LOAD_LOCATION & 0xFF;
+		*v6502_map(cpu->memory, v6502_memoryVectorResetHigh) = ROM_LOAD_LOCATION >> 8;
 	}
 	
+	printf("Resetting CPU...\n");
+	v6502_reset(cpu);
+
 	/* An empty breakpoint list must be created even before first run, since 
 	 * breakpoint checks are made during all calls to run()
 	 */
