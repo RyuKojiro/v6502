@@ -22,7 +22,6 @@
 ; This file is a sample of some assembly to interact with text mode video.
 ;
 
-start:
 	lda #$54	;	T
 	sta $2000
 	lda #$65	;	e
@@ -31,5 +30,5 @@ start:
 	sta $2002
 	lda #$74	;	t
 	sta $2003
-
-	jmp start
+end:			; This does the same in v6502 as a wai instruction will
+	jmp end
