@@ -9,33 +9,39 @@
 ; NOTE: If LDA, JMP, or JSR do not properly work, then the environment is not
 ; sane enough to even test.
 
+; On failure, brk, so that the PC is intact, if there is a branch required for
+; failure, then have a unique label with a brk.
+
 ; First, sanity check flags and branches
 ; SEC	....	set carry
 	lda #$38
 	sec
-	bcc fail
+	bcc fail1
 ; BCC	....	branch on carry clear
 	bcs testCLC
-	lda #$90
-	jmp fail
+	brk
+fail1:
+	brk
 ; CLC	....	clear carry
 testCLC:
 	lda #$18
 	clc
-	bcs fail
+	bcs fail2
 ; BCS	....	branch on carry set
 	bcc testSED
-	lda #$B0
-	jmp fail
+	brk
+fail2:
+	brk
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GOOD UNTIL HERE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; SED	....	set decimal
 testSED:
 	lda #$F8
 	sed
-	bcs fail
+	bcs fail3
 ; CLD	....	clear decimal
 	lda #$D8
 	cld
-	bcs fail
+	bcs fail4
 
 ; SEI	....	set interrupt disable
 ; CLI	....	clear interrupt disable
@@ -111,9 +117,4 @@ negFail:
 
 success:
 	lda #$FF
-	brk
-
-; On test failure, the opcode that failed is pushed to the accumulator, and the
-; subtest that failed is pushed into the X register.
-fail:
 	brk
