@@ -341,13 +341,13 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 }
 
 void v6502_nmi(v6502_cpu *cpu) {
-	cpu->pc = (*v6502_map(cpu->memory, v6502_memoryVectorNMIHigh) << 8);
-	cpu->pc |= *v6502_map(cpu->memory, v6502_memoryVectorNMILow);
+	cpu->pc = (*v6502_access(cpu->memory, v6502_memoryVectorNMIHigh) << 8);
+	cpu->pc |= *v6502_access(cpu->memory, v6502_memoryVectorNMILow);
 }
 
 void v6502_reset(v6502_cpu *cpu) {
-	cpu->pc = (*v6502_map(cpu->memory, v6502_memoryVectorResetHigh) << 8);
-	cpu->pc |= *v6502_map(cpu->memory, v6502_memoryVectorResetLow);
+	cpu->pc = (*v6502_access(cpu->memory, v6502_memoryVectorResetHigh) << 8);
+	cpu->pc |= *v6502_access(cpu->memory, v6502_memoryVectorResetLow);
 	cpu->ac = 0;
 	cpu->x  = 0;
 	cpu->y  = 0;
@@ -356,9 +356,9 @@ void v6502_reset(v6502_cpu *cpu) {
 }
 
 void v6502_step(v6502_cpu *cpu) {
-	v6502_opcode opcode = *v6502_map(cpu->memory, cpu->pc);
-	uint8_t low = *v6502_map(cpu->memory, cpu->pc + 1);
-	uint8_t high = *v6502_map(cpu->memory, cpu->pc + 2);
+	v6502_opcode opcode = *v6502_access(cpu->memory, cpu->pc);
+	uint8_t low = *v6502_access(cpu->memory, cpu->pc + 1);
+	uint8_t high = *v6502_access(cpu->memory, cpu->pc + 2);
 	v6502_execute(cpu, opcode, low, high);
 	cpu->pc += v6502_instructionLengthForOpcode(opcode);
 }
@@ -376,39 +376,39 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			operand = &low;
 		} break;
 		case v6502_address_mode_indirect: {
-			ref = *v6502_map(cpu->memory, BOTH_BYTES); // Low byte first
-			ref |= *v6502_map(cpu->memory, BOTH_BYTES + 1) << 8; // High byte second
-			operand = v6502_map(cpu->memory, ref);
+			ref = *v6502_access(cpu->memory, BOTH_BYTES); // Low byte first
+			ref |= *v6502_access(cpu->memory, BOTH_BYTES + 1) << 8; // High byte second
+			operand = v6502_access(cpu->memory, ref);
 		} break;
 		case v6502_address_mode_indirect_x: {
 			low += cpu->x;
-			ref = *v6502_map(cpu->memory, low); // Low byte first
-			ref |= *v6502_map(cpu->memory, low + 1) << 8; // High byte second
-			operand = v6502_map(cpu->memory, ref);
+			ref = *v6502_access(cpu->memory, low); // Low byte first
+			ref |= *v6502_access(cpu->memory, low + 1) << 8; // High byte second
+			operand = v6502_access(cpu->memory, ref);
 		} break;
 		case v6502_address_mode_indirect_y: {
-			ref = *v6502_map(cpu->memory, low); // Low byte first
-			ref |= *v6502_map(cpu->memory, low + 1) << 8; // High byte second
+			ref = *v6502_access(cpu->memory, low); // Low byte first
+			ref |= *v6502_access(cpu->memory, low + 1) << 8; // High byte second
 			ref += cpu->y;
-			operand = v6502_map(cpu->memory, ref);
+			operand = v6502_access(cpu->memory, ref);
 		} break;
 		case v6502_address_mode_zeropage: {
-			operand = v6502_map(cpu->memory, low);
+			operand = v6502_access(cpu->memory, low);
 		} break;
 		case v6502_address_mode_zeropage_x: {
-			operand = v6502_map(cpu->memory, low + cpu->x);
+			operand = v6502_access(cpu->memory, low + cpu->x);
 		} break;
 		case v6502_address_mode_zeropage_y: {
-			operand = v6502_map(cpu->memory, low + cpu->y);
+			operand = v6502_access(cpu->memory, low + cpu->y);
 		} break;
 		case v6502_address_mode_absolute: {
-			operand = v6502_map(cpu->memory, BOTH_BYTES);
+			operand = v6502_access(cpu->memory, BOTH_BYTES);
 		} break;
 		case v6502_address_mode_absolute_x: {
-			operand = v6502_map(cpu->memory, BOTH_BYTES + cpu->x);
+			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->x);
 		} break;
 		case v6502_address_mode_absolute_y: {
-			operand = v6502_map(cpu->memory, BOTH_BYTES + cpu->y);
+			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->y);
 		} break;
 		case v6502_address_mode_relative:
 			break;
@@ -665,13 +665,13 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->pc -= 3; // PC shift
 		} return;
 		case v6502_opcode_jmp_ind: {
-			if (*v6502_map(cpu->memory, low) == cpu->pc) {
+			if (*v6502_access(cpu->memory, low) == cpu->pc) {
 				v6502_execute(cpu, v6502_opcode_wai, 0, 0);
 				cpu->pc -= 2; // PC shift
 				return;
 			}
 
-			cpu->pc = *v6502_map(cpu->memory, low);
+			cpu->pc = *v6502_access(cpu->memory, low);
 			cpu->pc -= 2; // PC shift
 		} return;
 		
