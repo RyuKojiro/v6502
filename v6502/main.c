@@ -140,7 +140,7 @@ static void run(v6502_cpu *cpu) {
 	}
 	
 	if (interrupt) {
-		printf("Recieved interrupt, CPU halted.\n");
+		printf("Received interrupt, CPU halted.\n");
 	}
 }
 
