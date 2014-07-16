@@ -39,7 +39,7 @@
  * pointer to whatever it is supposed to be pointing to. This is NOT safe for
  * larger than single byte access.
  */
-uint8_t *v6502_access(v6502_memory *memory, uint16_t offset) {
+uint8_t *v6502_access(v6502_memory *memory, uint16_t offset, int trap) {
 	assert(memory);
 	
 	// Safety
@@ -110,7 +110,7 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 	assert(memory);
 
 	for (uint16_t i = 0; i < size; i++) {
-		*v6502_access(memory, v6502_memoryStartExpansionRom + i) = rom[i];
+		*v6502_access(memory, v6502_memoryStartExpansionRom + i, NO) = rom[i];
 	}
 }
 

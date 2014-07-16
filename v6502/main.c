@@ -241,12 +241,12 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			uint8_t low, high;
 			as6502_byteValuesForString(&high, &low, NULL, command);
 
-			*v6502_access(cpu->memory, vector_address) = low;
-			*v6502_access(cpu->memory, vector_address + 1) = high;
+			*v6502_access(cpu->memory, vector_address, NO) = low;
+			*v6502_access(cpu->memory, vector_address + 1, NO) = high;
 		}
 		else {
 			// Low first, little endian
-			uint16_t value = *v6502_access(cpu->memory, vector_address) | (*v6502_access(cpu->memory, vector_address + 1) << 8);
+			uint16_t value = *v6502_access(cpu->memory, vector_address, NO) | (*v6502_access(cpu->memory, vector_address + 1, NO) << 8);
 			printf("0x%04x\n", value);
 		}
 		return YES;
@@ -336,7 +336,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			address -= 0x10;
 		}
 		
-		*v6502_access(cpu->memory, address) = value;
+		*v6502_access(cpu->memory, address, YES) = value;
 		return YES;
 	}
 	if (compareCommand(command, "quit")) {
@@ -402,8 +402,8 @@ int main(int argc, const char * argv[])
 		loadProgram(cpu->memory, filename);
 		
 		// Make sure the reset vector is the same
-		*v6502_access(cpu->memory, v6502_memoryVectorResetLow) = ROM_LOAD_LOCATION & 0xFF;
-		*v6502_access(cpu->memory, v6502_memoryVectorResetHigh) = ROM_LOAD_LOCATION >> 8;
+		*v6502_access(cpu->memory, v6502_memoryVectorResetLow, NO) = ROM_LOAD_LOCATION & 0xFF;
+		*v6502_access(cpu->memory, v6502_memoryVectorResetHigh, NO) = ROM_LOAD_LOCATION >> 8;
 	}
 	
 	printf("Resetting CPU...\n");

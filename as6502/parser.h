@@ -30,16 +30,6 @@
 
 #include "cpu.h"
 
-#ifndef YES
-/** @brief Boolean true */
-#define YES		1
-#endif
-
-#ifndef NO
-/** @brief Boolean false */
-#define NO		0
-#endif
-
 /** @brief Perform the fastest possible three-character compare */
 /** v6502_opcodeForStringAndMode() is a huge function with very repetetive behavior.
  * In order to alleviate a lot of linear calls to strncmp(), asmeq() was created.

@@ -341,13 +341,13 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 }
 
 void v6502_nmi(v6502_cpu *cpu) {
-	cpu->pc = (*v6502_access(cpu->memory, v6502_memoryVectorNMIHigh) << 8);
-	cpu->pc |= *v6502_access(cpu->memory, v6502_memoryVectorNMILow);
+	cpu->pc = (*v6502_access(cpu->memory, v6502_memoryVectorNMIHigh, NO) << 8);
+	cpu->pc |= *v6502_access(cpu->memory, v6502_memoryVectorNMILow, NO);
 }
 
 void v6502_reset(v6502_cpu *cpu) {
-	cpu->pc = (*v6502_access(cpu->memory, v6502_memoryVectorResetHigh) << 8);
-	cpu->pc |= *v6502_access(cpu->memory, v6502_memoryVectorResetLow);
+	cpu->pc = (*v6502_access(cpu->memory, v6502_memoryVectorResetHigh, NO) << 8);
+	cpu->pc |= *v6502_access(cpu->memory, v6502_memoryVectorResetLow, NO);
 	cpu->ac = 0;
 	cpu->x  = 0;
 	cpu->y  = 0;
@@ -356,9 +356,9 @@ void v6502_reset(v6502_cpu *cpu) {
 }
 
 void v6502_step(v6502_cpu *cpu) {
-	v6502_opcode opcode = *v6502_access(cpu->memory, cpu->pc);
-	uint8_t low = *v6502_access(cpu->memory, cpu->pc + 1);
-	uint8_t high = *v6502_access(cpu->memory, cpu->pc + 2);
+	v6502_opcode opcode = *v6502_access(cpu->memory, cpu->pc, YES);
+	uint8_t low = *v6502_access(cpu->memory, cpu->pc + 1, YES);
+	uint8_t high = *v6502_access(cpu->memory, cpu->pc + 2, YES);
 	v6502_execute(cpu, opcode, low, high);
 	cpu->pc += v6502_instructionLengthForOpcode(opcode);
 }
@@ -376,39 +376,39 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			operand = &low;
 		} break;
 		case v6502_address_mode_indirect: {
-			ref = *v6502_access(cpu->memory, BOTH_BYTES); // Low byte first
-			ref |= *v6502_access(cpu->memory, BOTH_BYTES + 1) << 8; // High byte second
-			operand = v6502_access(cpu->memory, ref);
+			ref = *v6502_access(cpu->memory, BOTH_BYTES, YES); // Low byte first
+			ref |= *v6502_access(cpu->memory, BOTH_BYTES + 1, YES) << 8; // High byte second
+			operand = v6502_access(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_indirect_x: {
 			low += cpu->x;
-			ref = *v6502_access(cpu->memory, low); // Low byte first
-			ref |= *v6502_access(cpu->memory, low + 1) << 8; // High byte second
-			operand = v6502_access(cpu->memory, ref);
+			ref = *v6502_access(cpu->memory, low, YES); // Low byte first
+			ref |= *v6502_access(cpu->memory, low + 1, YES) << 8; // High byte second
+			operand = v6502_access(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_indirect_y: {
-			ref = *v6502_access(cpu->memory, low); // Low byte first
-			ref |= *v6502_access(cpu->memory, low + 1) << 8; // High byte second
+			ref = *v6502_access(cpu->memory, low, YES); // Low byte first
+			ref |= *v6502_access(cpu->memory, low + 1, YES) << 8; // High byte second
 			ref += cpu->y;
-			operand = v6502_access(cpu->memory, ref);
+			operand = v6502_access(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_zeropage: {
-			operand = v6502_access(cpu->memory, low);
+			operand = v6502_access(cpu->memory, low, YES);
 		} break;
 		case v6502_address_mode_zeropage_x: {
-			operand = v6502_access(cpu->memory, low + cpu->x);
+			operand = v6502_access(cpu->memory, low + cpu->x, YES);
 		} break;
 		case v6502_address_mode_zeropage_y: {
-			operand = v6502_access(cpu->memory, low + cpu->y);
+			operand = v6502_access(cpu->memory, low + cpu->y, YES);
 		} break;
 		case v6502_address_mode_absolute: {
-			operand = v6502_access(cpu->memory, BOTH_BYTES);
+			operand = v6502_access(cpu->memory, BOTH_BYTES, YES);
 		} break;
 		case v6502_address_mode_absolute_x: {
-			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->x);
+			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->x, YES);
 		} break;
 		case v6502_address_mode_absolute_y: {
-			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->y);
+			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->y, YES);
 		} break;
 		case v6502_address_mode_relative:
 			break;
@@ -665,13 +665,17 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->pc -= 3; // PC shift
 		} return;
 		case v6502_opcode_jmp_ind: {
-			if (*v6502_access(cpu->memory, low) == cpu->pc) {
+			// This is purely a non-machine optimization, we should not trigger any traps here
+			if (*v6502_access(cpu->memory, low, NO) == cpu->pc) {
 				v6502_execute(cpu, v6502_opcode_wai, 0, 0);
 				cpu->pc -= 2; // PC shift
 				return;
 			}
-
-			cpu->pc = *v6502_access(cpu->memory, low);
+			
+			
+			// FIXME: @bug Should v6502_opcode_jmp_ind really only use the low byte and be zeropage?
+			// Trap was already triggered by indirect memory classification in prior switch
+			cpu->pc = *v6502_access(cpu->memory, low, NO);
 			cpu->pc -= 2; // PC shift
 		} return;
 		

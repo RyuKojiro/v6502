@@ -56,7 +56,7 @@ void textMode_refreshVideo(v6502_textmode_video *vid) {
 
 void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y) {
 	uint16_t address = textMode_addressForLocation(x, y);
-	char ch = *v6502_access(vid->memory, address);
+	char ch = *v6502_access(vid->memory, address, NO);
 	
 	if (ch) {
 		wmove(vid->screen, y, x);
