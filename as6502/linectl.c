@@ -83,7 +83,7 @@ char *trimhead(const char *str, size_t len) {
 char *trimheadchar(char *str, char token, size_t len) {
 	char *newstr = str;
 	
-	while ((*newstr == token) && (newstr < str + len)) {
+	while ((*newstr != token) && (newstr < str + len)) {
 		newstr++;
 	}
 	

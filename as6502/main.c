@@ -173,8 +173,8 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		trimgreedytailchard(line, ';');
 		
 		// Check for symbols
-		trimmedLine = trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
-		lineLen = MAX_LINE_LEN - (trimmedLine - line);
+		trimmedLine = line; //trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
+		lineLen = MAX_LINE_LEN; // - (trimmedLine - line);
 		if (trimmedLine && (isalnum(CTYPE_CAST trimmedLine[0]) || trimmedLine[0] == '.')) {
 			as6502_symbol_type type = as6502_addSymbolForLine(obj->table, line, currentLineNum, address, currentVarAddress);
 			
@@ -239,8 +239,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		if (line[0] == '.') {
 			if (strncasecmp("asciz", line + 1, lineLen)) {
 				char *stop = line + lineLen;
-				trimheadchar(line, '"', lineLen);
-				for (char *ch = line; *ch && ch < stop && *ch != '"'; ch++) {
+				for (char *ch = trimheadchar(line, '"', lineLen) + 1; *ch && ch < stop && *ch != '"'; ch++) {
 					ld6502_appendByteToBlob(&obj->blobs[currentBlob], *ch);
 				}
 				ld6502_appendByteToBlob(&obj->blobs[currentBlob], 0x00);
