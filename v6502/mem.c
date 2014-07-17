@@ -33,6 +33,13 @@
 #pragma mark -
 #pragma mark Memory Lifecycle
 
+int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_memoryAccessor *callback) {
+	// TODO: @bug Make sure it's not already mapped
+
+	// Create a struct and add it to the list
+	
+}
+
 /**
  * This is actually much more compilcated than dereferencing an offset, in fact,
  * it is actually creating a reference to it. However, it is creating a mapped
@@ -58,52 +65,20 @@ uint8_t *v6502_access(v6502_memory *memory, uint16_t offset, int trap) {
 		return NULL;
 	}
 	
-	// Work memory, 0x07FF + 3 mirrors = 0x1FFF
-	if (offset < v6502_memoryStartPPURegisters) {
-		offset %= v6502_memorySizeWorkMemory;
-		
-		return &memory->bytes[offset];
-	}
-	
-	// PPU Registers
-	if (offset >= v6502_memoryStartPPURegisters && offset < v6502_memoryStartAPURegisters) {
-//		offset %= v6502_memorySizePPURegisters;
-//		offset += v6502_memoryStartPPURegisters;
-		
-		return &memory->bytes[offset];
+	// Search mapped memory regions to see if we should defer to the map
+	for(int i = 0; i < memory->rangeCount; i++) {
+		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
+		if(offset > currentRange->start && offset < (currentRange->start + currentRange->size)) {
+			currentRange->callback(memory, offset, trap);
+		}
 	}
 
-	/** FIXME: @bug Everything past here, is it mapped or just in memory? */
-	// APU registers
-	if (offset >= v6502_memoryStartAPURegisters && offset < v6502_memoryStartExpansionRom) {
-		return &memory->bytes[offset];
-	}
+	//if (memory && memory->fault_callback) {
+	//	memory->fault_callback(memory->fault_context, v6502_unableToMapMemoryErrorTextv6502);
+	//}
 
-	// Expansion ROM (Cartridge)
-	if (offset >= v6502_memoryStartExpansionRom && offset < v6502_memoryStartSRAM) {
-		return &memory->bytes[offset];
-	}
-	
-	// SRAM
-	if (offset >= v6502_memoryStartSRAM && offset < v6502_memoryStartPRGROM) {
-		return &memory->bytes[offset];
-	}
-
-	// PRG ROM
-	if (offset >= v6502_memoryStartPRGROM && offset < v6502_memoryStartInterruptVectors) {
-		return &memory->bytes[offset];
-	}
-
-	// Interrupt Vectors
-	if (offset >= v6502_memoryStartInterruptVectors && offset < v6502_memoryStartCeiling) {
-		return &memory->interrupt_vectors[offset - v6502_memoryStartInterruptVectors];
-	}
-	
-	if (memory && memory->fault_callback) {
-		memory->fault_callback(memory->fault_context, v6502_unableToMapMemoryErrorTextv6502);
-	}
-
-	return NULL;
+	// If it's not mapped, and everything else checks out, return the real RAM location
+	return &memory->bytes[offset];
 }
 
 void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size) {

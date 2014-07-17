@@ -89,6 +89,24 @@
 /** @brief Maximum possible value of an 8-bit byte */
 #define BYTE_MAX	0xFF
 
+/* Forward declaration needed for circular dependency of mapping function and structures */
+struct _v6502_memory;
+
+/** @ingroup mem_access */
+/** @brief The function prototype for memory mapped accessors to be used by external virtual hardware. */
+typedef uint16_t *(v6502_memoryAccessor)(struct _v6502_memory *memory, uint16_t offset, int trap);
+
+/** @struct */
+/** @brief Memory Map Range Record */
+typedef struct {
+	/** @brief Start address of mapped range */
+	uint16_t start;
+	/** @brief Byte-length of mapped range */
+	uint16_t size;
+	/** @brief Memory access callback for all access within this memory range */
+	v6502_memoryAccessor *callback;
+} v6502_mappedRange;
+
 /** @struct */
 /** @brief Virtual Memory Object */
 typedef struct {
@@ -102,6 +120,10 @@ typedef struct {
 	void *fault_context;
 	/** @brief The three 16-bit (two 8-byte) interrupt vectors starting at address v6502_memoryVectorNMILow */
 	uint8_t interrupt_vectors[v6502_memorySizeInterruptVectors];
+	/** @brief Array of memory map ranges */
+	v6502_mappedRange *mappedRanges;
+	/** @brief Number of memory map ranges in array */
+	int rangeCount;
 } v6502_memory;
 
 /** @defgroup mem_lifecycle Memory Lifecycle Functions */
@@ -116,8 +138,6 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 
 /** @defgroup mem_access Memory Access */
 /**@{*/
-/** @brief The function prototype for memory mapped accessors to be used by external virtual hardware. */
-typedef uint16_t *(v6502_memoryAccessor)(v6502_memory *memory, uint16_t offset, int trap);
 /** @brief Map an address in v6502_memory */
 /** This works by registering an v6502_memoryAccessor as the handler for that range of v6502_memory. Anytime an access is made to that range of memory, the v6502_memoryAccessor is called instead, and is expected to return a byte ready for access. When this function is called, it is also assumed that an access is actually going to happen, which means it is safe to use calls to your callback as trap signals. */
 int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_memoryAccessor *callback);
