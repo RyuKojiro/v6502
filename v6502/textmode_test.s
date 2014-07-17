@@ -22,13 +22,14 @@
 ; This file is a sample of some assembly to interact with text mode video.
 ;
 
-	lda #$54	;	T
-	sta $2000
-	lda #$65	;	e
-	sta $2001
-	lda #$73	;	s
-	sta $2002
-	lda #$74	;	t
-	sta $2003
-end:			; This does the same in v6502 as a wai instruction will
+	ldx #$00
+nextChar:
+	lda string,X
+	sta $2000,X
+	inx
+	beq end
+	jmp nextChar
+end:			; This does the same in v6502 as a wai instruction would
 	jmp end
+string:
+.asciz "This is a test"
