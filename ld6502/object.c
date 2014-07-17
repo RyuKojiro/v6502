@@ -129,6 +129,12 @@ void ld6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, 
 		return;
 	}
 
+	if (!strncasecmp(line + 1, "data", 3)) {
+		// start new blob
+		ld6502_addBlobToObject(obj, v6502_memoryStartProgram);
+		*currentBlob = obj->count - 1;
+	}
+	
 	if (!strncasecmp(line + 1, "org", 3)) {
 		// start new blob
 		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, line + 5));
