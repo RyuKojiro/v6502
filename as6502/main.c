@@ -237,6 +237,15 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Handle dot directives
 		if (line[0] == '.') {
+			if (strncasecmp("asciz", line + 1, lineLen)) {
+				char *stop = line + lineLen;
+				trimheadchar(line, '"', lineLen);
+				for (char *ch = line; *ch && ch < stop && *ch != '"'; ch++) {
+					ld6502_appendByteToBlob(&obj->blobs[currentBlob], *ch);
+				}
+				ld6502_appendByteToBlob(&obj->blobs[currentBlob], 0x00);
+			}
+			
 			ld6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
 			
 			if (newline) {
