@@ -26,6 +26,8 @@
 #ifndef v6502_breakpoint_h
 #define v6502_breakpoint_h
 
+#include <stdint.h>
+
 /** @defgroup breakpoint Breakpoint Management */
 /**@{*/
 /** @brief Breakpoint List Object */
