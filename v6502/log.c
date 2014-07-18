@@ -50,7 +50,7 @@ void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) 
 	for (uint16_t y = start; y < end - 0x10; y += 0x10) {
 		printf("%04x ", y);
 		for (uint16_t x = y; x <= y + 0x0F; x++) {
-			printf("%02x ", *v6502_access(memory, x, NO));
+			printf("%02x ", v6502_read(memory, x, NO));
 		}
 		printf("\n");
 	}
