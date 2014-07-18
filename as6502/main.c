@@ -367,6 +367,11 @@ int main(int argc, char * const argv[]) {
 	else {
 		for (/* i */; i < argc; i++) {
 			in = fopen(argv[i], "r");
+			if (!in) {
+				perror("fopen");
+				return 1;
+			}
+			
 			currentFileName = argv[i];
 			if (!outName[0]) {
 				outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
