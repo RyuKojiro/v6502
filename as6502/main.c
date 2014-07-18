@@ -244,8 +244,21 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 				}
 				ld6502_appendByteToBlob(&obj->blobs[currentBlob], 0x00);
 			}
-			
-			ld6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
+			else if (strncasecmp("byte", line + 1, lineLen)) {
+				int skip = 1 /* "." */ + 4 /* "byte" */;
+				char *start = line + skip;
+				start = trimhead(start, lineLen - skip);
+				uint8_t low;
+				int wide;
+				as6502_byteValuesForString(NULL, &low, &wide, start);
+				if (wide) {
+					as6502_warn("Value larger than 8-bits specified in .byte directive, only the lower 8-bits will be used.");
+				}
+				ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
+			}
+			else {
+				ld6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
+			}			
 			
 			if (newline) {
 				currentLineNum++;
