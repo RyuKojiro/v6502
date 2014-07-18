@@ -24,9 +24,34 @@
 
 #include "textmode.h"
 
+void textMode_updateOffset(v6502_textmode_video *vid, uint16_t address) {
+	if (!vid->screen) {
+		vid->screen = initscr();
+	}
+	
+	char ch = vid->memory->bytes[address];
+	address -= textMode_characterMemoryStart;
+	
+	int x = address % 80;
+	int y = (address - x) / 80;
+	
+	if (ch) {
+		wmove(vid->screen, y, x);
+		waddch(vid->screen, ch);
+	}
+}
+
+void textMode_write(v6502_memory *memory, uint16_t offset, uint8_t value, void *context) {
+	v6502_textmode_video *vid = context;
+	vid->memory->bytes[offset] = value;
+	textMode_updateOffset(vid, offset);
+	wrefresh(vid->screen);
+}
+
 v6502_textmode_video *textMode_create(v6502_memory *mem) {
 	v6502_textmode_video *vid = malloc(sizeof(v6502_textmode_video));
 	vid->memory = mem;
+	v6502_map(mem, textMode_characterMemoryStart, textMode_memoryCeiling - textMode_characterMemoryStart, NULL, textMode_write, vid);
 	return vid;
 }
 
@@ -56,7 +81,7 @@ void textMode_refreshVideo(v6502_textmode_video *vid) {
 
 void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y) {
 	uint16_t address = textMode_addressForLocation(x, y);
-	char ch = v6502_read(vid->memory, address, NO);
+	char ch = vid->memory->bytes[address];
 	
 	if (ch) {
 		wmove(vid->screen, y, x);
@@ -66,5 +91,5 @@ void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y) {
 
 
 uint16_t textMode_addressForLocation(int x, int y) {
-	return textMode_memoryStart + ((y * 80) + x);
+	return textMode_characterMemoryStart + ((y * 80) + x);
 }

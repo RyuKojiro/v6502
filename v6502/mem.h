@@ -94,9 +94,9 @@ struct _v6502_memory;
 
 /** @ingroup mem_access */
 /** @brief The function prototype for memory mapped accessors to be used by external virtual hardware. */
-typedef uint8_t (v6502_readFunction)(struct _v6502_memory *memory, uint16_t offset, int trap);
+typedef uint8_t (v6502_readFunction)(struct _v6502_memory *memory, uint16_t offset, int trap, void *context);
 /** @brief The function prototype for memory mapped accessors to be used by external virtual hardware. */
-typedef void (v6502_writeFunction)(struct _v6502_memory *memory, uint16_t offset, uint8_t value);
+typedef void (v6502_writeFunction)(struct _v6502_memory *memory, uint16_t offset, uint8_t value, void *context);
 
 /** @struct */
 /** @brief Memory Map Range Record */
@@ -109,6 +109,7 @@ typedef struct {
     v6502_readFunction *read;
     /** @brief Memory access callback for writing bytes within this memory range */
     v6502_writeFunction *write;
+	void *context;
 } v6502_mappedRange;
 
 /** @struct */
@@ -144,7 +145,7 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 /**@{*/
 /** @brief Map an address in v6502_memory */
 /** This works by registering an v6502_memoryAccessor as the handler for that range of v6502_memory. Anytime an access is made to that range of memory, the v6502_memoryAccessor is called instead, and is expected to return a byte ready for access. When this function is called, it is also assumed that an access is actually going to happen, which means it is safe to use calls to your callback as trap signals. */
-int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write);
+int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write, void *context);
 /** @brief Access an address in v6502_memory. */
 /** All accesses made by the v6502_cpu should travel through this function, so that they respect any hardware memory mapping.
 	The trap argument should always be YES when accessed by the CPU, and always NO when accessed by any virtual hardware outside the CPU, or any VM construct (such as logging/introspection mechanisms.)

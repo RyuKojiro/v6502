@@ -118,6 +118,7 @@ static void run(v6502_cpu *cpu) {
 		v6502_step(cpu);
 	}
 
+	textMode_refreshVideo(video);
 	resist = YES;
 	do {
 		if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
@@ -129,7 +130,6 @@ static void run(v6502_cpu *cpu) {
 			printSingleInstruction(cpu, cpu->pc);
 		}
 		v6502_step(cpu);
-		textMode_refreshVideo(video);
 	} while (!(cpu->sr & v6502_cpu_status_break) && !interrupt);
 	resist = NO;
 	

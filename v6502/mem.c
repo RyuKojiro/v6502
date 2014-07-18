@@ -43,7 +43,7 @@ v6502_mappedRange *v6502_mappedRangeForOffset(v6502_memory *memory, uint16_t off
 	return NULL;
 }
 
-int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write) {
+int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write, void *context) {
 	// TODO: @bug Make sure it's not already mapped
 
 	// Create a struct and add it to the list
@@ -55,6 +55,7 @@ int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFun
 	this->size = size;
 	this->read = read;
 	this->write = write;
+	this->context = context;
 	
 	memory->rangeCount++;
 
@@ -66,8 +67,8 @@ void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
 
 	// Check map
 	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
-	if (range) {
-		range->write(memory, offset, value);
+	if (range && range->write) {
+		range->write(memory, offset, value, range->context);
 	}
 	else {
 		memory->bytes[offset] = value;
@@ -81,8 +82,8 @@ uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap) {
 
 	// Search mapped memory regions to see if we should defer to the map
 	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
-	if (range) {
-		return range->read(memory, offset, trap);
+	if (range && range->read) {
+		return range->read(memory, offset, trap, range->context);
 	}
 	else {
 		return memory->bytes[offset];
