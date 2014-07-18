@@ -33,45 +33,60 @@
 #pragma mark -
 #pragma mark Memory Lifecycle
 
+v6502_mappedRange *v6502_mappedRangeForOffset(v6502_memory *memory, uint16_t offset) {
+	for (int i = 0; i < memory->rangeCount; i++) {
+		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
+		if (offset > currentRange->start && offset < (currentRange->start + currentRange->size)) {
+			return currentRange;
+		}
+	}
+	return NULL;
+}
+
 int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write) {
 	// TODO: @bug Make sure it's not already mapped
 
 	// Create a struct and add it to the list
+	memory->mappedRanges = realloc(memory->mappedRanges, sizeof(v6502_mappedRange) * (memory->rangeCount + 1));
+	
+	v6502_mappedRange *this = &memory->mappedRanges[memory->rangeCount];
+	
+	this->start = start;
+	this->size = size;
+	this->read = read;
+	this->write = write;
+	
+	memory->rangeCount++;
+
 	return NO;
 }
 
 void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
 	assert(memory);
 
-
-	memory->bytes[offset] = value;
+	// Check map
+	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
+	if (range) {
+		range->write(memory, offset, value);
+	}
+	else {
+		memory->bytes[offset] = value;
+	}
 }
 
-/**
- * This is actually much more compilcated than dereferencing an offset, in fact,
- * it is actually creating a reference to it. However, it is creating a mapped
- * pointer to whatever it is supposed to be pointing to. This is NOT safe for
- * larger than single byte access.
- */
 uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap) {
 	assert(memory);
 	assert(memory->bytes);
 	assert(offset < memory->size);
 
 	// Search mapped memory regions to see if we should defer to the map
-	for(int i = 0; i < memory->rangeCount; i++) {
-		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
-		if(offset > currentRange->start && offset < (currentRange->start + currentRange->size)) {
-			return currentRange->read(memory, offset, trap);
-		}
+	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
+	if (range) {
+		return range->read(memory, offset, trap);
 	}
-
-	//if (memory && memory->fault_callback) {
-	//	memory->fault_callback(memory->fault_context, v6502_unableToMapMemoryErrorTextv6502);
-	//}
-
-	// If it's not mapped, and everything else checks out, return the real RAM location
-	return memory->bytes[offset];
+	else {
+		return memory->bytes[offset];
+	}
 }
 
 void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size) {

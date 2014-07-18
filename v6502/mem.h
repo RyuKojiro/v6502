@@ -151,6 +151,7 @@ int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFun
  */
 uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap);
 void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value);
+v6502_mappedRange *v6502_mappedRangeForOffset(v6502_memory *memory, uint16_t offset);
 /** @brief Convert a raw byte to its signed value */
 int8_t v6502_signedValueOfByte(uint8_t byte);
 /** @brief Convert a signed value to its raw byte */
