@@ -402,22 +402,28 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_zeropage: {
-			operand = v6502_read(cpu->memory, low, YES);
+			ref = low;
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_zeropage_x: {
-			operand = v6502_read(cpu->memory, low + cpu->x, YES);
+			ref = low + cpu->x;
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_zeropage_y: {
-			operand = v6502_read(cpu->memory, low + cpu->y, YES);
+			ref = low + cpu->y;
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_absolute: {
-			operand = v6502_read(cpu->memory, BOTH_BYTES, YES);
+			ref = BOTH_BYTES;
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_absolute_x: {
-			operand = v6502_read(cpu->memory, BOTH_BYTES + cpu->x, YES);
+			ref = BOTH_BYTES + cpu->x;
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_absolute_y: {
-			operand = v6502_read(cpu->memory, BOTH_BYTES + cpu->y, YES);
+			ref = BOTH_BYTES + cpu->y;
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_relative:
 			break;
@@ -600,7 +606,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_asl_zpgx:
 		case v6502_opcode_asl_abs:
 		case v6502_opcode_asl_absx:
-			*operand = _executeInPlaceASL(cpu, operand);
+			v6502_write(cpu->memory, ref, _executeInPlaceASL(cpu, operand));
 			return;
 			
 		// BIT
@@ -640,7 +646,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_dec_zpgx:
 		case v6502_opcode_dec_abs:
 		case v6502_opcode_dec_absx:
-			*operand = _executeInPlaceDecrement(cpu, operand);
+			v6502_write(cpu->memory, ref, _executeInPlaceDecrement(cpu, operand));
 			return;
 
 		// EOR
@@ -661,7 +667,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_inc_zpgx:
 		case v6502_opcode_inc_abs:
 		case v6502_opcode_inc_absx:
-			*operand = _executeInPlaceIncrement(cpu, operand);
+			v6502_write(cpu->memory, ref, _executeInPlaceIncrement(cpu, operand));
 			return;
 
 		// JMP
@@ -743,7 +749,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_lsr_zpgx:
 		case v6502_opcode_lsr_abs:
 		case v6502_opcode_lsr_absx:
-			*operand = _executeInPlaceLSR(cpu, operand);
+			v6502_write(cpu->memory, ref, _executeInPlaceLSR(cpu, operand));
 			return;
 
 		// ROL
@@ -754,7 +760,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_rol_zpgx:
 		case v6502_opcode_rol_abs:
 		case v6502_opcode_rol_absx:
-			*operand = _executeInPlaceROL(cpu, operand);
+			v6502_write(cpu->memory, ref, _executeInPlaceROL(cpu, operand));
 			return;
 
 		// ROR
@@ -765,7 +771,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ror_zpgx:
 		case v6502_opcode_ror_abs:
 		case v6502_opcode_ror_absx:
-			*operand = _executeInPlaceROR(cpu, operand);
+			v6502_write(cpu->memory, ref, _executeInPlaceROR(cpu, operand));
 			return;
 
 		// SBC
@@ -788,21 +794,21 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sta_absy:
 		case v6502_opcode_sta_indx:
 		case v6502_opcode_sta_indy:
-			*operand = cpu->ac;
+			v6502_write(cpu->memory, ref, cpu->ac);
 			return;
 			
 		// STX
 		case v6502_opcode_stx_zpg:
 		case v6502_opcode_stx_zpgy:
 		case v6502_opcode_stx_abs:
-			*operand = cpu->x;
+			v6502_write(cpu->memory, ref, cpu->x);
 			return;
 			
 		// STY
 		case v6502_opcode_sty_zpg:
 		case v6502_opcode_sty_zpgx:
 		case v6502_opcode_sty_abs:
-			*operand = cpu->y;
+			v6502_write(cpu->memory, ref, cpu->y);
 			return;
 			
 		// Failure
