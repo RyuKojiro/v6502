@@ -110,8 +110,8 @@ static uint8_t _executeInPlaceIncrement(v6502_cpu *cpu, uint8_t operand) {
 	return operand;
 }
 
-static void _executeInPlaceCompare(v6502_cpu *cpu, uint8_t *reg, uint8_t operand) {
-	uint8_t result = (*reg) - operand;
+static void _executeInPlaceCompare(v6502_cpu *cpu, uint8_t reg, uint8_t operand) {
+	uint8_t result = reg - operand;
 	FLAG_CARRY_WITH_COMPARISON(operand, result);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
@@ -373,51 +373,51 @@ void v6502_step(v6502_cpu *cpu) {
 	2) Execute operation, some in-place functions replace the value of *operand with the new resulting value
  */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
-	uint8_t *operand;
+	uint8_t operand;
 	uint16_t ref;
 	
 	switch (v6502_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_implied:
 		case v6502_address_mode_accumulator: {
-			operand = &(cpu->ac);
+			operand = cpu->ac;
 		} break;
 		case v6502_address_mode_immediate: {
-			operand = &low;
+			operand = low;
 		} break;
 		case v6502_address_mode_indirect: {
-			ref = *v6502_access(cpu->memory, BOTH_BYTES, YES); // Low byte first
-			ref |= *v6502_access(cpu->memory, BOTH_BYTES + 1, YES) << 8; // High byte second
-			operand = v6502_access(cpu->memory, ref, YES);
+			ref = v6502_read(cpu->memory, BOTH_BYTES, YES); // Low byte first
+			ref |= v6502_read(cpu->memory, BOTH_BYTES + 1, YES) << 8; // High byte second
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_indirect_x: {
 			low += cpu->x;
-			ref = *v6502_access(cpu->memory, low, YES); // Low byte first
-			ref |= *v6502_access(cpu->memory, low + 1, YES) << 8; // High byte second
-			operand = v6502_access(cpu->memory, ref, YES);
+			ref = v6502_read(cpu->memory, low, YES); // Low byte first
+			ref |= v6502_read(cpu->memory, low + 1, YES) << 8; // High byte second
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_indirect_y: {
-			ref = *v6502_access(cpu->memory, low, YES); // Low byte first
-			ref |= *v6502_access(cpu->memory, low + 1, YES) << 8; // High byte second
+			ref = v6502_read(cpu->memory, low, YES); // Low byte first
+			ref |= v6502_read(cpu->memory, low + 1, YES) << 8; // High byte second
 			ref += cpu->y;
-			operand = v6502_access(cpu->memory, ref, YES);
+			operand = v6502_read(cpu->memory, ref, YES);
 		} break;
 		case v6502_address_mode_zeropage: {
-			operand = v6502_access(cpu->memory, low, YES);
+			operand = v6502_read(cpu->memory, low, YES);
 		} break;
 		case v6502_address_mode_zeropage_x: {
-			operand = v6502_access(cpu->memory, low + cpu->x, YES);
+			operand = v6502_read(cpu->memory, low + cpu->x, YES);
 		} break;
 		case v6502_address_mode_zeropage_y: {
-			operand = v6502_access(cpu->memory, low + cpu->y, YES);
+			operand = v6502_read(cpu->memory, low + cpu->y, YES);
 		} break;
 		case v6502_address_mode_absolute: {
-			operand = v6502_access(cpu->memory, BOTH_BYTES, YES);
+			operand = v6502_read(cpu->memory, BOTH_BYTES, YES);
 		} break;
 		case v6502_address_mode_absolute_x: {
-			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->x, YES);
+			operand = v6502_read(cpu->memory, BOTH_BYTES + cpu->x, YES);
 		} break;
 		case v6502_address_mode_absolute_y: {
-			operand = v6502_access(cpu->memory, BOTH_BYTES + cpu->y, YES);
+			operand = v6502_read(cpu->memory, BOTH_BYTES + cpu->y, YES);
 		} break;
 		case v6502_address_mode_relative:
 			break;
@@ -458,10 +458,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
 		case v6502_opcode_dex: {
-			_executeInPlaceDecrement(cpu, &cpu->x);
+			cpu->x = _executeInPlaceDecrement(cpu, cpu->x);
 		} return;
 		case v6502_opcode_dey: {
-			_executeInPlaceDecrement(cpu, &cpu->y);
+			cpu->y = _executeInPlaceDecrement(cpu, cpu->y);
 		} return;
 		case v6502_opcode_tax: {
 			cpu->x = cpu->ac;
@@ -488,10 +488,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 		} return;
 		case v6502_opcode_inx: {
-			_executeInPlaceIncrement(cpu, &cpu->x);
+			cpu->x = _executeInPlaceIncrement(cpu, cpu->x);
 		} return;
 		case v6502_opcode_iny: {
-			_executeInPlaceIncrement(cpu, &cpu->y);
+			cpu->y = _executeInPlaceIncrement(cpu, cpu->y);
 		} return;
 		case v6502_opcode_wai: {
 			sleep(1);
@@ -577,7 +577,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_adc_absy:
 		case v6502_opcode_adc_indx:
 		case v6502_opcode_adc_indy:
-			_executeInPlaceADC(cpu, *operand);
+			_executeInPlaceADC(cpu, operand);
 			return;
 
 		// AND
@@ -589,24 +589,24 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_and_absy:
 		case v6502_opcode_and_indx:
 		case v6502_opcode_and_indy:
-			_executeInPlaceAND(cpu, *operand);
+			_executeInPlaceAND(cpu, operand);
 			return;
 		
 		// ASL
 		case v6502_opcode_asl_acc:
-			cpu->ac = _executeInPlaceASL(cpu, *operand);
+			cpu->ac = _executeInPlaceASL(cpu, operand);
 			return;
 		case v6502_opcode_asl_zpg:
 		case v6502_opcode_asl_zpgx:
 		case v6502_opcode_asl_abs:
 		case v6502_opcode_asl_absx:
-			*operand = _executeInPlaceASL(cpu, *operand);
+			*operand = _executeInPlaceASL(cpu, operand);
 			return;
 			
 		// BIT
 		case v6502_opcode_bit_zpg:
 		case v6502_opcode_bit_abs:
-			_executeInPlaceBIT(cpu, *operand);
+			_executeInPlaceBIT(cpu, operand);
 			return;
 
 		// CMP
@@ -618,21 +618,21 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_cmp_absy:
 		case v6502_opcode_cmp_indx:
 		case v6502_opcode_cmp_indy:
-			_executeInPlaceCompare(cpu, &(cpu->ac), *operand);
+			_executeInPlaceCompare(cpu, cpu->ac, operand);
 			return;
 		
 		// CPX
 		case v6502_opcode_cpx_imm:
 		case v6502_opcode_cpx_zpg:
 		case v6502_opcode_cpx_abs:
-			_executeInPlaceCompare(cpu, &(cpu->x), *operand);
+			_executeInPlaceCompare(cpu, cpu->x, operand);
 			return;
 
 		// CPY
 		case v6502_opcode_cpy_imm:
 		case v6502_opcode_cpy_zpg:
 		case v6502_opcode_cpy_abs:
-			_executeInPlaceCompare(cpu, &(cpu->y), *operand);
+			_executeInPlaceCompare(cpu, cpu->y, operand);
 			return;
 
 		// DEC
@@ -652,7 +652,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_eor_absy:
 		case v6502_opcode_eor_indx:
 		case v6502_opcode_eor_indy:
-			cpu->ac ^= *operand;
+			cpu->ac ^= operand;
 			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 			return;
 		
@@ -677,7 +677,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		} return;
 		case v6502_opcode_jmp_ind: {
 			// This is purely a non-machine optimization, we should not trigger any traps here
-			if (*v6502_access(cpu->memory, low, NO) == cpu->pc) {
+			if (v6502_read(cpu->memory, low, NO) == cpu->pc) {
 				v6502_execute(cpu, v6502_opcode_wai, 0, 0);
 				cpu->pc -= 2; // PC shift
 				return;
@@ -686,7 +686,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			
 			// FIXME: @bug Should v6502_opcode_jmp_ind really only use the low byte and be zeropage?
 			// Trap was already triggered by indirect memory classification in prior switch
-			cpu->pc = *v6502_access(cpu->memory, low, NO);
+			cpu->pc = v6502_read(cpu->memory, low, NO);
 			cpu->pc -= 2; // PC shift
 		} return;
 		
@@ -699,7 +699,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ora_absy:
 		case v6502_opcode_ora_indx:
 		case v6502_opcode_ora_indy:
-			_executeInPlaceORA(cpu, *operand);
+			_executeInPlaceORA(cpu, operand);
 			return;
 			
 		// LDA
@@ -711,8 +711,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_lda_absy:
 		case v6502_opcode_lda_indx:
 		case v6502_opcode_lda_indy:
-			cpu->ac = *operand;
-			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
+			cpu->ac = operand;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 			return;
 		
 		// LDX
@@ -721,8 +721,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ldx_zpgy:
 		case v6502_opcode_ldx_abs:
 		case v6502_opcode_ldx_absy:
-			cpu->x = *operand;
-			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
+			cpu->x = operand;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 			return;
 
 		// LDY
@@ -731,41 +731,41 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ldy_zpgx:
 		case v6502_opcode_ldy_abs:
 		case v6502_opcode_ldy_absx:
-			cpu->y = *operand;
-			FLAG_NEG_AND_ZERO_WITH_RESULT(*operand);
+			cpu->y = operand;
+			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 			return;
 		
 		// LSR
 		case v6502_opcode_lsr_acc:
-			cpu->ac = _executeInPlaceLSR(cpu, *operand);
+			cpu->ac = _executeInPlaceLSR(cpu, operand);
 			return;
 		case v6502_opcode_lsr_zpg:
 		case v6502_opcode_lsr_zpgx:
 		case v6502_opcode_lsr_abs:
 		case v6502_opcode_lsr_absx:
-			*operand = _executeInPlaceLSR(cpu, *operand);
+			*operand = _executeInPlaceLSR(cpu, operand);
 			return;
 
 		// ROL
 		case v6502_opcode_rol_acc:
-			cpu->ac = _executeInPlaceROL(cpu, *operand);
+			cpu->ac = _executeInPlaceROL(cpu, operand);
 			return;
 		case v6502_opcode_rol_zpg:
 		case v6502_opcode_rol_zpgx:
 		case v6502_opcode_rol_abs:
 		case v6502_opcode_rol_absx:
-			*operand = _executeInPlaceROL(cpu, *operand);
+			*operand = _executeInPlaceROL(cpu, operand);
 			return;
 
 		// ROR
 		case v6502_opcode_ror_acc:
-			cpu->ac = _executeInPlaceROR(cpu, *operand);
+			cpu->ac = _executeInPlaceROR(cpu, operand);
 			return;
 		case v6502_opcode_ror_zpg:
 		case v6502_opcode_ror_zpgx:
 		case v6502_opcode_ror_abs:
 		case v6502_opcode_ror_absx:
-			*operand = _executeInPlaceROR(cpu, *operand);
+			*operand = _executeInPlaceROR(cpu, operand);
 			return;
 
 		// SBC
@@ -777,7 +777,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sbc_absy:
 		case v6502_opcode_sbc_indx:
 		case v6502_opcode_sbc_indy:
-			_executeInPlaceADC(cpu, *operand ^ BYTE_MAX);
+			_executeInPlaceADC(cpu, operand ^ BYTE_MAX);
 			return;
 
 		// STA
