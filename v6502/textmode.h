@@ -27,7 +27,9 @@
 
 #include "mem.h"
 
-#define textMode_memoryStart	0x2000
+#define textMode_characterMemoryStart	0x2000
+#define textMode_attributeMemoryStart	0x3000
+#define textMode_memoryCeiling			0x4000
 
 typedef struct {
 	WINDOW *screen;
