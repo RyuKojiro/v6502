@@ -33,11 +33,18 @@
 #pragma mark -
 #pragma mark Memory Lifecycle
 
-int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_memoryAccessor *callback) {
+int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write) {
 	// TODO: @bug Make sure it's not already mapped
 
 	// Create a struct and add it to the list
-	
+	return NO;
+}
+
+void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
+	assert(memory);
+
+
+	memory->bytes[offset] = value;
 }
 
 /**
@@ -46,30 +53,16 @@ int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_memoryA
  * pointer to whatever it is supposed to be pointing to. This is NOT safe for
  * larger than single byte access.
  */
-uint8_t *v6502_access(v6502_memory *memory, uint16_t offset, int trap) {
+uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap) {
 	assert(memory);
-	
-	// Safety
-	if (!memory || !memory->bytes) {
-		if (memory && memory->fault_callback) {
-			memory->fault_callback(memory->fault_context, v6502_memoryStructErrorText);
-		}
-		
-		return NULL;
-	}
-	if (offset > memory->size) {
-		if (memory && memory->fault_callback) {
-			memory->fault_callback(memory->fault_context, v6502_memoryBoundsErrorText);
-		}
-		
-		return NULL;
-	}
-	
+	assert(memory->bytes);
+	assert(offset < memory->size);
+
 	// Search mapped memory regions to see if we should defer to the map
 	for(int i = 0; i < memory->rangeCount; i++) {
 		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
 		if(offset > currentRange->start && offset < (currentRange->start + currentRange->size)) {
-			currentRange->callback(memory, offset, trap);
+			return currentRange->read(memory, offset, trap);
 		}
 	}
 
@@ -78,14 +71,14 @@ uint8_t *v6502_access(v6502_memory *memory, uint16_t offset, int trap) {
 	//}
 
 	// If it's not mapped, and everything else checks out, return the real RAM location
-	return &memory->bytes[offset];
+	return memory->bytes[offset];
 }
 
 void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size) {
 	assert(memory);
 
 	for (uint16_t i = 0; i < size; i++) {
-		*v6502_access(memory, v6502_memoryStartExpansionRom + i, NO) = rom[i];
+		v6502_write(memory, v6502_memoryStartExpansionRom + i, rom[i]);
 	}
 }
 

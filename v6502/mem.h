@@ -94,7 +94,7 @@ struct _v6502_memory;
 
 /** @ingroup mem_access */
 /** @brief The function prototype for memory mapped accessors to be used by external virtual hardware. */
-typedef uint8_t (v6502_readFunction)(struct _v6502_memory *memory, uint16_t offset);
+typedef uint8_t (v6502_readFunction)(struct _v6502_memory *memory, uint16_t offset, int trap);
 /** @brief The function prototype for memory mapped accessors to be used by external virtual hardware. */
 typedef void (v6502_writeFunction)(struct _v6502_memory *memory, uint16_t offset, uint8_t value);
 
