@@ -66,7 +66,7 @@ static uint16_t *locationOfBreakpointInList(v6502_breakpoint_list *list, uint16_
 }
 
 int v6502_breakpointIsInList(v6502_breakpoint_list *list, uint16_t address) {
-	return (int)locationOfBreakpointInList(list, address);
+	return locationOfBreakpointInList(list, address) != nil;
 }
 
 void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t address) {
