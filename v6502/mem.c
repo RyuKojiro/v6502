@@ -133,6 +133,7 @@ void v6502_destroyMemory(v6502_memory *memory) {
 		return;
 	}
 	
+	free(memory->mappedRanges);
 	free(memory->bytes);
 	free(memory);
 }
