@@ -121,6 +121,10 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 		memory->bytes[i] = 0x00;
 	}
 	
+	// Zero out the Map
+	memory->rangeCount = 0;
+	memory->mappedRanges = NULL;
+	
 	return memory;
 }
 
