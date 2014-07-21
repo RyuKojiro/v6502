@@ -171,6 +171,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
 			   "peek <addr>         Dumps the memory at and around a given address.\n"
 			   "poke <addr> <value> Sets the location in memory to the value specified.\n"
+			   "jump <addr>         Jumps to a given address; program counter is set to given address.\n"
 			   "quit                Exits v6502.\n"
 			   "run                 Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
 			   "reset               Resets the CPU.\n"
@@ -338,6 +339,15 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		
 		v6502_write(cpu->memory, address, value);
 		return YES;
+	}
+	if (compareCommand(command, "jump")) {
+		command = trimheadtospc(command, len);
+        	command++;
+
+		uint16_t address = as6502_valueForString(NULL, command);
+        	cpu->pc = address;
+
+        	return YES;
 	}
 	if (compareCommand(command, "quit")) {
 		v6502_destroyMemory(cpu->memory);
