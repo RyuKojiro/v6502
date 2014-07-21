@@ -198,6 +198,10 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_rti:
 		case v6502_opcode_rts:
 		case v6502_opcode_wai:
+		case v6502_opcode_pha:
+		case v6502_opcode_pla:
+		case v6502_opcode_php:
+		case v6502_opcode_plp:
 			return v6502_address_mode_implied;
 		case v6502_opcode_bcc:
 		case v6502_opcode_bcs:
@@ -207,10 +211,6 @@ v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode) {
 		case v6502_opcode_bpl:
 		case v6502_opcode_bvc:
 		case v6502_opcode_bvs:
-		case v6502_opcode_pha:
-		case v6502_opcode_pla:
-		case v6502_opcode_php:
-		case v6502_opcode_plp:
 			return v6502_address_mode_relative;
 		case v6502_opcode_asl_acc:
 		case v6502_opcode_lsr_acc:
