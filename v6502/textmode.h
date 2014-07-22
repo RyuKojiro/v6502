@@ -31,6 +31,14 @@
 #define textMode_attributeMemoryStart	0x3000
 #define textMode_memoryCeiling			0x4000
 
+/** The first two kilobytes of memory (starting at textMode_characterMemoryStart or 0x2000) are character data, starting with the top right, ending with the bottom left, one row at a time, with no interruptions. After a short break for video hardware registers, another 2 kilobytes (starting at textMode_attributeMemoryStart or 0x3000) are attribute data, which correspond to each byte of character data + 0x1000.
+ 
+	Attribute data byte anatomy:
+	B = Bright C = Color data
+	<- fg -><- bg ->
+	B C C C  B C C C
+ */
+
 typedef struct {
 	WINDOW *screen;
 	v6502_memory *memory;
