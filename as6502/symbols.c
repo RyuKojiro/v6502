@@ -325,12 +325,12 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 			if (width) {
 				out = realloc(out, _outLen + 6);
 				snprintf(out + _outLen, 6, "$%04x", pstart + this->address);
-				_outLen += 6;
+				_outLen += 5;
 			}
 			else {
 				out = realloc(out, _outLen + 4);
 				snprintf(out + _outLen, 4, "$%02x", v6502_byteValueOfSigned(this->address - offset));
-				_outLen += 4;
+				_outLen += 3;
 			}
 			
 			last += strlen(this->name);
@@ -341,6 +341,7 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 	if (last < len && in[last]) {
 		size_t lengthToCopy = len - last;
 		out = realloc(out, _outLen + lengthToCopy);
+		lengthToCopy++; // Add one for guaranteed null termination, even if the in buffer isn't
 		strncpy(out + _outLen, in + last, lengthToCopy);
 		_outLen += lengthToCopy;
 	}
