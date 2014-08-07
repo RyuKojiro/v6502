@@ -30,15 +30,19 @@
 extern unsigned long currentLineNum;
 /** @brief Current file name */
 extern const char *currentFileName;
+/** @brief Last line number that encountered an error or warning */
+extern unsigned long lastProblematicLine;
+extern unsigned long startOfProblem;
+extern unsigned long lengthOfProblem;
 
 /** @defgroup as_error Assembler Error Handling */
 /**@{*/
 /** @brief Called for fatal errors during assembly, such as internal memory failures */
 void as6502_fatal(const char *reason) __attribute((noreturn));
 /** @brief Called for code errors detected during assembly, which prevent producing a binary */
-void as6502_error(const char *reason, ...);
+void as6502_error(unsigned long loc, unsigned long len, const char *reason, ...);
 /** @brief Called for code warnings detected during assembly, which don't prevent producing a binary */
-void as6502_warn(const char *reason);
+void as6502_warn(unsigned long loc, unsigned long len, const char *reason);
 /** @brief Called for code notation which pertain to preceding errors or warnings, this can reference other code */
 void as6502_note(unsigned long lineNumber, const char *reason, ...);
 /**@}*/

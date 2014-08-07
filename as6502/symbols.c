@@ -168,7 +168,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 	// Add it to the table
 	for (as6502_symbol **this = &table->first_symbol;; this = &((*this)->next)) {
 		if (*this && !strncmp((*this)->name, name, len)) {
-			as6502_error(v6502_DuplicateSymbolErrorText, name);
+			as6502_error(0, 0, v6502_DuplicateSymbolErrorText, name);
 			as6502_note((*this)->line, v6502_DuplicateSymbolNoteText);
 			return;
 		}

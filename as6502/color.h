@@ -20,25 +20,25 @@
  * IN THE SOFTWARE.
  */
 
-#include <stdio.h>
+#ifndef ansi_color_h
+#define ansi_color_h
 
-#include "flat.h"
-#include "error.h"
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN    "\x1b[36m"
+#define ANSI_COLOR_WHITE   "\x1b[37m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 
-void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file) {
-	if (obj->count > 1) {
-		as6502_warn(0, 0, "Writing flat file with multiple segments will result in loss of object data");
-	}
-	fwrite(obj->blobs[0].data, 1, obj->blobs[0].len, file);
-}
+#define ANSI_COLOR_BRIGHT_RED     "\x1b[1;31m"
+#define ANSI_COLOR_BRIGHT_GREEN   "\x1b[1;32m"
+#define ANSI_COLOR_BRIGHT_YELLOW  "\x1b[1;33m"
+#define ANSI_COLOR_BRIGHT_BLUE    "\x1b[1;34m"
+#define ANSI_COLOR_BRIGHT_MAGENTA "\x1b[1;35m"
+#define ANSI_COLOR_BRIGHT_CYAN    "\x1b[1;36m"
+#define ANSI_COLOR_BRIGHT_WHITE   "\x1b[1;37m"
+#define ANSI_COLOR_BRIGHT_RESET   "\x1b[1;0m"
 
-void as6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file) {
-	ld6502_addBlobToObject(obj, 0);
-	ld6502_object_blob *blob = &obj->blobs[0];
-	
-	uint8_t byte;
-	while (!feof(file)) {
-		fread(&byte, 1, 1, file);
-		ld6502_appendByteToBlob(blob, byte);
-	}
-}
+#endif

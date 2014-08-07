@@ -31,6 +31,7 @@
 #include "object.h"
 #include "codegen.h"
 #include "error.h"
+#include "color.h"
 
 #include "flat.h"
 #include "ines.h"
@@ -96,13 +97,19 @@ int isValidLiteral(const char *start, size_t len) {
 	return YES;
 }
 
+static void printSpaces(unsigned long num) {
+	for (/* num */; num > 0; num--) {
+		printf(" ");
+	}
+}
+
 static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t len, as6502_symbol_table *table, int printProcess) {
 	uint8_t opcode, low, high;
 	int addrLen;
 	v6502_address_mode mode;
 
 	if (line[3] && !isValidLiteral(line + 4, len - 4)) {
-		as6502_error(v6502_BadLiteralValueErrorText, line + 4);
+		as6502_error(4, strlen(line + 4), v6502_BadLiteralValueErrorText, line + 4);
 		/** TODO: @todo Should this short circuit the rest of the assembly for this line? */
 	}
 	
@@ -119,7 +126,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 		ld6502_appendByteToBlob(blob, high);
 	}
 		
-	if (printProcess) {
+	if (printProcess || (lastProblematicLine == currentLineNum)) {
 		as6502_symbol *label = as6502_symbolForAddress(table, blob->len - addrLen);
 		if (label) {
 			printf("0x%04x:          - %4lu: %s:\n", blob->len - addrLen, label->line, label->name);
@@ -143,6 +150,26 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 		}
 		
 		printf(" - %4lu:  \t%s\n", currentLineNum, line);
+		
+		if (lengthOfProblem) {
+			printSpaces(19);
+			for (unsigned long i = currentLineNum; i >= 10; i %= 10) {
+				printf(" ");
+			}
+			printSpaces(4);
+			printf("\t");
+			
+			printSpaces(startOfProblem);
+			printf(ANSI_COLOR_BRIGHT_GREEN "^");
+			
+			if (lengthOfProblem) {
+				for (lengthOfProblem--; lengthOfProblem; lengthOfProblem--) {
+					printf("~");
+				}
+			}
+
+			printf(ANSI_COLOR_RESET "\n");
+		}
 	}
 	
 	return addrLen;
@@ -181,7 +208,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			
 			if (as6502_symbolTypeIsVariable(type)) {
 				if (currentVarAddress >= 0x7FF) {
-					as6502_error("Maximum number of addressable variables exceeded.");
+					as6502_error(0, 0, "Maximum number of addressable variables exceeded.");
 				}
 				else {
 					currentVarAddress++;
@@ -253,7 +280,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 				int wide;
 				as6502_byteValuesForString(NULL, &low, &wide, start);
 				if (wide) {
-					as6502_warn("Value larger than 8-bits specified in .byte directive, only the lower 8-bits will be used.");
+					as6502_warn(start - line, 1, "Value larger than 8-bits specified in .byte directive, only the lower 8-bits will be used.");
 				}
 				ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
 			}
@@ -374,7 +401,7 @@ int main(int argc, char * const argv[]) {
 		currentFileName = "stdin";
 		currentLineNum = 0;
 		
-		as6502_warn("Assembling from stdin does not support symbols");
+		as6502_warn(0, 0, "Assembling from stdin does not support symbols");
 		
 		assembleFile(stdin, stdout, NO, NO, format);
 	}
