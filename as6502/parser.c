@@ -94,9 +94,18 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 	}
 }
 
+void _failOpcode(const char *string) {
+	size_t len = as6502_lengthOfToken(string, strlen(string));
+	char *opcode = malloc(len + 1);
+	strncpy(opcode, string, len);
+	opcode[len] = '\0';
+	as6502_error(0, len, v6502_InvalidOpcodeFormatText, opcode);
+	free(opcode);
+}
+
 v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
 	if (strlen(string) < 3) {
-		as6502_error(0, strlen(string), v6502_InvalidOpcodeFormatText, string);
+		_failOpcode(string);
 		return v6502_opcode_nop;
 	}
 	
@@ -622,7 +631,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 		}
 	}
 
-	as6502_error(0, strlen(string), v6502_InvalidOpcodeFormatText, string);
+	_failOpcode(string);
 	return v6502_opcode_nop;
 }
 

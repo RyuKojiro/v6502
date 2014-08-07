@@ -109,7 +109,13 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 	v6502_address_mode mode;
 
 	if (line[3] && !isValidLiteral(line + 4, len - 4)) {
-		as6502_error(4,  as6502_lengthOfToken(line + 4, len - 4), v6502_BadLiteralValueErrorText, line + 4);
+		size_t sLen = as6502_lengthOfToken(line + 4, len - 4);
+		char *symbol = malloc(sLen + 1);
+		strncpy(symbol, line + 4, sLen);
+		symbol[sLen] = '\0';
+		as6502_error(4,  sLen, v6502_BadLiteralValueErrorText, symbol);
+		free(symbol);
+
 		/** TODO: @todo Should this short circuit the rest of the assembly for this line? */
 	}
 	
