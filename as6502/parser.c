@@ -38,7 +38,7 @@ static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char m[12];
 	
 	as6502_stringForAddressMode(m, mode);
-	as6502_error(v6502_BadAddressModeErrorText, m, op);
+	as6502_error(0, 3, v6502_BadAddressModeErrorText, m, op);
 
 	return v6502_opcode_nop;
 }
