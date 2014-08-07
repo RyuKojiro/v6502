@@ -301,10 +301,10 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 			cur = strcasestr(in, this->name);
 		}
 
-		// Swap in address
+		// Found a symbol! Swap in the address
 		if (cur) {
 			// Copy up to the encountered symbol
-			out = realloc(out, _outLen + last);
+			out = realloc(out, _outLen + last + (cur - in));
 			size_t lengthToCopy = cur - in - last;
 			strncpy(out + _outLen, in + last, lengthToCopy);
 			last += lengthToCopy;
@@ -349,7 +349,7 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 		*outLen = _outLen;
 	}
 	
-	return in;
+	return out;
 }
 
 int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, size_t len) {
