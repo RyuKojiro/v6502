@@ -1,8 +1,8 @@
-AS=		as6502
+AS=	/Users/kojiro/Library/Developer/Xcode/DerivedData/v6502-ercgzvuowvxjxdddtgtxnqrrlfug/Build/Products/Debug/as6502
 ASDIR=	../as6502
-PROG=	overflow.o
-SRCS=	overflow.s
-ASFLAGS=	-S
+PROG=	wozfp1.o
+SRCS=	wozfp1.s
+#ASFLAGS=	-S
 VM=		v6502
 VMDIR=	../v6502
 
@@ -10,7 +10,7 @@ test: $(PROG) $(VM)
 	$(VMDIR)/$(VM) $(PROG)
 
 $(PROG): $(AS)
-	$(ASDIR)/$(AS) $(ASFLAGS) $(SRCS)
+	$(AS) $(ASFLAGS) $(SRCS)
 
 $(VM):
 	cd $(VMDIR) ; make

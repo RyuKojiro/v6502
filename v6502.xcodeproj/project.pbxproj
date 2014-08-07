@@ -158,6 +158,8 @@
 		E6817C2A1855658B008A58A9 /* flat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flat.h; sourceTree = "<group>"; };
 		E6817C2B1855658B008A58A9 /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = object.c; sourceTree = "<group>"; };
 		E6817C2C1855658B008A58A9 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
+		E6828B2D1992E0C900442439 /* wozfp1.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = wozfp1.s; sourceTree = "<group>"; };
+		E6828B2F19933FBD00442439 /* color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = color.h; path = as6502/color.h; sourceTree = "<group>"; };
 		E68821CD175DBC2300BA1FE2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = easy6502/Makefile; sourceTree = SOURCE_ROOT; };
 		E68C9A3D193FA00300AD9E00 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = /usr/lib/libedit.dylib; sourceTree = "<absolute>"; };
 		E6A079101737321800E0027B /* NOTES.dox */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTES.dox; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				E61D402D1799B5A1009BA763 /* Makefile */,
 				E61D402E1799B5A1009BA763 /* overflow.s */,
 				E61D402F1799B5A1009BA763 /* test.s */,
+				E6828B2D1992E0C900442439 /* wozfp1.s */,
 			);
 			name = Tests;
 			path = tests;
@@ -348,6 +351,7 @@
 				E6FE6FB117376FCD00B4D249 /* error.c */,
 				E677B2891737338300A3B9E8 /* symbols.h */,
 				E677B2881737338300A3B9E8 /* symbols.c */,
+				E6828B2F19933FBD00442439 /* color.h */,
 			);
 			name = as6502;
 			sourceTree = "<group>";
@@ -760,6 +764,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lcurses";
 				WARNING_CFLAGS = "-Weverything";
@@ -785,6 +790,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OTHER_LDFLAGS = "-lcurses";
 				WARNING_CFLAGS = "-Weverything";
 			};
