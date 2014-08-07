@@ -29,8 +29,6 @@
 #include "error.h"
 #include "color.h"
 
-#define THIS_IS_A_REAL_TTY	isatty(fileno(stdin))
-
 unsigned long currentLineNum;
 const char *currentFileName;
 unsigned long lastProblematicLine;
@@ -49,26 +47,28 @@ void _setProblemLocation(unsigned long loc, unsigned long len) {
 	lengthOfProblem = len;
 }
 
-void as6502_error(unsigned long loc, unsigned long len, const char *reason, ...) {
+void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len, const char *color, const char *type, const char *reason, va_list ap) {
 	_setProblemLocation(loc, len);
 	
-	va_list ap;
-	va_start(ap, reason);
-	
-	if (THIS_IS_A_REAL_TTY) {
+	// Only use color codes on real TTYs
+	if (isatty(fileno(stdin))) {
 		fprintf(stderr,
-				ANSI_COLOR_BRIGHT_WHITE "%s:%lu: "
-				ANSI_COLOR_BRIGHT_RED "error: "
-				ANSI_COLOR_BRIGHT_WHITE, currentFileName, currentLineNum);
+				ANSI_COLOR_BRIGHT_WHITE "%s:%lu:", currentFileName, line);
+		
+		if (len) {
+			fprintf(stderr, "%lu:", loc);
+		}
+		
+		fprintf(stderr,
+				" %s%s: "
+				ANSI_COLOR_BRIGHT_WHITE, color, type);
 		vfprintf(stderr, reason, ap);
-		va_end(ap);
 		
 		fprintf(stderr, ANSI_COLOR_RESET);
 	}
 	else {
-		fprintf(stderr, "%s:%lu: error: ", currentFileName, currentLineNum);
+		fprintf(stderr, "%s:%lu: %s: ", currentFileName, line, type);
 		vfprintf(stderr, reason, ap);
-		va_end(ap);
 	}
 	
 	if (reason[strlen(reason)] != '\n') {
@@ -76,48 +76,23 @@ void as6502_error(unsigned long loc, unsigned long len, const char *reason, ...)
 	}
 }
 
-void as6502_warn(unsigned long loc, unsigned long len, const char *reason) {
-	_setProblemLocation(loc, len);
+void as6502_error(unsigned long loc, unsigned long len, const char *reason, ...) {
+	va_list ap;
+	va_start(ap, reason);
+	as6502_vlog(currentLineNum, loc, len, ANSI_COLOR_BRIGHT_RED, "error", reason, ap);
+	va_end(ap);
+}
 
-	if (THIS_IS_A_REAL_TTY) {
-		fprintf(stderr,
-			ANSI_COLOR_BRIGHT_WHITE "%s:%lu: "
-			ANSI_COLOR_BRIGHT_MAGENTA "warning: "
-			ANSI_COLOR_BRIGHT_WHITE "%s"
-			ANSI_COLOR_RESET, currentFileName, currentLineNum, reason);
-	}
-	else {
-		fprintf(stderr, "%s:%lu: warning: %s", currentFileName, currentLineNum, reason);
-	}
-	
-	if (reason[strlen(reason)] != '\n') {
-		fprintf(stderr, "\n");
-	}
+void as6502_warn(unsigned long loc, unsigned long len, const char *reason, ...) {
+	va_list ap;
+	va_start(ap, reason);
+	as6502_vlog(currentLineNum, loc, len, ANSI_COLOR_BRIGHT_MAGENTA, "warning", reason, ap);
+	va_end(ap);
 }
 
 void as6502_note(unsigned long lineNumber, const char *reason, ...) {
-	lastProblematicLine = currentLineNum;
-
 	va_list ap;
 	va_start(ap, reason);
-	
-	if (THIS_IS_A_REAL_TTY) {
-		fprintf(stderr,
-				ANSI_COLOR_BRIGHT_WHITE "%s:%lu: "
-				ANSI_COLOR_BRIGHT_CYAN "note: "
-				ANSI_COLOR_BRIGHT_WHITE, currentFileName, lineNumber);
-		vfprintf(stderr, reason, ap);
-		va_end(ap);
-		
-		fprintf(stderr, ANSI_COLOR_RESET);
-	}
-	else {
-		fprintf(stderr, "%s:%lu: note: ", currentFileName, lineNumber);
-		vfprintf(stderr, reason, ap);
-		va_end(ap);
-	}
-	
-	if (reason[strlen(reason)] != '\n') {
-		fprintf(stderr, "\n");
-	}
+	as6502_vlog(lineNumber, 0, 0, ANSI_COLOR_BRIGHT_CYAN, "note", reason, ap);
+	va_end(ap);
 }
