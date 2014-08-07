@@ -42,7 +42,7 @@ __attribute((noreturn)) void as6502_fatal(const char *reason) {
 	exit(EXIT_FAILURE);
 }
 
-void _setProblemLocation(unsigned long loc, unsigned len) {
+void _setProblemLocation(unsigned long loc, unsigned long len) {
 	lastProblematicLine = currentLineNum;
 
 	startOfProblem = loc;
