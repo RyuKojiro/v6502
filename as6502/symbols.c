@@ -304,7 +304,7 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 		// Found a symbol! Swap in the address
 		if (cur) {
 			// Prevent partial symbol matches
-			if (!isspace(cur[strlen(this->name)]) && cur[strlen(this->name)] != ',' && cur[strlen(this->name)] != '\n') {
+			if (as6502_lengthOfToken(cur, len - (cur - line)) > strlen(this->name)) {
 				continue;
 			}
 			if (!isspace(CTYPE_CAST cur[-1])) {

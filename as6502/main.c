@@ -109,7 +109,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 	v6502_address_mode mode;
 
 	if (line[3] && !isValidLiteral(line + 4, len - 4)) {
-		as6502_error(4, strlen(line + 4), v6502_BadLiteralValueErrorText, line + 4);
+		as6502_error(4,  as6502_lengthOfToken(line + 4, len - 4), v6502_BadLiteralValueErrorText, line + 4);
 		/** TODO: @todo Should this short circuit the rest of the assembly for this line? */
 	}
 	
