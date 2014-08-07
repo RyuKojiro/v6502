@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h> // getopt
+#include <stdlib.h> // free
 
 #include "linectl.h"
 #include "parser.h"
@@ -279,14 +280,14 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_resolveArithmetic(line, maxLen);
 		
 		// Convert symbols to hard addresses from symbol table
-		as6502_desymbolicateLine(obj->table, trimmedLine, maxLen, 0x0600, address, NO);
-		lineLen = strlen(trimmedLine);
+		trimmedLine = as6502_desymbolicateLine(obj->table, trimmedLine, maxLen, 0x0600, address, NO, &lineLen);
 
 		// Assemble whatever is left, if anything
 		if (lineLen) {
 			instructionLength = assembleLine(&obj->blobs[currentBlob], trimmedLine, lineLen, obj->table, printProcess);
 			address += instructionLength;
 		}
+		free(trimmedLine);
 				
 		// Check if we are on the next line yet
 		if (newline) {
