@@ -28,7 +28,7 @@
 
 #include <sys/types.h>
 
-/** @brief <ctype.h> functions all expect int sized chars */
+/** @brief This is to cope with <ctype.h> functions, which all expect int sized chars */
 #define CTYPE_CAST	(int)
 
 /** @defgroup linectl String Manipulation Functions */
