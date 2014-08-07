@@ -285,11 +285,15 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 	offset += as6502_instructionLengthForAddressMode(mode);
 	
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
-		// Search for symbol
+		// Make sure searching is even possible
+		if (!in[last]) {
+			break;
+		}
 		if (strlen(this->name) > (len - last)) {
 			continue;
 		}
 		
+		// Search for symbol
 		if (caseSensitive) {
 			cur = strstr(in, this->name);
 		}
@@ -334,9 +338,9 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 	}
 	
 	// Empty anything that's left in the input buffer to the output
-	if (last < len) {
-		out = realloc(out, _outLen + last);
+	if (last < len && in[last]) {
 		size_t lengthToCopy = len - last;
+		out = realloc(out, _outLen + lengthToCopy);
 		strncpy(out + _outLen, in + last, lengthToCopy);
 		_outLen += lengthToCopy;
 	}
