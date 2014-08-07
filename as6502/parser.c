@@ -94,7 +94,7 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 	}
 }
 
-void _failOpcode(const char *string) {
+void _badOpcode(const char *string) {
 	size_t len = as6502_lengthOfToken(string, strlen(string));
 	char *opcode = malloc(len + 1);
 	strncpy(opcode, string, len);
@@ -105,7 +105,7 @@ void _failOpcode(const char *string) {
 
 v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
 	if (strlen(string) < 3) {
-		_failOpcode(string);
+		_badOpcode(string);
 		return v6502_opcode_nop;
 	}
 	
@@ -631,7 +631,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 		}
 	}
 
-	_failOpcode(string);
+	_badOpcode(string);
 	return v6502_opcode_nop;
 }
 
