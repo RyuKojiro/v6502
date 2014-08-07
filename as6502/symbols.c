@@ -323,14 +323,14 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 			/** @todo FIXME: Should this detect if relative is an option, and do that instead? */
 			width = as6502_doubleWidthForSymbolInLine(table, in, len, cur);
 			if (width) {
-				out = realloc(out, _outLen + 5);
-				snprintf(out + _outLen, 5, "$%04x", pstart + this->address);
-				_outLen += 5;
+				out = realloc(out, _outLen + 6);
+				snprintf(out + _outLen, 6, "$%04x", pstart + this->address);
+				_outLen += 6;
 			}
 			else {
-				out = realloc(out, _outLen + 3);
-				snprintf(out + _outLen, 3, "$%02x", v6502_byteValueOfSigned(this->address - offset));
-				_outLen += 3;
+				out = realloc(out, _outLen + 4);
+				snprintf(out + _outLen, 4, "$%02x", v6502_byteValueOfSigned(this->address - offset));
+				_outLen += 4;
 			}
 			
 			last += strlen(this->name);
