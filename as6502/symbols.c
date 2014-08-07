@@ -263,54 +263,89 @@ static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *l
 	return 1;
 }
 
-void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive) {
+char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive, size_t *outLen) {
 	/** FIXME: This needs to be smart about address formation, based on address mode
 	 * This is absurdly inefficient, but works, given the current symbol table implementation
 	 */
 	assert(table);
 
 	char *cur;
-	char addrString[7];
 	int width;
+	size_t last = 0;
 	
-	// Ensure termination for strstr
-	line[len - 1] = '\0';
-		
+	char *in = malloc(len);
+	char *out = NULL;
+	size_t _outLen = 0;
+	
+	// Copy in string and ensure NULL termination for strstr
+	strncpy(in, line, len + 1);
+	
 	// Shift offset for pre-branch program counter shift
-	v6502_address_mode mode = as6502_addressModeForLine(line, len);
+	v6502_address_mode mode = as6502_addressModeForLine(in, len);
 	offset += as6502_instructionLengthForAddressMode(mode);
 	
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		// Search for symbol
+		if (strlen(this->name) > (len - last)) {
+			continue;
+		}
+		
 		if (caseSensitive) {
-			cur = strstr(line, this->name);
+			cur = strstr(in, this->name);
 		}
 		else {
-			cur = strcasestr(line, this->name);
+			cur = strcasestr(in, this->name);
 		}
 
 		// Swap in address
 		if (cur) {
+			// Copy up to the encountered symbol
+			out = realloc(out, _outLen + last);
+			size_t lengthToCopy = cur - in - last;
+			strncpy(out + _outLen, in + last, lengthToCopy);
+			last += lengthToCopy;
+			_outLen += lengthToCopy;
+			
 			if (!isspace(CTYPE_CAST cur[-1])) {
 				// Partial symbol match @todo Double check this logic
 				continue;
 			}
-			
+
 			if (as6502_symbolTypeIsVariable(this->type)) {
 				offset = 0;
 				pstart = 0;
 			}
-			
-			width = as6502_doubleWidthForSymbolInLine(table, line, len, cur);
+
+			/** @todo FIXME: Should this detect if relative is an option, and do that instead? */
+			width = as6502_doubleWidthForSymbolInLine(table, in, len, cur);
 			if (width) {
-				snprintf(addrString, 7, "$%04x", pstart + this->address);
+				out = realloc(out, _outLen + 5);
+				snprintf(out + _outLen, 5, "$%04x", pstart + this->address);
+				_outLen += 5;
 			}
 			else {
-				snprintf(addrString, 5, "$%02x", v6502_byteValueOfSigned(this->address - offset));
+				out = realloc(out, _outLen + 3);
+				snprintf(out + _outLen, 3, "$%02x", v6502_byteValueOfSigned(this->address - offset));
+				_outLen += 3;
 			}
-			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, this->name, addrString);
+			
+			last += strlen(this->name);
 		}
-	}	
+	}
+	
+	// Empty anything that's left in the input buffer to the output
+	if (last < len) {
+		out = realloc(out, _outLen + last);
+		size_t lengthToCopy = len - last;
+		strncpy(out + _outLen, in + last, lengthToCopy);
+		_outLen += lengthToCopy;
+	}
+	
+	if (outLen) {
+		*outLen = _outLen;
+	}
+	
+	return in;
 }
 
 int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, size_t len) {

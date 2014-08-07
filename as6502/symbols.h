@@ -109,8 +109,10 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	@param pstart Program start address
 	@param offset Address of current line
 	@param caseSensitive Symbol search case sensitivity
+	@param outLen The char length of the string being returned
+	@return A freshly malloc'ed, null terminated, string of length outLen, containing the desymbolicated line
  */
-void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive);
+char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive, size_t *outLen);
 
 /** @brief Searches for addresses in a given line and replaces them with their symbols in a given symbol table
 	@param table The as6502_symbol_table to search
@@ -118,6 +120,8 @@ void as6502_desymbolicateLine(as6502_symbol_table *table, char *line, size_t len
 	@param len Useable length of the line in chars
 	@param pstart Program start address
 	@param offset Address of current line
+	@param outLen The char length of the string being returned
+	@return A freshly malloc'ed, null terminated, string of length outLen, containing the desymbolicated line
  */
 void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset);
 /**@}*/
