@@ -303,18 +303,21 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 
 		// Found a symbol! Swap in the address
 		if (cur) {
+			// Prevent partial symbol matches
+			if (!isspace(cur[strlen(this->name)]) && cur[strlen(this->name)] != ',' && cur[strlen(this->name)] != '\n') {
+				continue;
+			}
+			if (!isspace(CTYPE_CAST cur[-1])) {
+				continue;
+			}
+
 			// Copy up to the encountered symbol
-			out = realloc(out, _outLen + last + (cur - in));
 			size_t lengthToCopy = cur - in - last;
+			out = realloc(out, _outLen + lengthToCopy);
 			strncpy(out + _outLen, in + last, lengthToCopy);
 			last += lengthToCopy;
 			_outLen += lengthToCopy;
 			
-			if (!isspace(CTYPE_CAST cur[-1])) {
-				// Partial symbol match @todo Double check this logic
-				continue;
-			}
-
 			if (as6502_symbolTypeIsVariable(this->type)) {
 				offset = 0;
 				pstart = 0;
