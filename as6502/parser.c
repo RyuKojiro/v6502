@@ -651,16 +651,17 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 	}
 	
 	// Remove all whitespace, #'s, *'s, high ascii, and parenthesis, also, truncate at comma
-	int i = 0;
-	for (const char *cur = string; *cur; cur++) {
+	const char *cur;
+	for (cur = string; *cur; cur++) {
 		if (!isspace(CTYPE_CAST *cur) && *cur != '#' && *cur !='*' && *cur !='(' && *cur !=')' && *cur < 0x7F && *cur != ';') {
-			workString[i++] = *cur;
-		}
-		if (*cur == ',') {
 			break;
 		}
 	}
-	workString[i] = '\0';
+	
+	// Truncate to end of token
+	size_t len = as6502_lengthOfToken(cur, 79);
+	strncpy(workString, cur, len);
+	workString[len + 1] = '\0';
 	
 	// Check first char to determine base
 	switch (workString[0]) {
@@ -676,11 +677,21 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 			}
 			result = strtol(workString + 1, NULL, 2);
 		} break;
-		case '0': { // Octal
-			if (wide) {
-				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
+		case '0': {
+			// Traditional Hex
+			if (workString[1] == 'x') {
+				if (wide) {
+					*wide = (_valueLengthInChars(workString + 1) > 2) ? YES : NO;
+				}
+				result = strtol(workString + 2, NULL, 16);
 			}
-			result = strtol(workString, NULL, 8);
+			// Octal
+			else {
+				if (wide) {
+					*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
+				}
+				result = strtol(workString, NULL, 8);
+			}
 		} break;
 		default: { // Decimal
 			if (wide) {
@@ -951,6 +962,7 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 	
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
+		// We already know the address mode at this point, so we just want the actual value
 		as6502_byteValuesForString(high, low, NULL, string + 4);
 	}
 	
