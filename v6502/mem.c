@@ -25,11 +25,6 @@
 
 #include "mem.h"
 
-// Error Text
-#define v6502_unableToMapMemoryErrorTextv6502	"Unable to map memory address"
-#define v6502_memoryStructErrorText				"Internal memory structure inconsitency"
-#define v6502_memoryBoundsErrorText				"Memory access out of bounds"
-
 #pragma mark -
 #pragma mark Memory Lifecycle
 
