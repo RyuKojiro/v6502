@@ -326,14 +326,9 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		as6502_byteValuesForString(NULL, &value, NULL, command);
 		
 		// Make sure we don't go out of bounds either direction
-		if (address <= 0x10) {
-			address = 0x00;
-		}
-		else if (address >= cpu->memory->size - 0x30) {
-			address = cpu->memory->size - 0x30;
-		}
-		else {
-			address -= 0x10;
+		if (address >= cpu->memory->size) {
+			printf("Cannot poke memory that is out of bounds.\n");
+			return YES;
 		}
 		
 		v6502_write(cpu->memory, address, value);
