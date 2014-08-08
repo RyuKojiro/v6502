@@ -47,6 +47,7 @@ void _setProblemLocation(unsigned long loc, unsigned long len) {
 	lengthOfProblem = len;
 }
 
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
 void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len, const char *color, const char *type, const char *reason, va_list ap) {
 	_setProblemLocation(loc, len);
 	
@@ -75,6 +76,7 @@ void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len, const
 		fprintf(stderr, "\n");
 	}
 }
+#pragma clang diagnostic warning "-Wformat-nonliteral"
 
 void as6502_error(unsigned long loc, unsigned long len, const char *reason, ...) {
 	va_list ap;
