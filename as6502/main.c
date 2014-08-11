@@ -271,7 +271,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Handle dot directives
 		if (line[0] == '.') {
-			if (strncasecmp("asciz", line + 1, lineLen)) {
+			if (strncasecmp("asciiz", line + 1, lineLen)) {
 				char *stop = line + lineLen;
 				for (char *ch = trimheadchar(line, '"', lineLen) + 1; *ch && ch < stop && *ch != '"'; ch++) {
 					ld6502_appendByteToBlob(&obj->blobs[currentBlob], *ch);

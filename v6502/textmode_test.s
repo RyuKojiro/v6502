@@ -32,4 +32,4 @@ nextChar:
 end:			; This does the same in v6502 as a wai instruction would
 	jmp end
 string:
-.asciz "This is a test"
+.asciiz "This is a test"
