@@ -73,7 +73,7 @@ static void loadProgram(v6502_memory *mem, const char *fname, uint16_t address) 
 		mem->bytes[address + (offset++)] = byte;
 	}
 	
-	printf("Loaded %u bytes.\n", offset);
+	printf("Loaded %u bytes at 0x%x.\n", offset, address);
 	
 	fclose(f);
 }
@@ -417,11 +417,11 @@ int main(int argc, const char * argv[])
 		const char *filename = argv[argc - 1];
 		printf("Loading binary image \"%s\" into memory...\n", filename);
 		loadProgram(cpu->memory, filename, DEFAULT_RESET_VECTOR);
-		
-		// Make sure the reset vector is the same
-		v6502_write(cpu->memory, v6502_memoryVectorResetLow, DEFAULT_RESET_VECTOR	& 0xFF);
-		v6502_write(cpu->memory, v6502_memoryVectorResetHigh, DEFAULT_RESET_VECTOR >> 8);
 	}
+	
+	// Set the reset vector
+	v6502_write(cpu->memory, v6502_memoryVectorResetLow, DEFAULT_RESET_VECTOR & 0xFF);
+	v6502_write(cpu->memory, v6502_memoryVectorResetHigh, DEFAULT_RESET_VECTOR >> 8);
 	
 	printf("Resetting CPU...\n");
 	v6502_reset(cpu);
