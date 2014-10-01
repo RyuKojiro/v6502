@@ -18,6 +18,8 @@ subsections:
 		- \ref log
 	- \ref breakpoint.h
 		- \ref breakpoint
+	- \ref textmode.h
+		- \ref textmode
 - \subpage as (as6502)
 	- \ref parser.h
 		- \ref parser_translit
