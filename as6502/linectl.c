@@ -100,6 +100,15 @@ char *trimheadtospc(const char *str, size_t len) {
 	return newstr;
 }
 
+char *strnspc(const char *str, size_t len) {
+	while (len && !isspace(*str)) {
+		str++;
+		len--;
+	}
+	
+	return str;
+}
+
 char *rev_strnspc(const char *stop, const char *start) {
 	for (/* start */; start > stop; start--) {
 		if (isspace(CTYPE_CAST *start)) {
