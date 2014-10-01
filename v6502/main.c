@@ -41,7 +41,7 @@
 #define MAX_INSTRUCTION_LEN		32
 #define DISASSEMBLY_COUNT		10
 #define MEMORY_SIZE				0xFFFF
-#define ROM_LOAD_LOCATION		0x600
+#define DEFAULT_RESET_VECTOR	0x0600
 
 static int verbose;
 static volatile sig_atomic_t interrupt;
@@ -58,7 +58,7 @@ static void fault(void *ctx, const char *error) {
 	}
 }
 
-static void loadProgram(v6502_memory *mem, const char *fname) {
+static void loadProgram(v6502_memory *mem, const char *fname, uint16_t address) {
 	FILE *f = fopen(fname, "r");
 	
 	if (!f) {
@@ -70,7 +70,7 @@ static void loadProgram(v6502_memory *mem, const char *fname) {
 	uint16_t offset = 0;
 	
 	while (fread(&byte, 1, 1, f)) {
-		mem->bytes[ROM_LOAD_LOCATION + (offset++)] = byte;
+		mem->bytes[address + (offset++)] = byte;
 	}
 	
 	printf("Loaded %u bytes.\n", offset);
@@ -167,7 +167,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
 			   "help                Displays this help.\n"
 			   "iv <type> <addr>    Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.\n"
-			   "load <file>         Load binary image into memory at 0x0600.\n"
+			   "load <file> <addr>  Load binary image into memory at the address specified. If no address is specified, then the reset vector is used.\n"
 			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
 			   "peek <addr>         Dumps the memory at and around a given address.\n"
 			   "poke <addr> <value> Sets the location in memory to the value specified.\n"
@@ -254,15 +254,28 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 	if (compareCommand(command, "load")) {
 		command = trimheadtospc(command, len);
 		
-		if (command[0]) {
-			command++;
-		}
-		else {
+		// Make sure we have at least one argument
+		if (!command[0]) {
+			printf("You must specify a file to load.\n");
 			return YES;
 		}
 		
-		trimtaild(command);
-		loadProgram(cpu->memory, command);
+		// We do, so extract the filename
+		command++;
+		
+		
+		// Now check for a load address, or fall back to the reset vector
+		uint16_t addr;
+		if(command[0]) {
+			uint8_t low, high;
+			as6502_byteValuesForString(&high, &low, NULL, command);
+			addr = (high << 8) | low;
+		}
+		else {
+			addr = v6502_read(cpu->memory, v6502_memoryVectorResetLow, NO) | (v6502_read(cpu->memory, v6502_memoryVectorResetHigh, NO) << 8);
+		}
+
+		loadProgram(cpu->memory, command, addr);
 		return YES;
 	}
 	if (compareCommand(command, "disassemble")) {
@@ -403,11 +416,11 @@ int main(int argc, const char * argv[])
 	if (argc > 1) {
 		const char *filename = argv[argc - 1];
 		printf("Loading binary image \"%s\" into memory...\n", filename);
-		loadProgram(cpu->memory, filename);
+		loadProgram(cpu->memory, filename, DEFAULT_RESET_VECTOR);
 		
 		// Make sure the reset vector is the same
-		v6502_write(cpu->memory, v6502_memoryVectorResetLow, ROM_LOAD_LOCATION & 0xFF);
-		v6502_write(cpu->memory, v6502_memoryVectorResetHigh, ROM_LOAD_LOCATION >> 8);
+		v6502_write(cpu->memory, v6502_memoryVectorResetLow, DEFAULT_RESET_VECTOR	& 0xFF);
+		v6502_write(cpu->memory, v6502_memoryVectorResetHigh, DEFAULT_RESET_VECTOR >> 8);
 	}
 	
 	printf("Resetting CPU...\n");
