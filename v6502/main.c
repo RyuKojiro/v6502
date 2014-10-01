@@ -252,6 +252,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		return YES;
 	}
 	if (compareCommand(command, "load")) {
+		const char *c2 = command;
 		command = trimheadtospc(command, len);
 		
 		// Make sure we have at least one argument
@@ -259,14 +260,23 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			printf("You must specify a file to load.\n");
 			return YES;
 		}
-		
-		// We do, so extract the filename
+		// Bump past space
 		command++;
 		
+		// We have at least one argument, so extract the filename
+		size_t fLen = strnspc(command, len - (c2 - command)) - command;
+		char *filename = malloc(fLen + 1);
+		memcpy(filename, command, fLen);
+		filename[fLen] = '\0';
 		
+		// Next arg
+		command = trimheadtospc(command, len);
+
 		// Now check for a load address, or fall back to the reset vector
 		uint16_t addr;
 		if(command[0]) {
+			command++;
+			
 			uint8_t low, high;
 			as6502_byteValuesForString(&high, &low, NULL, command);
 			addr = (high << 8) | low;
@@ -275,7 +285,9 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 			addr = v6502_read(cpu->memory, v6502_memoryVectorResetLow, NO) | (v6502_read(cpu->memory, v6502_memoryVectorResetHigh, NO) << 8);
 		}
 
-		loadProgram(cpu->memory, command, addr);
+		loadProgram(cpu->memory, filename, addr);
+		free(filename);
+		
 		return YES;
 	}
 	if (compareCommand(command, "disassemble")) {
