@@ -75,9 +75,9 @@ void textMode_refreshVideo(v6502_textmode_video *vid) {
 	for (int y = 0; y < 24; y++) {
 		for (int x = 0; x < 80; x++) {
 			textMode_updateCharacter(vid, x, y);
-			wrefresh(vid->screen);
 		}
 	}
+	wrefresh(vid->screen);
 }
 
 void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y) {
