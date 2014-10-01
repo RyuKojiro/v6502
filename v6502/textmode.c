@@ -50,6 +50,7 @@ void textMode_write(v6502_memory *memory, uint16_t offset, uint8_t value, void *
 
 v6502_textmode_video *textMode_create(v6502_memory *mem) {
 	v6502_textmode_video *vid = malloc(sizeof(v6502_textmode_video));
+	vid->screen = NULL;
 	vid->memory = mem;
 	v6502_map(mem, textMode_characterMemoryStart, textMode_memoryCeiling - textMode_characterMemoryStart, NULL, textMode_write, vid);
 	return vid;
