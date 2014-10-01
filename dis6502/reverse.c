@@ -316,6 +316,8 @@ void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
 			strncpy(string, "wai", len);
 			return;
 	}
+	
+	strncpy(string, "???", len);
 }
 
 void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode mode, uint8_t high, uint8_t low) {
