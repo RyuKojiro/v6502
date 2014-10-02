@@ -63,7 +63,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 			if(insideOfString) {
 				if(!opcode) {
 					insideOfString = 0;
-					fprintf(out, "\"\n");
+					fprintf(out, "\" ; The next brk serves as the terminator\n");
 				}
 				else {
 					if(isascii(opcode) && isprint(opcode)) {
@@ -71,7 +71,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 					}
 					else {
 						insideOfString = 0;
-						fprintf(out, "\" - This string is unterminated\n");
+						fprintf(out, "\" ; This string is unterminated\n");
 						continue;
 					}
 				}
@@ -85,7 +85,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
 					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
 					// Let's see if it's a string
-					fprintf(out, "$%04x:\n\t\"", offset);
+					fprintf(out, "; String at $%04x:\n.ascii \"", offset);
 					insideOfString = 1;
 					continue;
 				}
