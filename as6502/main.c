@@ -47,6 +47,8 @@
 												len--; \
 											}
 
+// This macro is only for use inside of assembleLine
+#define dotDirectiveEq(a)	!strncasecmp(a, line + 1, (lineLen > strlen(a)) ? strlen(a) : lineLen)
 
 // Figures out if the number is valid, or a stray symbol
 // TODO: @todo make these actually throw the errors, so that the error is more specific, and more helpful, rather than being more generic
@@ -271,14 +273,17 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Handle dot directives
 		if (line[0] == '.') {
-			if (strncasecmp("asciiz", line + 1, lineLen)) {
+			if (dotDirectiveEq("ascii")) {
 				char *stop = line + lineLen;
 				for (char *ch = trimheadchar(line, '"', lineLen) + 1; *ch && ch < stop && *ch != '"'; ch++) {
 					ld6502_appendByteToBlob(&obj->blobs[currentBlob], *ch);
 				}
-				ld6502_appendByteToBlob(&obj->blobs[currentBlob], 0x00);
+				
+				if (dotDirectiveEq("asciiz")) {
+					ld6502_appendByteToBlob(&obj->blobs[currentBlob], 0x00);
+				}
 			}
-			else if (strncasecmp("byte", line + 1, lineLen)) {
+			else if (dotDirectiveEq("byte")) {
 				int skip = 1 /* "." */ + 4 /* "byte" */;
 				char *start = line + skip;
 				start = trimhead(start, lineLen - skip);
