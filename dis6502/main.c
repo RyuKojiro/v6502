@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #include "object.h"
 #include "error.h"
@@ -36,6 +37,7 @@
 
 static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
+	int insideOfString = 0;
 	
 	ld6502_object *obj = ld6502_createObject();
 	ld6502_loadObjectFromFile(obj, in, format);
@@ -51,15 +53,37 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 
 		// Disassemble
 		currentLineNum = 0;
-		for (uint16_t offset = 0; offset < blob->len; offset += v6502_instructionLengthForOpcode(blob->data[offset])) {
+		for (uint16_t offset = 0; offset < blob->len; ){
 			as6502_symbol *label = as6502_symbolForAddress(table, offset);
 			if (label) {
 				fprintf(out, "%s:\n", label->name);
 			}
 			
-			dis6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
-			as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
-			
+			if(insideOfString) {
+				if(!blob->data[offset]) {
+					insideOfString = 0;
+					snprintf(line, MAX_LINE_LEN, "0x%02x - \'\\0\'", blob->data[offset]);
+				}
+				else {
+					snprintf(line, MAX_LINE_LEN, "0x%02x - \'%c\'", blob->data[offset], blob->data[offset]);
+				}
+				offset++;
+			}
+			else {
+				dis6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
+				as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
+
+				if(!strncmp("???", line, 3) && isascii(blob->data[offset])) {
+					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
+					// Let's see if it's a string
+					fprintf(out, "$%04x:\n", offset);
+					insideOfString = 1;
+					continue;
+				}
+
+				offset += v6502_instructionLengthForOpcode(blob->data[offset]) ;
+			}
+
 			fprintf(out, "\t%s\n", line);
 			currentLineNum++;
 		}
