@@ -54,19 +54,20 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 		// Disassemble
 		currentLineNum = 0;
 		for (uint16_t offset = 0; offset < blob->len; ){
+			uint8_t opcode = blob->data[offset];
 			as6502_symbol *label = as6502_symbolForAddress(table, offset);
 			if (label) {
 				fprintf(out, "%s:\n", label->name);
 			}
 			
 			if(insideOfString) {
-				if(!blob->data[offset]) {
+				if(!opcode) {
 					insideOfString = 0;
 					fprintf(out, "\"\n");
 				}
 				else {
-					if(isascii(blob->data[offset]) && isprint(blob->data[offset])) {
-						fprintf(out, "%c", blob->data[offset]);
+					if(isascii(opcode) && isprint(opcode)) {
+						fprintf(out, "%c", opcode);
 					}
 					else {
 						insideOfString = 0;
@@ -78,10 +79,10 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 				continue;
 			}
 			else {
-				dis6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
+				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, blob->data[offset + 2], blob->data[offset + 1]);
 				as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
 
-				if(!strncmp("???", line, 3) && isascii(blob->data[offset]) && isprint(blob->data[offset])) {
+				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
 					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
 					// Let's see if it's a string
 					fprintf(out, "$%04x:\n\t\"", offset);
@@ -89,7 +90,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 					continue;
 				}
 
-				offset += v6502_instructionLengthForOpcode(blob->data[offset]) ;
+				offset += v6502_instructionLengthForOpcode(opcode) ;
 			}
 
 			fprintf(out, "\t%s\n", line);
