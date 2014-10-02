@@ -62,27 +62,29 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 			if(insideOfString) {
 				if(!blob->data[offset]) {
 					insideOfString = 0;
-					snprintf(line, MAX_LINE_LEN, "0x%02x - \'\\0\'", blob->data[offset]);
+					fprintf(out, "\"\n");
 				}
 				else {
-					if(isascii(blob->data[offset])) {
-						snprintf(line, MAX_LINE_LEN, "0x%02x - \'%c\'", blob->data[offset], blob->data[offset]);
+					if(isascii(blob->data[offset]) && isprint(blob->data[offset])) {
+						fprintf(out, "%c", blob->data[offset]);
 					}
 					else {
 						insideOfString = 0;
+						fprintf(out, "\" - This string is unterminated\n");
 						continue;
 					}
 				}
 				offset++;
+				continue;
 			}
 			else {
 				dis6502_stringForInstruction(line, MAX_LINE_LEN, blob->data[offset], blob->data[offset + 2], blob->data[offset + 1]);
 				as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
 
-				if(!strncmp("???", line, 3) && isascii(blob->data[offset])) {
+				if(!strncmp("???", line, 3) && isascii(blob->data[offset]) && isprint(blob->data[offset])) {
 					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
 					// Let's see if it's a string
-					fprintf(out, "$%04x:\n", offset);
+					fprintf(out, "$%04x:\n\t\"", offset);
 					insideOfString = 1;
 					continue;
 				}
