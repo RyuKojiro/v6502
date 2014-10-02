@@ -65,7 +65,13 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 					snprintf(line, MAX_LINE_LEN, "0x%02x - \'\\0\'", blob->data[offset]);
 				}
 				else {
-					snprintf(line, MAX_LINE_LEN, "0x%02x - \'%c\'", blob->data[offset], blob->data[offset]);
+					if(isascii(blob->data[offset])) {
+						snprintf(line, MAX_LINE_LEN, "0x%02x - \'%c\'", blob->data[offset], blob->data[offset]);
+					}
+					else {
+						insideOfString = 0;
+						continue;
+					}
 				}
 				offset++;
 			}
