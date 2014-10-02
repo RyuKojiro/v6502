@@ -263,6 +263,10 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		if (strchr(line, '\n')) {
 			newline = YES;
 		}
+		else if(feof(in)) {
+			// If the end of the file has a blank line, don't try to assemble it
+			break;
+		}
 		
 		// Truncate at comments
 		trimgreedytailchard(line, ';');
@@ -273,13 +277,13 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Handle dot directives
 		if (line[0] == '.') {
-			if (dotDirectiveEq("ascii")) {
+			if (dotDirectiveEq("asci")) {
 				char *stop = line + lineLen;
 				for (char *ch = trimheadchar(line, '"', lineLen) + 1; *ch && ch < stop && *ch != '"'; ch++) {
 					ld6502_appendByteToBlob(&obj->blobs[currentBlob], *ch);
 				}
 				
-				if (dotDirectiveEq("asciiz")) {
+				if (dotDirectiveEq("asciz")) {
 					ld6502_appendByteToBlob(&obj->blobs[currentBlob], 0x00);
 				}
 			}
