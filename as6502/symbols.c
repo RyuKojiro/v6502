@@ -273,7 +273,7 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 	int width;
 	size_t last = 0;
 	
-	char *in = malloc(len);
+	char *in = malloc(len + 1);
 	char *out = NULL;
 	size_t _outLen = 0;
 	
