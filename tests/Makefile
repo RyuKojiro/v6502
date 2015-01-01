@@ -1,5 +1,5 @@
-AS=	/Users/kojiro/Library/Developer/Xcode/DerivedData/v6502-ercgzvuowvxjxdddtgtxnqrrlfug/Build/Products/Debug/as6502
 ASDIR=	../as6502
+AS=	$(ASDIR)/as6502
 PROG=	wozfp1.o
 SRCS=	wozfp1.s
 #ASFLAGS=	-S
