@@ -48,4 +48,4 @@ $(DIS):
 	cd $(DISDIR) ; make
 
 clean:
-	rm -f *.o
+	rm -f *.o snake.dis.s snake.tmp.md5 snake2.s
