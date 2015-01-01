@@ -114,7 +114,6 @@
 		E61D402C1799B5A1009BA763 /* instructions.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = instructions.s; sourceTree = "<group>"; };
 		E61D402D1799B5A1009BA763 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		E61D402E1799B5A1009BA763 /* overflow.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = overflow.s; sourceTree = "<group>"; };
-		E61D402F1799B5A1009BA763 /* test.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = test.s; sourceTree = "<group>"; };
 		E622934B175BB52900AD2866 /* easy6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = easy6502; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6229359175D0C4000AD2866 /* easy6502_xcode.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = easy6502_xcode.1; path = easy6502/easy6502_xcode.1; sourceTree = SOURCE_ROOT; };
 		E622935A175D0C4000AD2866 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = easy6502/main.c; sourceTree = SOURCE_ROOT; };
@@ -173,6 +172,7 @@
 		E6B33F221759821E00F0D8C2 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
 		E6CD3C001975C602006E2E2B /* Chip.sketch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Chip.sketch; sourceTree = "<group>"; };
 		E6CD3C011975C602006E2E2B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		E6D604B91A54FCDB00EF2B10 /* snake.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = snake.s; sourceTree = "<group>"; };
 		E6EE9E9F1948FD6E0088B705 /* breakpoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = breakpoint.c; sourceTree = "<group>"; };
 		E6EE9EA11948FD7A0088B705 /* breakpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breakpoint.h; sourceTree = "<group>"; };
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -225,10 +225,10 @@
 		E61D402B1799B5A1009BA763 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E6D604B91A54FCDB00EF2B10 /* snake.s */,
 				E61D402C1799B5A1009BA763 /* instructions.s */,
 				E61D402D1799B5A1009BA763 /* Makefile */,
 				E61D402E1799B5A1009BA763 /* overflow.s */,
-				E61D402F1799B5A1009BA763 /* test.s */,
 				E6828B2D1992E0C900442439 /* wozfp1.s */,
 			);
 			name = Tests;
