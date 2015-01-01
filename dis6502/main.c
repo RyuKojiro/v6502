@@ -48,16 +48,17 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 		ld6502_object_blob *blob = &obj->blobs[i];
 
 		// Build Symbol Table
-		currentLineNum = 0;
+		currentLineNum = 1;
 		dis6502_deriveSymbolsForObjectBlob(table, blob);
 
 		// Disassemble
-		currentLineNum = 0;
+		currentLineNum = 1;
 		for (uint16_t offset = 0; offset < blob->len; ){
 			uint8_t opcode = blob->data[offset];
 			as6502_symbol *label = as6502_symbolForAddress(table, offset);
 			if (label) {
 				fprintf(out, "%s:\n", label->name);
+				currentLineNum++;
 			}
 			
 			if(insideOfString) {
