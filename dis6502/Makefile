@@ -1,4 +1,4 @@
-.include "../config.mk"
+include ../config.mk
 
 PROG=	dis6502
 SRCS=	main.c ../as6502/symbols.c ../ld6502/object.c ../dis6502/reverse.c \

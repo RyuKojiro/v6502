@@ -1,4 +1,4 @@
-.include "../config.mk"
+include ../config.mk
 
 PROG=	as6502
 SRCS=	main.c symbols.c ../ld6502/object.c error.c codegen.c\
