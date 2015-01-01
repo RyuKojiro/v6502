@@ -25,6 +25,7 @@
 #include <string.h>
 #include <ctype.h>
 
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-qual"
 #pragma clang diagnostic ignored "-Wincompatible-pointer-types"
 
@@ -72,7 +73,7 @@ void trimgreedytailchard(char *str, char token) {
 }
 
 char *trimhead(const char *str, size_t len) {
-	char *newstr = str;
+	char *newstr = (char *)str;
 	while (*newstr && isspace(CTYPE_CAST *newstr) && (newstr < str + len)) {
 		newstr++;
 	}
@@ -91,7 +92,7 @@ char *trimheadchar(char *str, char token, size_t len) {
 }
 
 char *trimheadtospc(const char *str, size_t len) {
-	char *newstr = str;
+	char *newstr = (char *)str;
 
 	while (*newstr && !isspace(CTYPE_CAST *newstr) && (newstr < str + len)) {
 		newstr++;
@@ -106,13 +107,13 @@ char *strnspc(const char *str, size_t len) {
 		len--;
 	}
 	
-	return str;
+	return (char *)str;
 }
 
 char *rev_strnspc(const char *stop, const char *start) {
 	for (/* start */; start > stop; start--) {
 		if (isspace(CTYPE_CAST *start)) {
-			return start;
+			return (char *)start;
 		}
 	}
 	return NULL;
@@ -131,11 +132,12 @@ char *strnchr(const char *str, char chr, size_t len) {
 	size_t i;
 	for (i = 0; str[i] && i < len; i++) {
 		if (str[i] == chr) {
-			return str + i;
+			return (char *)(str + i);
 		}
 	}
 	return NULL;
 }
 
-#pragma GCC diagnostic warning "-Wcast-qual"
 #pragma clang diagnostic warning "-Wincompatible-pointer-types"
+#pragma GCC diagnostic pop
+
