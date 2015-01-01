@@ -337,10 +337,10 @@ void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode mode,
 			snprintf(string, len, "*$%02x", low);
 		} return;
 		case v6502_address_mode_zeropage_x: {
-			snprintf(string, len, "#$%02x,X", low);
+			snprintf(string, len, "*$%02x,X", low);
 		} return;
 		case v6502_address_mode_zeropage_y: {
-			snprintf(string, len, "#$%02x,Y", low);
+			snprintf(string, len, "*$%02x,Y", low);
 		} return;
 		case v6502_address_mode_relative: {
 			snprintf(string, len, "$%02x", low);
