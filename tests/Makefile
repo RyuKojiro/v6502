@@ -20,7 +20,7 @@ circularAssemble: $(AS) $(DIS)
 
 # This attempts to assemble the snake code, comparing the result with an MD5
 # hash of a known-working-good binary.
-expectedAssemblyResult: $(AS) $(DIS)
+expectedAssemblyResult: $(AS)
 	$(AS) snake.s
 	md5 snake.o > snake.tmp.md5
 	diff snake.o.md5 snake.tmp.md5
