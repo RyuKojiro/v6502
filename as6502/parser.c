@@ -880,16 +880,11 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 						return v6502_address_mode_implied;
 					}
 					else {
-						if (!as6502_isNumber(cur)) {
-							if (as6502_isBranchInstruction(string)) {
-								return v6502_address_mode_relative;
-							}
-							else {
-								return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
-							}
+						if (as6502_isBranchInstruction(string)) {
+							return v6502_address_mode_relative;
 						}
 						else {
-							return v6502_address_mode_unknown;							
+							return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
 						}
 					}
 				}
