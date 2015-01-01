@@ -11,6 +11,7 @@ INSTALLDIR= /usr/local/bin
 MANDIR= /usr/share/man/man1
 
 all: $(BINS)
+	cd tests ; make
 
 $(VMDIR)/$(VM):
 	cd $(VMDIR) ; make
