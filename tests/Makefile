@@ -3,15 +3,10 @@ AS=	$(ASDIR)/as6502
 DISDIR=	../dis6502
 DIS=	$(DISDIR)/dis6502
 
-PROG=	wozfp1.o
-SRCS=	wozfp1.s
-
-#ASFLAGS=	-S
-
 VM=	v6502
 VMDIR=	../v6502
 
-tests: expectedAssemblyResult circularAssemble
+tests: expectedAssemblyResult circularAssemble #wozfp
 
 circularAssemble: $(AS) $(DIS)
 	$(AS) snake.s
@@ -24,11 +19,11 @@ expectedAssemblyResult: $(AS) $(DIS)
 	md5 snake.o > snake.tmp.md5
 	diff snake.o.md5 snake.tmp.md5
 
+wozfp: $(AS)
+	$(AS) wozfp1.s
+
 run: $(PROG) $(VM)
 	$(VMDIR)/$(VM) $(PROG)
-
-$(PROG): $(AS)
-	$(AS) $(ASFLAGS) $(SRCS)
 
 $(VM):
 	cd $(VMDIR) ; make
