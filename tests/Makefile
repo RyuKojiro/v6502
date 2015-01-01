@@ -11,7 +11,7 @@ SRCS=	wozfp1.s
 VM=	v6502
 VMDIR=	../v6502
 
-tests: circularAssemble expectedAssemblyResult
+tests: expectedAssemblyResult circularAssemble
 
 circularAssemble: $(AS) $(DIS)
 	$(AS) snake.s
@@ -40,4 +40,4 @@ $(DIS):
 	cd $(DISDIR) ; make
 
 clean:
-	rm -f $(PROG)
+	rm -f *.o
