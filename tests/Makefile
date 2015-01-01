@@ -19,7 +19,7 @@ circularAssemble: $(AS) $(DIS)
 	$(AS) snake2.s
 	diff snake.o snake2.o
 
-expectedAssemblyResult:
+expectedAssemblyResult: $(AS) $(DIS)
 	$(AS) snake.s
 	md5 snake.o > snake.tmp.md5
 	diff snake.o.md5 snake.tmp.md5
