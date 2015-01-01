@@ -37,8 +37,11 @@ void as6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file) {
 	ld6502_object_blob *blob = &obj->blobs[0];
 	
 	uint8_t byte;
-	while (!feof(file)) {
-		fread(&byte, 1, 1, file);
+	
+	// FIXME: if the first byte is the last, this is probably going to break
+	fread(&byte, 1, 1, file);
+	do {
 		ld6502_appendByteToBlob(blob, byte);
-	}
+		fread(&byte, 1, 1, file);
+	} while (!feof(file));
 }
