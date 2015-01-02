@@ -177,6 +177,7 @@
 		E6DCD51A1A564309002008BE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		E6DCD51B1A5643D1002008BE /* libvars.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = libvars.mk; sourceTree = "<group>"; };
 		E6DCD51C1A56496B002008BE /* libtargets.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libtargets.mk; sourceTree = "<group>"; };
+		E6DCD51D1A56A048002008BE /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E6EE9E9F1948FD6E0088B705 /* breakpoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = breakpoint.c; sourceTree = "<group>"; };
 		E6EE9EA11948FD7A0088B705 /* breakpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breakpoint.h; sourceTree = "<group>"; };
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -234,6 +235,7 @@
 				E61D402D1799B5A1009BA763 /* Makefile */,
 				E61D402E1799B5A1009BA763 /* overflow.s */,
 				E6828B2D1992E0C900442439 /* wozfp1.s */,
+				E6DCD51D1A56A048002008BE /* main.c */,
 			);
 			name = Tests;
 			path = tests;
