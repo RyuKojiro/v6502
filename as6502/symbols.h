@@ -95,6 +95,10 @@ uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name);
 uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name);
 /** @brief Creates and adds a as6502_symbol to a as6502_symbol_table */
 void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address, as6502_symbol_type type);
+/** @brief Removes a as6502_symbol from a as6502_symbol_table */
+void as6502_removeSymbolFromTable(as6502_symbol_table *table, as6502_symbol *symbol);
+/** @brief Remove all as6502_symbol's that lie outside the address region specified. */
+void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t start, uint16_t len);
 /**@}*/
 
 /** @defgroup sym_ez Easy Symbol Table Interaction */

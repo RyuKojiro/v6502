@@ -181,6 +181,38 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 	}
 }
 
+void _removeConfirmedSymbol(as6502_symbol *symbol, as6502_symbol *previousSymbol) {
+	previousSymbol->next = symbol->next;
+	free(symbol->name);
+	free(symbol);
+}
+
+void as6502_removeSymbolFromTable(as6502_symbol_table *table, as6502_symbol *symbol) {
+	assert(table);
+	
+	as6502_symbol *last = NULL;
+
+	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
+		if (this == symbol) {
+			_removeConfirmedSymbol(this, last);
+		}
+		last = this;
+	}
+}
+
+void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t start, uint16_t len) {
+	assert(table);
+	
+	as6502_symbol *last = NULL;
+	
+	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
+		if ((this->address < start) || (this->address > start + len)) {
+			_removeConfirmedSymbol(this, last);
+		}
+		last = this;
+	}
+}
+
 // Easy Symbol Table Access
 
 as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation) {
