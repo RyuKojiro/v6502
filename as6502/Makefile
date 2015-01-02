@@ -1,13 +1,22 @@
 include ../config.mk
+include ../libvars.mk
 
-PROG=	as6502
-SRCS=	main.c symbols.c ../ld6502/object.c error.c codegen.c\
-	parser.c ../v6502/cpu.c ../v6502/mem.c linectl.c \
-	../ld6502/flat.c ../ld6502/ines.c ../dis6502/reverse.c
-OBJS=	$(SRCS:.c=.o)
+PROG=		as6502
+SRCS=		main.c
+LDFLAGS+=	-lv6502 -las6502 -ldis6502 -lld6502
+OBJS=		$(SRCS:.c=.o)
 
-$(PROG): $(SRCS)
-	$(CC) $(LIB) $(INCLUDE) $(CFLAGS) $(LDFLAGS) $(SRCS) -o $(PROG)
+all: $(PROG)
 
-clean:
+lib: $(LIBAS6502)
+
+$(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
+	$(CC) $(LDFLAGS) $(OBJS) -o $(PROG)
+
+cleanlib:
+	rm -f $(LIBAS6502) $(LIBAS6502_OBJS)
+
+clean: cleanlib
 	rm -f $(PROG) $(OBJS)
+
+include ../libtargets.mk

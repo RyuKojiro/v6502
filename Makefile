@@ -1,39 +1,11 @@
-AS=	as6502
-ASDIR=	as6502
-VM=	v6502
-VMDIR=	v6502
-DIS= dis6502
-DISDIR= dis6502
-LD= ld6502
-LDDIR= ld6502
-BINS= $(ASDIR)/$(AS) $(VMDIR)/$(VM) $(DISDIR)/$(DIS) $(LDDIR)/$(LD)
-INSTALLDIR= /usr/local/bin
-MANDIR= /usr/share/man/man1
+SUBDIRS=	as6502 dis6502 ld6502 v6502 tests
 
-all: $(BINS)
-	cd tests ; make
-
-$(VMDIR)/$(VM):
-	cd $(VMDIR) ; make
-
-$(ASDIR)/$(AS):
-	cd $(ASDIR) ; make
-
-$(DISDIR)/$(DIS):
-	cd $(DISDIR) ; make
-
-$(LDDIR)/$(LD):
-	cd $(LDDIR) ; make
-
-install:
-	install -Cv $(ASDIR)/$(AS) $(INSTALLDIR)/
-	cp $(ASDIR)/$(AS).1 $(MANDIR)/ 
-	install -Cv $(VMDIR)/$(VM) $(INSTALLDIR)/
-	cp $(VMDIR)/$(VM).1 $(MANDIR)/ 
-	install -Cv $(LDDIR)/$(LD) $(INSTALLDIR)/
-	cp $(LDDIR)/$(LD).1 $(MANDIR)/ 
-	install -Cv $(DISDIR)/$(DIS) $(INSTALLDIR)/
-	cp $(DISDIR)/$(DIS).1 $(MANDIR)/ 
-
-clean:
-	rm -f $(BINS)
+all clean cleandir depend:
+	@for dir in $(SUBDIRS) ; do			\
+		echo "==> $$dir ($@)";			\
+		$(MAKE) -C $$dir $@ || exit 1;		\
+	done
+	@if [ "$@" = "clean" -o "$@" = "cleandir" ] ; then \
+		rm -rf $(PACKAGE_DIR) ; \
+		rm -f $(PACKAGE_NAME) ; \
+	fi
