@@ -3,7 +3,7 @@ include ../libvars.mk
 
 PROG=		v6502
 SRCS=		main.c log.c breakpoint.c textmode.c
-LDFLAGS+=	-ledit -lcurses -lv6502 -las6502 -ldis6502
+LDFLAGS+=	-ledit -lcurses -ldis6502 -las6502 -lv6502
 OBJS=		$(SRCS:.c=.o)
 
 all: $(PROG)
@@ -12,7 +12,7 @@ lib: $(LIBV6502_OBJS)
 	$(AR) $(ARFLAGS) libv6502.a $(LIBV6502_OBJS)
 
 $(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502)
-	$(CC) $(LDFLAGS) $(OBJS) -o $(PROG)
+	$(CC) $(OBJS) -o $(PROG) $(LDFLAGS)
 
 analyze: $(SRCS)
 	$(CC) $(INCLUDE) --analyze $(CFLAGS) $(LDFLAGS) $(SRCS) #-o $(PROG)
