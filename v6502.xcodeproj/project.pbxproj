@@ -173,6 +173,10 @@
 		E6CD3C001975C602006E2E2B /* Chip.sketch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Chip.sketch; sourceTree = "<group>"; };
 		E6CD3C011975C602006E2E2B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		E6D604B91A54FCDB00EF2B10 /* snake.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = snake.s; sourceTree = "<group>"; };
+		E6DCD5191A564309002008BE /* config.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.mk; sourceTree = "<group>"; };
+		E6DCD51A1A564309002008BE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		E6DCD51B1A5643D1002008BE /* libvars.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = libvars.mk; sourceTree = "<group>"; };
+		E6DCD51C1A56496B002008BE /* libtargets.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libtargets.mk; sourceTree = "<group>"; };
 		E6EE9E9F1948FD6E0088B705 /* breakpoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = breakpoint.c; sourceTree = "<group>"; };
 		E6EE9EA11948FD7A0088B705 /* breakpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breakpoint.h; sourceTree = "<group>"; };
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,6 +297,7 @@
 		E652129D1704B90D009CE919 = {
 			isa = PBXGroup;
 			children = (
+				E6DCD5181A5642F6002008BE /* Top Level Makefiles */,
 				E640F6CF182D721000A4C6A5 /* ld6502 */,
 				E666A8111715D1A800EDBF95 /* as6502 */,
 				E640E21117DFD81B009C0718 /* dis6502 */,
@@ -354,6 +359,17 @@
 				E6828B2F19933FBD00442439 /* color.h */,
 			);
 			name = as6502;
+			sourceTree = "<group>";
+		};
+		E6DCD5181A5642F6002008BE /* Top Level Makefiles */ = {
+			isa = PBXGroup;
+			children = (
+				E6DCD5191A564309002008BE /* config.mk */,
+				E6DCD51A1A564309002008BE /* Makefile */,
+				E6DCD51B1A5643D1002008BE /* libvars.mk */,
+				E6DCD51C1A56496B002008BE /* libtargets.mk */,
+			);
+			name = "Top Level Makefiles";
 			sourceTree = "<group>";
 		};
 		E6FF8998193FA615000DD391 /* xcodebuild */ = {
@@ -754,7 +770,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
