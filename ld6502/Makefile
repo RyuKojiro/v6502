@@ -8,7 +8,8 @@ OBJS=		$(SRCS:.c=.o)
 
 all: $(PROG)
 
-lib: $(LIBLD6502)
+lib: $(LIBLD6502_OBJS)
+	$(AR) $(ARFLAGS) libld6502.a $(LIBLD6502_OBJS)
 
 $(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(PROG)
@@ -18,3 +19,5 @@ cleanlib:
 
 clean: cleanlib
 	rm -f $(PROG) $(OBJS)
+
+include ../libtargets.mk

@@ -8,7 +8,8 @@ OBJS=		$(SRCS:.c=.o)
 
 all: $(PROG)
 
-lib: $(LIBDIS6502)
+lib: $(LIBDIS6502_OBJS)
+	$(AR) $(ARFLAGS) libdis6502.a $(LIBDIS6502_OBJS)
 
 $(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(PROG)
