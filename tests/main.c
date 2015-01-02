@@ -71,8 +71,8 @@ int test_signedUnderflow() {
 	cpu->ac = 0x04;
 	//v6502_printCpuState(cpu);
 	v6502_execute(cpu, v6502_opcode_sbc_imm, 0xf0, 0x00);
-	v6502_printCpuState(cpu);
-	if (!(cpu->ac == 0xfa && cpu->sr & v6502_cpu_status_carry)) {
+	//v6502_printCpuState(cpu);
+	if (!(cpu->ac == 0x13 && !(cpu->sr & v6502_cpu_status_carry))) {
 		rc++;
 	}
 	
