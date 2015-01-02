@@ -1,16 +1,18 @@
 include ../config.mk
+include ../libvars.mk
 
-PROG=	v6502
-SRCS=	main.c ../as6502/parser.c log.c cpu.c mem.c ../as6502/linectl.c ../as6502/error.c ../dis6502/reverse.c ../as6502/symbols.c breakpoint.c textmode.c
-LIB=	-ledit -lcurses
-OBJS=	$(SRCS:.c=.o)
+PROG=		v6502
+SRCS=		main.c log.c breakpoint.c textmode.c
+LDFLAGS+=	-ledit -lcurses -lv6502 -las6502 -ldis6502
+OBJS=		$(SRCS:.c=.o)
 
-$(PROG): $(OBJS)
-	echo asdf $(OBJS) asdf
-	$(CC) $(LIB) $(LDFLAGS) $(OBJS) -o $(PROG)
+$(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502)
+	$(CC) $(LDFLAGS) $(OBJS) -o $(PROG)
 
 analyze: $(SRCS)
-	$(CC) $(LIB) $(INCLUDE) --analyze $(CFLAGS) $(LDFLAGS) $(SRCS) #-o $(PROG)
+	$(CC) $(INCLUDE) --analyze $(CFLAGS) $(LDFLAGS) $(SRCS) #-o $(PROG)
 
 clean:
 	rm -f $(PROG) $(OBJS)
+
+include ../libtargets.mk
