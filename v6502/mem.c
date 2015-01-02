@@ -62,25 +62,29 @@ void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
 
 	// Check map
 	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
+	assert((offset < memory->size) || (range && range->write));
+
 	if (range && range->write) {
 		range->write(memory, offset, value, range->context);
 	}
 	else {
+		assert(memory->bytes);
 		memory->bytes[offset] = value;
 	}
 }
 
 uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap) {
 	assert(memory);
-	assert(memory->bytes);
-	assert(offset < memory->size);
-
+	
 	// Search mapped memory regions to see if we should defer to the map
 	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
+	assert((offset < memory->size) || (range && range->read));
+
 	if (range && range->read) {
 		return range->read(memory, offset, trap, range->context);
 	}
 	else {
+		assert(memory->bytes);
 		return memory->bytes[offset];
 	}
 }
