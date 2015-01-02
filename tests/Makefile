@@ -7,7 +7,7 @@ DIS=	$(DISDIR)/dis6502
 VMDIR=	../v6502
 VM=	$(VMDIR)/v6502
 
-tests: expectedAssemblyResult circularAssemble #wozfp
+all: expectedAssemblyResult circularAssemble #wozfp
 
 # This attempts to assemble the snake code, disassemble the result, assemble the
 # disassembler result, and then compare the originally assembled binary, with

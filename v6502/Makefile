@@ -6,6 +6,8 @@ SRCS=		main.c log.c breakpoint.c textmode.c
 LDFLAGS+=	-ledit -lcurses -lv6502 -las6502 -ldis6502
 OBJS=		$(SRCS:.c=.o)
 
+all: $(PROG)
+
 $(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(PROG)
 
