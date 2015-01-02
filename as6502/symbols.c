@@ -182,6 +182,9 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 }
 
 void _removeConfirmedSymbol(as6502_symbol *symbol, as6502_symbol *previousSymbol) {
+	// NOTE: Never call this with a NULL previousSymbol (i.e. the head)
+	assert(previousSymbol);
+	
 	previousSymbol->next = symbol->next;
 	free(symbol->name);
 	free(symbol);
@@ -194,7 +197,15 @@ void as6502_removeSymbolFromTable(as6502_symbol_table *table, as6502_symbol *sym
 
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if (this == symbol) {
-			_removeConfirmedSymbol(this, last);
+			if (!last) {
+				table->first_symbol = this->next;
+				free(this->name);
+				free(this);
+			}
+			else {
+				_removeConfirmedSymbol(this, last);
+			}
+			return;
 		}
 		last = this;
 	}
@@ -205,9 +216,18 @@ void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t sta
 	
 	as6502_symbol *last = NULL;
 	
+start_over:
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if ((this->address < start) || (this->address > start + len)) {
-			_removeConfirmedSymbol(this, last);
+			if (!last) {
+				table->first_symbol = this->next;
+				free(this->name);
+				free(this);
+				goto start_over;
+			}
+			else {
+				_removeConfirmedSymbol(this, last);
+			}
 		}
 		last = this;
 	}
