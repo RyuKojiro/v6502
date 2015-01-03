@@ -21,7 +21,6 @@
  */
 
 #include <stdlib.h>
-#include <unistd.h>	// v6502_opcode_wai's sleep(3) call
 
 #include "cpu.h"
 
@@ -500,8 +499,9 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->y = _executeInPlaceIncrement(cpu, cpu->y);
 		} return;
 		case v6502_opcode_wai: {
-			sleep(1);
-		}
+			// Do nothing, to be platform independent
+			// sleep(1);
+		} return;
 
 		// Branch Instructions
 		case v6502_opcode_bcc: {
