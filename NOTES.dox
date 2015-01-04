@@ -91,7 +91,7 @@ following platforms:
 
 - powerpc-apple-darwin9 (gcc 4.0.1, big-endian, 32-bit, GNU make)
 
-- x86_64-unknown-freebsd10.1 (clang 3.4.1, 64-bit, BSD make)
+- x86_64-unknown-freebsd10.1 (clang 3.4.1, little-endian, 64-bit, BSD make)
 
 - i386--netbsdelf (clang 3.4 & gcc 4.5.3, little-endian, 32-bit, BSD make)
 
