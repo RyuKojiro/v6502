@@ -4,13 +4,13 @@
 \section Components
 
 The v6502 infrastructure currently consists of a few major tools, and their API
-subsections:
+subsections. (L) indicates that a module is a member of its library target.
 
 - \subpage vm (v6502)
-	- \ref cpu.h
+	- \ref cpu.h (L)
 		- \ref cpu_lifecycle
 		- \ref cpu_exec
-	- \ref mem.h
+	- \ref mem.h (L)
 		- \ref mem_boundaries
 		- \ref mem_lifecycle
 		- \ref mem_access
@@ -21,32 +21,64 @@ subsections:
 	- \ref textmode.h
 		- \ref textmode
 - \subpage as (as6502)
-	- \ref parser.h
+	- \ref parser.h (L)
 		- \ref parser_translit
 		- \ref parser_line
 		- \ref parser_help
-	- \ref linectl.h
+	- \ref linectl.h (L)
 		- \ref linectl
-	- \ref codegen.h
+	- \ref codegen.h (L)
 		- \ref codegen
-	- \ref error.h
+	- \ref error.h (L)
 		- \ref as_error
-	- \ref flat.h
-	- \ref aout.h
 - \subpage ld (ld6502)
-	- \ref symbols.h
+	- \ref symbols.h (L)
 		- \ref sym_lifecycle
 		- \ref sym_access
 		- \ref sym_ez
 		- \ref sym_rep
-	- \ref object.h
+	- \ref object.h (L)
 		- \ref obj_lifecycle
 		- \ref obj_access
 		- \ref obj_mutate
-	- \ref ines.h
+	- \ref ines.h (L)
+	- \ref flat.h (L)
+	- \ref aout.h (L)
 - \subpage dis (dis6502)
-	- \ref reverse.h
+	- \ref reverse.h (L)
 		- \ref rev
+
+\section Building
+
+The entire project is separated into libraries for each of the
+\ref Components. You can build each target in its directory, or build its
+library with `make lib`. Everything uses portable Makefiles, if you want to
+just build and test the entire project, simply run `make` in the top level
+directory.
+
+\section Testing
+
+Currently, running make in the top level directory will automatically make all
+subdirectory targets with the final one being the tests directory. Inside the
+tests directory are unit tests that test actual runs of the assembler,
+disassembler, interactive VM, and a compiled set of C-based unit tests.
+
+v6502 has been successfully built and tested without modification on the
+following platforms:
+
+- x86_64-apple-darwin13.4.0 (clang 6.0, little-endian, 64-bit, GNU make)
+
+- avr (gcc 4.8.1, mixed-endian, 8-bit, GNU make) *libv6502 only
+
+- i386--netbsdelf (clang 3.4 & gcc 4.5.3, little-endian, 32-bit, BSD make)
+
+- powerpc-apple-darwin9 (gcc 4.0.1, big-endian, 32-bit, GNU make)
+
+- x86_64-unknown-freebsd10.1 (clang 3.4.1, little-endian, 64-bit, BSD make)
+
+- armv6--netbsdelf-eabihf (gcc 4.8.4, little-endian, 32-bit, BSD make)
+
+- x86_64-linux-gnu (gcc 4.7.2, little-endian, 64-bit, GNU make)
 
 \section License
 
@@ -74,30 +106,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 \endverbatim
-
-\section Testing
-
-Currently, running make in the top level directory will automatically make all
-subdirectory targets with the final one being the tests directory. Inside the
-tests directory are unit tests that test actual runs of the assembler,
-disassembler, interactive VM, and a compiled set of C-based unit tests.
-
-v6502 has been successfully built and tested without modification on the
-following platforms:
-
-- x86_64-apple-darwin13.4.0 (clang 6.0, little-endian, 64-bit, GNU make)
-
-- avr (gcc 4.8.1, mixed-endian, 8-bit, GNU make) *libv6502 only
-
-- i386--netbsdelf (clang 3.4 & gcc 4.5.3, little-endian, 32-bit, BSD make)
-
-- powerpc-apple-darwin9 (gcc 4.0.1, big-endian, 32-bit, GNU make)
-
-- x86_64-unknown-freebsd10.1 (clang 3.4.1, little-endian, 64-bit, BSD make)
-
-- armv6--netbsdelf-eabihf (gcc 4.8.4, little-endian, 32-bit, BSD make)
-
-- x86_64-linux-gnu (gcc 4.7.2, little-endian, 64-bit, GNU make)
 
 \page dis Disassembler
 \section dis_usage Arguments and Usage
