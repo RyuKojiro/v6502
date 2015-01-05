@@ -51,6 +51,8 @@ static v6502_breakpoint_list *breakpoint_list;
 static v6502_textmode_video *video;
 
 static void fault(void *ctx, const char *error) {
+	(void)ctx;
+	
 	fprintf(stderr, "fault: ");
 	fprintf(stderr, "%s", error);
 	if (error[strlen(error)] != '\n') {
