@@ -264,14 +264,14 @@ typedef enum {
 /** @enum */
 /** @brief Status Register Flags */
 typedef enum {
-	v6502_cpu_status_carry		= 1,
-	v6502_cpu_status_zero		= 2,
-	v6502_cpu_status_interrupt	= 4,
-	v6502_cpu_status_decimal	= 8,
-	v6502_cpu_status_break		= 16,
-	v6502_cpu_status_ignored	= 32,
-	v6502_cpu_status_overflow	= 64,
-	v6502_cpu_status_negative	= 128
+	v6502_cpu_status_carry		= 1 << 0,
+	v6502_cpu_status_zero		= 1 << 1,
+	v6502_cpu_status_interrupt	= 1 << 2,
+	v6502_cpu_status_decimal	= 1 << 3,
+	v6502_cpu_status_break		= 1 << 4,
+	v6502_cpu_status_ignored	= 1 << 5,
+	v6502_cpu_status_overflow	= 1 << 6,
+	v6502_cpu_status_negative	= 1 << 7
 } v6502_cpu_status;
 
 /** @enum */

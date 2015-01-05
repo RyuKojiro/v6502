@@ -36,8 +36,8 @@ circularAssemble: $(AS) $(DIS)
 # hash of a known-working-good binary.
 expectedAssemblyResult: $(AS)
 	$(AS) snake.s
-	md5 snake.o > snake.tmp.md5
-	diff snake.o.md5 snake.tmp.md5
+	cksum snake.o > snake.tmp.crc
+	diff snake.o.crc snake.tmp.crc
 
 # This simply tries to assemble the Apple II floating point routines originally
 # written by Steve Wozniak.
@@ -62,6 +62,6 @@ $(DIS):
 	cd $(DISDIR) ; make
 
 clean:
-	rm -f *.o snake.dis.s snake.tmp.md5 snake2.s
+	rm -f *.o snake.dis.s snake.tmp.crc snake2.s
 
 include ../libtargets.mk
