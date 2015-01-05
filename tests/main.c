@@ -107,7 +107,7 @@ int test_wideJumpWithParsing() {
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
 	
-	printf("Testing signed underflow...\n");
+	printf("Testing wide jump with inline assembler parsing...\n");
 	
 	v6502_reset(cpu);
 	cpu->ac = 0x04;
