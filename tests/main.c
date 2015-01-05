@@ -53,6 +53,7 @@ int test_sbc() {
 	TEST_START;
 	int rc = 0;
 	
+	v6502_cpu before;
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
@@ -61,11 +62,13 @@ int test_sbc() {
 	
 	v6502_reset(cpu);
 	cpu->ac = 0xff;
-	//v6502_printCpuState(cpu);
+	
+	memcpy(&before, cpu, sizeof(v6502_cpu));
 	v6502_execute(cpu, v6502_opcode_sbc_imm, 0x04, 0x00);
-	//v6502_printCpuState(cpu);
 	if (!(cpu->ac == 0xfa && cpu->sr & v6502_cpu_status_carry)) {
 		rc++;
+		v6502_printCpuState(&before);
+		v6502_printCpuState(cpu);
 	}
 	
 	v6502_destroyMemory(cpu->memory);
@@ -78,6 +81,7 @@ int test_signedUnderflow() {
 	TEST_START;
 	int rc = 0;
 	
+	v6502_cpu before;
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
@@ -86,11 +90,12 @@ int test_signedUnderflow() {
 	
 	v6502_reset(cpu);
 	cpu->ac = 0x04;
-	//v6502_printCpuState(cpu);
+	memcpy(&before, cpu, sizeof(v6502_cpu));
 	v6502_execute(cpu, v6502_opcode_sbc_imm, 0xf0, 0x00);
-	//v6502_printCpuState(cpu);
 	if (!(cpu->ac == 0x13 && !(cpu->sr & v6502_cpu_status_carry))) {
 		rc++;
+		v6502_printCpuState(&before);
+		v6502_printCpuState(cpu);
 	}
 	
 	v6502_destroyMemory(cpu->memory);
@@ -103,6 +108,7 @@ int test_wideJumpWithParsing() {
 	TEST_START;
 	int rc = 0;
 	
+	v6502_cpu before;
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
@@ -111,11 +117,12 @@ int test_wideJumpWithParsing() {
 	
 	v6502_reset(cpu);
 	cpu->ac = 0x04;
-	//v6502_printCpuState(cpu);
+	memcpy(&before, cpu, sizeof(v6502_cpu));
 	TEST_ASM("jmp $7b7b");
-	//v6502_printCpuState(cpu);
 	if (cpu->pc != 0x7b7b - 3 /* instruction length */) {
 		rc++;
+		v6502_printCpuState(&before);
+		v6502_printCpuState(cpu);
 	}
 	
 	v6502_destroyMemory(cpu->memory);
