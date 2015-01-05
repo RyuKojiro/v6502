@@ -141,16 +141,9 @@ void v6502_destroyMemory(v6502_memory *memory) {
 #pragma mark Signedness Management
 
 int8_t v6502_signedValueOfByte(uint8_t byte) {
-//	if (byte & 0x80) {
-//		return (0 - (BYTE_MAX - byte));
-//	}
 	return (int8_t)byte;
 }
 
 uint8_t v6502_byteValueOfSigned(int8_t i) {
-/** TODO: @todo Reliable portable implementation */
-//	if (i < 0) {
-//		return (uint8_t)(0xff - i);
-//	}
 	return (uint8_t)i;
 }
