@@ -52,7 +52,7 @@
 
 // Figures out if the number is valid, or a stray symbol
 // TODO: @todo make these actually throw the errors, so that the error is more specific, and more helpful, rather than being more generic
-int isValidLiteral(const char *start, size_t len) {
+static int isValidLiteral(const char *start, size_t len) {
 	if (!len || !start[0]) {
 		return YES;
 	}

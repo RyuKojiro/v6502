@@ -94,7 +94,7 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode) {
 	}
 }
 
-void _badOpcode(const char *string) {
+static void _badOpcode(const char *string) {
 	size_t len = as6502_lengthOfToken(string, strlen(string));
 	char *opcode = malloc(len + 1);
 	strncpy(opcode, string, len);
@@ -754,7 +754,7 @@ static int _isEndOfString(const char *c) {
 	return YES;
 }
 
-int _isPartOfToken(char c) {
+static int _isPartOfToken(char c) {
 	return !isspace(c) && c != ',' && c != '\n';
 }
 

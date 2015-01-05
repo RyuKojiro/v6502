@@ -76,7 +76,7 @@ typedef struct {
 /** @defgroup sym_lifecycle Symbol Table Lifecycle Functions */
 /**@{*/
 /** @brief Creates a new symbol table object */
-as6502_symbol_table *as6502_createSymbolTable();
+as6502_symbol_table *as6502_createSymbolTable(void);
 /** @brief Destroys a symbol table object */
 void as6502_destroySymbolTable(as6502_symbol_table *table);
 /** @brief Prints a human readable representation of a as6502_symbol_table for debugging */

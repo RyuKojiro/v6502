@@ -395,7 +395,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 	return NO;
 }
 
-void handleSignal(int signal) {
+static void handleSignal(int signal) {
 	if (signal == SIGINT) {
 		interrupt++;
 	}
@@ -405,7 +405,7 @@ void handleSignal(int signal) {
 	}
 }
 
-const char * prompt() {
+static const char * prompt() {
 	static char prompt[10];
 	snprintf(prompt, 10, "(0x%04x) ", cpu->pc);
 	return prompt;

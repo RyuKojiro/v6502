@@ -181,7 +181,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 	}
 }
 
-void _removeConfirmedSymbol(as6502_symbol *symbol, as6502_symbol *previousSymbol) {
+static void _removeConfirmedSymbol(as6502_symbol *symbol, as6502_symbol *previousSymbol) {
 	// NOTE: Never call this with a NULL previousSymbol (i.e. the head)
 	assert(previousSymbol);
 	
@@ -408,7 +408,7 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 	return out;
 }
 
-int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, size_t len) {
+static int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, size_t len) {
 	line = trimhead(line, len);
 	
 	if (line[0] == 'b' || line[0] == 'B') {

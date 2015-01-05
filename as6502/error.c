@@ -40,7 +40,7 @@ __attribute((noreturn)) void as6502_fatal(const char *reason) {
 	exit(EXIT_FAILURE);
 }
 
-void _setProblemLocation(unsigned long loc, unsigned long len) {
+static void _setProblemLocation(unsigned long loc, unsigned long len) {
 	lastProblematicLine = currentLineNum;
 
 	startOfProblem = loc;
@@ -48,7 +48,7 @@ void _setProblemLocation(unsigned long loc, unsigned long len) {
 }
 
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
-void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len, const char *color, const char *type, const char *reason, va_list ap) {
+static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len, const char *color, const char *type, const char *reason, va_list ap) {
 	_setProblemLocation(loc, len);
 	
 	// Only use color codes on real TTYs
