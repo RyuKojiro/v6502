@@ -124,8 +124,6 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 	@param len Useable length of the line in chars
 	@param pstart Program start address
 	@param offset Address of current line
-	@param outLen The char length of the string being returned
-	@return A freshly malloc'ed, null terminated, string of length outLen, containing the desymbolicated line
  */
 void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset);
 /**@}*/
