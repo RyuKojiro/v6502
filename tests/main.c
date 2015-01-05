@@ -23,14 +23,17 @@
 #include <stdio.h>
 #include <sysexits.h>
 #include <unistd.h>
+
 #include "color.h"
 #include "cpu.h"
 #include "log.h"
+#include "parser.h"
 
 #pragma mark Test Harness
 
-#define TOTAL_TESTS (sizeof(testFunctions) / sizeof(testFunction))
-#define TEST_START lastTest = __PRETTY_FUNCTION__
+#define TOTAL_TESTS		(sizeof(testFunctions) / sizeof(testFunction))
+#define TEST_START		lastTest = __PRETTY_FUNCTION__
+#define TEST_ASM(a)		as6502_executeAsmLineOnCPU(cpu, a, sizeof(a))
 
 typedef int (* testFunction)(void);
 
@@ -96,11 +99,37 @@ int test_signedUnderflow() {
 	return rc;
 }
 
+int test_wideJumpWithParsing() {
+	TEST_START;
+	int rc = 0;
+	
+	v6502_cpu *cpu = v6502_createCPU();
+	cpu->memory = v6502_createMemory(0);
+	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
+	
+	printf("Testing signed underflow...\n");
+	
+	v6502_reset(cpu);
+	cpu->ac = 0x04;
+	//v6502_printCpuState(cpu);
+	TEST_ASM("jmp $7b7b");
+	//v6502_printCpuState(cpu);
+	if (cpu->pc != 0x7b7b - 3 /* instruction length */) {
+		rc++;
+	}
+	
+	v6502_destroyMemory(cpu->memory);
+	v6502_destroyCPU(cpu);
+	
+	return rc;
+}
+
 #pragma mark - Test Harness
 
 static testFunction testFunctions[] = {
 	test_sbc,
-	test_signedUnderflow
+	test_signedUnderflow,
+	test_wideJumpWithParsing
 };
 
 int main(int argc, const char *argv[]) {
