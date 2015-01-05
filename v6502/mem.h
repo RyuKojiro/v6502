@@ -129,7 +129,7 @@ typedef struct _v6502_memory {
 	/** @brief Array of memory map ranges */
 	v6502_mappedRange *mappedRanges;
 	/** @brief Number of memory map ranges in array */
-	int rangeCount;
+	size_t rangeCount;
 } v6502_memory;
 
 /** @defgroup mem_lifecycle Memory Lifecycle Functions */

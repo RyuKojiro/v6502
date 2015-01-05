@@ -29,7 +29,7 @@
 #pragma mark Memory Lifecycle
 
 v6502_mappedRange *v6502_mappedRangeForOffset(v6502_memory *memory, uint16_t offset) {
-	for (int i = 0; i < memory->rangeCount; i++) {
+	for (size_t i = 0; i < memory->rangeCount; i++) {
 		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
 		if (offset >= currentRange->start && offset < (currentRange->start + currentRange->size)) {
 			return currentRange;
