@@ -124,7 +124,7 @@ int main(int argc, const char *argv[]) {
 		}
 	}
 	
-	printf("Compiled unit test results: %lu/%lu tests passed, %lu%% pass rate.\n", TOTAL_TESTS - rc, TOTAL_TESTS, 100 * (TOTAL_TESTS - rc) / TOTAL_TESTS);
+	printf("Compiled unit test results: %lu/%lu tests passed, %lu%% pass rate.\n", (unsigned long)TOTAL_TESTS - rc, (unsigned long)TOTAL_TESTS, 100UL * (TOTAL_TESTS - rc) / TOTAL_TESTS);
 	
 	return rc;
 }
