@@ -29,6 +29,10 @@
 		E64198EB17373A6200D0EE25 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E666A8121715D1C000EDBF95 /* main.c */; };
 		E64198EE17373AE000D0EE25 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E64198EF17373AE500D0EE25 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
+		E66663151A5A3F1D007025FA /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
+		E66663161A5A3F34007025FA /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
+		E66663171A5A3F42007025FA /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
+		E66663181A5A3F45007025FA /* symbols.c in Sources */ = {isa = PBXBuildFile; fileRef = E677B2881737338300A3B9E8 /* symbols.c */; };
 		E679C573185257DD00C773E9 /* symbols.c in Sources */ = {isa = PBXBuildFile; fileRef = E677B2881737338300A3B9E8 /* symbols.c */; };
 		E6817C2D1855658B008A58A9 /* aout.c in Sources */ = {isa = PBXBuildFile; fileRef = E6817C271855658B008A58A9 /* aout.c */; };
 		E6817C2E1855658B008A58A9 /* flat.c in Sources */ = {isa = PBXBuildFile; fileRef = E6817C291855658B008A58A9 /* flat.c */; };
@@ -789,9 +793,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E66663161A5A3F34007025FA /* error.c in Sources */,
 				E6DCD52C1A573CDD002008BE /* log.c in Sources */,
 				E6DCD52B1A56A8BF002008BE /* mem.c in Sources */,
+				E66663181A5A3F45007025FA /* symbols.c in Sources */,
 				E6DCD52A1A56A8B4002008BE /* cpu.c in Sources */,
+				E66663151A5A3F1D007025FA /* parser.c in Sources */,
+				E66663171A5A3F42007025FA /* linectl.c in Sources */,
 				E6DCD5291A56A7FB002008BE /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
