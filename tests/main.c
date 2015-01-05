@@ -104,6 +104,11 @@ int test_signedUnderflow() {
 	return rc;
 }
 
+int test_jumpInstructionLength() {
+	TEST_START;
+	return v6502_instructionLengthForOpcode(v6502_opcode_jmp_abs) != 3;
+}
+
 int test_wideJumpWithParsing() {
 	TEST_START;
 	int rc = 0;
@@ -136,6 +141,7 @@ int test_wideJumpWithParsing() {
 static testFunction testFunctions[] = {
 	test_sbc,
 	test_signedUnderflow,
+	test_jumpInstructionLength,
 	test_wideJumpWithParsing
 };
 
