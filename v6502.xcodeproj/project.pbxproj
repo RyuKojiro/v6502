@@ -66,6 +66,37 @@
 		E6FF8996193FA292000DD391 /* libtermcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6FF8995193FA292000DD391 /* libtermcap.dylib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E666630D1A5A37C8007025FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E66662F31A5A3695007025FA;
+			remoteInfo = "make-as6502";
+		};
+		E666630F1A5A37C8007025FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E66662F71A5A36B2007025FA;
+			remoteInfo = "make-dis6502";
+		};
+		E66663111A5A37C8007025FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E66662FB1A5A36BF007025FA;
+			remoteInfo = "make-ld6502";
+		};
+		E66663131A5A37C8007025FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E66662EF1A5A3671007025FA;
+			remoteInfo = "make-v6502";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		E6229349175BB52900AD2866 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -439,17 +470,77 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		E666A83A17169D9A00EDBF95 /* tests */ = {
+		E66662EF1A5A3671007025FA /* make-v6502 */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = E666A83D17169D9A00EDBF95 /* Build configuration list for PBXLegacyTarget "tests" */;
+			buildConfigurationList = E66662F01A5A3671007025FA /* Build configuration list for PBXLegacyTarget "make-v6502" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = v6502;
+			dependencies = (
+			);
+			name = "make-v6502";
+			passBuildSettingsInEnvironment = 1;
+			productName = "make-v6502";
+		};
+		E66662F31A5A3695007025FA /* make-as6502 */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E66662F41A5A3695007025FA /* Build configuration list for PBXLegacyTarget "make-as6502" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = as6502;
+			dependencies = (
+			);
+			name = "make-as6502";
+			passBuildSettingsInEnvironment = 1;
+			productName = "make-as6502";
+		};
+		E66662F71A5A36B2007025FA /* make-dis6502 */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E66662F81A5A36B2007025FA /* Build configuration list for PBXLegacyTarget "make-dis6502" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = dis6502;
+			dependencies = (
+			);
+			name = "make-dis6502";
+			passBuildSettingsInEnvironment = 1;
+			productName = "make-dis6502";
+		};
+		E66662FB1A5A36BF007025FA /* make-ld6502 */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E66662FC1A5A36BF007025FA /* Build configuration list for PBXLegacyTarget "make-ld6502" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = ld6502;
+			dependencies = (
+			);
+			name = "make-ld6502";
+			passBuildSettingsInEnvironment = 1;
+			productName = "make-ld6502";
+		};
+		E666A83A17169D9A00EDBF95 /* make-tests */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = E666A83D17169D9A00EDBF95 /* Build configuration list for PBXLegacyTarget "make-tests" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
 			buildWorkingDirectory = tests;
 			dependencies = (
+				E666630E1A5A37C8007025FA /* PBXTargetDependency */,
+				E66663101A5A37C8007025FA /* PBXTargetDependency */,
+				E66663121A5A37C8007025FA /* PBXTargetDependency */,
+				E66663141A5A37C8007025FA /* PBXTargetDependency */,
 			);
-			name = tests;
+			name = "make-tests";
 			passBuildSettingsInEnvironment = 1;
 			productName = "as6502-test";
 		};
@@ -537,9 +628,9 @@
 			productReference = E64198E117373A5A00D0EE25 /* as6502 */;
 			productType = "com.apple.product-type.tool";
 		};
-		E6DCD5211A56A7DE002008BE /* xcode-tests */ = {
+		E6DCD5211A56A7DE002008BE /* tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E6DCD5261A56A7DE002008BE /* Build configuration list for PBXNativeTarget "xcode-tests" */;
+			buildConfigurationList = E6DCD5261A56A7DE002008BE /* Build configuration list for PBXNativeTarget "tests" */;
 			buildPhases = (
 				E6DCD51E1A56A7DE002008BE /* Sources */,
 				E6DCD51F1A56A7DE002008BE /* Frameworks */,
@@ -549,7 +640,7 @@
 			);
 			dependencies = (
 			);
-			name = "xcode-tests";
+			name = tests;
 			productName = "xcode-tests";
 			productReference = E6DCD5221A56A7DE002008BE /* xcode-tests */;
 			productType = "com.apple.product-type.tool";
@@ -580,6 +671,18 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Hello-Channel, LLC";
 				TargetAttributes = {
+					E66662EF1A5A3671007025FA = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					E66662F31A5A3695007025FA = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					E66662F71A5A36B2007025FA = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					E66662FB1A5A36BF007025FA = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
 					E6DCD5211A56A7DE002008BE = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -597,14 +700,18 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E666A83A17169D9A00EDBF95 /* tests */,
-				E64198E017373A5A00D0EE25 /* as6502 */,
 				E6B33F1E17597E9300F0D8C2 /* Doxygen */,
+				E64198E017373A5A00D0EE25 /* as6502 */,
 				E622934A175BB52900AD2866 /* easy6502 */,
 				E6FB94AA1791140B0053EB7E /* v6502 */,
 				E640E21817DFDCC9009C0718 /* dis6502 */,
 				E640F6D8182D95B600A4C6A5 /* ld6502 */,
-				E6DCD5211A56A7DE002008BE /* xcode-tests */,
+				E6DCD5211A56A7DE002008BE /* tests */,
+				E66662F31A5A3695007025FA /* make-as6502 */,
+				E66662F71A5A36B2007025FA /* make-dis6502 */,
+				E66662FB1A5A36BF007025FA /* make-ld6502 */,
+				E66662EF1A5A3671007025FA /* make-v6502 */,
+				E666A83A17169D9A00EDBF95 /* make-tests */,
 			);
 		};
 /* End PBXProject section */
@@ -708,6 +815,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E666630E1A5A37C8007025FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E66662F31A5A3695007025FA /* make-as6502 */;
+			targetProxy = E666630D1A5A37C8007025FA /* PBXContainerItemProxy */;
+		};
+		E66663101A5A37C8007025FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E66662F71A5A36B2007025FA /* make-dis6502 */;
+			targetProxy = E666630F1A5A37C8007025FA /* PBXContainerItemProxy */;
+		};
+		E66663121A5A37C8007025FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E66662FB1A5A36BF007025FA /* make-ld6502 */;
+			targetProxy = E66663111A5A37C8007025FA /* PBXContainerItemProxy */;
+		};
+		E66663141A5A37C8007025FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E66662EF1A5A3671007025FA /* make-v6502 */;
+			targetProxy = E66663131A5A37C8007025FA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E6229352175BB52900AD2866 /* Debug */ = {
@@ -887,6 +1017,242 @@
 					"-Wno-switch-enum",
 					"-Wno-covered-switch-default",
 				);
+			};
+			name = Release;
+		};
+		E66662F11A5A3671007025FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUGGING_SYMBOLS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E66662F21A5A3671007025FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E66662F51A5A3695007025FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUGGING_SYMBOLS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E66662F61A5A3695007025FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E66662F91A5A36B2007025FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUGGING_SYMBOLS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E66662FA1A5A36B2007025FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E66662FD1A5A36BF007025FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUGGING_SYMBOLS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E66662FE1A5A36BF007025FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -1070,7 +1436,39 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E666A83D17169D9A00EDBF95 /* Build configuration list for PBXLegacyTarget "tests" */ = {
+		E66662F01A5A3671007025FA /* Build configuration list for PBXLegacyTarget "make-v6502" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E66662F11A5A3671007025FA /* Debug */,
+				E66662F21A5A3671007025FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		E66662F41A5A3695007025FA /* Build configuration list for PBXLegacyTarget "make-as6502" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E66662F51A5A3695007025FA /* Debug */,
+				E66662F61A5A3695007025FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		E66662F81A5A36B2007025FA /* Build configuration list for PBXLegacyTarget "make-dis6502" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E66662F91A5A36B2007025FA /* Debug */,
+				E66662FA1A5A36B2007025FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		E66662FC1A5A36BF007025FA /* Build configuration list for PBXLegacyTarget "make-ld6502" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E66662FD1A5A36BF007025FA /* Debug */,
+				E66662FE1A5A36BF007025FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		E666A83D17169D9A00EDBF95 /* Build configuration list for PBXLegacyTarget "make-tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E666A83B17169D9A00EDBF95 /* Debug */,
@@ -1088,13 +1486,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E6DCD5261A56A7DE002008BE /* Build configuration list for PBXNativeTarget "xcode-tests" */ = {
+		E6DCD5261A56A7DE002008BE /* Build configuration list for PBXNativeTarget "tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E6DCD5271A56A7DE002008BE /* Debug */,
 				E6DCD5281A56A7DE002008BE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E6FB94B31791140B0053EB7E /* Build configuration list for PBXNativeTarget "v6502" */ = {
 			isa = XCConfigurationList;
