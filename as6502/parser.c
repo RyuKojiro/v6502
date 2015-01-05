@@ -661,7 +661,7 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 	// Truncate to end of token
 	size_t len = as6502_lengthOfToken(cur, 79);
 	strncpy(workString, cur, len);
-	workString[len + 1] = '\0';
+	workString[len] = '\0';
 	
 	// Check first char to determine base
 	switch (workString[0]) {
