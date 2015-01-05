@@ -144,7 +144,7 @@ int8_t v6502_signedValueOfByte(uint8_t byte) {
 //	if (byte & 0x80) {
 //		return (0 - (BYTE_MAX - byte));
 //	}
-	return byte;
+	return (int8_t)byte;
 }
 
 uint8_t v6502_byteValueOfSigned(int8_t i) {
