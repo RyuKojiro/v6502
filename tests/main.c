@@ -106,6 +106,9 @@ int test_signedUnderflow() {
 
 int test_jumpInstructionLength() {
 	TEST_START;
+	
+	printf("Making sure that the jump instruction is calculated as 3 bytes...\n");
+
 	return v6502_instructionLengthForOpcode(v6502_opcode_jmp_abs) != 3;
 }
 
