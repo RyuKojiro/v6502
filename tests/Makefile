@@ -1,7 +1,7 @@
 include ../config.mk
 include ../libvars.mk
 
-SRCS=		main.c
+SRCS=		main.c ../v6502/log.c
 LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502
 OBJS=		$(SRCS:.c=.o)
 
