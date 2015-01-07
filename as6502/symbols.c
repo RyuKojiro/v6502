@@ -259,7 +259,8 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	trimtaild(symbol);
 	trimtailchard(symbol, ':'); // If there is a colon, truncate there
 	
-	if (strchr(line, '=') || isByte) { // Variable
+	// TODO: implement variable declaration without equals signs
+	if (/* strchr(line, '=')  ||*/ isByte) { // Variable
 		/** TODO: @todo allocate variable addresses */
 		type = as6502_symbol_type_variable;
 		offset = varLocation;

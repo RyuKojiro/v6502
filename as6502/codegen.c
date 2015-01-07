@@ -102,11 +102,12 @@ int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context,
 	uint8_t initialValue;
 	char buf[9];
 	uint8_t address;
-	
-	if (!strnchr(line, '=', len)) {
+
+	// TODO: implement variable declaration without equals signs
+//	if (!strnchr(line, '=', len)) {
 		// No assignments on the line
 		return NO;
-	}
+//	}
 	
 	const char *cur = rev_strnspc(line, line + len - 1);
 	if (!cur) {

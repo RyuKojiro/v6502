@@ -859,6 +859,7 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 				return v6502_address_mode_accumulator;
 			}
 		}
+		case '=':
 		case '#': // Immediate
 			return v6502_address_mode_immediate;
 		case '*': // Zeropage
