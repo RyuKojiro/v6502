@@ -39,7 +39,7 @@ typedef uint16_t (* as6502_lineCallback)(ld6502_object_blob *blob, const char *l
 /** @brief Resolves arithmetical operations down to their literal result */
 void as6502_resolveArithmetic(char *line, size_t len);
 /** @brief Replaces variable declarations with the instructions needed to initialize a variable without altering the current running state of the CPU */
-int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context, as6502_lineCallback cb, const char *line, size_t len);
+int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_table *table, const char *line, size_t len);
 /**@}*/
 
 #endif

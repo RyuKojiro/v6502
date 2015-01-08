@@ -311,7 +311,9 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 		
 		// TODO: @todo Handle Variable Declarations
-		// as6502_resolveVariableDeclaration(table, as6502_currentBlobInContext(ctx), assembleLine, trimmedLine, maxLen);
+		if (as6502_resolveVariableDeclaration(&obj->blobs[currentBlob], obj->table, line, lineLen)) {
+			continue;
+		}
 		
 		// Remove label clause
 		trimmedLine = trimheadtospc(line, lineLen);
