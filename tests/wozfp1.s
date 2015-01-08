@@ -36,16 +36,16 @@
 ;
 ;
 .ORG 3       SET BASE PAGE ADRESSES
-SIGN   NOP
-X2     NOP         ; EXPONENT 2
-M2     BSS 3       ; MANTISSA 2
-X1     NOP         ; EXPONENT 1
-M1     BSS 3       ; MANTISSA 1
-E      BSS 4       ; SCRATCH
-Z      BSS 4
-T      BSS 4
-SEXP   BSS 4
-INT    BSS 1
+SIGN  = 0
+X2	  = 0       ; EXPONENT 2
+M2    = 3       ; MANTISSA 2
+X1    = 0       ; EXPONENT 1
+M1	  = 3       ; MANTISSA 1
+E     = 4       ; SCRATCH
+Z     = 4
+T     = 4
+SEXP  = 4
+INT   = 1
 ;
 .ORG $1D00   STARTING LOCATION FOR LOG
 ;
@@ -59,14 +59,14 @@ ERROR  BRK         ; ERROR ARG<=0
 ;
 CONT   JSR SWAP    ; MOVE ARG TO EXP/MANT2
        LDA X2      ; HOLD EXPONENT
-       LDY =$80
+       LDY #$80
        STY X2      ; SET EXPONENT 2 TO 0 ($80)
-       EOR =$80    ; COMPLIMENT SIGN BIT OF ORIGINAL EXPONENT
+       EOR #$80    ; COMPLIMENT SIGN BIT OF ORIGINAL EXPONENT
        STA M1+1    ; SET EXPONENT INTO MANTISSA 1 FOR FLOAT
-       LDA =0
+       LDA #0
        STA M1      ; CLEAR MSB OF MANTISSA 1
        JSR FLOAT   ; CONVERT TO FLOATING POINT
-       LDX =3      ; 4 BYTE TRANSFERS
+       LDX #3      ; 4 BYTE TRANSFERS
 SEXP1  LDA X2,X
        STA Z,X     ; COPY MANTISSA TO Z
        LDA X1,X
@@ -76,7 +76,7 @@ SEXP1  LDA X2,X
        DEX
        BPL SEXP1
        JSR FSUB    ; Z-SQRT(2)
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 SAVET  LDA X1,X    ; SAVE EXP/MANT1 AS T
        STA T,X
        LDA Z,X     ; LOAD EXP/MANT1 WITH Z
@@ -86,13 +86,13 @@ SAVET  LDA X1,X    ; SAVE EXP/MANT1 AS T
        DEX
        BPL SAVET
        JSR FADD    ; Z+SQRT(2)
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 TM2    LDA T,X
        STA X2,X    ; LOAD T INTO EXP/MANT2
        DEX
        BPL TM2
        JSR FDIV    ; T=(Z-SQRT(2))/(Z+SQRT(2))
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 MIT    LDA X1,X
        STA T,X     ; COPY EXP/MANT1 TO T AND
        STA X2,X    ; LOAD EXP/MANT2 WITH T
@@ -100,43 +100,43 @@ MIT    LDA X1,X
        BPL MIT
        JSR FMUL    ; T*T
        JSR SWAP    ; MOVE T*T TO EXP/MANT2
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 MIC    LDA C,X
        STA X1,X    ; LOAD EXP/MANT1 WITH C
        DEX
        BPL MIC
        JSR FSUB    ; T*T-C
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 M2MB   LDA MB,X
        STA X2,X    ; LOAD EXP/MANT2 WITH MB
        DEX
        BPL M2MB
        JSR FDIV    ; MB/(T*T-C)
-       LDX =3
+       LDX #3
 M2A1   LDA A1,X
        STA X2,X    ; LOAD EXP/MANT2 WITH A1
        DEX
        BPL M2A1
        JSR FADD    ; MB/(T*T-C)+A1
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 M2T    LDA T,X
        STA X2,X    ; LOAD EXP/MANT2 WITH T
        DEX
        BPL M2T
        JSR FMUL    ; (MB/(T*T-C)+A1)*T
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 M2MHL  LDA MHLF,X
        STA X2,X    ; LOAD EXP/MANT2 WITH MHLF (.5)
        DEX
        BPL M2MHL
        JSR FADD    ; +.5
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 LDEXP  LDA SEXP,X
        STA X2,X    ; LOAD EXP/MANT2 WITH ORIGINAL EXPONENT
        DEX
        BPL LDEXP
        JSR FADD    ; +EXPN
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 MLE2   LDA LE2,X
        STA X2,X    ; LOAD EXP/MANT2 WITH LN(2)
        DEX
@@ -147,7 +147,7 @@ MLE2   LDA LE2,X
 ;     COMMON LOG OF MANT/EXP1 RESULT IN MANT/EXP1
 ;
 LOG10  JSR LOG     ; COMPUTE NATURAL LOG
-       LDX =3
+       LDX #3
 L10    LDA LN10,X
        STA X2,X    ; LOAD EXP/MANT2 WITH 1/LN(10)
        DEX
@@ -155,32 +155,32 @@ L10    LDA LN10,X
        JSR FMUL    ; LOG10(X)=LN(X)/LN(10)
        RTS
 ;
-LN10   DCM 0.4342945
+.dcm LN10   0.4342945
 
-R22    DCM 1.4142136   ; SQRT(2)
+.dcm R22    1.4142136   ; SQRT(2)
 
-LE2    DCM 0.69314718  ; LOG BASE E OF 2
+.dcm LE2    0.69314718  ; LOG BASE E OF 2
 
-A1     DCM 1.2920074
+.dcm A1     1.2920074
 
-MB     DCM -2.6398577
+.dcm MB     -2.6398577
 
-C      DCM 1.6567626
+.dcm C      1.6567626
 
-MHLF   DCM 0.5
+.dcm MHLF   0.5
 
 ;
 .ORG $1E00   STARTING LOCATION FOR EXP
 ;
 ;     EXP OF MANT/EXP1 RESULT IN MANT/EXP1
 ;
-EXP    LDX =3      ; 4 BYTE TRANSFER
+EXP    LDX #3      ; 4 BYTE TRANSFER
        LDA L2E,X
        STA X2,X    ; LOAD EXP/MANT2 WITH LOG BASE 2 OF E
        DEX
        BPL EXP+2
        JSR FMUL    ; LOG2(3)*X
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 FSA    LDA X1,X
        STA Z,X     ; STORE EXP/MANT1 IN Z
        DEX
@@ -189,18 +189,18 @@ FSA    LDA X1,X
        LDA M1+1
        STA INT     ; SAVE RESULT AS INT
        SEC         ; SET CARRY FOR SUBTRACTION
-       SBC =124    ; INT-124
+       SBC #124    ; INT-124
        LDA M1
-       SBC =0
+       SBC #0
        BPL OVFLW   ; OVERFLOW INT>=124
        CLC         ; CLEAR CARRY FOR ADD
        LDA M1+1
-       ADC =120    ; ADD 120 TO INT
+       ADC #120    ; ADD 120 TO INT
        LDA M1
-       ADC =0
+       ADC #0
        BPL CONTIN  ; IF RESULT POSITIVE CONTINUE
-       LDA =0      ; INT<-120 SET RESULT TO ZERO AND RETURN
-       LDX =3      ; 4 BYTE MOVE
+       LDA #0      ; INT<-120 SET RESULT TO ZERO AND RETURN
+       LDX #3      ; 4 BYTE MOVE
 ZERO   STA X1,X    ; SET EXP/MANT1 TO ZERO
        DEX
        BPL ZERO
@@ -209,20 +209,20 @@ ZERO   STA X1,X    ; SET EXP/MANT1 TO ZERO
 OVFLW  BRK         ; OVERFLOW
 ;
 CONTIN JSR FLOAT   ; FLOAT INT
-       LDX =3
+       LDX #3
 ENTD   LDA Z,X
        STA X2,X    ; LOAD EXP/MANT2 WITH Z
        DEX
        BPL ENTD
        JSR FSUB    ; Z*Z-FLOAT(INT)
-       LDX =3      ; 4 BYTE MOVE
+       LDX #3      ; 4 BYTE MOVE
 ZSAV   LDA X1,X
        STA Z,X     ; SAVE EXP/MANT1 IN Z
        STA X2,X    ; COPY EXP/MANT1 TO EXP/MANT2
        DEX
        BPL ZSAV
        JSR FMUL    ; Z*Z
-       LDX =3      ; 4 BYTE MOVE
+       LDX #3      ; 4 BYTE MOVE
 LA2    LDA A2,X
        STA X2,X    ; LOAD EXP/MANT2 WITH A2
        LDA X1,X
@@ -230,13 +230,13 @@ LA2    LDA A2,X
        DEX
        BPL LA2
        JSR FADD    ; Z*Z+A2
-       LDX =3      ; 4 BYTE MOVE
+       LDX #3      ; 4 BYTE MOVE
 LB2    LDA B2,X
        STA X2,X    ; LOAD EXP/MANT2 WITH B2
        DEX
        BPL LB2
        JSR FDIV    ; T=B/(Z*Z+A2)
-       LDX =3      ; 4 BYTE MOVE
+       LDX #3      ; 4 BYTE MOVE
 DLOAD  LDA X1,X
        STA T,X     ; SAVE EXP/MANT1 AS T
        LDA C2,X
@@ -247,32 +247,32 @@ DLOAD  LDA X1,X
        BPL DLOAD
        JSR FMUL    ; Z*Z*C2
        JSR SWAP    ; MOVE EXP/MANT1 TO EXP/MANT2
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 LTMP   LDA T,X
        STA X1,X    ; LOAD EXP/MANT1 WITH T
        DEX
        BPL LTMP
        JSR FSUB    ; C2*Z*Z-B2/(Z*Z+A2)
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 LDD    LDA D,X
        STA X2,X    ; LOAD EXP/MANT2 WITH D
        DEX
        BPL LDD
        JSR FADD    ; D+C2*Z*Z-B2/(Z*Z+A2)
        JSR SWAP    ; MOVE EXP/MANT1 TO EXP/MANT2
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 LFA    LDA Z,X
        STA X1,X    ; LOAD EXP/MANT1 WITH Z
        DEX
        BPL LFA
        JSR FSUB    ; -Z+D+C2*Z*Z-B2/(Z*Z+A2)
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 LF3    LDA Z,X
        STA X2,X    ; LOAD EXP/MANT2 WITH Z
        DEX
        BPL LF3
        JSR FDIV    ; Z/(**** )
-       LDX =3      ; 4 BYTE TRANSFER
+       LDX #3      ; 4 BYTE TRANSFER
 LD12   LDA MHLF,X
        STA X2,X    ; LOAD EXP/MANT2 WITH .5
        DEX
@@ -299,7 +299,7 @@ D      DCM 9.9545957821
 ;
 .ORG $1F00   ; START OF BASIC FLOATING POINT ROUTINES
 ADD    CLC         ; CLEAR CARRY
-       LDX =$02    ; INDEX FOR 3-BYTE ADD
+       LDX #$02    ; INDEX FOR 3-BYTE ADD
 ADD1   LDA M1,X
        ADC M2,X    ; ADD A BYTE OF MANT2 TO MANT1
        STA M1,X
@@ -316,7 +316,7 @@ ABSWP1 SEC         ; SET CARRY FOR RETURN TO MUL/DIV
 ;
 ;     SWAP EXP/MANT1 WITH EXP/MANT2
 ;
-SWAP   LDX =$04    ; INDEX FOR 4-BYTE SWAP.
+SWAP   LDX #$04    ; INDEX FOR 4-BYTE SWAP.
 SWAP1  STY E-1,X
        LDA X1-1,X  ; SWAP A BYTE OF EXP/MANT1 WITH
        LDY X2-1,X  ; EXP/MANT2 AND LEAVEA COPY OF
@@ -332,9 +332,9 @@ SWAP1  STY E-1,X
 ;     RESULT IN EXP/MANT1.  EXP/MANT2 UNEFFECTED
 ;
 ;
-FLOAT  LDA =$8E
+FLOAT  LDA #$8E
        STA X1      ; SET EXPN TO 14 DEC
-       LDA =0      ; CLEAR LOW ORDER BYTE
+       LDA #0      ; CLEAR LOW ORDER BYTE
        STA M1+2
        BEQ NORM    ; NORMALIZE RESULT
 NORM1  DEC X1      ; DECREMENT EXP1
@@ -368,8 +368,8 @@ RTAR   LDA M1      ; SIGN OF MANT1 INTO CARRY FOR
        ASL         ; RIGHT ARITH SHIFT
 RTLOG  INC X1      ; INCR EXP1 TO COMPENSATE FOR RT SHIFT
        BEQ OVFL    ; EXP1 OUT OF RANGE.
-RTLOG1 LDX =$FA    ; INDEX FOR 6 BYTE RIGHT SHIFT
-ROR1   LDA =$80
+RTLOG1 LDX #$FA    ; INDEX FOR 6 BYTE RIGHT SHIFT
+ROR1   LDA #$80
        BCS ROR2
        ASL
 ROR2   LSR E+3,X   ; SIMULATE ROR E+3,X
@@ -394,8 +394,8 @@ MUL2   DEY         ; NEXT MUL ITERATION
 MDEND  LSR SIGN    ; TEST SIGN (EVEN/ODD)
 NORMX  BCC NORM    ; IF EXEN, NORMALIZE PRODUCT, ELSE COMPLEMENT
 FCOMPL SEC         ; SET CARRY FOR SUBTRACT
-       LDX =$03    ; INDEX FOR 3 BYTE SUBTRACTION
-COMPL1 LDA =$00    ; CLEAR A
+       LDX #$03    ; INDEX FOR 3 BYTE SUBTRACTION
+COMPL1 LDA #$00    ; CLEAR A
        SBC X1,X    ; SUBTRACT BYTE OF EXP1
        STA X1,X    ; RESTORE IT
        DEX         ; NEXT MORE SIGNIFICANT BYTE
@@ -409,13 +409,13 @@ FDIV   JSR MD1     ; TAKE ABS VAL OF MANT1, MANT2
        SBC X1      ; SUBTRACT EXP1 FROM EXP2
        JSR MD2     ; SAVE AS QUOTIENT EXP
 DIV1   SEC         ; SET CARRY FOR SUBTRACT
-       LDX =$02    ; INDEX FOR 3-BYTE INSTRUCTION
+       LDX #$02    ; INDEX FOR 3-BYTE INSTRUCTION
 DIV2   LDA M2,X
        SBC E,X     ; SUBTRACT A BYTE OF E FROM MANT2
        PHA         ; SAVE ON STACK
        DEX         ; NEXT MORE SIGNIF BYTE
        BPL DIV2    ; LOOP UNTIL DONE
-       LDX =$FD    ; INDEX FOR 3-BYTE CONDITIONAL MOVE
+       LDX #$FD    ; INDEX FOR 3-BYTE CONDITIONAL MOVE
 DIV3   PLA         ; PULL A BYTE OF DIFFERENCE OFF STACK
        BCC DIV4    ; IF MANT2<E THEN DONT RESTORE MANT2
        STA M2+3,X
@@ -439,9 +439,9 @@ MD2    STX M1+2
        PLA         ; POP ONE
        PLA         ; RETURN LEVEL
        BCC NORMX   ; CLEAR X1 AND RETURN
-MD3    EOR =$80    ; COMPLIMENT SIGN BIT OF EXP
+MD3    EOR #$80    ; COMPLIMENT SIGN BIT OF EXP
        STA X1      ; STORE IT
-       LDY =$17    ; COUNT FOR 24 MUL OR 23 DIV ITERATIONS
+       LDY #$17    ; COUNT FOR 24 MUL OR 23 DIV ITERATIONS
        RTS         ; RETURN
 OVCHK  BPL MD3     ; IF POS EXP THEN NO OVERFLOW
 OVFL   BRK
@@ -452,7 +452,7 @@ OVFL   BRK
 ;
        JSR RTAR    ; SHIFT MANT1 RT AND INCREMENT EXPNT
 FIX    LDA X1      ; CHECK EXPONENT
-       CMP =$8E    ; IS EXPONENT 14?
+       CMP #$8E    ; IS EXPONENT 14?
        BNE FIX-3   ; NO, SHIFT
 RTRN   RTS         ; RETURN
        END

@@ -60,7 +60,6 @@ static int isValidLiteral(const char *start, size_t len) {
 	// First skip any parens, immediate, zeropage, or hex markers
 	// NOTE: The order of these is significant in that immediate values can not be indirectly referenced (follow a parens), dollar signs cannot come before any of the other symbols, etc.
 	// TODO: @todo parenthesis tracking to make sure they line up properly
-	advanceOverCharIfPresent('=');
 	advanceOverCharIfPresent('#');
 	advanceOverCharIfPresent('(');
 	advanceOverCharIfPresent('*');
