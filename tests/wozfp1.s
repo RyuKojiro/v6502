@@ -155,19 +155,19 @@ L10    LDA LN10,X
        JSR FMUL    ; LOG10(X)=LN(X)/LN(10)
        RTS
 ;
-.dcm LN10   0.4342945
+LN10      = 0.4342945
 
-.dcm R22    1.4142136   ; SQRT(2)
+R22       = 1.4142136   ; SQRT(2)
 
-.dcm LE2    0.69314718  ; LOG BASE E OF 2
+LE2       = 0.69314718  ; LOG BASE E OF 2
 
-.dcm A1     1.2920074
+A1        = 1.2920074
 
-.dcm MB     -2.6398577
+MB        = -2.6398577
 
-.dcm C      1.6567626
+C         = 1.6567626
 
-.dcm MHLF   0.5
+MHLF      = 0.5
 
 ;
 .ORG $1E00   STARTING LOCATION FOR EXP
@@ -283,15 +283,15 @@ LD12   LDA MHLF,X
        ADC X1      ; 2**(INT+1)
        STA X1      ; RETURN RESULT TO EXPONENT
        RTS         ; RETURN ANS=(.5+Z/(-Z+D+C2*Z*Z-B2/(Z*Z+A2))*2**(INT+1)
-L2E    DCM 1.4426950409   LOG BASE 2 OF E
+L2E      = 1.4426950409   LOG BASE 2 OF E
 
-A2     DCM 87.417497202
+A2       = 87.417497202
 
-B2     DCM 617.9722695
+B2       = 617.9722695
 
-C2     DCM .03465735903
+C2       = .03465735903
 
-D      DCM 9.9545957821
+D        = 9.9545957821
 
 ;
 ;
