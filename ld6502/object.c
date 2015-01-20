@@ -38,6 +38,7 @@ ld6502_object *ld6502_createObject() {
 	if (obj) {
 		obj->count = 0;
 		obj->blobs = malloc(sizeof(ld6502_object_blob));
+        obj->table = NULL;
 		bzero(obj->blobs, sizeof(ld6502_object_blob));
 		
 		return obj;
