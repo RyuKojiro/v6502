@@ -40,7 +40,7 @@
 
 /** @enum */
 /** @brief as6502_symbol Type */
-/** <b>If you need to test type or linkage, use the provided @ref sym_type_macros.</b> If for some reason you need to do more advanced manipulation of the type field: Label types are odd, variable types are even, so symbol type (regardless of linkage) can be tested with a simple or mask against the unlinked type that you want. For example: @code (type | as6502_symbol_type_variable_unlinked) == as6502_symbol_type_variable_unlinked @endcode Linkage can be tested by masking against the linkage you want, always using label, as it carries a type bit of zero. */
+/** <B>If you need to test type or linkage, use the provided @ref sym_type_macros.</B> If for some reason you need to do more advanced manipulation of the type field: Label types are odd, variable types are even, so symbol type (regardless of linkage) can be tested with a simple or mask against the unlinked type that you want. For example: @code (type | as6502_symbol_type_variable_unlinked) == as6502_symbol_type_variable_unlinked @endcode Linkage can be tested by masking against the linkage you want, always using label, as it carries a type bit of zero. */
 typedef enum {
 	as6502_symbol_type_unknown = 0,
 	as6502_symbol_type_label = 2,
