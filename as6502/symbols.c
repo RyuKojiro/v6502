@@ -241,9 +241,8 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 
 	as6502_symbol_type type;
 	size_t len = strlen(line) + 1;
-	char *symbol_true = malloc(len);
-	strncpy(symbol_true, line, len);
-	char *symbol = symbol_true;
+	char *symbol = malloc(len);
+	strncpy(symbol, line, len);
 	int isByte = NO;
 	
 	if (!strncasecmp(".byte", symbol, 5)) {
@@ -257,8 +256,9 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 		trimgreedytaild(symbol);
 	}
 	
-	trimtaild(symbol);
 	trimtailchard(symbol, ':'); // If there is a colon, truncate there
+	trimtailchard(symbol, '=');
+	trimtaild(symbol);
 	
 	// TODO: implement variable declaration without equals signs
 	if (strchr(line, '=')  || isByte) { // Variable
@@ -272,7 +272,7 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	
 	as6502_addSymbolToTable(table, lineNumber, symbol, offset, type);
 	
-	free(symbol_true);
+	free(symbol);
 	
 	return type;
 }
