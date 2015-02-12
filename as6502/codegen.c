@@ -101,8 +101,10 @@ int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_ta
 	 *				sta var1;
 	 *				pla;
 	 */
-	uint8_t initialValue;
-
+	uint8_t low;
+	uint8_t high;
+	int wide;
+	
 	if (!strnchr(line, '=', len)) {
 		// No assignments on the line
 		return NO;
@@ -114,10 +116,15 @@ int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_ta
 		return NO;
 	}
 	
-	as6502_byteValuesForString(NULL, &initialValue, NULL, cur + 1);
+	// TODO: A sanity check here to make sure our label lines up with where we are appending blob data
+	//if(as6502_addressForLabel(table, <#const char *name#>) == blob->len) {
 	
-	as6502_addSymbolToTable(table, currentLineNum, trimhead(line, len), blob->len, as6502_symbol_type_variable);
-	ld6502_appendByteToBlob(blob, initialValue);
+	as6502_byteValuesForString(&high, &low, &wide, cur + 1);
+	
+	ld6502_appendByteToBlob(blob, low);
+	if (wide) {
+		ld6502_appendByteToBlob(blob, high);
+	}
 	
 	return YES;
 }
