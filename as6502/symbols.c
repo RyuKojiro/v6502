@@ -170,6 +170,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 		if (*this && !strncmp((*this)->name, name, len)) {
 			as6502_error(0, 0, v6502_DuplicateSymbolErrorText, name);
 			as6502_note((*this)->line, v6502_DuplicateSymbolNoteText);
+			free(sym);
 			return;
 		}
 		if (!*this || strlen((*this)->name) < strlen(name)) {
@@ -406,6 +407,7 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 		*outLen = _outLen;
 	}
 	
+	free(in);
 	return out;
 }
 
