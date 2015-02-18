@@ -347,20 +347,21 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 			continue;
 		}
 		
-		// Search for symbol
-		if (caseSensitive) {
-			cur = strstr(in, this->name);
-		}
-		else {
-			cur = strcasestr(in, this->name);
-		}
+		// Search for symbol, ignoring partial hits
+		char *search = in;
+		do {
+			if (caseSensitive) {
+				cur = strstr(search, this->name);
+			}
+			else {
+				cur = strcasestr(search, this->name);
+			}
+			
+			search = cur + 1;
+		} while (cur && as6502_lengthOfToken(cur, len - (cur - line)) > strlen(this->name));
 
 		// Found a symbol! Swap in the address
 		if (cur) {
-			// Prevent partial symbol matches
-			if (as6502_lengthOfToken(cur, len - (cur - line)) > strlen(this->name)) {
-				continue;
-			}
 			if (!isspace(CTYPE_CAST cur[-1])) {
 				continue;
 			}
