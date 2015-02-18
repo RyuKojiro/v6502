@@ -290,8 +290,8 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 
 	if (difference > 0) { // Shift string right
 		if (strlen(line) + difference < len) {
-			char *start = line + strlen(line) + 1;
-			for (char *cur = start + difference; cur > start; cur--) {
+			char *start = strstr(line, symbol);
+			for (char *cur = start + txtLen + difference; cur > start; cur--) {
 				*cur = *(cur - difference);
 			}
 		}
