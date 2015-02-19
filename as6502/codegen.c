@@ -38,7 +38,7 @@ static size_t _lengthOfValue(const char *start) {
 	return i;
 }
 
-void as6502_resolveArithmetic(char *line, size_t len) {
+void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
 	const char *cur;
 	char *start;
 	size_t clause = 0;
@@ -86,7 +86,15 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	// Put resolved value in
 	if (clause) {
 		clauseString = malloc(clause + 1);
-		snprintf(resultString, 7, "$%04x", result);
+		strncpy(clauseString, start, clause);
+		clauseString[clause] = '\0';
+		// If the instruction is a branch instruction, swap in a relative address
+		if (as6502_isBranchInstruction(line)) {
+			snprintf(resultString, 4, "$%02x", (uint8_t)result - (uint8_t)offset); // @todo FIXME: Is this doing relative properly?
+		}
+		else {
+			snprintf(resultString, 7, "$%04x", result);
+		}
 		as6502_replaceSymbolInLineAtLocationWithText(line, len, start, clauseString, resultString);
 		free(clauseString);
 	}
