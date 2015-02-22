@@ -93,7 +93,12 @@ void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
 			snprintf(resultString, 4, "$%02x", (uint8_t)result - (uint8_t)offset); // @todo FIXME: Is this doing relative properly?
 		}
 		else {
-			snprintf(resultString, 7, "$%04x", result);
+			if (result <= 0xff) {
+				snprintf(resultString, 6, "*$%02x", result);
+			}
+			else {
+				snprintf(resultString, 7, "$%04x", result);
+			}
 		}
 		as6502_replaceSymbolInLineAtLocationWithText(line, len, start, clauseString, resultString);
 		free(clauseString);
