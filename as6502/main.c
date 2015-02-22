@@ -319,15 +319,15 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		trimmedLine = trimheadtospc(line, lineLen);
 		trimmedLine = trimhead(trimmedLine, lineLen - (trimmedLine - line));
 		maxLen = MAX_LINE_LEN - (trimmedLine - line);
-
-		// Check for Variable Declarations and Arithmetic
-		as6502_resolveArithmetic(trimmedLine, maxLen - (trimmedLine - line), address);
 		
 		// Convert symbols to hard addresses from symbol table
 		trimmedLine = as6502_desymbolicateLine(obj->table, trimmedLine, maxLen, 0x0600, address, NO, &lineLen);
 
 		// Assemble whatever is left, if anything
 		if (lineLen) {
+			// Check for Variable Declarations and Arithmetic
+			as6502_resolveArithmetic(trimmedLine, lineLen, address);
+			
 			instructionLength = assembleLine(&obj->blobs[currentBlob], trimmedLine, lineLen, obj->table, printProcess);
 			address += instructionLength;
 		}
