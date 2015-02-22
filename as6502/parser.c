@@ -755,7 +755,8 @@ static int _isEndOfString(const char *c) {
 }
 
 static int _isPartOfToken(char c) {
-	return !isspace(c) && c != ',' && c != '\n';
+	return !isspace(c) && c != ',' && c != '\n' &&
+	c != '+' && c != '-';
 }
 
 size_t as6502_lengthOfToken(const char *start, size_t len) {
