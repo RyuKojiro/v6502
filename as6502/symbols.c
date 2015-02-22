@@ -236,7 +236,7 @@ start_over:
 
 // Easy Symbol Table Access
 
-as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation) {
+as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset) {
 	assert(table);
 
 	as6502_symbol_type type;
@@ -264,7 +264,6 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	if (strchr(line, '=')  || isByte) { // Variable
 		/** TODO: @todo allocate variable addresses */
 		type = as6502_symbol_type_variable;
-		offset = varLocation;
 	}
 	else { // Label
 		type = as6502_symbol_type_label;

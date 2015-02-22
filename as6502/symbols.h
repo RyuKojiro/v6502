@@ -104,7 +104,7 @@ void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t sta
 /** @defgroup sym_ez Easy Symbol Table Interaction */
 /**@{*/
 /** @brief Automatically detects symbols in a given line, then creates and inserts them into a given as6502_symbol_table */
-as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation);
+as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset);
 
 /** @brief Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses
 	@param table The as6502_symbol_table to search
