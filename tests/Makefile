@@ -14,7 +14,7 @@ DIS=	$(DISDIR)/dis6502
 VMDIR=	../v6502
 VM=	$(VMDIR)/v6502
 
-all: compiledTests expectedAssemblyResult circularAssemble #wozfp
+all: compiledTests expectedAssemblyResult circularAssemble wozfp
 
 # This builds and runs the C-based unit test suite. This should test actual
 # interaction with the API itself.

@@ -192,7 +192,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	int newline;
 	size_t lineLen, maxLen;
 	int instructionLength;
-	uint16_t currentVarAddress = 0x200;	// Variable storage will grow upwards, opposite the stack
 	ld6502_object *obj = ld6502_createObject();
 	obj->table = as6502_createSymbolTable();
 	int currentBlob = 0;
@@ -208,25 +207,26 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		// Truncate at comments
 		trimgreedytailchard(line, ';');
 		
+		// Check for .org directives, which reset the current address offset (this is a special case)
+		if (!strncasecmp(line, ".org", 3)) {
+			// reset current offset address
+			address = as6502_valueForString(NULL, line + 5);
+		}
+
 		// Check for symbols
 		trimmedLine = line; //trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
 		lineLen = MAX_LINE_LEN; // - (trimmedLine - line);
 		if (trimmedLine && (isalnum(CTYPE_CAST trimmedLine[0]))) {
-			as6502_symbol_type type = as6502_addSymbolForLine(obj->table, line, currentLineNum, address, currentVarAddress);
+			as6502_symbol_type type = as6502_addSymbolForLine(obj->table, line, currentLineNum, address);
 			
 			if (as6502_symbolTypeIsVariable(type)) {
-				if (currentVarAddress >= 0x7FF) {
-					as6502_error(0, 0, "Maximum number of addressable variables exceeded.");
+				address++;
+				
+				if (newline) {
+					currentLineNum++;
 				}
-				else {
-					currentVarAddress++;
-					
-					if (newline) {
-						currentLineNum++;
-					}
-					
-					continue;
-				}
+				
+				continue;
 			}
 
 			// Trim any possible labels we encountered
@@ -311,21 +311,23 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 		
 		// TODO: @todo Handle Variable Declarations
-		// as6502_resolveVariableDeclaration(table, as6502_currentBlobInContext(ctx), assembleLine, trimmedLine, maxLen);
+		if (as6502_resolveVariableDeclaration(&obj->blobs[currentBlob], obj->table, line, lineLen)) {
+			continue;
+		}
 		
 		// Remove label clause
 		trimmedLine = trimheadtospc(line, lineLen);
 		trimmedLine = trimhead(trimmedLine, lineLen - (trimmedLine - line));
 		maxLen = MAX_LINE_LEN - (trimmedLine - line);
-
-		// Check for Variable Declarations and Arithmetic
-		as6502_resolveArithmetic(line, maxLen);
 		
 		// Convert symbols to hard addresses from symbol table
 		trimmedLine = as6502_desymbolicateLine(obj->table, trimmedLine, maxLen, 0x0600, address, NO, &lineLen);
 
 		// Assemble whatever is left, if anything
 		if (lineLen) {
+			// Check for Variable Declarations and Arithmetic
+			as6502_resolveArithmetic(trimmedLine, lineLen, address);
+			
 			instructionLength = assembleLine(&obj->blobs[currentBlob], trimmedLine, lineLen, obj->table, printProcess);
 			address += instructionLength;
 		}

@@ -102,7 +102,9 @@ void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start) {
 	}
 	
 	obj->blobs[obj->count].start = start;
-	
+	obj->blobs[obj->count].len = 0;
+	obj->blobs[obj->count].data = NULL;
+
 	obj->count++;
 }
 
@@ -111,6 +113,11 @@ void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte) {
 	
 	if (!blob) {
 		as6502_fatal("Null blob in ld6502_appendByteToBlob");
+	}
+	
+	// This only applies while we still do single byte-at-a-time appending to blobs
+	if (blob->len == UINT16_MAX) {
+		as6502_fatal("Tried to overfill a blob in ld6502_appendByteToBlob");
 	}
 	
 	uint16_t newSize = blob->len + 1;

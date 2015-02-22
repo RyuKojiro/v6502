@@ -23,6 +23,7 @@
 #include "codegen.h"
 #include "parser.h"
 #include "linectl.h"
+#include "error.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -37,7 +38,7 @@ static size_t _lengthOfValue(const char *start) {
 	return i;
 }
 
-void as6502_resolveArithmetic(char *line, size_t len) {
+void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
 	const char *cur;
 	char *start;
 	size_t clause = 0;
@@ -85,13 +86,27 @@ void as6502_resolveArithmetic(char *line, size_t len) {
 	// Put resolved value in
 	if (clause) {
 		clauseString = malloc(clause + 1);
-		snprintf(resultString, 7, "$%04x", result);
+		strncpy(clauseString, start, clause);
+		clauseString[clause] = '\0';
+		// If the instruction is a branch instruction, swap in a relative address
+		if (as6502_isBranchInstruction(line)) {
+			snprintf(resultString, 4, "$%02x", (uint8_t)result - (uint8_t)offset); // @todo FIXME: Is this doing relative properly?
+		}
+		else {
+			if (result <= 0xff) {
+				snprintf(resultString, 6, "*$%02x", result);
+			}
+			else {
+				snprintf(resultString, 7, "$%04x", result);
+			}
+		}
 		as6502_replaceSymbolInLineAtLocationWithText(line, len, start, clauseString, resultString);
 		free(clauseString);
 	}
 }
 
-int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context, as6502_lineCallback cb, const char *line, size_t len) {
+// NOTE: We only support single byte declarations
+int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_table *table, const char *line, size_t len) {
 	/* This will take 1 line in and output 4 lines
 	 * e.g.	 IN: var1 = $ff
 	 *		OUT:	pha;
@@ -99,9 +114,9 @@ int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context,
 	 *				sta var1;
 	 *				pla;
 	 */
-	uint8_t initialValue;
-	char buf[9];
-	uint8_t address;
+	uint8_t low;
+	uint8_t high;
+	int wide;
 	
 	if (!strnchr(line, '=', len)) {
 		// No assignments on the line
@@ -113,19 +128,16 @@ int as6502_resolveVariableDeclaration(as6502_symbol_table *table, void *context,
 		// Couldn't find a space
 		return NO;
 	}
-	as6502_byteValuesForString(NULL, &initialValue, NULL, cur + 1);
 	
-	address = as6502_addressForVar(table, line);
+	// TODO: A sanity check here to make sure our label lines up with where we are appending blob data
+	//if(as6502_addressForLabel(table, <#const char *name#>) == blob->len) {
 	
-	cb(context, "pha", 4);
+	as6502_byteValuesForString(&high, &low, &wide, cur + 1);
 	
-	snprintf(buf, 9, "lda #$%02x", initialValue);
-	cb(context, buf, 9);
+	ld6502_appendByteToBlob(blob, low);
+	if (wide) {
+		ld6502_appendByteToBlob(blob, high);
+	}
 	
-	snprintf(buf, 9, "sta $%04x", address);
-	cb(context, buf, 9);
-
-	cb(context, "pla", 4);
-
 	return YES;
 }

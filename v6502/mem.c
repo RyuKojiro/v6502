@@ -38,8 +38,35 @@ v6502_mappedRange *v6502_mappedRangeForOffset(v6502_memory *memory, uint16_t off
 	return NULL;
 }
 
+int v6502_memoryRangesIntersect(uint16_t start1, uint16_t size1, uint16_t start2, uint16_t size2) {
+	// Curly braces are 1
+	// Square braces are 2
+	uint16_t end1 = start1 + size1;
+	uint16_t end2 = start2 + size2;
+	
+	// [ { ]
+	if (start1 >= start2 && start1 < end2) {
+		return YES;
+	}
+	// [ } ]
+	if (end1 >= start2 && end1 < end2) {
+		return YES;
+	}
+	// { [ ] }
+	if (start2 >= start1 && end2 <= end1) {
+		return YES;
+	}
+	return NO;
+}
+
 int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write, void *context) {
-	// TODO: @bug Make sure it's not already mapped
+	// Make sure it's not already mapped
+	for (size_t i = 0; i < memory->rangeCount; i++) {
+		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
+		if (v6502_memoryRangesIntersect(start, size, currentRange->start, currentRange->size)) {
+			return YES;
+		}
+	}
 
 	// Create a struct and add it to the list
 	memory->mappedRanges = realloc(memory->mappedRanges, sizeof(v6502_mappedRange) * (memory->rangeCount + 1));

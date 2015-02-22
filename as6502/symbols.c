@@ -170,6 +170,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 		if (*this && !strncmp((*this)->name, name, len)) {
 			as6502_error(0, 0, v6502_DuplicateSymbolErrorText, name);
 			as6502_note((*this)->line, v6502_DuplicateSymbolNoteText);
+			free(sym);
 			return;
 		}
 		if (!*this || strlen((*this)->name) < strlen(name)) {
@@ -235,14 +236,13 @@ start_over:
 
 // Easy Symbol Table Access
 
-as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation) {
+as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset) {
 	assert(table);
 
 	as6502_symbol_type type;
 	size_t len = strlen(line) + 1;
-	char *symbol_true = malloc(len);
-	strncpy(symbol_true, line, len);
-	char *symbol = symbol_true;
+	char *symbol = malloc(len);
+	strncpy(symbol, line, len);
 	int isByte = NO;
 	
 	if (!strncasecmp(".byte", symbol, 5)) {
@@ -256,13 +256,14 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 		trimgreedytaild(symbol);
 	}
 	
-	trimtaild(symbol);
 	trimtailchard(symbol, ':'); // If there is a colon, truncate there
+	trimtailchard(symbol, '=');
+	trimtaild(symbol);
 	
-	if (strchr(line, '=') || isByte) { // Variable
+	// TODO: implement variable declaration without equals signs
+	if (strchr(line, '=')  || isByte) { // Variable
 		/** TODO: @todo allocate variable addresses */
 		type = as6502_symbol_type_variable;
-		offset = varLocation;
 	}
 	else { // Label
 		type = as6502_symbol_type_label;
@@ -270,7 +271,7 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	
 	as6502_addSymbolToTable(table, lineNumber, symbol, offset, type);
 	
-	free(symbol_true);
+	free(symbol);
 	
 	return type;
 }
@@ -288,8 +289,8 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 
 	if (difference > 0) { // Shift string right
 		if (strlen(line) + difference < len) {
-			char *start = line + strlen(line) + 1;
-			for (char *cur = start + difference; cur > start; cur--) {
+			char *start = strstr(line, symbol);
+			for (char *cur = start + txtLen + difference; cur > start; cur--) {
 				*cur = *(cur - difference);
 			}
 		}
@@ -345,20 +346,21 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 			continue;
 		}
 		
-		// Search for symbol
-		if (caseSensitive) {
-			cur = strstr(in, this->name);
-		}
-		else {
-			cur = strcasestr(in, this->name);
-		}
+		// Search for symbol, ignoring partial hits
+		char *search = in;
+		do {
+			if (caseSensitive) {
+				cur = strstr(search, this->name);
+			}
+			else {
+				cur = strcasestr(search, this->name);
+			}
+			
+			search = cur + 1;
+		} while (cur && as6502_lengthOfToken(cur, len - (cur - line)) > strlen(this->name));
 
 		// Found a symbol! Swap in the address
 		if (cur) {
-			// Prevent partial symbol matches
-			if (as6502_lengthOfToken(cur, len - (cur - line)) > strlen(this->name)) {
-				continue;
-			}
 			if (!isspace(CTYPE_CAST cur[-1])) {
 				continue;
 			}
@@ -378,9 +380,21 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 			/** @todo FIXME: Should this detect if relative is an option, and do that instead? */
 			width = as6502_doubleWidthForSymbolInLine(table, in, len, cur);
 			if (width) {
-				out = realloc(out, _outLen + 6);
-				snprintf(out + _outLen, 6, "$%04x", pstart + this->address);
-				_outLen += 5;
+				/* If the variable falls in zeropage, make it a zeropage call.
+				 * All instructions that aren't either implied-only or
+				 * relative-only, have zero page modes for all possible register
+				 * combinations.
+				 */
+				if (pstart + this->address <= 0xFF) {
+					out = realloc(out, _outLen + 6);
+					snprintf(out + _outLen, 5, "*$%02x", pstart + this->address);
+					_outLen += 4;
+				}
+				else {
+					out = realloc(out, _outLen + 6);
+					snprintf(out + _outLen, 6, "$%04x", pstart + this->address);
+					_outLen += 5;
+				}
 			}
 			else {
 				out = realloc(out, _outLen + 4);
@@ -405,6 +419,7 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 		*outLen = _outLen;
 	}
 	
+	free(in);
 	return out;
 }
 

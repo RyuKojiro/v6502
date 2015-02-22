@@ -40,7 +40,7 @@
 
 /** @enum */
 /** @brief as6502_symbol Type */
-/** <b>If you need to test type or linkage, use the provided @ref sym_type_macros.</b> If for some reason you need to do more advanced manipulation of the type field: Label types are odd, variable types are even, so symbol type (regardless of linkage) can be tested with a simple or mask against the unlinked type that you want. For example: @code (type | as6502_symbol_type_variable_unlinked) == as6502_symbol_type_variable_unlinked @endcode Linkage can be tested by masking against the linkage you want, always using label, as it carries a type bit of zero. */
+/** <B>If you need to test type or linkage, use the provided @ref sym_type_macros.</B> If for some reason you need to do more advanced manipulation of the type field: Label types are odd, variable types are even, so symbol type (regardless of linkage) can be tested with a simple or mask against the unlinked type that you want. For example: @code (type | as6502_symbol_type_variable_unlinked) == as6502_symbol_type_variable_unlinked @endcode Linkage can be tested by masking against the linkage you want, always using label, as it carries a type bit of zero. */
 typedef enum {
 	as6502_symbol_type_unknown = 0,
 	as6502_symbol_type_label = 2,
@@ -104,7 +104,7 @@ void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t sta
 /** @defgroup sym_ez Easy Symbol Table Interaction */
 /**@{*/
 /** @brief Automatically detects symbols in a given line, then creates and inserts them into a given as6502_symbol_table */
-as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset, uint16_t varLocation);
+as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset);
 
 /** @brief Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses
 	@param table The as6502_symbol_table to search
