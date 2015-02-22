@@ -380,9 +380,21 @@ char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, siz
 			/** @todo FIXME: Should this detect if relative is an option, and do that instead? */
 			width = as6502_doubleWidthForSymbolInLine(table, in, len, cur);
 			if (width) {
-				out = realloc(out, _outLen + 6);
-				snprintf(out + _outLen, 6, "$%04x", pstart + this->address);
-				_outLen += 5;
+				/* If the variable falls in zeropage, make it a zeropage call.
+				 * All instructions that aren't either implied-only or
+				 * relative-only, have zero page modes for all possible register
+				 * combinations.
+				 */
+				if (pstart + this->address <= 0xFF) {
+					out = realloc(out, _outLen + 6);
+					snprintf(out + _outLen, 5, "*$%02x", pstart + this->address);
+					_outLen += 4;
+				}
+				else {
+					out = realloc(out, _outLen + 6);
+					snprintf(out + _outLen, 6, "$%04x", pstart + this->address);
+					_outLen += 5;
+				}
 			}
 			else {
 				out = realloc(out, _outLen + 4);
