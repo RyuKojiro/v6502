@@ -119,6 +119,15 @@ char *rev_strnspc(const char *stop, const char *start) {
 	return NULL;
 }
 
+char *rev_strnpc(const char *stop, const char *start) {
+	for (/* start */; start > stop; start--) {
+		if (!isspace(CTYPE_CAST *start)) {
+			return (char *)start;
+		}
+	}
+	return NULL;
+}
+
 const char *rev_strnchr(const char *stop, const char *start, const char chr) {
 	for (/* start */; start > stop; start--) {
 		if (*start == chr) {

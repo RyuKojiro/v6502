@@ -62,6 +62,11 @@ char *strnspc(const char *str, size_t len);
 /** @param[in] stop The earliest location in the string to search up to, usually the beginning of the string */
 char *rev_strnspc(const char *stop, const char *start);
 
+/** @brief Reverse search string for printable char (non-whitespace), safely */
+/** @param[in] start The location in the string to start searching backwards from */
+/** @param[in] stop The earliest location in the string to search up to, usually the beginning of the string */
+char *rev_strnpc(const char *stop, const char *start);
+
 /** @brief Reverse search string for character, safely */
 /** @param[in] start The location in the string to start searching backwards from */
 /** @param[in] stop The earliest location in the string to search up to, usually the beginning of the string */
