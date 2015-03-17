@@ -22,6 +22,8 @@
 
 #include "token.h"
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 	as6502_token *result = malloc(sizeof(as6502_token));
@@ -45,11 +47,33 @@ void as6502_tokenDestroy(as6502_token *token) {
 void as6502_tokenListDestroy(as6502_token *token) {
 	as6502_token *next;
 	while (token) {
-		next = token->next
+		next = token->next;
 		as6502_tokenDestroy(token);
 		token = next;
 	}
 }
+
+static int _isPartOfToken(char c) {
+	return !isspace(c) && c != ',' && c != '\n' &&
+	c != '+' && c != '-';
+}
+
+size_t as6502_lengthOfToken(const char *start, size_t len) {
+	size_t i = 0;
+
+	while (start[i] && i < len) {
+		if (!_isPartOfToken(start[i])) {
+			break;
+		}
+
+		i++;
+	}
+
+	return i;
+}
+
+#define insert(t)	if(!head) { head = t; tail = t; } \
+					else { tail->next = t; tail = t; }
 
 as6502_token *as6502_tokenizeLine(const char *line, size_t len) {
 	as6502_token *head = NULL;
@@ -58,10 +82,12 @@ as6502_token *as6502_tokenizeLine(const char *line, size_t len) {
 	for (const char *cur = line; cur && cur < line + len;) {
 		switch (*cur) {
 			case ';':
-				return first;
-			case '.':
-				// find the end of the dot directive and add it
-				break;
+				return head;
+			case '.': {
+				size_t tlen = as6502_lengthOfToken(cur + 1, len - (cur - line) - 1);
+				as6502_token *t = as6502_tokenCreate(cur, cur - line, tlen);
+				insert(t);
+			} break;
 			case '$':
 				// resolve number and add it
 			case '-':
@@ -72,4 +98,6 @@ as6502_token *as6502_tokenizeLine(const char *line, size_t len) {
 				break;
 		}
 	}
+
+	return head;
 }
