@@ -14,7 +14,19 @@ DIS=	$(DISDIR)/dis6502
 VMDIR=	../v6502
 VM=	$(VMDIR)/v6502
 
+FUZZIN=afl_tests
+FUZZOUT=afl_results
+
 all: compiledTests expectedAssemblyResult circularAssemble wozfp
+
+# This requires the afl fuzzer to be present, and does fuzzing of the snake code to find assembler bugs
+fuzz_as: $(AS) $(FUZZIN)
+	mkdir $(FUZZOUT)
+	afl-fuzz -i $(FUZZIN) -o $(FUZZOUT) -M fuzzer01 $(AS) @@
+
+$(FUZZIN):
+	mkdir $(FUZZIN)
+	cp snake.s wozfp1.s $(FUZZIN)
 
 # This builds and runs the C-based unit test suite. This should test actual
 # interaction with the API itself.
