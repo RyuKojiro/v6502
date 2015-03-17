@@ -54,12 +54,11 @@ void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
 		right = as6502_valueForString(NULL, cur);
 		
 		// Get left hand side
-		/** FIXME: @bug This currently relies on the first space found in reverse
-		 * being separate from the arithmetic clause, and a delimeter for the
-		 * left hand value. Not sure if this is proper if whitespace is allowed
-		 * in between operators and values. 
+		/* This works by first reversing from the operator to the the first
+		 * whitespace found in reverse, then reversing over that until the
 		 */
-		start = rev_strnspc(line, cur) + 1;
+		start = rev_strnpc(line, cur - 1);
+		start = rev_strnspc(line, start) + 1;
 		left = as6502_valueForString(NULL, start);
 		
 		// Solve
