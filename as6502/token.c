@@ -90,12 +90,25 @@ as6502_token *as6502_tokenizeLine(const char *line, size_t len) {
 			} break;
 			case '$':
 				// resolve number and add it
+			case ')':
+			case '(':
+			case ',':
+			case '=':
 			case '-':
 			case '+': {
 				as6502_token *t = as6502_tokenCreate(cur, cur - line, 1);
 				insert(t);
 			} break;
 			default:
+				if (isspace(*cur)) {
+					// seek over whitespace
+				}
+				else if (isalpha(*cur)) {
+					// handle alpha text, probably an instruction or symbol
+				}
+				else if (isnumber(*cur)) {
+					// handle what is definitely a number in the same way that we would above
+				}
 				break;
 		}
 	}
