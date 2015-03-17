@@ -300,7 +300,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 				ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
 			}
 			else {
-				ld6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
+				as6502_processObjectDirectiveForLine(obj, &currentBlob, line, lineLen);
 			}			
 			
 			if (newline) {

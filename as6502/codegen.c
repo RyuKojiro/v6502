@@ -27,6 +27,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 static size_t _lengthOfValue(const char *start) {
 	size_t i;
@@ -139,4 +140,30 @@ int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_ta
 	}
 	
 	return YES;
+}
+
+void as6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len) {
+	assert(obj);
+	
+	if (len <= 3) {
+		return;
+	}
+	
+	if (!strncasecmp(line + 1, "data", 3)) {
+		// start new blob
+		ld6502_addBlobToObject(obj, v6502_memoryStartProgram);
+		*currentBlob = obj->count - 1;
+	}
+	else if (!strncasecmp(line + 1, "org", 3)) {
+		// start new blob
+		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, line + 5));
+		*currentBlob = obj->count - 1;
+	}
+	else if (!strncasecmp(line + 1, "end", 3)) {
+		// revert to top blob
+		*currentBlob = 0;
+	}
+	else {
+		as6502_warn(0, strnspc(line, len) - line, "Unknown assembler directive");
+	}
 }

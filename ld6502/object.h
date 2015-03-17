@@ -79,10 +79,4 @@ void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start);
 void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte);
 /**@}*/
 
-/** @defgroup obj_mutate Contextual Object Mutators */
-/**@{*/
-/** @brief Automatically processes any dot directive in a given line and updates an ld6502_object_context */
-void ld6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len);
-/**@}*/
-
 #endif

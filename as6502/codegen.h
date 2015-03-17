@@ -40,6 +40,8 @@ typedef uint16_t (* as6502_lineCallback)(ld6502_object_blob *blob, const char *l
 void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset);
 /** @brief Replaces variable declarations with the instructions needed to initialize a variable without altering the current running state of the CPU */
 int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_table *table, const char *line, size_t len);
+/** @brief Automatically processes any dot directive in a given line and updates an ld6502_object_context */
+void as6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len);
 /**@}*/
 
 #endif

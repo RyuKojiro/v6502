@@ -128,28 +128,3 @@ void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte) {
 	blob->data[newSize - 1] = byte;
 	blob->len = newSize;
 }
-
-// Contextual Object Mutators
-void ld6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len) {
-	assert(obj);
-	
-	if (len <= 3) {
-		return;
-	}
-
-	if (!strncasecmp(line + 1, "data", 3)) {
-		// start new blob
-		ld6502_addBlobToObject(obj, v6502_memoryStartProgram);
-		*currentBlob = obj->count - 1;
-	}
-	
-	if (!strncasecmp(line + 1, "org", 3)) {
-		// start new blob
-		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, line + 5));
-		*currentBlob = obj->count - 1;
-	}
-	if (!strncasecmp(line + 1, "end", 3)) {
-		// revert to top blob
-		*currentBlob = 0;
-	}
-}
