@@ -91,9 +91,10 @@ as6502_token *as6502_tokenizeLine(const char *line, size_t len) {
 			case '$':
 				// resolve number and add it
 			case '-':
-			case '+':
-				as6502_tokenCreate(cur, cur - line, 1);
-				break;
+			case '+': {
+				as6502_token *t = as6502_tokenCreate(cur, cur - line, 1);
+				insert(t);
+			} break;
 			default:
 				break;
 		}
