@@ -30,11 +30,12 @@
 
 typedef struct _as6502_token {
 	char *text;
+	size_t loc;
 	size_t len;
 	struct _as6502_token *next;
 } as6502_token;
 
-as6502_token *as6502_tokenCreate();
+as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len);
 void as6502_tokenDestroy(as6502_token *token);
 void as6502_tokenListDestroy(as6502_token *token);
 
