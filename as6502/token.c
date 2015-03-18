@@ -66,8 +66,7 @@ static int _valueLengthInChars(const char *string, size_t len) {
 }
 
 static int _isPartOfToken(char c) {
-	return !isspace(c) && c != ',' && c != '\n' &&
-	c != '+' && c != '-';
+	return isalnum(c) || c == '_';
 }
 
 size_t as6502_lengthOfToken(const char *start, size_t len) {
@@ -127,20 +126,21 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 					insert(t);
 					cur += tlen;
 				}
-				else if (isnumber(*cur) || *cur == '$' || *cur == '%') {
+				else if (isnumber(*cur) || *cur == '$' || *cur == '%' || *cur == '#' || *cur == '*') {
 					// handle what is definitely a number
 					const char *start = cur;
 					size_t tlen = 0;
-					if (*cur == '$' || *cur == '%') {
+
+					while (!isnumber(*start) && tlen <= 2) {
 						start++;
 						tlen++;
 					}
 
-					tlen += _valueLengthInChars(cur, remaining);
+					tlen += _valueLengthInChars(start, remaining);
 
-					as6502_token *t = as6502_tokenCreate(start, consumed, tlen);
+					as6502_token *t = as6502_tokenCreate(cur, consumed, tlen);
 					insert(t);
-					cur = start + tlen;
+					cur += tlen;
 				}
 				else {
 					as6502_warn(consumed, 1, "Don't know how to handle this char!");
