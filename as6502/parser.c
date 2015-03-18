@@ -759,20 +759,6 @@ static int _isPartOfToken(char c) {
 	c != '+' && c != '-';
 }
 
-size_t as6502_lengthOfToken(const char *start, size_t len) {
-	size_t i = 0;
-	
-	while (start[i] && i < len) {
-		if (!_isPartOfToken(start[i])) {
-			break;
-		}
-		
-		i++;
-	}
-	
-	return i;
-}
-
 int as6502_isDigit(char c) {
 	if ((c >= 'a' && c <= 'f') ||
 		(c >= 'A' && c <= 'F') ||

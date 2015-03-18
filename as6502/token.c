@@ -22,10 +22,13 @@
 
 #include "token.h"
 #include "linectl.h"
+#include "error.h"
 
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+
+#include <stdio.h> // dot printing
 
 as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 	as6502_token *result = malloc(sizeof(as6502_token));
@@ -91,7 +94,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 	as6502_token *head = NULL;
 	as6502_token *tail = NULL;
 	
-	for (const char *cur = line; cur && cur < line + len;) {
+	for (const char *cur = line; *cur && cur < line + len;) {
 		switch (*cur) {
 			case ';':
 				return head;
@@ -139,9 +142,28 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 					insert(t);
 					cur = start + tlen;
 				}
+				else {
+					as6502_warn(consumed, 1, "Don't know how to handle this char!");
+					cur++;
+				}
 				break;
 		}
 	}
 
 	return head;
+}
+
+void as6502_printDotForList(as6502_token *head) {
+	printf("digraph \"Lex Results: %p\" { rankdir=LR;", head);
+	while (head) {
+		printf("\t\"%p\" [label=\"%s\"];", head, head->text);
+		
+		if (head->next) {
+			printf("\t\"%p\" -> \"%p\";", head, head->next);
+		}
+		
+		head = head->next;
+	}
+	
+	printf("}\n");
 }

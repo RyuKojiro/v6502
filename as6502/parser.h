@@ -70,8 +70,6 @@ int as6502_isBranchInstruction(const char *string);
 int as6502_isDigit(char c);
 /** @brief Determines whether or not a token is a number literal */
 int as6502_isNumber(const char *c);
-/** @brief Finds the first non-token character encountered, and returns it's location relative to the start pointer */
-size_t as6502_lengthOfToken(const char *start, size_t len);
 /**@}*/
 
 #endif

@@ -32,6 +32,7 @@
 #include "codegen.h"
 #include "error.h"
 #include "color.h"
+#include "token.h"
 
 #include "flat.h"
 #include "ines.h"
@@ -185,6 +186,15 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 
 static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
+
+	do {
+		fgets(line, MAX_LINE_LEN, in);
+		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
+		as6502_printDotForList(head);
+		
+	} while (!feof(in));
+
+	/*
 	char *trimmedLine;
 	v6502_address_mode mode;
 	uint16_t address = 0;
@@ -214,7 +224,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 
 		// Check for symbols
-		trimmedLine = line; //trimheadchar(line, '\n', MAX_LINE_LEN); /** FIXME: @bug Does this do anything at all? */
+		trimmedLine = line; //trimheadchar(line, '\n', MAX_LINE_LEN); // FIXME: @bug Does this do anything at all?
 		lineLen = MAX_LINE_LEN; // - (trimmedLine - line);
 		if (trimmedLine && (isalnum(CTYPE_CAST trimmedLine[0]))) {
 			as6502_symbol_type type = as6502_addSymbolForLine(obj->table, line, currentLineNum, address);
@@ -288,7 +298,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 				}
 			}
 			else if (dotDirectiveEq("byte")) {
-				int skip = 1 /* "." */ + 4 /* "byte" */;
+				int skip = 1 + 4; // "." + "byte"
 				char *start = line + skip;
 				start = trimhead(start, lineLen - skip);
 				uint8_t low;
@@ -357,6 +367,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	
 	as6502_destroySymbolTable(obj->table);
 	ld6502_destroyObject(obj);
+	 */
 }
 
 static void outNameFromInName(char *out, int len, const char *in) {
