@@ -57,8 +57,10 @@ void as6502_tokenListDestroy(as6502_token *token);
 size_t as6502_lengthOfToken(const char *start, size_t len);
 /** @brief Lexes a line of text into a linked list of tokens for later parsing */
 as6502_token *as6502_lex(const char *line, size_t len);
+/** @brief Lexes a line of text into a linked list of tokens for later parsing */
+int as6502_tokenListContainsToken(as6502_token *token, const char *text, size_t len);
 /**@}*/
 
-void as6502_printDotForList(as6502_token *head);
+void as6502_showDotForLinkedList (as6502_token *head);
 
 #endif /* defined(__v6502__token__) */

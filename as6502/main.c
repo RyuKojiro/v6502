@@ -186,19 +186,31 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 
 static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
+	currentLineNum = 1;
+	ld6502_object *obj = ld6502_createObject();
+	obj->table = as6502_createSymbolTable();
 
 	do {
 		fgets(line, MAX_LINE_LEN, in);
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
-		as6502_printDotForList(head);
-		
+
+		// Label
+		if (as6502_tokenListContainsToken(head, ":", 1)) {
+			//<#statements#>
+		}
+		// Instruction (needed to keep track of offset)
+		else {
+
+		}
+
+		as6502_tokenListDestroy(head);
+		currentLineNum++;
 	} while (!feof(in));
 
 	/*
 	char *trimmedLine;
 	v6502_address_mode mode;
 	uint16_t address = 0;
-	currentLineNum = 1;
 	int newline;
 	size_t lineLen, maxLen;
 	int instructionLength;

@@ -23,12 +23,14 @@
 #include "token.h"
 #include "linectl.h"
 #include "error.h"
+#include "mem.h"
 
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 
 #include <stdio.h> // dot printing
+#include <sys/time.h>
 
 as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 	as6502_token *result = malloc(sizeof(as6502_token));
@@ -153,17 +155,43 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 	return head;
 }
 
-void as6502_printDotForList(as6502_token *head) {
-	printf("digraph \"Lex Results: %p\" { rankdir=LR;", head);
-	while (head) {
-		printf("\t\"%p\" [label=\"%s\"];", head, head->text);
-		
-		if (head->next) {
-			printf("\t\"%p\" -> \"%p\";", head, head->next);
+int as6502_tokenListContainsToken(as6502_token *token, const char *text, size_t len) {
+	while (token) {
+		if (token->len == len && !strncmp(token->text, text, len)) {
+			return YES;
 		}
-		
-		head = head->next;
+		token = token->next;
 	}
 	
-	printf("}\n");
+	return NO;
+}
+
+static void as6502_printDotForList(FILE *stream, as6502_token *head) {
+	fprintf(stream, "digraph \"Lex Results: %p\" { rankdir=LR;", head);
+	while (head) {
+		fprintf(stream, "\t\"%p\" [label=\"%s\"];", head, head->text);
+
+		if (head->next) {
+			fprintf(stream, "\t\"%p\" -> \"%p\";", head, head->next);
+		}
+
+		head = head->next;
+	}
+
+	fprintf(stream, "}\n");
+}
+
+void as6502_showDotForLinkedList(as6502_token *head) {
+	char command[100];
+
+	snprintf(command, 100, "open /tmp/%lu_%lu.gv", time(NULL), currentLineNum);
+	//snprintf(command, 100, "dot -o /tmp/gv.png -Tpng /tmp/%lu.gv", time(NULL));
+
+	FILE *out = fopen(command + 5, "w");
+	//FILE *out = fopen(command + 25, "w");
+	as6502_printDotForList(out, head);
+	fclose(out);
+
+	system(command);
+	//system("feh /tmp/gv.png");
 }
