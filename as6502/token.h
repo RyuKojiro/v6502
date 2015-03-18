@@ -28,17 +28,33 @@
 
 #include <sys/types.h>
 
+/** @struct */
+/** @brief An individual token which will often be a part of a linked list of tokens */
 typedef struct _as6502_token {
+	/** @brief The raw text of a token */
 	char *text;
+	/** @brief The token's column location in the line */
 	size_t loc;
+	/** @brief The token's character length */
 	size_t len;
+	/** @brief The next token in the linked list */
 	struct _as6502_token *next;
 } as6502_token;
 
+/** @defgroup tok_lifecycle Token Lifecycle Methods */
+/**@{*/
+/** @brief Creates a single token object. Text is copied up to length indicated by len. */
 as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len);
+/** @brief Destroys a single token object */
 void as6502_tokenDestroy(as6502_token *token);
+/** @brief Destroys a token and all tokens attached to it by traversing the linked list of tokens */
 void as6502_tokenListDestroy(as6502_token *token);
+/**@}*/
 
-as6502_token *as6502_tokenizeLine(const char *line, size_t len);
+/** @defgroup tok_lex Lexing */
+/**@{*/
+/** @brief Lexes a line of text into a linked list of tokens for later parsing */
+as6502_token *as6502_lex(const char *line, size_t len);
+/**@}*/
 
 #endif /* defined(__v6502__token__) */

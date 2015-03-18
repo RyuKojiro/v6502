@@ -75,7 +75,10 @@ size_t as6502_lengthOfToken(const char *start, size_t len) {
 #define insert(t)	if(!head) { head = t; tail = t; } \
 					else { tail->next = t; tail = t; }
 
-as6502_token *as6502_tokenizeLine(const char *line, size_t len) {
+#define consumed	(cur - line)
+#define	remaining	(len - consumed)
+
+as6502_token *as6502_lex(const char *line, size_t len) {
 	as6502_token *head = NULL;
 	as6502_token *tail = NULL;
 	
