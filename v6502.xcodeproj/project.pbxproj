@@ -413,6 +413,7 @@
 		E666A8111715D1A800EDBF95 /* as6502 */ = {
 			isa = PBXGroup;
 			children = (
+				E6828B2F19933FBD00442439 /* color.h */,
 				E6B33F1B1759748C00F0D8C2 /* linectl.c */,
 				E6B33F1C1759748C00F0D8C2 /* linectl.h */,
 				E6A4808A1758355A005ABE54 /* parser.c */,
@@ -426,9 +427,8 @@
 				E6FE6FB117376FCD00B4D249 /* error.c */,
 				E677B2891737338300A3B9E8 /* symbols.h */,
 				E677B2881737338300A3B9E8 /* symbols.c */,
-				E6828B2F19933FBD00442439 /* color.h */,
-				E6723EE71AB80D4B0045F8F6 /* token.c */,
 				E6723EE81AB80D4B0045F8F6 /* token.h */,
+				E6723EE71AB80D4B0045F8F6 /* token.c */,
 			);
 			name = as6502;
 			sourceTree = "<group>";
