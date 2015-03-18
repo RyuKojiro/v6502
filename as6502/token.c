@@ -21,6 +21,8 @@
  */
 
 #include "token.h"
+#include "linectl.h"
+
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -51,6 +53,13 @@ void as6502_tokenListDestroy(as6502_token *token) {
 		as6502_tokenDestroy(token);
 		token = next;
 	}
+}
+
+static int _valueLengthInChars(const char *string, size_t len) {
+	int i;
+	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
+
+	return i;
 }
 
 static int _isPartOfToken(char c) {
@@ -87,12 +96,12 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 			case ';':
 				return head;
 			case '.': {
-				size_t tlen = as6502_lengthOfToken(cur + 1, len - (cur - line) - 1);
-				as6502_token *t = as6502_tokenCreate(cur, cur - line, tlen);
+				size_t tlen = as6502_lengthOfToken(cur + 1, remaining - 1);
+				as6502_token *t = as6502_tokenCreate(cur, consumed, tlen);
 				insert(t);
+				cur += tlen;
 			} break;
-			case '$':
-				// resolve number and add it
+			case ':':
 			case ')':
 			case '(':
 			case ',':
@@ -101,16 +110,34 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 			case '+': {
 				as6502_token *t = as6502_tokenCreate(cur, cur - line, 1);
 				insert(t);
+				cur++;
 			} break;
 			default:
 				if (isspace(*cur)) {
 					// seek over whitespace
+					cur = strnpc(cur, remaining);
 				}
 				else if (isalpha(*cur)) {
 					// handle alpha text, probably an instruction or symbol
+					size_t tlen = as6502_lengthOfToken(cur, remaining);
+					as6502_token *t = as6502_tokenCreate(cur, consumed, tlen);
+					insert(t);
+					cur += tlen;
 				}
-				else if (isnumber(*cur)) {
-					// handle what is definitely a number in the same way that we would above
+				else if (isnumber(*cur) || *cur == '$' || *cur == '%') {
+					// handle what is definitely a number
+					const char *start = cur;
+					size_t tlen = 0;
+					if (*cur == '$' || *cur == '%') {
+						start++;
+						tlen++;
+					}
+
+					tlen += _valueLengthInChars(cur, remaining);
+
+					as6502_token *t = as6502_tokenCreate(start, consumed, tlen);
+					insert(t);
+					cur = start + tlen;
 				}
 				break;
 		}
