@@ -57,6 +57,9 @@ char *trimheadtospc(const char *str, size_t len);
 /** @brief Search string for first encounter of a space, safely. If no whitespace is found, a pointer to the end is returned */
 char *strnspc(const char *str, size_t len);
 
+/** @brief Search string for first encounter of a printable char (non-whitespace), safely. If no printable character is found, a pointer to the end is returned */
+char *strnpc(const char *str, size_t len);
+
 /** @brief Reverse search string for space, safely */
 /** @param[in] start The location in the string to start searching backwards from */
 /** @param[in] stop The earliest location in the string to search up to, usually the beginning of the string */

@@ -110,6 +110,15 @@ char *strnspc(const char *str, size_t len) {
 	return (char *)str;
 }
 
+char *strnpc(const char *str, size_t len) {
+	while (len && isspace(*str)) {
+		str++;
+		len--;
+	}
+
+	return (char *)str;
+}
+
 char *rev_strnspc(const char *stop, const char *start) {
 	for (/* start */; start > stop; start--) {
 		if (isspace(CTYPE_CAST *start)) {
