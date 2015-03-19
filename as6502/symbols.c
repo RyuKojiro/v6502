@@ -38,6 +38,8 @@
 #define v6502_DuplicateSymbolErrorText	"Encountered duplicate symbol declaration '%s'"
 #define v6502_DuplicateSymbolNoteText	"Previous declaration was here"
 
+#define MAX_ADDRESS_TEXT_LEN			6
+
 // Address Table Lifecycle Functions
 as6502_symbol_table *as6502_createSymbolTable() {
 	as6502_symbol_table *table = malloc(sizeof(as6502_symbol_table));
@@ -316,111 +318,72 @@ static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *l
 	return 1;
 }
 
-char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive, size_t *outLen) {
+as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive, size_t *outLen) {
 	/** FIXME: This needs to be smart about address formation, based on address mode
 	 * This is absurdly inefficient, but works, given the current symbol table implementation
 	 */
 	assert(table);
 
 	char *cur;
-	int width;
 	size_t last = 0;
 	
-	char *in = malloc(len + 1);
 	char *out = NULL;
 	size_t _outLen = 0;
-	
-	// Copy in string and ensure NULL termination for strstr
-	strncpy(in, line, len + 1);
-	
+
 	// Shift offset for pre-branch program counter shift
-	v6502_address_mode mode = as6502_addressModeForLine(in, len);
+	v6502_address_mode mode = as6502_addressModeForExpression(head);
 	offset += as6502_instructionLengthForAddressMode(mode);
-	
-	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
-		// Make sure searching is even possible
-		if (!in[last]) {
-			break;
-		}
-		if (strlen(this->name) > (len - last)) {
-			continue;
-		}
-		
-		// Search for symbol, ignoring partial hits
-		char *search = in;
-		do {
-			if (caseSensitive) {
-				cur = strstr(search, this->name);
-			}
-			else {
-				cur = strcasestr(search, this->name);
-			}
-			
-			search = cur + 1;
-		} while (cur && as6502_lengthOfToken(cur, len - (cur - line)) > strlen(this->name));
 
-		// Found a symbol! Swap in the address
-		if (cur) {
-			if (!isspace(CTYPE_CAST cur[-1])) {
-				continue;
-			}
+	as6502_token *newHead = NULL;
+	as6502_token *newTail = NULL;
+	while (head) {
+		as6502_token *cur = NULL;
 
-			// Copy up to the encountered symbol
-			size_t lengthToCopy = cur - in - last;
-			out = realloc(out, _outLen + lengthToCopy);
-			strncpy(out + _outLen, in + last, lengthToCopy);
-			last += lengthToCopy;
-			_outLen += lengthToCopy;
-			
-			if (as6502_symbolTypeIsVariable(this->type)) {
-				offset = 0;
-				pstart = 0;
-			}
+		// Find it in the symbol table and create a new token with it's address, or just copy it into the new token
+		for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
+			if (!strncmp(this->name, head->text, head->len)) {
+				char address[MAX_ADDRESS_TEXT_LEN];
 
-			/** @todo FIXME: Should this detect if relative is an option, and do that instead? */
-			width = as6502_doubleWidthForSymbolInLine(table, in, len, cur);
-			if (width) {
-				/* If the variable falls in zeropage, make it a zeropage call.
-				 * All instructions that aren't either implied-only or
-				 * relative-only, have zero page modes for all possible register
-				 * combinations.
-				 */
-				if (pstart + this->address <= 0xFF) {
-					out = realloc(out, _outLen + 6);
-					snprintf(out + _outLen, 5, "*$%02x", pstart + this->address);
-					_outLen += 4;
+				int width = as6502_doubleWidthForSymbolInLine(table, in, len, cur);
+				if (width) {
+					/* If the variable falls in zeropage, make it a zeropage call.
+					 * All instructions that aren't either implied-only or
+					 * relative-only, have zero page modes for all possible register
+					 * combinations.
+					 */
+					if (pstart + this->address <= 0xFF) {
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "*$%02x", pstart + this->address);
+					}
+					else {
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%04x", pstart + this->address);
+					}
 				}
 				else {
-					out = realloc(out, _outLen + 6);
-					snprintf(out + _outLen, 6, "$%04x", pstart + this->address);
-					_outLen += 5;
+					snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%02x", v6502_byteValueOfSigned(this->address - offset));
 				}
+
+				cur = as6502_tokenCreate(address, head->loc, strlen(address));
+				break;
 			}
-			else {
-				out = realloc(out, _outLen + 4);
-				snprintf(out + _outLen, 4, "$%02x", v6502_byteValueOfSigned(this->address - offset));
-				_outLen += 3;
-			}
-			
-			last += strlen(this->name);
 		}
+
+		if (!cur) {
+			cur = as6502_tokenCreate(head->text, head->loc, head->len);
+		}
+
+		// Insert into new token list
+		if (!newHead) {
+			newHead = cur;
+		}
+		else {
+			newTail->next = cur;
+		}
+		newTail = cur;
+
+		head = head->next;
 	}
-	
-	// Empty anything that's left in the input buffer to the output
-	if (last < len && in[last]) {
-		size_t lengthToCopy = len - last;
-		out = realloc(out, _outLen + lengthToCopy);
-		lengthToCopy++; // Add one for guaranteed null termination, even if the in buffer isn't
-		strncpy(out + _outLen, in + last, lengthToCopy);
-		_outLen += lengthToCopy;
-	}
-	
-	if (outLen) {
-		*outLen = _outLen;
-	}
-	
-	free(in);
-	return out;
+
+	return newHead;
 }
 
 static int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, size_t len) {
