@@ -48,9 +48,6 @@
 												len--; \
 											}
 
-// This macro is only for use inside of assembleLine
-#define dotDirectiveEq(a)	!strncasecmp(a, line + 1, (lineLen > strlen(a)) ? strlen(a) : lineLen)
-
 // Figures out if the number is valid, or a stray symbol
 // TODO: @todo make these actually throw the errors, so that the error is more specific, and more helpful, rather than being more generic
 static int isValidLiteral(const char *start, size_t len) {
@@ -195,13 +192,22 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		fgets(line, MAX_LINE_LEN, in);
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 
+		// Dot Directives
+		if (head->text[0] == '.') {
+			// Handle them!
+		}
 		// Label
-		if (as6502_tokenListContainsToken(head, ":", 1)) {
-			//<#statements#>
+		else if (head->next && head->next->len == 1 && head->next->text[0] == ':') {
+			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address, as6502_symbol_type_label);
+		}
+		// Variable
+		else if(NO) {
+			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address, as6502_symbol_type_variable);
 		}
 		// Instruction (needed to keep track of offset)
 		else {
-
+			v6502_address_mode mode = as6502_addressModeForExpression(head);
+			address += as6502_instructionLengthForAddressMode(mode);
 		}
 
 		as6502_tokenListDestroy(head);

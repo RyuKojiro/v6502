@@ -42,8 +42,8 @@
 /**@{*/
 /** @brief Returns the v6502_opcode for a given instruction string at a specified v6502_address_mode */
 v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode);
-/** @brief Returns the v6502_address_mode for a given instruction string by analyzing the operands */
-v6502_address_mode as6502_addressModeForLine(const char *string, size_t len);
+/** @brief Returns the v6502_address_mode for a given (already lexed) expression by analyzing the operands */
+v6502_address_mode as6502_addressModeForExpression(as6502_token *head);
 /** @brief Returns the string representation of an v6502_address_mode */
 void as6502_stringForAddressMode(char *out, v6502_address_mode mode);
 /**@}*/

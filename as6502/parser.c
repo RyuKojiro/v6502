@@ -27,11 +27,11 @@
 #include "linectl.h"
 #include "parser.h"
 #include "error.h"	// as6502_error
+#include "token.h"
 
 #define v6502_BadAddressModeErrorText			"Address mode '%s' invalid for operation '%s'"
 #define v6502_InvalidOpcodeFormatText			"Invalid opcode '%s'"
 #define v6502_UnknownSymbolErrorText			"Unknown symbol for operation '%s'"
-#define v6502_AddressModeNullStringErrorText	"Cannot determine address mode for null string"
 #define v6502_LineMallocErrorText				"Could not allocate work buffer for line"
 
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
@@ -790,8 +790,8 @@ int as6502_isBranchInstruction(const char *string) {
 	return NO;
 }
 
-v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
-	/* 
+v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
+	/*
 	 √ OPC			....	implied
 	 √ OPC A		....	Accumulator
 	 √ OPC #BB		....	immediate
@@ -806,78 +806,47 @@ v6502_address_mode as6502_addressModeForLine(const char *string, size_t len) {
 	 √ OPC (HHLL)	....	indirect
 	 √ OPC BB		....	relative
 	 */
-	
-	const char *cur;
-	int wide;
 
-	if (!string) {
-		as6502_error(0, 0, v6502_AddressModeNullStringErrorText);
-		return v6502_address_mode_unknown;
-	}
-	
-	// In case it wasn't trimmed beforehand
-	string = trimhead(string, len);
-	
-	if (!string[0]) {
+	if (!head) {
 		return v6502_address_mode_unknown;
 	}
 
-	// Skip opcode and whitespace to find first argument
-	for (cur = string + 3; isspace(CTYPE_CAST *cur); cur++) {
-		if (*cur == '\0' || *cur == ';') {
-			return v6502_address_mode_implied;
+	if (!head->next) {
+		return v6502_address_mode_implied;
+	}
+
+	if (as6502_tokenIsEqualToStringLiteral(head->next, "A")) {
+		return v6502_address_mode_accumulator;
+	}
+
+	if (as6502_tokenListContainsTokenLiteral(head, ")")) {
+		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
+			if (as6502_tokenListContainsTokenLiteral(head, "X")) {
+				return v6502_address_mode_indirect_x;
+			}
+			else if (as6502_tokenListContainsTokenLiteral(head, "Y")) {
+				return v6502_address_mode_indirect_y;
+			}
+		}
+		else {
+			return v6502_address_mode_indirect;
 		}
 	}
-	
-	// Check first character of argument, and byte length
-	switch (*cur) {
-		case 'A':
-		case 'a': { // Accumulator (normalized)
-			if (isalnum(CTYPE_CAST *(cur + 1))) {
-				// For symbols, check to see if it is a branch instruction, if so, relative, if not, absolute
-				if (as6502_isBranchInstruction(string)) {
-					return v6502_address_mode_relative;
-				}
-				else {
-					return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
-				}
+	else {
+		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
+			if (as6502_tokenListContainsTokenLiteral(head, "X")) {
+				return v6502_address_mode_zeropage_x;
 			}
-			else {
-				return v6502_address_mode_accumulator;
+			else if (as6502_tokenListContainsTokenLiteral(head, "Y")) {
+				return v6502_address_mode_zeropage_y;
 			}
 		}
-		case '#': // Immediate
-			return v6502_address_mode_immediate;
-		case '*': // Zeropage
-			return _incrementModeByFoundRegister(v6502_address_mode_zeropage, cur);
-		case '(': // Indirect
-			return _incrementModeByFoundRegister(v6502_address_mode_indirect, cur);
-		default: { // Relative, Absolute, or Implied
-			/** TODO: @todo Better byte length determination, this doesn't tell shit */
-			as6502_byteValuesForString(NULL, NULL, &wide, cur);
-			if (wide) {
-				return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
-			}
-			else {
-				if (as6502_isNumber(cur)) {
-					return v6502_address_mode_relative;
-				}
-				else {
-					if (_isEndOfString(cur)) {
-						return v6502_address_mode_implied;
-					}
-					else {
-						if (as6502_isBranchInstruction(string)) {
-							return v6502_address_mode_relative;
-						}
-						else {
-							return _incrementModeByFoundRegister(v6502_address_mode_absolute, cur);
-						}
-					}
-				}
-			}
+		else {
+			// zpg, relative or absolute
 		}
 	}
+
+	return v6502_address_mode_unknown;
 }
 
 int as6502_instructionLengthForAddressMode(v6502_address_mode mode) {
