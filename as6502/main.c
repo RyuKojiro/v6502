@@ -233,6 +233,22 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		currentLineNum++;
 	} while (!feof(in));
 
+	currentLineNum = 0;
+
+	// Write out the object to whatever file format we were told
+	switch (format) {
+		case ld6502_file_type_None:
+		case ld6502_file_type_FlatFile: {
+			as6502_writeObjectToFlatFile(obj, out);
+		} break;
+		case ld6502_file_type_iNES: {
+			ines_properties props;
+			props.videoMode = ines_videoMode_NTSC;
+
+			writeToINES(out, &(obj->blobs[0]), NULL, &props);
+		} break;
+	}
+
 	as6502_destroySymbolTable(obj->table);
 	ld6502_destroyObject(obj);
 
@@ -387,21 +403,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 	} while (!feof(in));
 	
-	currentLineNum = 0;
-	
-	// Write out the object to whatever file format we were told
-	switch (format) {
-		case ld6502_file_type_None:
-		case ld6502_file_type_FlatFile: {
-			as6502_writeObjectToFlatFile(obj, out);
-		} break;
-		case ld6502_file_type_iNES: {
-			ines_properties props;
-			props.videoMode = ines_videoMode_NTSC;
-			
-			writeToINES(out, &(obj->blobs[0]), NULL, &props);
-		} break;
-	}
 	 */
 }
 
