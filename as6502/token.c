@@ -60,6 +60,14 @@ void as6502_tokenListDestroy(as6502_token *token) {
 	}
 }
 
+int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t len) {
+	if (token->len != len) {
+		return NO;
+	}
+
+	return !strncasecmp(token->text, string, len);
+}
+
 static int _valueLengthInChars(const char *string, size_t len) {
 	int i;
 	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);

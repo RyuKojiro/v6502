@@ -49,6 +49,10 @@ as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len);
 void as6502_tokenDestroy(as6502_token *token);
 /** @brief Destroys a token and all tokens attached to it by traversing the linked list of tokens */
 void as6502_tokenListDestroy(as6502_token *token);
+/** @brief Does a quick token comparison to a string */
+int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t len);
+/** @brief Does a quick token comparison to a string literal */
+#define as6502_tokenIsEqualToStringLiteral(token, string) as6502_tokenIsEqualToString(token, string, sizeof(string))
 /**@}*/
 
 /** @defgroup tok_lex Lexing */
@@ -57,8 +61,10 @@ void as6502_tokenListDestroy(as6502_token *token);
 size_t as6502_lengthOfToken(const char *start, size_t len);
 /** @brief Lexes a line of text into a linked list of tokens for later parsing */
 as6502_token *as6502_lex(const char *line, size_t len);
-/** @brief Lexes a line of text into a linked list of tokens for later parsing */
+/** @brief Searches through a linked list of tokens to find a token matching a given string of a given length */
 int as6502_tokenListContainsToken(as6502_token *token, const char *text, size_t len);
+/** @brief Searches through a linked list of tokens to find a token matching a given string literal */
+#define as6502_tokenListContainsTokenLiteral(token, literal) as6502_tokenListContainsToken(token, literal, sizeof(literal))
 /**@}*/
 
 void as6502_showDotForLinkedList (as6502_token *head);
