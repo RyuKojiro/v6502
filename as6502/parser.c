@@ -819,6 +819,9 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 		return v6502_address_mode_accumulator;
 	}
 
+	int wide;
+	as6502_byteValuesForString(NULL, NULL, &wide, head->next->text);
+
 	if (as6502_tokenListContainsTokenLiteral(head, ")")) {
 		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
 			if (as6502_tokenListContainsTokenLiteral(head, "X")) {
@@ -835,14 +838,38 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	else {
 		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
 			if (as6502_tokenListContainsTokenLiteral(head, "X")) {
-				return v6502_address_mode_zeropage_x;
+				if (wide) {
+					return v6502_address_mode_absolute_x;
+				}
+				else {
+					return v6502_address_mode_zeropage_x;
+				}
 			}
 			else if (as6502_tokenListContainsTokenLiteral(head, "Y")) {
-				return v6502_address_mode_zeropage_y;
+				if (wide) {
+					return v6502_address_mode_absolute_y;
+				}
+				else {
+					return v6502_address_mode_zeropage_y;
+				}
 			}
 		}
 		else {
-			// zpg, relative or absolute
+			if (head->next->text[0] == '#') {
+				return v6502_address_mode_immediate;
+			}
+			else if (head->next->text[0] == '*') {
+				return v6502_address_mode_zeropage;
+			}
+			else if (head->next->text[0] == '#') {
+				return v6502_address_mode_immediate;
+			}
+			else if (wide) {
+				return v6502_address_mode_absolute;
+			}
+			else {
+				return v6502_address_mode_relative;
+			}
 		}
 	}
 
