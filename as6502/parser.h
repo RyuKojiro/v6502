@@ -29,6 +29,7 @@
 #include <string.h>
 
 #include "cpu.h"
+#include "token.h"
 
 /** @brief Perform the fastest possible three-character compare */
 /** v6502_opcodeForStringAndMode() is a huge function with very repetetive behavior.
@@ -55,7 +56,7 @@ uint16_t as6502_valueForString(int *wide, const char *string);
 /** @brief Determines the numeric value of a literal separated into its high and low bytes */
 void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string);
 /** @brief Completely parses a line of text to extract the instruction and v6502_address_mode */
-void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len);
+void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, as6502_token *head);
 /** @brief Returns the byte-length of a given v6502_address_mode */
 int as6502_instructionLengthForAddressMode(v6502_address_mode mode);
 /** @brief Executes a symbol-free line of assembly on a specified v6502_cpu */

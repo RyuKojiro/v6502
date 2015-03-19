@@ -27,7 +27,6 @@
 #include "linectl.h"
 #include "parser.h"
 #include "error.h"	// as6502_error
-#include "token.h"
 
 #define v6502_BadAddressModeErrorText			"Address mode '%s' invalid for operation '%s'"
 #define v6502_InvalidOpcodeFormatText			"Invalid opcode '%s'"
@@ -901,14 +900,7 @@ int as6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 	}
 }
 
-void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len) {
-	char *string = malloc(len + 1); // Malloc an extra char in case the passed in len does not include a null
-	if (!string) {
-		// FIXME: should this be fatal? or asserted?
-		as6502_error(0, 0, v6502_LineMallocErrorText);
-		return;
-	}
-	
+void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, as6502_token *head) {
 	// Use stack if required storage is not passed in
 	if (!mode) {
 		v6502_address_mode _mode;
@@ -919,32 +911,19 @@ void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v65
 		uint8_t _opcode;
 		opcode = &_opcode;
 	}
-	
-	// Normalize text (all lowercase,) trim leading whitespace, and copy into a non-const string, all in one shot
-	int o = 0;
-	int charEncountered = NO;
-	for(size_t i = 0; line[i] && i <= len; i++){
-		if (!isspace(CTYPE_CAST line[i]) || charEncountered) {
-			charEncountered = YES;
-			string[o++] = tolower(CTYPE_CAST line[i]);
-		}
-	}
-	string[o] = '\0';
-	
+
 	// Determine address mode
-	*mode = as6502_addressModeForLine(string, len);
+	*mode = as6502_addressModeForExpression(head);
 	
 	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line
-	*opcode = as6502_opcodeForStringAndMode(string, *mode);
+	*opcode = as6502_opcodeForStringAndMode(head->text, *mode);
 	
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
 		// We already know the address mode at this point, so we just want the actual value
-		as6502_byteValuesForString(high, low, NULL, string + 4);
+		as6502_byteValuesForString(high, low, NULL, head->next);
 	}
-	
-	free(string);
 }
 
 void as6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
