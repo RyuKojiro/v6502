@@ -66,7 +66,7 @@ as6502_token *as6502_lex(const char *line, size_t len);
 /** @brief Searches through a linked list of tokens to find a token matching a given string of a given length */
 int as6502_tokenListContainsToken(as6502_token *token, const char *text, size_t len);
 /** @brief Searches through a linked list of tokens to find a token matching a given string literal */
-#define as6502_tokenListContainsTokenLiteral(token, literal) as6502_tokenListContainsToken(token, literal, sizeof(literal))
+#define as6502_tokenListContainsTokenLiteral(token, literal) as6502_tokenListContainsToken(token, literal, sizeof(literal) - 1)
 /**@}*/
 
 void as6502_showDotForLinkedList (as6502_token *head);
