@@ -305,13 +305,13 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 	memcpy(loc, text, txtLen);
 }
 
-static int as6502_doubleWidthForSymbolInLine(as6502_symbol_table *table, char *line, size_t len, char *symbol) {
+static int as6502_symbolShouldBeReplacedDoubleWidth(as6502_symbol_table *table, as6502_token *instruction, int isRelative) {
 	assert(table);
 
-	char *trimmed = trimhead(line, len);
+	const char *trimmed = instruction->text;
 	//len -= trimmed - line;
 	
-	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || symbol[-1] == '(') {
+	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || isRelative) {
 		return 0;
 	}
 
@@ -323,12 +323,6 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 	 * This is absurdly inefficient, but works, given the current symbol table implementation
 	 */
 	assert(table);
-
-	char *cur;
-	size_t last = 0;
-	
-	char *out = NULL;
-	size_t _outLen = 0;
 
 	// Shift offset for pre-branch program counter shift
 	v6502_address_mode mode = as6502_addressModeForExpression(head);
@@ -344,7 +338,7 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 			if (!strncmp(this->name, head->text, head->len)) {
 				char address[MAX_ADDRESS_TEXT_LEN];
 
-				int width = as6502_doubleWidthForSymbolInLine(table, in, len, cur);
+				int width = as6502_symbolShouldBeReplacedDoubleWidth(table, head, as6502_tokenListContainsTokenLiteral(head, "("));
 				if (width) {
 					/* If the variable falls in zeropage, make it a zeropage call.
 					 * All instructions that aren't either implied-only or
