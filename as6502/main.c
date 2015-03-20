@@ -103,23 +103,23 @@ static void printSpaces(unsigned long num) {
 	}
 }
 
-static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t len, as6502_symbol_table *table, int printProcess) {
+static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess) {
 	uint8_t opcode, low, high;
 	int addrLen;
 	v6502_address_mode mode;
 
-	if (line[3] && !isValidLiteral(line + 4, len - 4)) {
-		size_t sLen = as6502_lengthOfToken(line + 4, len - 4);
-		char *symbol = malloc(sLen + 1);
-		strncpy(symbol, line + 4, sLen);
-		symbol[sLen] = '\0';
-		as6502_error(4,  sLen, v6502_BadLiteralValueErrorText, symbol);
-		free(symbol);
+//	if (line[3] && !isValidLiteral(line + 4, len - 4)) {
+//		size_t sLen = as6502_lengthOfToken(line + 4, len - 4);
+//		char *symbol = malloc(sLen + 1);
+//		strncpy(symbol, line + 4, sLen);
+//		symbol[sLen] = '\0';
+//		as6502_error(4,  sLen, v6502_BadLiteralValueErrorText, symbol);
+//		free(symbol);
+//
+//		/** TODO: @todo Should this short circuit the rest of the assembly for this line? */
+//	}
 
-		/** TODO: @todo Should this short circuit the rest of the assembly for this line? */
-	}
-	
-	as6502_instructionForLine(&opcode, &low, &high, &mode, line, len);
+	as6502_instructionForExpression(&opcode, &low, &high, &mode, head);
 	addrLen = as6502_instructionLengthForAddressMode(mode);
 	
 	if (addrLen >= 1) {
@@ -154,7 +154,9 @@ static uint16_t assembleLine(ld6502_object_blob *blob, const char *line, size_t 
 				printf("        ");
 			} break;
 		}
-		
+
+		char line[80];
+		as6502_stringForTokenList(line, 80, head);
 		printf(" - %4lu:  \t%s\n", currentLineNum, line);
 		
 		if (lengthOfProblem) {
@@ -187,6 +189,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	currentLineNum = 0;
 	ld6502_object *obj = ld6502_createObject();
 	obj->table = as6502_createSymbolTable();
+	int currentBlob = 0;
 
 	do {
 		currentLineNum++;
@@ -194,6 +197,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 
 		if (!head) {
+			as6502_tokenListDestroy(head);
 			continue;
 		}
 
@@ -225,16 +229,21 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	// Reset for pass 2
 	rewind(in);
 	address = 0;
-	currentLineNum = 1;
+	currentLineNum = 0;
 
 	do {
 		fgets(line, MAX_LINE_LEN, in);
-		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
-
-		// Actually assemble
-
-		as6502_tokenListDestroy(head);
 		currentLineNum++;
+
+		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
+		if (!head) {
+			as6502_tokenListDestroy(head);
+			continue;
+		}
+
+		assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess);
+		
+		as6502_tokenListDestroy(head);
 	} while (!feof(in));
 
 	currentLineNum = 0;
@@ -262,7 +271,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	int newline;
 	size_t lineLen, maxLen;
 	int instructionLength;
-	int currentBlob = 0;
 
 	// First pass, build symbol table
 	do {
