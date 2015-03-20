@@ -922,7 +922,7 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
 		// We already know the address mode at this point, so we just want the actual value
-		as6502_byteValuesForString(high, low, NULL, head->next);
+		as6502_byteValuesForString(high, low, NULL, head->next->text);
 	}
 }
 
