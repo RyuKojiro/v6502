@@ -68,6 +68,20 @@ int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t 
 	return !strncasecmp(token->text, string, len);
 }
 
+void as6502_stringForTokenList(char *output, size_t len, as6502_token *head) {
+	bzero(output, len);
+	
+	while (head) {
+		strncat(output, head->text, len);
+		len -= head->len;
+
+		strncat(output, " ", len);
+		len--;
+
+		head = head->next;
+	}
+}
+
 static int _valueLengthInChars(const char *string, size_t len) {
 	int i;
 	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
