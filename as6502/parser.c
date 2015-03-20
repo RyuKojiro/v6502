@@ -31,7 +31,6 @@
 #define v6502_BadAddressModeErrorText			"Address mode '%s' invalid for operation '%s'"
 #define v6502_InvalidOpcodeFormatText			"Invalid opcode '%s'"
 #define v6502_UnknownSymbolErrorText			"Unknown symbol for operation '%s'"
-#define v6502_LineMallocErrorText				"Could not allocate work buffer for line"
 
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char m[12];
