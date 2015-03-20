@@ -928,6 +928,10 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 
 void as6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	uint8_t opcode, low, high;
-	as6502_instructionForLine(&opcode, &low, &high, NULL, line, len);
+
+	as6502_token *head = as6502_lex(line, len);
+	as6502_instructionForExpression(&opcode, &low, &high, NULL, head);
+	as6502_tokenListDestroy(head);
+
 	v6502_execute(cpu, opcode, low, high);
 }
