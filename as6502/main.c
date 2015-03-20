@@ -197,7 +197,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 
 		if (!head) {
-			as6502_tokenListDestroy(head);
 			continue;
 		}
 
@@ -237,6 +236,10 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 		if (!head) {
+			continue;
+		}
+
+		if (as6502_tokenListContainsTokenLiteral(head, ":")) {
 			as6502_tokenListDestroy(head);
 			continue;
 		}
