@@ -235,12 +235,18 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		currentLineNum++;
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
-		if (!head) {
-			continue;
+
+		// Trim off labels
+		as6502_token *colon = as6502_tokenListContainsTokenLiteral(head, ":");
+		if (colon) {
+			as6502_token *tail = colon->next;
+			colon->next = NULL;
+			as6502_tokenListDestroy(head);
+			head = tail;
 		}
 
-		if (as6502_tokenListContainsTokenLiteral(head, ":")) {
-			as6502_tokenListDestroy(head);
+		// Make sure there's something left to assemble
+		if (!head) {
 			continue;
 		}
 
