@@ -27,6 +27,7 @@
 #include "linectl.h"
 #include "parser.h"
 #include "error.h"	// as6502_error
+#include "symbols.h"
 
 #define v6502_BadAddressModeErrorText			"Address mode '%s' invalid for operation '%s'"
 #define v6502_InvalidOpcodeFormatText			"Invalid opcode '%s'"
@@ -819,13 +820,17 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 
 	int wide;
 	as6502_byteValuesForString(NULL, NULL, &wide, head->next->text);
+	if (!wide) {
+		wide = as6502_symbolShouldBeReplacedDoubleWidth(head, as6502_tokenListContainsTokenLiteral(head, ")"));
+	}
+
 
 	if (as6502_tokenListContainsTokenLiteral(head, ")")) {
 		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
-			if (as6502_tokenListContainsTokenLiteral(head, "X")) {
+			if (as6502_tokenListContainsTokenLiteral(head, "X") || as6502_tokenListContainsTokenLiteral(head, "x")) {
 				return v6502_address_mode_indirect_x;
 			}
-			else if (as6502_tokenListContainsTokenLiteral(head, "Y")) {
+			else if (as6502_tokenListContainsTokenLiteral(head, "Y") || as6502_tokenListContainsTokenLiteral(head, "y")) {
 				return v6502_address_mode_indirect_y;
 			}
 		}
@@ -835,7 +840,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	}
 	else {
 		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
-			if (as6502_tokenListContainsTokenLiteral(head, "X")) {
+			if (as6502_tokenListContainsTokenLiteral(head, "X") || as6502_tokenListContainsTokenLiteral(head, "x")) {
 				if (wide) {
 					return v6502_address_mode_absolute_x;
 				}
@@ -843,7 +848,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 					return v6502_address_mode_zeropage_x;
 				}
 			}
-			else if (as6502_tokenListContainsTokenLiteral(head, "Y")) {
+			else if (as6502_tokenListContainsTokenLiteral(head, "Y") || as6502_tokenListContainsTokenLiteral(head, "y")) {
 				if (wide) {
 					return v6502_address_mode_absolute_y;
 				}
