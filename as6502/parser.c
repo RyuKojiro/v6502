@@ -768,6 +768,10 @@ int as6502_isDigit(char c) {
 }
 
 int as6502_isNumber(const char *c) {
+	if (*c == '*') {
+		c++;
+	}
+
 	// Hex
 	if (c[0] == '$' && as6502_isDigit(c[2])) {
 		return YES;
