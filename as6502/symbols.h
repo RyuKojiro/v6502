@@ -135,7 +135,7 @@ void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, 
 /** @brief Convenience function to replace a given string in another string, with its location already specified for performance */
 void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, char *symbol, const char *text);
 /** @brief This indicates if a symbol following an instruction should be replaced with a relative or absolute address */
-int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction, int isRelative);
+int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction);
 /**@}*/
 
 #endif

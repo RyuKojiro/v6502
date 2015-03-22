@@ -825,7 +825,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	int wide;
 	as6502_byteValuesForString(NULL, NULL, &wide, head->next->text);
 	if (!wide) {
-		wide = as6502_symbolShouldBeReplacedDoubleWidth(head, as6502_tokenListContainsTokenLiteral(head, ")"));
+		wide = as6502_symbolShouldBeReplacedDoubleWidth(head);
 	}
 
 

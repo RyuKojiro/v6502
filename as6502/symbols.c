@@ -305,11 +305,11 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 	memcpy(loc, text, txtLen);
 }
 
-int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction, int isRelative) {
+int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction) {
 	const char *trimmed = instruction->text;
 	//len -= trimmed - line;
 	
-	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || isRelative) {
+	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || as6502_tokenListContainsTokenLiteral(instruction, ")")) {
 		return 0;
 	}
 
@@ -336,7 +336,7 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 			if (!strncmp(this->name, head->text, head->len)) {
 				char address[MAX_ADDRESS_TEXT_LEN];
 
-				int width = as6502_symbolShouldBeReplacedDoubleWidth(head, as6502_tokenListContainsTokenLiteral(head, "("));
+				int width = as6502_symbolShouldBeReplacedDoubleWidth(head);
 				if (width) {
 					/* If the variable falls in zeropage, make it a zeropage call.
 					 * All instructions that aren't either implied-only or
