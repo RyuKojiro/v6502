@@ -76,9 +76,6 @@ void as6502_stringForTokenList(char *output, size_t len, as6502_token *head) {
 		strncat(output, head->text, len);
 		len -= head->len;
 
-		strncat(output, " ", len);
-		len--;
-
 		head = head->next;
 	}
 }

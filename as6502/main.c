@@ -147,8 +147,8 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 		}
 
 		char line[80];
-		as6502_stringForTokenList(line, 80, head);
-		printf(" - %4lu:  \t%s\n", currentLineNum, line);
+		as6502_stringForTokenList(line, 80, head->next);
+		printf(" - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
 		
 		if (lengthOfProblem) {
 			printSpaces(19);
