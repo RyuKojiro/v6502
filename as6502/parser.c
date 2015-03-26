@@ -658,9 +658,14 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 	}
 	
 	// Truncate to end of token
-	size_t len = as6502_lengthOfToken(cur, 79);
-	strncpy(workString, cur, len);
-	workString[len] = '\0';
+	size_t starter = 0;
+	if (*cur == '$' || *cur == '%') {
+		starter++;
+	}
+
+	size_t len = as6502_lengthOfToken(cur + starter, (80 - (cur - string)) - starter);
+	strncpy(workString, cur, len + starter);
+	workString[len + starter] = '\0';
 	
 	// Check first char to determine base
 	switch (workString[0]) {
