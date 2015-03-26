@@ -108,17 +108,6 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	int addrLen;
 	v6502_address_mode mode;
 
-//	if (line[3] && !isValidLiteral(line + 4, len - 4)) {
-//		size_t sLen = as6502_lengthOfToken(line + 4, len - 4);
-//		char *symbol = malloc(sLen + 1);
-//		strncpy(symbol, line + 4, sLen);
-//		symbol[sLen] = '\0';
-//		as6502_error(4,  sLen, v6502_BadLiteralValueErrorText, symbol);
-//		free(symbol);
-//
-//		/** TODO: @todo Should this short circuit the rest of the assembly for this line? */
-//	}
-
 	as6502_instructionForExpression(&opcode, &low, &high, &mode, head);
 	addrLen = as6502_instructionLengthForAddressMode(mode);
 	
