@@ -103,10 +103,12 @@ static void printSpaces(unsigned long num) {
 	}
 }
 
-static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess) {
+static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess, uint16_t offset) {
 	uint8_t opcode, low, high;
 	int addrLen;
 	v6502_address_mode mode;
+
+	as6502_desymbolicateExpression(table, head, 0x600, offset, YES);
 
 	as6502_instructionForExpression(&opcode, &low, &high, &mode, head);
 	addrLen = as6502_instructionLengthForAddressMode(mode);
@@ -239,7 +241,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			continue;
 		}
 
-		assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess);
+		address += assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess, address);
 		
 		as6502_tokenListDestroy(head);
 	} while (!feof(in));

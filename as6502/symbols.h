@@ -118,7 +118,7 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	@param outLen The char length of the string being returned
 	@return A freshly malloc'ed, null terminated, string of length outLen, containing the desymbolicated line
  */
-as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive, size_t *outLen);
+as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive);
 
 /** @brief Searches for addresses in a given line and replaces them with their symbols in a given symbol table
 	@param table The as6502_symbol_table to search

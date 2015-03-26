@@ -316,7 +316,7 @@ int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction) {
 	return 1;
 }
 
-as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive, size_t *outLen) {
+as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive) {
 	/** FIXME: This needs to be smart about address formation, based on address mode
 	 * This is absurdly inefficient, but works, given the current symbol table implementation
 	 */
