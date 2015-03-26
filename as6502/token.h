@@ -28,6 +28,11 @@
 
 #include <sys/types.h>
 
+typedef enum {
+	as6502_token_type_other,
+	as6502_token_type_value
+} as6502_token_type;
+
 /** @struct */
 /** @brief An individual token which will often be a part of a linked list of tokens */
 typedef struct _as6502_token {
@@ -39,6 +44,8 @@ typedef struct _as6502_token {
 	size_t len;
 	/** @brief The next token in the linked list */
 	struct _as6502_token *next;
+	/** @brief Significant type information to help identify this token during parsing */
+	as6502_token_type type;
 } as6502_token;
 
 /** @defgroup tok_lifecycle Token Lifecycle Methods */

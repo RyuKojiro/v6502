@@ -37,7 +37,8 @@ as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 	result->loc = loc;
 	result->len = len;
 	result->next = NULL;
-	
+	result->type = as6502_token_type_other;
+
 	result->text = malloc(len + 1);
 	strncpy(result->text, text, len);
 	result->text[len + 1] = '\0';
@@ -163,6 +164,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 					tlen += _valueLengthInChars(start, remaining);
 
 					as6502_token *t = as6502_tokenCreate(cur, consumed, tlen);
+					t->type = as6502_token_type_value;
 					insert(t);
 					cur += tlen;
 				}
