@@ -326,6 +326,9 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 	v6502_address_mode mode = as6502_addressModeForExpression(head);
 	offset += as6502_instructionLengthForAddressMode(mode);
 
+	// Decide whether use relative or absolute when swapping in addresses
+	int width = as6502_instructionLengthForAddressMode(mode) - 2;
+
 	as6502_token *newHead = NULL;
 	as6502_token *newTail = NULL;
 	while (head) {
@@ -336,7 +339,6 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 			if (!strncmp(this->name, head->text, head->len)) {
 				char address[MAX_ADDRESS_TEXT_LEN];
 
-				int width = as6502_symbolShouldBeReplacedDoubleWidth(head);
 				if (width) {
 					/* If the variable falls in zeropage, make it a zeropage call.
 					 * All instructions that aren't either implied-only or
