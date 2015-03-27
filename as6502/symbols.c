@@ -336,7 +336,7 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 
 		// Find it in the symbol table and create a new token with it's address, or just copy it into the new token
 		for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
-			if (!strncmp(this->name, head->text, head->len)) {
+			if (!strncmp(this->name, head->text, head->len + 1)) {
 				char address[MAX_ADDRESS_TEXT_LEN];
 
 				if (width) {
