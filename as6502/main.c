@@ -126,11 +126,10 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	obj->table = as6502_createSymbolTable();
 	int currentBlob = 0;
 
-	do {
+	while (fgets(line, MAX_LINE_LEN, in)) {
 		currentLineNum++;
-		fgets(line, MAX_LINE_LEN, in);
-		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 
+		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 		if (!head) {
 			continue;
 		}
@@ -154,7 +153,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 
 		as6502_tokenListDestroy(head);
-	} while (!feof(in));
+	}
 
 	if (printTable) {
 		as6502_printSymbolTable(obj->table);
@@ -165,8 +164,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	address = 0;
 	currentLineNum = 0;
 
-	do {
-		fgets(line, MAX_LINE_LEN, in);
+	while (fgets(line, MAX_LINE_LEN, in)) {
 		currentLineNum++;
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
@@ -188,7 +186,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		address += assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess, address);
 		
 		as6502_tokenListDestroy(head);
-	} while (!feof(in));
+	}
 
 	currentLineNum = 0;
 
