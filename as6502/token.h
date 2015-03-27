@@ -64,6 +64,8 @@ int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t 
 #define as6502_tokenIsEqualToStringLiteral(token, string) as6502_tokenIsEqualToString(token, string, sizeof(string) - 1)
 /** @brief Outputs a flat string for a given token list */
 void as6502_stringForTokenList(char *output, size_t len, as6502_token *head);
+/** @brief Searches through a token list and returns the first token whose type matches the specified as6502_token_type */
+as6502_token *as6502_firstTokenOfTypeInList(as6502_token *head, as6502_token_type type);
 /**@}*/
 
 /** @defgroup tok_lex Lexing */

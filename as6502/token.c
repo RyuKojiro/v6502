@@ -86,6 +86,16 @@ void as6502_stringForTokenList(char *output, size_t len, as6502_token *head) {
 	}
 }
 
+as6502_token *as6502_firstTokenOfTypeInList(as6502_token *head, as6502_token_type type) {
+	while (head) {
+		if (head->type == type) {
+			return head;
+		}
+		head = head->next;
+	}
+	return NULL;
+}
+
 static int _valueLengthInChars(const char *string, size_t len) {
 	int i;
 	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
