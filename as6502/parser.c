@@ -829,8 +829,14 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 
 	int wide;
 	as6502_byteValuesForString(NULL, NULL, &wide, head->next->text);
-	if (!wide) {
+	if (!wide) { // FIXME: Starting to doubt this logic
 		wide = as6502_symbolShouldBeReplacedDoubleWidth(head);
+	}
+
+	int zpg = NO;
+	as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
+	if (value && value->text[0] == '*') {
+		zpg = YES;
 	}
 
 	if (as6502_tokenListContainsTokenLiteral(head, ")")) {
@@ -849,7 +855,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	else {
 		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
 			if (as6502_tokenListContainsTokenLiteral(head, "X") || as6502_tokenListContainsTokenLiteral(head, "x")) {
-				if (wide) {
+				if (!zpg) {
 					return v6502_address_mode_absolute_x;
 				}
 				else {
@@ -857,7 +863,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 				}
 			}
 			else if (as6502_tokenListContainsTokenLiteral(head, "Y") || as6502_tokenListContainsTokenLiteral(head, "y")) {
-				if (wide) {
+				if (!zpg) {
 					return v6502_address_mode_absolute_y;
 				}
 				else {
