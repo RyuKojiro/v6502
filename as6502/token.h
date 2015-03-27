@@ -61,7 +61,7 @@ void as6502_tokenListDestroy(as6502_token *token);
 /** @brief Does a quick token comparison to a string */
 int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t len);
 /** @brief Does a quick token comparison to a string literal */
-#define as6502_tokenIsEqualToStringLiteral(token, string) as6502_tokenIsEqualToString(token, string, sizeof(string))
+#define as6502_tokenIsEqualToStringLiteral(token, string) as6502_tokenIsEqualToString(token, string, sizeof(string) - 1)
 /** @brief Outputs a flat string for a given token list */
 void as6502_stringForTokenList(char *output, size_t len, as6502_token *head);
 /**@}*/
