@@ -72,7 +72,7 @@ int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t 
 		return NO;
 	}
 
-	return !strncasecmp(token->text, string, len);
+	return !strncmp(token->text, string, len);
 }
 
 void as6502_stringForTokenList(char *output, size_t len, as6502_token *head) {
