@@ -46,6 +46,12 @@ as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 	return result;
 }
 
+as6502_token *as6502_tokenCopy(as6502_token *original) {
+	as6502_token *copy = as6502_tokenCreate(original->text, original->loc, original->len);
+	copy->type = original->type;
+	return copy;
+}
+
 void as6502_tokenDestroy(as6502_token *token) {
 	free(token->text);
 	free(token);

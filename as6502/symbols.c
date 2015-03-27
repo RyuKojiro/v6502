@@ -355,12 +355,13 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 				}
 
 				cur = as6502_tokenCreate(address, head->loc, strlen(address));
+				cur->type = as6502_token_type_value;
 				break;
 			}
 		}
 
 		if (!cur) {
-			cur = as6502_tokenCreate(head->text, head->loc, head->len);
+			cur = as6502_tokenCopy(head);
 		}
 
 		// Insert into new token list

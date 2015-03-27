@@ -52,6 +52,8 @@ typedef struct _as6502_token {
 /**@{*/
 /** @brief Creates a single token object. Text is copied up to length indicated by len. */
 as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len);
+/** @brief Creates a single token object that is identical to the passed in object, but in a different location. The next pointer is not copied. */
+as6502_token *as6502_tokenCopy(as6502_token *original);
 /** @brief Destroys a single token object */
 void as6502_tokenDestroy(as6502_token *token);
 /** @brief Destroys a token and all tokens attached to it by traversing the linked list of tokens */
