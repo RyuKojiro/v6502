@@ -143,7 +143,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address, as6502_symbol_type_label);
 		}
 		// Variable
-		else if(NO) {
+		else if(as6502_tokenListContainsToken(head, "=", 1)) {
 			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address, as6502_symbol_type_variable);
 		}
 		// Instruction (needed to keep track of offset)
@@ -180,6 +180,18 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Make sure there's something left to assemble
 		if (!head) {
+			continue;
+		}
+
+		// Handle variable assignments
+		if (as6502_tokenListContainsToken(head, "=", 1)) {
+			as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
+
+			uint8_t low;
+			as6502_byteValuesForString(NULL, &low, NULL, value->text);
+			ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
+
+			as6502_tokenListDestroy(head);
 			continue;
 		}
 
