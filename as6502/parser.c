@@ -823,7 +823,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 		return v6502_address_mode_implied;
 	}
 
-	if (as6502_tokenIsEqualToStringLiteral(head->next, "A")) {
+	if (as6502_tokenIsEqualToStringLiteral(head->next, "A") || as6502_tokenIsEqualToStringLiteral(head->next, "a")) {
 		return v6502_address_mode_accumulator;
 	}
 
@@ -832,7 +832,6 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	if (!wide) {
 		wide = as6502_symbolShouldBeReplacedDoubleWidth(head);
 	}
-
 
 	if (as6502_tokenListContainsTokenLiteral(head, ")")) {
 		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
