@@ -41,7 +41,7 @@ as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 
 	result->text = malloc(len + 1);
 	strncpy(result->text, text, len);
-	result->text[len + 1] = '\0';
+	result->text[len] = '\0';
 	
 	return result;
 }
