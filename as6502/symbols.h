@@ -110,12 +110,10 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 
 /** @brief Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses
 	@param table The as6502_symbol_table to search
-	@param line The string to desymbolicate
-	@param len Useable length of the line in chars
+	@param head The as6502_token list to desymbolicate
 	@param pstart Program start address
 	@param offset Address of current line
 	@param caseSensitive Symbol search case sensitivity
-	@param outLen The char length of the string being returned
 	@return A freshly malloc'ed, null terminated, string of length outLen, containing the desymbolicated line
  */
 as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive);
