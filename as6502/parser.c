@@ -725,44 +725,6 @@ void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const ch
 	}
 }
 
-static v6502_address_mode _incrementModeByFoundRegister(v6502_address_mode mode, const char *string) {
-	/* This relies on the fact that the enum is always ordered in normal, x, y. */
-	const char *cur;
-	
-	cur = strchr(string, ',');
-	
-	if (!cur) {
-		return mode;
-	}
-	
-	// Get the letter after the comma
-	cur++;
-	
-	if (*cur == 'x' || *cur == 'X') {
-		return mode + 1;
-	}
-	
-	if (*cur == 'y' || *cur == 'Y') {
-		return mode + 2;
-	}
-	
-	return mode;
-}
-
-static int _isEndOfString(const char *c) {
-	for (/* c */; *c; c++) {
-		if (!isspace(CTYPE_CAST *c)) {
-			return NO;
-		}
-	}
-	return YES;
-}
-
-static int _isPartOfToken(char c) {
-	return !isspace(c) && c != ',' && c != '\n' &&
-	c != '+' && c != '-';
-}
-
 int as6502_isDigit(char c) {
 	if ((c >= 'a' && c <= 'f') ||
 		(c >= 'A' && c <= 'F') ||
