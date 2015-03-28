@@ -385,7 +385,7 @@ static int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char 
 	line = trimhead(line, len);
 	
 	if (line[0] == 'b' || line[0] == 'B') {
-		if (!asmeq(line, "bit")) {
+		if (strncasecmp(line, "bit", 3)) {
 			return as6502_symbolTypeIsLabel(type);
 		}
 	}
