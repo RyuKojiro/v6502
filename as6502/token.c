@@ -137,9 +137,9 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 				return head;
 			case '.': {
 				size_t tlen = as6502_lengthOfToken(cur + 1, remaining - 1);
-				as6502_token *t = as6502_tokenCreate(cur, consumed, tlen);
+				as6502_token *t = as6502_tokenCreate(cur, consumed, tlen + 1);
 				insert(t);
-				cur += tlen;
+				cur += tlen + 1;
 			} break;
 			case ':':
 			case ')':
