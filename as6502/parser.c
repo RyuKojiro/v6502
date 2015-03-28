@@ -33,6 +33,10 @@
 #define v6502_InvalidOpcodeFormatText			"Invalid opcode '%s'"
 #define v6502_UnknownSymbolErrorText			"Unknown symbol for operation '%s'"
 
+// FIXME: This is now a shim for the old asmeq macro, so that we can support case insensitivity
+#define asmeq(a, b) (!strncasecmp(a, b, 3))
+
+
 static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
 	char m[12];
 	
@@ -903,7 +907,9 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
 		// We already know the address mode at this point, so we just want the actual value
 		as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
-		as6502_byteValuesForString(high, low, NULL, value->text);
+		if (value) {
+			as6502_byteValuesForString(high, low, NULL, value->text);
+		}
 	}
 }
 
