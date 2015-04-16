@@ -805,12 +805,12 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 		zpg = YES;
 	}
 
-	if (as6502_tokenListContainsTokenLiteral(head, ")")) {
-		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
-			if (as6502_tokenListContainsTokenLiteral(head, "X") || as6502_tokenListContainsTokenLiteral(head, "x")) {
+	if (as6502_tokenListFindTokenLiteral(head, ")")) {
+		if (as6502_tokenListFindTokenLiteral(head, ",")) {
+			if (as6502_tokenListFindTokenLiteral(head, "X") || as6502_tokenListFindTokenLiteral(head, "x")) {
 				return v6502_address_mode_indirect_x;
 			}
-			else if (as6502_tokenListContainsTokenLiteral(head, "Y") || as6502_tokenListContainsTokenLiteral(head, "y")) {
+			else if (as6502_tokenListFindTokenLiteral(head, "Y") || as6502_tokenListFindTokenLiteral(head, "y")) {
 				return v6502_address_mode_indirect_y;
 			}
 		}
@@ -819,8 +819,8 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 		}
 	}
 	else {
-		if (as6502_tokenListContainsTokenLiteral(head, ",")) {
-			if (as6502_tokenListContainsTokenLiteral(head, "X") || as6502_tokenListContainsTokenLiteral(head, "x")) {
+		if (as6502_tokenListFindTokenLiteral(head, ",")) {
+			if (as6502_tokenListFindTokenLiteral(head, "X") || as6502_tokenListFindTokenLiteral(head, "x")) {
 				if (!zpg) {
 					return v6502_address_mode_absolute_x;
 				}
@@ -828,7 +828,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 					return v6502_address_mode_zeropage_x;
 				}
 			}
-			else if (as6502_tokenListContainsTokenLiteral(head, "Y") || as6502_tokenListContainsTokenLiteral(head, "y")) {
+			else if (as6502_tokenListFindTokenLiteral(head, "Y") || as6502_tokenListFindTokenLiteral(head, "y")) {
 				if (!zpg) {
 					return v6502_address_mode_absolute_y;
 				}

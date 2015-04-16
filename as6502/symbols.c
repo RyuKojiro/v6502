@@ -309,7 +309,7 @@ int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction) {
 	const char *trimmed = instruction->text;
 	//len -= trimmed - line;
 	
-	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || as6502_tokenListContainsTokenLiteral(instruction, ")")) {
+	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || as6502_tokenListFindTokenLiteral(instruction, ")")) {
 		return 0;
 	}
 

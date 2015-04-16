@@ -192,7 +192,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 	return head;
 }
 
-as6502_token *as6502_tokenListContainsToken(as6502_token *token, const char *text, size_t len) {
+as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, size_t len) {
 	while (token) {
 		if (token->len == len && !strncmp(token->text, text, len)) {
 			return token;
