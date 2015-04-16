@@ -242,6 +242,7 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	as6502_symbol_type type;
 	size_t len = strlen(line) + 1;
 	char *symbol = malloc(len);
+	char *_symbol = symbol;
 	strncpy(symbol, line, len);
 	int isByte = NO;
 	
@@ -271,7 +272,7 @@ as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const cha
 	
 	as6502_addSymbolToTable(table, lineNumber, symbol, offset, type);
 	
-	free(symbol);
+	free(_symbol);
 	
 	return type;
 }
