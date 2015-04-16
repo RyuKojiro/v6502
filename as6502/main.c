@@ -186,10 +186,15 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		// Handle variable assignments
 		if (as6502_tokenListContainsToken(head, "=", 1)) {
 			as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
-
-			uint8_t low;
-			as6502_byteValuesForString(NULL, &low, NULL, value->text);
-			ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
+			
+			if (value) {
+				uint8_t low;
+				as6502_byteValuesForString(NULL, &low, NULL, value->text);
+				ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
+			}
+			else {
+				as6502_warn(head->loc, head->len, "Encountered variable assignment with no right hand value");
+			}
 
 			as6502_tokenListDestroy(head);
 			continue;
