@@ -52,6 +52,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	v6502_address_mode mode;
 
 	as6502_token *desymedHead = as6502_desymbolicateExpression(table, head, 0x600, offset, YES);
+	desymedHead = as6502_resolveArithmeticInExpression(desymedHead);
 	as6502_instructionForExpression(&opcode, &low, &high, &mode, desymedHead);
 	as6502_tokenListDestroy(desymedHead);
 

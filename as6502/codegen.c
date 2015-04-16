@@ -41,7 +41,17 @@ static size_t _lengthOfValue(const char *start) {
 }
 
 as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
-	return NULL;
+	as6502_token *operator = as6502_tokenListFindTokenLiteral(head, "-");
+	if (operator) {
+		// resolve subtraction
+	}
+
+	operator = as6502_tokenListFindTokenLiteral(head, "+");
+	if (operator) {
+		// resolve addition
+	}
+
+	return head;
 }
 
 void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
