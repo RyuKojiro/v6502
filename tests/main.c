@@ -182,6 +182,10 @@ int test_contiguousMemoryMapping() {
 
 #pragma mark - Test Harness
 
+/* All you have to do to add a test is make a function that returns int,
+ * starts with TEST_START, returns 1 (or more) for failure, and has been
+ * appended to this array. The array length is automagically recalculated.
+ */
 static testFunction testFunctions[] = {
 	test_sbc,
 	test_signedUnderflow,
