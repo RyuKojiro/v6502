@@ -24,6 +24,7 @@
 #include "parser.h"
 #include "linectl.h"
 #include "error.h"
+#include "token.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -37,6 +38,10 @@ static size_t _lengthOfValue(const char *start) {
 		}
 	}
 	return i;
+}
+
+as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
+	return NULL;
 }
 
 void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
