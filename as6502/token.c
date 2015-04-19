@@ -203,7 +203,7 @@ as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, s
 }
 
 void as6502_printDotForList(FILE *stream, as6502_token *head) {
-	fprintf(stream, "digraph \"Lex Results: %p\" { rankdir=LR;", head);
+	fprintf(stream, "digraph \"%p\" { label=\"Lex Results for line %lu\";rankdir=LR;", head, currentLineNum);
 	while (head) {
 		fprintf(stream, "\t\"%p\" [label=\"%s\"];", head, head->text);
 
