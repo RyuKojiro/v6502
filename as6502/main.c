@@ -119,7 +119,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	return addrLen;
 }
 
-static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, ld6502_file_type format) {
+static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, int printDot, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
 	uint16_t address = 0;
 	currentLineNum = 0;
@@ -169,6 +169,10 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		currentLineNum++;
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
+
+		if (printDot) {
+			as6502_printDotForList(stdout, head);
+		}
 
 		// Trim off labels
 		as6502_token *colon = as6502_tokenListFindTokenLiteral(head, ":");
@@ -246,6 +250,7 @@ int main(int argc, char * const argv[]) {
 	char outName[MAX_FILENAME_LEN];
 	int printProcess = NO;
 	int printTable = NO;
+	int printDot = NO;
 	ld6502_file_type format = ld6502_file_type_FlatFile;
 	
 	outName[0] = '\0';
@@ -253,7 +258,7 @@ int main(int argc, char * const argv[]) {
 	// If no arguments
 	int ch;
 	
-	while ((ch = getopt(argc, argv, "STWF:o:")) != -1) {
+	while ((ch = getopt(argc, argv, "dSTWF:o:")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "flat", 4)) {
@@ -268,6 +273,9 @@ int main(int argc, char * const argv[]) {
 			} break;
 			case 'T': {
 				printTable = YES;
+			} break;
+			case 'd': {
+				printDot = YES;
 			} break;
 			case 'o': {
 				strncpy(outName, optarg, MAX_FILENAME_LEN);
@@ -287,7 +295,7 @@ int main(int argc, char * const argv[]) {
 		
 		as6502_warn(0, 0, "Assembling from stdin does not support symbols");
 		
-		assembleFile(stdin, stdout, NO, NO, format);
+		assembleFile(stdin, stdout, NO, NO, NO, format);
 	}
 	else {
 		for (/* i */; i < argc; i++) {
@@ -302,7 +310,7 @@ int main(int argc, char * const argv[]) {
 				outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
 			}
 			out = fopen(outName, "w");
-			assembleFile(in, out, printProcess, printTable, format);
+			assembleFile(in, out, printProcess, printTable, printDot, format);
 			fclose(in);
 			fclose(out);
 		}

@@ -29,7 +29,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#include <stdio.h> // dot printing
 #include <sys/time.h>
 
 as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
@@ -203,7 +202,7 @@ as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, s
 	return NULL;
 }
 
-static void as6502_printDotForList(FILE *stream, as6502_token *head) {
+void as6502_printDotForList(FILE *stream, as6502_token *head) {
 	fprintf(stream, "digraph \"Lex Results: %p\" { rankdir=LR;", head);
 	while (head) {
 		fprintf(stream, "\t\"%p\" [label=\"%s\"];", head, head->text);
