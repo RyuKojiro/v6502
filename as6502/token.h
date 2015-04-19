@@ -83,5 +83,6 @@ as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, s
 
 void as6502_showDotForLinkedList (as6502_token *head);
 void as6502_printDotForList(FILE *stream, as6502_token *head);
+void as6502_printDotRankForList(FILE *stream, as6502_token *head);
 
 #endif /* defined(__v6502__token__) */

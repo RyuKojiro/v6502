@@ -42,7 +42,7 @@
 
 static void printSpaces(unsigned long num) {
 	for (/* num */; num > 0; num--) {
-		printf(" ");
+		fprintf(stderr, " ");
 	}
 }
 
@@ -69,50 +69,52 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	}
 		
 	if (printProcess || (lastProblematicLine == currentLineNum)) {
+		FILE *lineout = printProcess ? stdout : stderr;
+
 		as6502_symbol *label = as6502_symbolForAddress(table, blob->len - addrLen);
 		if (label) {
-			printf("0x%04x:          - %4lu: %s:\n", blob->len - addrLen, label->line, label->name);
+			fprintf(lineout, "0x%04x:          - %4lu: %s:\n", blob->len - addrLen, label->line, label->name);
 		}
 		
-		printf("0x%04x: ", blob->len - addrLen);
+		fprintf(lineout, "0x%04x: ", blob->len - addrLen);
 		
 		switch (addrLen) {
 			case 1: {
-				printf("%02x      ", opcode);
+				fprintf(lineout, "%02x      ", opcode);
 			} break;
 			case 2: {
-				printf("%02x %02x   ", opcode, low);
+				fprintf(lineout, "%02x %02x   ", opcode, low);
 			} break;
 			case 3: {
-				printf("%02x %02x %02x", opcode, low, high);
+				fprintf(lineout, "%02x %02x %02x", opcode, low, high);
 			} break;
 			default: {
-				printf("        ");
+				fprintf(lineout, "        ");
 			} break;
 		}
 
 		char line[80];
 		as6502_stringForTokenList(line, 80, head->next);
-		printf(" - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
+		fprintf(lineout, " - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
 		
 		if (lengthOfProblem) {
 			printSpaces(19);
 			for (unsigned long i = currentLineNum; i >= 10; i %= 10) {
-				printf(" ");
+				fprintf(stderr, " ");
 			}
 			printSpaces(4);
-			printf("\t");
+			fprintf(stderr, "\t");
 			
 			printSpaces(startOfProblem);
-			printf(ANSI_COLOR_BRIGHT_GREEN "^");
+			fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
 			
 			if (lengthOfProblem) {
 				for (lengthOfProblem--; lengthOfProblem; lengthOfProblem--) {
-					printf("~");
+					fprintf(stderr, "~");
 				}
 			}
 
-			printf(ANSI_COLOR_RESET "\n");
+			fprintf(stderr, ANSI_COLOR_RESET "\n");
 		}
 	}
 	
@@ -159,6 +161,16 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	if (printTable) {
 		as6502_printSymbolTable(obj->table);
 	}
+	
+	// Render rank for final pass
+	if (printDot) {
+		printf("digraph G {\n");
+		printf("{ node [shape = plaintext]; ");
+		for (int i = 1; i < currentLineNum ; i++) {
+			printf("%lu -> ", i);
+		}
+		printf("%lu; }", currentLineNum);
+	}
 
 	// Reset for pass 2
 	rewind(in);
@@ -171,7 +183,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 
 		if (printDot) {
-			as6502_printDotForList(stdout, head);
+			as6502_printDotRankForList(stdout, head);
 		}
 
 		// Trim off labels
@@ -210,6 +222,9 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_tokenListDestroy(head);
 	}
 
+	if (printDot) {
+		printf("}\n");
+	}
 	currentLineNum = 0;
 
 	// Write out the object to whatever file format we were told
