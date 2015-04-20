@@ -166,7 +166,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	if (printDot) {
 		printf("digraph G {\n");
 		printf("{ node [shape = plaintext]; ");
-		for (int i = 1; i < currentLineNum ; i++) {
+		for (size_t i = 1; i < currentLineNum ; i++) {
 			printf("%lu -> ", i);
 		}
 		printf("%lu; }", currentLineNum);
