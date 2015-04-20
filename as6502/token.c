@@ -95,9 +95,17 @@ as6502_token *as6502_firstTokenOfTypeInList(as6502_token *head, as6502_token_typ
 	return NULL;
 }
 
+static int isprenum(char c) {
+	return c == '$' || c == '%' || c == '#' || c == '*';
+}
+
+static int ishex(char c) {
+	return isdigit(CTYPE_CAST c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+}
+
 static int _valueLengthInChars(const char *string, size_t len) {
 	int i;
-	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f') || (string[i] >= 'A' && string[i] <= 'F')); i++);
+	for (i = 0; string[i] && ishex(string[i]); i++);
 
 	return i;
 }
@@ -163,13 +171,13 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 					insert(t);
 					cur += tlen;
 				}
-				else if (isnumber(*cur) || *cur == '$' || *cur == '%' || *cur == '#' || *cur == '*') {
+				else if (isnumber(*cur) || isprenum(*cur)) {
 					// handle what is definitely a number
 					const char *start = cur;
 					size_t tlen = 0;
 
-					// Skip over stuff that isn't a number (FIXME: It looks like this might also incorrectly jump over the start of hex values)
-					while (!isnumber(*start) && tlen <= 2) {
+					// Skip over stuff that is pre-number
+					while (isprenum(*start) && tlen <= 2) {
 						start++;
 						tlen++;
 					}
