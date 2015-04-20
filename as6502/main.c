@@ -129,12 +129,22 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	obj->table = as6502_createSymbolTable();
 	int currentBlob = 0;
 
+	// Render rank for final pass
+	if (printDot) {
+		printf("digraph G {\n");
+		printf("{ node [shape = plaintext]; ");
+	}
+
 	while (fgets(line, MAX_LINE_LEN, in)) {
 		currentLineNum++;
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 		if (!head) {
 			continue;
+		}
+		
+		if (printDot) {
+			printf("%lu -> ", currentLineNum);
 		}
 
 		// Dot Directives
@@ -162,14 +172,8 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		as6502_printSymbolTable(obj->table);
 	}
 	
-	// Render rank for final pass
 	if (printDot) {
-		printf("digraph G {\n");
-		printf("{ node [shape = plaintext]; ");
-		for (size_t i = 1; i < currentLineNum ; i++) {
-			printf("%lu -> ", i);
-		}
-		printf("%lu; }", currentLineNum);
+		printf("EOF; }");
 	}
 
 	// Reset for pass 2
@@ -182,7 +186,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 
-		if (printDot) {
+		if (printDot && head) {
 			as6502_printDotRankForList(stdout, head);
 		}
 
