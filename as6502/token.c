@@ -203,18 +203,18 @@ as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, s
 }
 
 void as6502_printDotRankForList(FILE *stream, as6502_token *head) {
-	fprintf(stream, "{ rank = same; %lu; ", currentLineNum);
+	fprintf(stream, "{ rank = same; %lu;", currentLineNum);
 	while (head) {
-		fprintf(stream, "\t\"%p-%lu\" [label=\"%s\"];", head, currentLineNum, head->text);
+		fprintf(stream, " \"%p-%lu\" [label=\"%s\"];", head, currentLineNum, head->text);
 
 		if (head->next) {
-			fprintf(stream, "\t\"%p-%lu\" -> \"%p-%lu\";", head, currentLineNum, head->next, currentLineNum);
+			fprintf(stream, " \"%p-%lu\" -> \"%p-%lu\";", head, currentLineNum, head->next, currentLineNum);
 		}
 
 		head = head->next;
 	}
 
-	fprintf(stream, "}\n");
+	fprintf(stream, " }\n");
 }
 
 void as6502_printDotForList(FILE *stream, as6502_token *head) {
