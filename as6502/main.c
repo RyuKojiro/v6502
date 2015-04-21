@@ -149,7 +149,18 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Dot Directives
 		if (head->text[0] == '.') {
-			// Handle them!
+			if (!strncmp(head->text, ".org", 5)) {
+				uint16_t start = as6502_valueForString(NULL, head->next->text);
+
+				// Close old blob (FIXME: This doesn't need to happen currently since we allocate a byte at a time)
+//				obj->blobs[currentBlob].data = malloc(sizeof(uint8_t) * address);
+//				obj->blobs[currentBlob].len = address;
+
+				// New blob
+				ld6502_addBlobToObject(obj, start);
+				currentBlob++;
+				address = 0;
+			}
 		}
 		// Label
 		else if (head->next && head->next->len == 1 && head->next->text[0] == ':') {
@@ -167,6 +178,8 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		as6502_tokenListDestroy(head);
 	}
+
+	// TODO: Allocate last open blob
 
 	if (printTable) {
 		as6502_printSymbolTable(obj->table);
@@ -204,8 +217,22 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			continue;
 		}
 
-		// Handle variable assignments
-		if (as6502_tokenListFindTokenLiteral(head, "=")) {
+		// Dot Directives
+		if (head->text[0] == '.') {
+			if (!strncmp(head->text, ".org", 5)) {
+				// Find the preallocated blob and change to it
+				uint16_t start = as6502_valueForString(NULL, head->next->text);
+
+				for (int blob = 0; blob < obj->count; blob++) {
+					if (obj->blobs[blob].start == start) {
+						currentBlob = blob;
+						break;
+					}
+				}
+			}
+		}
+		// Variable assignments
+		else if (as6502_tokenListFindTokenLiteral(head, "=")) {
 			as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
 			
 			if (value) {
@@ -214,15 +241,14 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 				ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
 			}
 			else {
-				as6502_warn(head->loc, head->len, "Encountered variable assignment with no right hand value");
+				as6502_error(head->loc, head->len, "Encountered variable assignment with no right hand value");
 			}
-
-			as6502_tokenListDestroy(head);
-			continue;
+		}
+		// Normal instructions
+		else {
+			address += assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess, address);
 		}
 
-		address += assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess, address);
-		
 		as6502_tokenListDestroy(head);
 	}
 
