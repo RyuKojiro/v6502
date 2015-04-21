@@ -40,12 +40,6 @@
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
 
-static void printSpaces(unsigned long num) {
-	for (/* num */; num > 0; num--) {
-		fprintf(stderr, " ");
-	}
-}
-
 static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess, uint16_t offset) {
 	uint8_t opcode, low, high;
 	int addrLen;
@@ -98,23 +92,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 		fprintf(lineout, " - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
 		
 		if (lengthOfProblem) {
-			printSpaces(19);
-			for (unsigned long i = currentLineNum; i >= 10; i %= 10) {
-				fprintf(stderr, " ");
-			}
-			printSpaces(4);
-			fprintf(stderr, "\t");
-			
-			printSpaces(startOfProblem);
-			fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
-			
-			if (lengthOfProblem) {
-				for (lengthOfProblem--; lengthOfProblem; lengthOfProblem--) {
-					fprintf(stderr, "~");
-				}
-			}
-
-			fprintf(stderr, ANSI_COLOR_RESET "\n");
+			as6502_underline();
 		}
 	}
 	

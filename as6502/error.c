@@ -98,3 +98,29 @@ void as6502_note(unsigned long lineNumber, const char *reason, ...) {
 	as6502_vlog(lineNumber, 0, 0, ANSI_COLOR_BRIGHT_CYAN, "note", reason, ap);
 	va_end(ap);
 }
+
+static void printSpaces(unsigned long num) {
+	for (/* num */; num > 0; num--) {
+		fprintf(stderr, " ");
+	}
+}
+
+void as6502_underline() {
+	printSpaces(19);
+	for (unsigned long i = currentLineNum; i >= 10; i %= 10) {
+		fprintf(stderr, " ");
+	}
+	printSpaces(4);
+	fprintf(stderr, "\t");
+
+	printSpaces(startOfProblem);
+	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
+
+	if (lengthOfProblem) {
+		for (lengthOfProblem--; lengthOfProblem; lengthOfProblem--) {
+			fprintf(stderr, "~");
+		}
+	}
+
+	fprintf(stderr, ANSI_COLOR_RESET "\n");
+}
