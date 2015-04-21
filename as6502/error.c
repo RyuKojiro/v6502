@@ -29,6 +29,7 @@
 #include "error.h"
 #include "color.h"
 
+const char *currentLineText;
 unsigned long currentLineNum;
 const char *currentFileName;
 unsigned long lastProblematicLine;
@@ -105,19 +106,14 @@ static void printSpaces(unsigned long num) {
 	}
 }
 
-void as6502_underline() {
-	printSpaces(19);
-	for (unsigned long i = currentLineNum; i >= 10; i %= 10) {
-		fprintf(stderr, " ");
-	}
-	printSpaces(4);
-	fprintf(stderr, "\t");
+void as6502_underline(unsigned long loc, unsigned long len) {
+	fprintf(stderr, "%s\n", currentLineText);
 
-	printSpaces(startOfProblem);
+	printSpaces(loc);
 	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
 
-	if (lengthOfProblem) {
-		for (lengthOfProblem--; lengthOfProblem; lengthOfProblem--) {
+	if (len) {
+		for (len--; len; len--) {
 			fprintf(stderr, "~");
 		}
 	}

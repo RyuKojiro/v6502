@@ -92,7 +92,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 		fprintf(lineout, " - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
 		
 		if (lengthOfProblem) {
-			as6502_underline();
+			as6502_underline(startOfProblem, lengthOfProblem);
 		}
 	}
 	
@@ -115,6 +115,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 	while (fgets(line, MAX_LINE_LEN, in)) {
 		currentLineNum++;
+		currentLineText = line;
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
 		if (!head) {
