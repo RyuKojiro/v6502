@@ -76,6 +76,8 @@ static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len
 	if (reason[strlen(reason)] != '\n') {
 		fprintf(stderr, "\n");
 	}
+
+	as6502_underline(loc, len);
 }
 #pragma clang diagnostic warning "-Wformat-nonliteral"
 
