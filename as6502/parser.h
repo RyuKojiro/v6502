@@ -34,7 +34,7 @@
 /** @defgroup parser_translit Instruction Transliteration */
 /**@{*/
 /** @brief Returns the v6502_opcode for a given instruction string at a specified v6502_address_mode */
-v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode);
+v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502_address_mode mode);
 /** @brief Returns the v6502_address_mode for a given (already lexed) expression by analyzing the operands */
 v6502_address_mode as6502_addressModeForExpression(as6502_token *head);
 /** @brief Returns the instruction length for a given v6502_address_mode */

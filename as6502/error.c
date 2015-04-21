@@ -107,7 +107,7 @@ static void printSpaces(unsigned long num) {
 }
 
 void as6502_underline(unsigned long loc, unsigned long len) {
-	fprintf(stderr, "%s\n", currentLineText);
+	fprintf(stderr, "%s", currentLineText);
 
 	printSpaces(loc);
 	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");

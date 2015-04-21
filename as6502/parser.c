@@ -37,11 +37,11 @@
 #define asmeq(a, b) (!strncasecmp(a, b, 3))
 
 
-static v6502_opcode _addrModeError(const char *op, v6502_address_mode mode) {
+static v6502_opcode _addrModeError(as6502_token *instruction, v6502_address_mode mode) {
 	char m[12];
 	
 	as6502_stringForAddressMode(m, mode);
-	as6502_error(0, 3, v6502_BadAddressModeErrorText, m, op);
+	as6502_error(instruction->loc, instruction->len, v6502_BadAddressModeErrorText, m, instruction->text);
 
 	return v6502_opcode_nop;
 }
@@ -106,7 +106,8 @@ static void _badOpcode(const char *string) {
 	free(opcode);
 }
 
-v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode) {
+v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502_address_mode mode) {
+	const char *string = instruction->text;
 	if (strlen(string) < 3) {
 		_badOpcode(string);
 		return v6502_opcode_nop;
@@ -200,7 +201,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_bcc;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "bcs")) {
@@ -208,7 +209,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_bcs;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "beq")) {
@@ -216,7 +217,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_beq;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "bne")) {
@@ -224,7 +225,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_bne;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "bmi")) {
@@ -232,7 +233,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_bmi;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "bpl")) {
@@ -240,7 +241,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_bpl;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "bvc")) {
@@ -248,7 +249,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_bvc;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "bvs")) {
@@ -256,7 +257,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			return v6502_opcode_bvs;
 		}
 		else {
-			return _addrModeError(string, mode);
+			return _addrModeError(instruction, mode);
 		}
 	}
 	
@@ -286,7 +287,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_adc_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "and")) {
@@ -308,7 +309,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_and_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "asl")) {
@@ -324,7 +325,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_asl_absx;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "cmp")) {
@@ -346,7 +347,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_cmp_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "bit")) {
@@ -356,7 +357,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute:
 				return v6502_opcode_bit_abs;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "cpx")) {
@@ -368,7 +369,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute:
 				return v6502_opcode_cpx_abs;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "cpy")) {
@@ -380,7 +381,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute:
 				return v6502_opcode_cpy_abs;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "dec")) {
@@ -394,7 +395,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_dec_absx;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "eor")) {
@@ -416,7 +417,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_eor_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "ora")) {
@@ -438,7 +439,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_ora_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "inc")) {
@@ -452,7 +453,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_inc_absx;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "jmp")) {
@@ -462,7 +463,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect:
 				return v6502_opcode_jmp_ind;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "lda")) {
@@ -484,7 +485,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_lda_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "ldx")) {
@@ -500,7 +501,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_y:
 				return v6502_opcode_ldx_absy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "ldy")) {
@@ -516,7 +517,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_ldy_absx;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "lsr")) {
@@ -532,7 +533,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_lsr_absx;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "rol")) {
@@ -548,7 +549,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_rol_absx;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "ror")) {
@@ -564,7 +565,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute_x:
 				return v6502_opcode_ror_absx;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "sbc")) {
@@ -586,7 +587,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_sbc_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "sta")) {
@@ -606,7 +607,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_indirect_y:
 				return v6502_opcode_sta_indy;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "stx")) {
@@ -618,7 +619,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute:
 				return v6502_opcode_stx_abs;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 	if (asmeq(string, "sty")) {
@@ -630,7 +631,7 @@ v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mod
 			case v6502_address_mode_absolute:
 				return v6502_opcode_sty_abs;
 			default:
-				return _addrModeError(string, mode);
+				return _addrModeError(instruction, mode);
 		}
 	}
 
@@ -901,7 +902,7 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 	
 	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line
-	*opcode = as6502_opcodeForStringAndMode(head->text, *mode);
+	*opcode = as6502_opcodeForInstructionAndMode(head, *mode);
 	
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
