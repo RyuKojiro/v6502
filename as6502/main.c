@@ -211,6 +211,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
 			
 			if (value) {
+				// TODO: This should handle floating point values
 				uint8_t low;
 				as6502_byteValuesForString(NULL, &low, NULL, value->text);
 				ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);

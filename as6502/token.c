@@ -145,6 +145,18 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 			case '.': {
 				size_t tlen = as6502_lengthOfToken(cur + 1, remaining - 1);
 				as6502_token *t = as6502_tokenCreate(cur, consumed, tlen + 1);
+				int isFloat = YES;
+				for (const char *i = cur + 1; i < cur + tlen; i++) {
+					if (!isdigit(*i)) {
+						isFloat = NO;
+						break;
+					}
+				}
+
+				if (isFloat) {
+					t->type = as6502_token_type_value;
+				}
+
 				insert(t);
 				cur += tlen + 1;
 			} break;
