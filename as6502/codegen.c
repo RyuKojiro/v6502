@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#define MAX_HEX_LEN 8
+
 static size_t _lengthOfValue(const char *start) {
 	size_t i;
 	for (i = 0; start[i]; i++) {
@@ -41,14 +43,53 @@ static size_t _lengthOfValue(const char *start) {
 }
 
 as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
-	as6502_token *operator = as6502_tokenListFindTokenLiteral(head, "-");
-	if (operator) {
-		// resolve subtraction
-	}
+	// There can be multiple arithmetical operations per line, so just loop until all are solved.
+	
+	as6502_token *lhs, *op, *rhs;
+	while (as6502_tokenListFindTokenLiteral(head, "+") ||
+			as6502_tokenListFindTokenLiteral(head, "-") ) {
+		lhs = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
+		op = lhs->next;
 
-	operator = as6502_tokenListFindTokenLiteral(head, "+");
-	if (operator) {
-		// resolve addition
+		// actually detect an operator
+		if (!op || op->len != 1 || !(op->text[0] == '+' || op->text[0] == '-')) {
+			continue; 
+		}
+		rhs = op->next;
+
+		// Calculate value, variables are initialized for lint
+		uint16_t result = 0;
+		int lwide = NO;
+		int rwide = NO;
+		switch (op->text[0]) {
+			case '+': {
+				result = as6502_valueForString(&lwide, lhs->text) + as6502_valueForString(&rwide, rhs->text);
+			} break;
+			case '-': {
+				result = as6502_valueForString(&lwide, lhs->text) - as6502_valueForString(&rwide, rhs->text);
+			} break;
+			default:
+				assert(op);
+		}
+
+		// replace lhs value with result
+		char *newValue = malloc(MAX_HEX_LEN);
+		if (lwide || rwide) {
+			snprintf(newValue, MAX_HEX_LEN, "$%4x", result);
+		}
+		else {
+			snprintf(newValue, MAX_HEX_LEN, "$%2x", result);
+		}
+		free(lhs->text);
+		lhs->text = newValue;
+		lhs->len = strlen(newValue);
+
+		// remove op and rhs from list
+		lhs->next = rhs->next;
+
+		// free op and rhs
+		as6502_tokenDestroy(op);
+		as6502_tokenDestroy(rhs);
 	}
 
 	return head;
