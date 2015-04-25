@@ -171,7 +171,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 				insert(t);
 				cur++;
 			} break;
-			default:
+			default: {
 				if (isspace(*cur)) {
 					// seek over whitespace
 					cur = strnpc(cur, remaining);
@@ -205,7 +205,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 					as6502_warn(consumed, 1, "Don't know how to handle this char!");
 					cur++;
 				}
-				break;
+			} break;
 		}
 	}
 
