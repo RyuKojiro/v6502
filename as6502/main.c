@@ -40,14 +40,16 @@
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
 
-static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess, uint16_t offset) {
+static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess, int printDot, uint16_t offset) {
 	uint8_t opcode, low, high;
 	int addrLen;
 	v6502_address_mode mode;
 
 	as6502_token *desymedHead = as6502_desymbolicateExpression(table, head, 0x600, offset, YES);
 	desymedHead = as6502_resolveArithmeticInExpression(desymedHead);
+	if (printDot) as6502_printDotRankForList(stdout, desymedHead);
 	as6502_instructionForExpression(&opcode, &low, &high, &mode, desymedHead);
+	if (printDot) as6502_printDotRankForList(stdout, desymedHead);
 	as6502_tokenListDestroy(desymedHead);
 
 	addrLen = as6502_instructionLengthForAddressMode(mode);
@@ -222,7 +224,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 		// Normal instructions
 		else {
-			address += assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess, address);
+			address += assembleLine(&obj->blobs[currentBlob], head, obj->table, printProcess, printDot, address);
 		}
 
 		as6502_tokenListDestroy(head);
