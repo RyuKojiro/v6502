@@ -30,9 +30,11 @@ $(FUZZIN):
 
 # This builds and runs the C-based unit test suite. This should test actual
 # interaction with the API itself.
-compiledTests: $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
-	$(CC) $(OBJS) -o $@Executable $(LDFLAGS)
-	./$@Executable
+compiledTests: compiledTestsExecutable
+	./compiledTestsExecutable
+   
+compiledTestsExecutable: $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
 
 # This attempts to assemble the snake code, disassemble the result, assemble the
@@ -74,6 +76,6 @@ $(DIS):
 	cd $(DISDIR) ; make
 
 clean:
-	rm -f *.o snake.dis.s snake.tmp.crc snake2.s
+	rm -f *.o snake.dis.s snake.tmp.crc snake2.s compiledTestsExecutable
 
 include ../libtargets.mk
