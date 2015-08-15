@@ -9,3 +9,6 @@ $(LIBLD6502):
 
 $(LIBV6502):
 	make -C ../v6502/ lib
+
+analyze: $(SRCS)
+	$(CC) $(INCLUDE) --analyze -Weverything $(CFLAGS) $(SRCS)

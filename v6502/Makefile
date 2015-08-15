@@ -14,9 +14,6 @@ lib: $(LIBV6502_OBJS)
 $(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502)
 	$(CC) $(OBJS) -o $(PROG) $(LDFLAGS)
 
-analyze: $(SRCS)
-	$(CC) $(INCLUDE) --analyze $(CFLAGS) $(LDFLAGS) $(SRCS) #-o $(PROG)
-
 cleanlib:
 	rm -f $(LIBV6502) $(LIBV6502_OBJS)
 
