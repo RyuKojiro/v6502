@@ -107,3 +107,20 @@ void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	}
 }
 
+void as6502_writeObjectToINES(ld6502_object *obj, FILE *file) {
+	ines_properties props;
+	props.videoMode = ines_videoMode_NTSC;
+	
+	ld6502_object_blob prg_rom;
+	
+	// Flatten all segments into a single PRG ROM blob
+	for (int i = 0; i < obj->count; i++) {
+		memcpy(&prg_rom.data[obj->blobs[i].start], obj->blobs[i].data, obj->blobs[i].len);
+	}
+	
+	writeToINES(file, &prg_rom, NULL, &props);
+}
+
+void as6502_readObjectFromINES(ld6502_object *obj, FILE *file) {
+
+}

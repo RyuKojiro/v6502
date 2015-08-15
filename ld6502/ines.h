@@ -49,4 +49,9 @@ void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 /** @brief Load an iNES ROM in, populate an ines_properties struct using the header data, and split the ROM into it's PRG and CHR ROMs. Pass NULL to any pointers whose results you don't care to recieve, and those steps will be skipped. */
 void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props);
 
+/** @brief Writes an ld6502_object directly to an iNES file */
+void as6502_writeObjectToINES(ld6502_object *obj, FILE *file);
+/** @brief Read an ld6502_object from an iNES file */
+void as6502_readObjectFromINES(ld6502_object *obj, FILE *file);
+
 #endif
