@@ -32,16 +32,6 @@
 
 #define MAX_HEX_LEN 8
 
-static size_t _lengthOfValue(const char *start) {
-	size_t i;
-	for (i = 0; start[i]; i++) {
-		if (!as6502_isDigit(start[i])) {
-			return i;
-		}
-	}
-	return i;
-}
-
 as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 	// There can be multiple arithmetical operations per line, so just loop until all are solved.
 	
@@ -93,72 +83,6 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 	}
 
 	return head;
-}
-
-void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
-	const char *cur;
-	char *start;
-	size_t clause = 0;
-	uint16_t left, right, result;
-	char resultString[7];
-	char *clauseString;
-	
-	// Check for addition
-	cur = strnchr(line, '+', len);
-	if (cur) {
-		// Get right hand side
-		cur++;
-		right = as6502_valueForString(NULL, cur);
-		
-		// Get left hand side
-		/* This works by first reversing from the operator to the the first
-		 * whitespace found in reverse, then reversing over that until the
-		 */
-		start = rev_strnpc(line, cur - 1);
-		start = rev_strnspc(line, start) + 1;
-		left = as6502_valueForString(NULL, start);
-		
-		// Solve
-		result = left + right;
-		clause = (cur + _lengthOfValue(cur)) - start;
-	}
-	
-	// Check for subtraction
-	cur = strnchr(line, '-', len);
-	if (cur) {
-		// Get right hand side
-		cur++;
-		right = as6502_valueForString(NULL, cur);
-		
-		// Get left hand side
-		start = rev_strnspc(line, cur) + 1;
-		left = as6502_valueForString(NULL, start);
-		
-		// Solve
-		result = left - right;
-		clause = (cur + _lengthOfValue(cur)) - start;
-	}
-	
-	// Put resolved value in
-	if (clause) {
-		clauseString = malloc(clause + 1);
-		strncpy(clauseString, start, clause);
-		clauseString[clause] = '\0';
-		// If the instruction is a branch instruction, swap in a relative address
-		if (as6502_isBranchInstruction(line)) {
-			snprintf(resultString, 4, "$%02x", (uint8_t)result - (uint8_t)offset); // @todo FIXME: Is this doing relative properly?
-		}
-		else {
-			if (result <= 0xff) {
-				snprintf(resultString, 6, "*$%02x", result);
-			}
-			else {
-				snprintf(resultString, 7, "$%04x", result);
-			}
-		}
-		as6502_replaceSymbolInLineAtLocationWithText(line, len, start, clauseString, resultString);
-		free(clauseString);
-	}
 }
 
 // NOTE: We only support single byte declarations
