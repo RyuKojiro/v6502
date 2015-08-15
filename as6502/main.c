@@ -264,7 +264,7 @@ static void outNameFromInName(char *out, int len, const char *in) {
 }
 
 static void usage() {
-	fprintf(stderr, "usage: as6502 [-STW] [-F format] [-o outfile] [file ...]\n");
+	fprintf(stderr, "usage: as6502 [-dST] [-F format] [-o outfile] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
@@ -281,7 +281,7 @@ int main(int argc, char * const argv[]) {
 	// If no arguments
 	int ch;
 	
-	while ((ch = getopt(argc, argv, "dSTWF:o:")) != -1) {
+	while ((ch = getopt(argc, argv, "dSTF:o:")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "flat", 4)) {
