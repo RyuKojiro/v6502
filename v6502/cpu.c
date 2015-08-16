@@ -372,8 +372,9 @@ void v6502_step(v6502_cpu *cpu) {
 	2) Execute operation, some in-place functions replace the value of *operand with the new resulting value
  */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
-	uint8_t operand;
-	uint16_t ref;
+	// These don't need to be initialized, but do so to silence false positive clang lint warnings
+	uint8_t operand = '\0';
+	uint16_t ref = 0;
 	
 	switch (v6502_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_implied:

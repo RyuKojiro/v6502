@@ -28,6 +28,8 @@
 
 #include <stdint.h>
 
+#include "token.h"
+
 /** @defgroup sym_type_macros Symbol Type Test Macros */
 /**@{*/
 /** @brief Return YES if a given as6502_symbol_type has a high link bit */
@@ -103,20 +105,16 @@ void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t sta
 
 /** @defgroup sym_ez Easy Symbol Table Interaction */
 /**@{*/
-/** @brief Automatically detects symbols in a given line, then creates and inserts them into a given as6502_symbol_table */
-as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset);
 
 /** @brief Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses
 	@param table The as6502_symbol_table to search
-	@param line The string to desymbolicate
-	@param len Useable length of the line in chars
+	@param head The as6502_token list to desymbolicate
 	@param pstart Program start address
 	@param offset Address of current line
 	@param caseSensitive Symbol search case sensitivity
-	@param outLen The char length of the string being returned
 	@return A freshly malloc'ed, null terminated, string of length outLen, containing the desymbolicated line
  */
-char *as6502_desymbolicateLine(as6502_symbol_table *table, const char *line, size_t len, uint16_t pstart, uint16_t offset, int caseSensitive, size_t *outLen);
+as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive);
 
 /** @brief Searches for addresses in a given line and replaces them with their symbols in a given symbol table
 	@param table The as6502_symbol_table to search
@@ -132,6 +130,8 @@ void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, 
 /**@{*/
 /** @brief Convenience function to replace a given string in another string, with its location already specified for performance */
 void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, char *symbol, const char *text);
+/** @brief This indicates if a symbol following an instruction should be replaced with a relative or absolute address */
+int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction);
 /**@}*/
 
 #endif

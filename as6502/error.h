@@ -27,6 +27,8 @@
 #define v6502_error_h
 
 /** @brief Current line number */
+extern const char *currentLineText;
+/** @brief Current line number */
 extern unsigned long currentLineNum;
 /** @brief Current file name */
 extern const char *currentFileName;
@@ -45,6 +47,8 @@ void as6502_error(unsigned long loc, unsigned long len, const char *reason, ...)
 void as6502_warn(unsigned long loc, unsigned long len, const char *reason, ...);
 /** @brief Called for code notation which pertain to preceding errors or warnings, this can reference other code */
 void as6502_note(unsigned long lineNumber, const char *reason, ...);
+/** @brief This function outputs an underline annotation for a given character range */
+void as6502_underline(unsigned long loc, unsigned long len);
 /**@}*/
 
 #endif

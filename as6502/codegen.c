@@ -24,85 +24,65 @@
 #include "parser.h"
 #include "linectl.h"
 #include "error.h"
+#include "token.h"
 
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
 
-static size_t _lengthOfValue(const char *start) {
-	size_t i;
-	for (i = 0; start[i]; i++) {
-		if (!as6502_isDigit(start[i])) {
-			return i;
-		}
-	}
-	return i;
-}
+#define MAX_HEX_LEN 8
 
-void as6502_resolveArithmetic(char *line, size_t len, uint16_t offset) {
-	const char *cur;
-	char *start;
-	size_t clause = 0;
-	uint16_t left, right, result;
-	char resultString[7];
-	char *clauseString;
+as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
+	// There can be multiple arithmetical operations per line, so just loop until all are solved.
 	
-	// Check for addition
-	cur = strnchr(line, '+', len);
-	if (cur) {
-		// Get right hand side
-		cur++;
-		right = as6502_valueForString(NULL, cur);
-		
-		// Get left hand side
-		/* This works by first reversing from the operator to the the first
-		 * whitespace found in reverse, then reversing over that until the
-		 */
-		start = rev_strnpc(line, cur - 1);
-		start = rev_strnspc(line, start) + 1;
-		left = as6502_valueForString(NULL, start);
-		
-		// Solve
-		result = left + right;
-		clause = (cur + _lengthOfValue(cur)) - start;
-	}
-	
-	// Check for subtraction
-	cur = strnchr(line, '-', len);
-	if (cur) {
-		// Get right hand side
-		cur++;
-		right = as6502_valueForString(NULL, cur);
-		
-		// Get left hand side
-		start = rev_strnspc(line, cur) + 1;
-		left = as6502_valueForString(NULL, start);
-		
-		// Solve
-		result = left - right;
-		clause = (cur + _lengthOfValue(cur)) - start;
-	}
-	
-	// Put resolved value in
-	if (clause) {
-		clauseString = malloc(clause + 1);
-		strncpy(clauseString, start, clause);
-		clauseString[clause] = '\0';
-		// If the instruction is a branch instruction, swap in a relative address
-		if (as6502_isBranchInstruction(line)) {
-			snprintf(resultString, 4, "$%02x", (uint8_t)result - (uint8_t)offset); // @todo FIXME: Is this doing relative properly?
+	as6502_token *lhs, *op, *rhs;
+	while (as6502_tokenListFindTokenLiteral(head, "+") ||
+			as6502_tokenListFindTokenLiteral(head, "-") ) {
+		lhs = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
+		op = lhs->next;
+
+		// actually detect an operator
+		if (!op || op->len != 1 || !(op->text[0] == '+' || op->text[0] == '-')) {
+			continue; 
+		}
+		rhs = op->next;
+
+		// Calculate value, variables are initialized for lint
+		uint16_t result = 0;
+		int lwide = NO;
+		int rwide = NO;
+		switch (op->text[0]) {
+			case '+': {
+				result = as6502_valueForString(&lwide, lhs->text) + as6502_valueForString(&rwide, rhs->text);
+			} break;
+			case '-': {
+				result = as6502_valueForString(&lwide, lhs->text) - as6502_valueForString(&rwide, rhs->text);
+			} break;
+			default:
+				assert(op);
+		}
+
+		// replace lhs value with result
+		char *newValue = malloc(MAX_HEX_LEN);
+		if (lwide || rwide) {
+			snprintf(newValue, MAX_HEX_LEN, "$%4x", result);
 		}
 		else {
-			if (result <= 0xff) {
-				snprintf(resultString, 6, "*$%02x", result);
-			}
-			else {
-				snprintf(resultString, 7, "$%04x", result);
-			}
+			snprintf(newValue, MAX_HEX_LEN, "$%2x", result);
 		}
-		as6502_replaceSymbolInLineAtLocationWithText(line, len, start, clauseString, resultString);
-		free(clauseString);
+		free(lhs->text);
+		lhs->text = newValue;
+		lhs->len = strlen(newValue);
+
+		// remove op and rhs from list
+		lhs->next = rhs->next;
+
+		// free op and rhs
+		as6502_tokenDestroy(op);
+		as6502_tokenDestroy(rhs);
 	}
+
+	return head;
 }
 
 // NOTE: We only support single byte declarations

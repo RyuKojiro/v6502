@@ -29,21 +29,16 @@
 #include <string.h>
 
 #include "cpu.h"
-
-/** @brief Perform the fastest possible three-character compare */
-/** v6502_opcodeForStringAndMode() is a huge function with very repetetive behavior.
- * In order to alleviate a lot of linear calls to strncmp(), asmeq() was created.
- * Much faster than strncmp, slower than a jump table? Could be optimized with a
- * single vector compare?
- */
-#define asmeq(a, b) ((a[0] == b[0] && a[1] == b[1] && a[2] == b[2]) ? YES : NO)
+#include "token.h"
 
 /** @defgroup parser_translit Instruction Transliteration */
 /**@{*/
 /** @brief Returns the v6502_opcode for a given instruction string at a specified v6502_address_mode */
-v6502_opcode as6502_opcodeForStringAndMode(const char *string, v6502_address_mode mode);
-/** @brief Returns the v6502_address_mode for a given instruction string by analyzing the operands */
-v6502_address_mode as6502_addressModeForLine(const char *string, size_t len);
+v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502_address_mode mode);
+/** @brief Returns the v6502_address_mode for a given (already lexed) expression by analyzing the operands */
+v6502_address_mode as6502_addressModeForExpression(as6502_token *head);
+/** @brief Returns the instruction length for a given v6502_address_mode */
+int as6502_instructionLengthForAddressMode(v6502_address_mode mode);
 /** @brief Returns the string representation of an v6502_address_mode */
 void as6502_stringForAddressMode(char *out, v6502_address_mode mode);
 /**@}*/
@@ -55,7 +50,7 @@ uint16_t as6502_valueForString(int *wide, const char *string);
 /** @brief Determines the numeric value of a literal separated into its high and low bytes */
 void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string);
 /** @brief Completely parses a line of text to extract the instruction and v6502_address_mode */
-void as6502_instructionForLine(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, const char *line, size_t len);
+void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, as6502_token *head);
 /** @brief Returns the byte-length of a given v6502_address_mode */
 int as6502_instructionLengthForAddressMode(v6502_address_mode mode);
 /** @brief Executes a symbol-free line of assembly on a specified v6502_cpu */
@@ -70,8 +65,6 @@ int as6502_isBranchInstruction(const char *string);
 int as6502_isDigit(char c);
 /** @brief Determines whether or not a token is a number literal */
 int as6502_isNumber(const char *c);
-/** @brief Finds the first non-token character encountered, and returns it's location relative to the start pointer */
-size_t as6502_lengthOfToken(const char *start, size_t len);
 /**@}*/
 
 #endif

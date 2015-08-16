@@ -29,6 +29,7 @@
 #include "error.h"
 #include "color.h"
 
+const char *currentLineText;
 unsigned long currentLineNum;
 const char *currentFileName;
 unsigned long lastProblematicLine;
@@ -75,6 +76,8 @@ static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len
 	if (reason[strlen(reason)] != '\n') {
 		fprintf(stderr, "\n");
 	}
+
+	as6502_underline(loc, len);
 }
 #pragma clang diagnostic warning "-Wformat-nonliteral"
 
@@ -97,4 +100,25 @@ void as6502_note(unsigned long lineNumber, const char *reason, ...) {
 	va_start(ap, reason);
 	as6502_vlog(lineNumber, 0, 0, ANSI_COLOR_BRIGHT_CYAN, "note", reason, ap);
 	va_end(ap);
+}
+
+static void printSpaces(unsigned long num) {
+	for (/* num */; num > 0; num--) {
+		fprintf(stderr, " ");
+	}
+}
+
+void as6502_underline(unsigned long loc, unsigned long len) {
+	fprintf(stderr, "%s", currentLineText);
+
+	printSpaces(loc);
+	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
+
+	if (len) {
+		for (len--; len; len--) {
+			fprintf(stderr, "~");
+		}
+	}
+
+	fprintf(stderr, ANSI_COLOR_RESET "\n");
 }
