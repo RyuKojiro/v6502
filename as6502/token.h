@@ -81,8 +81,14 @@ as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, s
 #define as6502_tokenListFindTokenLiteral(token, literal) as6502_tokenListFindToken(token, literal, sizeof(literal) - 1)
 /**@}*/
 
+/** @defgroup tok_debug Token Debugging */
+/**@{*/
+/** @brief Generates and opens a full dot graph of a given list (This is a super convenience function for fully automatic dot graph display of an entire as6502_token linked list) */
 void as6502_showDotForLinkedList (as6502_token *head);
+/** @brief Generates a full dot graph of a given linked list of as6502_token's (one entire source file) */
 void as6502_printDotForList(FILE *stream, as6502_token *head);
+/** @brief Generates the dot code for a given rank of as6502_token's (one line of assembly) */
 void as6502_printDotRankForList(FILE *stream, as6502_token *head);
+/**@}*/
 
 #endif /* defined(__v6502__token__) */
