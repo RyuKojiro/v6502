@@ -48,7 +48,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	uint8_t offset = 0;
 	
 	while (fread(&byte, 1, 1, f)) {
-		mem->bytes[0x600 + (offset++)] = byte;
+		mem->bytes[v6502_memoryStartProgram + (offset++)] = byte;
 	}
 	
 	fprintf(logFile, "Loaded ROM of %d bytes\n\n", offset);

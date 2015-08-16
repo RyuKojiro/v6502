@@ -54,7 +54,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 		/* Trim Symbol Table, so that we don't symbolicate addresses outside of
 		 * our address space. FIXME: This currently assumes only one blob!
 		 */
-		as6502_truncateTableToAddressSpace(table, 0x600, blob->len);
+		as6502_truncateTableToAddressSpace(table, v6502_memoryStartProgram, blob->len);
 		
 		// Disassemble
 		currentLineNum = 1;
@@ -86,7 +86,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 			}
 			else {
 				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, blob->data[offset + 2], blob->data[offset + 1]);
-				//as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
+				as6502_symbolicateLine(table, line, MAX_LINE_LEN, v6502_memoryStartProgram, offset);
 
 				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
 					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
