@@ -1,29 +1,23 @@
-.\"Modified from man(1) of FreeBSD, the NetBSD mdoc.template, and mdoc.samples.
-.\"See Also:
-.\"man mdoc.samples for a complete listing of options
-.\"man mdoc for the short list of editing options
-.\"/usr/share/misc/mdoc.template
-.Dd H.25/04/10               \" DATE 
-.Dt as6502 1      \" Program name and manual section number 
+.Dd H.25/04/10
+.Dt as6502 1
 .Os Darwin
-.Sh NAME                 \" Section Header - required - don't modify 
+.Sh NAME
 .Nm as6502
-.\" Use .Nm macro to designate other names for the documented program.
 .Nd MOS 6502 Assembler
-.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Sh SYNOPSIS
 .Nm
-.Op Fl dST              \" [-abcd]
-.Op Fl F Ar format         \" [-a path] 
-.Op Fl o Ar output_file              \" [file]
-.Op Ar                   \" [file ...]
-.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Op Fl dST
+.Op Fl F Ar format
+.Op Fl o Ar output_file
+.Op Ar
+.Sh DESCRIPTION
 This is the assembler portion of the v6502 virtual machine infrastructure and toolchain for the MOS 6502 family of microprocessors.
 .Pp
 Any number of files may be specified and they will all be assembled, individually. To create useful binaries, rather than just object files, either specify flat as the format, or link the binaries with the Linker. If no files are specified, as6502 will assemble from stdin, line-buffered. See the caveats section for more information.
-.Pp                      \" Inserts a space
+.Pp
 A list of flags and their descriptions:
-.Bl -tag -width -indent  \" Differs from above in tag removed 
-.It Fl d                 \"-a flag as a list item
+.Bl -tag -width -indent
+.It Fl d
 Output graphviz dot code from the lexer.
 This is primarily useful for debug the lexing step of the assembler.
 .It Fl S
@@ -35,36 +29,19 @@ After first pass, dumps a human readable representation of the symbol table as s
 Specify the assembled output format for later linking or execution.
 
 The supported output formats are:
-.Bl -tag -width -indent  \" Begins a tagged list 
-.It flat               \" Each item preceded by .It macro
+.Bl -tag -width -indent
+.It flat
 A flat binary blob
 .It ines
 The iNES ROM format
-.El                      \" Ends the list
+.El
 .It Fl o
 Specify the file path of the output file.
-.El                      \" Ends the list
+.El
 .Pp
-.\" .Sh ENVIRONMENT      \" May not be needed
-.\" .Bl -tag -width "ENV_VAR_1" -indent \" ENV_VAR_1 is width of the string ENV_VAR_1
-.\" .It Ev ENV_VAR_1
-.\" Description of ENV_VAR_1
-.\" .It Ev ENV_VAR_2
-.\" Description of ENV_VAR_2
-.\" .El                      
-.\" .Sh DIAGNOSTICS       \" May not be needed
-.\" .Bl -diag
-.\" .It Diagnostic Tag
-.\" Diagnostic informtion here.
-.\" .It Diagnostic Tag
-.\" Diagnostic informtion here.
-.\" .El
-.Sh CAVEATS              \" Document known caveats
+.Sh CAVEATS
 When assembling from stdin, label parsing and dereferencing is not supported. This is because the labels are all determined in advance on a first pass that only cares about instruction size, and then the second pass actually begins converting the assembly to machine code, while dereferencing the labels along the way via the pre-built table. 
 .Sh SEE ALSO 
-.\" List links in ascending order by section, alphabetically within a section.
-.\" Please do not reference files that do not exist without filing a bug report
 .Xr ld6502 1 , 
 .Xr dis6502 1 ,
 .Xr v6502 1 
-.\" .Sh HISTORY           \" Document history if command behaves in a unique manner

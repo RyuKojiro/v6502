@@ -1,26 +1,18 @@
-.\"Modified from man(1) of FreeBSD, the NetBSD mdoc.template, and mdoc.samples.
-.\"See Also:
-.\"man mdoc.samples for a complete listing of options
-.\"man mdoc for the short list of editing options
-.\"/usr/share/misc/mdoc.template
-.Dd 7/10/14               \" DATE 
-.Dt v6502 1      \" Program name and manual section number 
+.Dd 7/10/14 
+.Dt v6502 1 
 .Os Darwin
-.Sh NAME                 \" Section Header - required - don't modify 
+.Sh NAME 
 .Nm v6502
-.\" The following lines are read in generating the apropos(man -k) database. Use only key
-.\" words here as the database is built based on the words here and in the .ND line. 
-.\" Use .Nm macro to designate other names for the documented program.
 .Nd MOS 6502 Virtual Machine Reference Platform
-.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Sh SYNOPSIS
 .Nm
-.Op Ar image                 \" Underlined argument - use .Ar anywhere to underline
-.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Op Ar image
+.Sh DESCRIPTION
 .Nm
 is a fully functional virtual machine implementation of libv6502, with textmode video, keyboard input, and interactive debugger included.
 The debugger has several commands, which can be listed by issuing the `help' command.
 The debug prompt can also take assembly code, and will execute it in-place without incrementing the program counter.
-.Pp                      \" Inserts a space
+.Pp
 You can specify a binary
 .Ar image
 to load by handing it in as an argument.
@@ -36,25 +28,7 @@ specified (if specified), and immediately start running from the reset vector. U
 .Nm
 will drop to the interactive debugger. 
 .Pp
-.\" .Sh ENVIRONMENT      \" May not be needed
-.\" .Bl -tag -width "ENV_VAR_1" -indent \" ENV_VAR_1 is width of the string ENV_VAR_1
-.\" .It Ev ENV_VAR_1
-.\" Description of ENV_VAR_1
-.\" .It Ev ENV_VAR_2
-.\" Description of ENV_VAR_2
-.\" .El                      
-.\" .Sh DIAGNOSTICS       \" May not be needed
-.\" .Bl -diag
-.\" .It Diagnostic Tag
-.\" Diagnostic informtion here.
-.\" .It Diagnostic Tag
-.\" Diagnostic informtion here.
-.\" .El
 .Sh SEE ALSO 
-.\" List links in ascending order by section, alphabetically within a section.
-.\" Please do not reference files that do not exist without filing a bug report
 .Xr as6502 1 , 
 .Xr dis6502 1 ,
 .Xr ld6502 1
-.\" .Sh BUGS              \" Document known, unremedied bugs 
-.\" .Sh HISTORY           \" Document history if command behaves in a unique manner
