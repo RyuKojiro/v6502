@@ -238,46 +238,6 @@ start_over:
 
 // Easy Symbol Table Access
 
-as6502_symbol_type as6502_addSymbolForLine(as6502_symbol_table *table, const char *line, unsigned long lineNumber, uint16_t offset) {
-	assert(table);
-
-	as6502_symbol_type type;
-	size_t len = strlen(line) + 1;
-	char *symbol = malloc(len);
-	strncpy(symbol, line, len);
-	int isByte = NO;
-	
-	if (!strncasecmp(".byte", symbol, 5)) {
-		// .byte will only be the last phrase
-		symbol = trimheadtospc(symbol, len);
-		symbol = trimhead(symbol, len);
-		isByte = YES;
-	}
-	else  {
-		// Labels will only be the first phrase
-		trimgreedytaild(symbol);
-	}
-	
-	trimtailchard(symbol, ':'); // If there is a colon, truncate there
-	trimtailchard(symbol, '=');
-	trimtaild(symbol);
-	
-	// TODO: implement variable declaration without equals signs
-	if (strchr(line, '=')  || isByte) { // Variable
-		/** TODO: @todo allocate variable addresses */
-		type = as6502_symbol_type_variable;
-	}
-	else { // Label
-		type = as6502_symbol_type_label;
-	}
-	
-	as6502_addSymbolToTable(table, lineNumber, symbol, offset, type);
-	
-	free(symbol);
-	
-	return type;
-}
-
 void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, char *symbol, const char *text) {
 	size_t symLen = strlen(symbol);
 	size_t txtLen = strlen(text);
