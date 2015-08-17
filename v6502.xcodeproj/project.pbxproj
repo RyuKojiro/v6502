@@ -166,6 +166,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E619BA6F1B81900000A235B5 /* dis6502.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = dis6502.1; sourceTree = "<group>"; };
 		E61D402C1799B5A1009BA763 /* instructions.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = instructions.s; sourceTree = "<group>"; };
 		E61D402D1799B5A1009BA763 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		E61D402E1799B5A1009BA763 /* overflow.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = overflow.s; sourceTree = "<group>"; };
@@ -326,6 +327,7 @@
 		E640E21117DFD81B009C0718 /* dis6502 */ = {
 			isa = PBXGroup;
 			children = (
+				E619BA6F1B81900000A235B5 /* dis6502.1 */,
 				E640F6BD182C180500A4C6A5 /* reverse.c */,
 				E640F6BE182C180500A4C6A5 /* reverse.h */,
 				E640E21217DFD81B009C0718 /* main.c */,
