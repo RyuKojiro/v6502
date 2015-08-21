@@ -183,7 +183,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 					insert(t);
 					cur += tlen;
 				}
-				else if (isnumber(*cur) || isprenum(*cur)) {
+				else if (isdigit(*cur) || isprenum(*cur)) {
 					// handle what is definitely a number
 					const char *start = cur;
 					size_t tlen = 0;
