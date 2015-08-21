@@ -77,6 +77,7 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 		char *type;
 		
 		switch (this->type) {
+			default:
 			case as6502_symbol_type_unknown: {
 				type = "???";
 			} break;
