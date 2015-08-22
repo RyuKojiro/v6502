@@ -236,7 +236,7 @@
 		E6DCD51B1A5643D1002008BE /* libvars.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = libvars.mk; sourceTree = "<group>"; };
 		E6DCD51C1A56496B002008BE /* libtargets.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libtargets.mk; sourceTree = "<group>"; };
 		E6DCD51D1A56A048002008BE /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		E6DCD5221A56A7DE002008BE /* xcode-tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "xcode-tests"; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6DCD5221A56A7DE002008BE /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6DCD5241A56A7DE002008BE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E6EE9E9F1948FD6E0088B705 /* breakpoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = breakpoint.c; sourceTree = "<group>"; };
 		E6EE9EA11948FD7A0088B705 /* breakpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breakpoint.h; sourceTree = "<group>"; };
@@ -297,6 +297,7 @@
 		E61D402B1799B5A1009BA763 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E6B04B5E1974855100F8690A /* textmode_test.s */,
 				E6D604B91A54FCDB00EF2B10 /* snake.s */,
 				E61D402C1799B5A1009BA763 /* instructions.s */,
 				E61D402D1799B5A1009BA763 /* Makefile */,
@@ -386,7 +387,7 @@
 			children = (
 				E6FF8999193FA628000DD391 /* make */,
 				E6FF8998193FA615000DD391 /* xcodebuild */,
-				E6DCD5221A56A7DE002008BE /* xcode-tests */,
+				E6DCD5221A56A7DE002008BE /* tests */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -394,7 +395,6 @@
 		E65212A81704B90D009CE919 /* v6502 */ = {
 			isa = PBXGroup;
 			children = (
-				E6B04B5E1974855100F8690A /* textmode_test.s */,
 				E6B04B5F1974855100F8690A /* textmode.c */,
 				E6B04B601974855100F8690A /* textmode.h */,
 				E64B300E170D59B700DAB63C /* Makefile */,
@@ -659,7 +659,7 @@
 			);
 			name = tests;
 			productName = "xcode-tests";
-			productReference = E6DCD5221A56A7DE002008BE /* xcode-tests */;
+			productReference = E6DCD5221A56A7DE002008BE /* tests */;
 			productType = "com.apple.product-type.tool";
 		};
 		E6FB94AA1791140B0053EB7E /* v6502 */ = {

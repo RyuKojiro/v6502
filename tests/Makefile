@@ -17,7 +17,7 @@ VM=	$(VMDIR)/v6502
 FUZZIN=afl_tests
 FUZZOUT=afl_results
 
-all: compiledTests expectedAssemblyResult circularAssemble wozfp
+all: compiledTests expectedAssemblyResultSnake circularAssemble #expectedAssemblyResultTextModeTest wozfp
 
 # This requires the afl fuzzer to be present, and does fuzzing of the snake code to find assembler bugs
 fuzz_as: $(AS) $(FUZZIN)
@@ -48,10 +48,18 @@ circularAssemble: $(AS) $(DIS)
 
 # This attempts to assemble the snake code, comparing the result with an MD5
 # hash of a known-working-good binary.
-expectedAssemblyResult: $(AS)
+expectedAssemblyResultSnake: $(AS)
 	$(AS) snake.s
 	cksum snake.o > snake.tmp.crc
 	diff snake.o.crc snake.tmp.crc
+
+
+# This attempts to assemble the snake code, comparing the result with an MD5
+# hash of a known-working-good binary.
+expectedAssemblyResultTextModeTest: $(AS)
+	$(AS) textmode_test.s
+	cksum textmode_test.o > snake.tmp.crc
+	diff textmode_test.o.crc textmode_test.tmp.crc
 
 # This simply tries to assemble the Apple II floating point routines originally
 # written by Steve Wozniak.
