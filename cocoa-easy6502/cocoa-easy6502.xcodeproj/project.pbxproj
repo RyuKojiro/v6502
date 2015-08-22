@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E63FDF1C1B891F5F00261C07 /* token.c in Sources */ = {isa = PBXBuildFile; fileRef = E63FDF1B1B891F5F00261C07 /* token.c */; };
 		E6BC8294175E87FB00FD7B4A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BC8293175E87FB00FD7B4A /* Cocoa.framework */; };
 		E6BC829E175E87FB00FD7B4A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6BC829C175E87FB00FD7B4A /* InfoPlist.strings */; };
 		E6BC82A0175E87FB00FD7B4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC829F175E87FB00FD7B4A /* main.m */; };
@@ -30,10 +31,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E63FDF1B1B891F5F00261C07 /* token.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = token.c; path = ../as6502/token.c; sourceTree = "<group>"; };
 		E6829A73177829C8003A31E1 /* VMInputWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMInputWindow.h; sourceTree = "<group>"; };
 		E6829A74177829C8003A31E1 /* VMInputWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMInputWindow.m; sourceTree = "<group>"; };
 		E6829A7517782A7D003A31E1 /* HIToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HIToolbox.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework; sourceTree = "<group>"; };
-		E6BC8290175E87FB00FD7B4A /* cocoa-easy6502.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cocoa-easy6502.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6BC8290175E87FB00FD7B4A /* v6502-cez.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "v6502-cez.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6BC8293175E87FB00FD7B4A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		E6BC8296175E87FB00FD7B4A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		E6BC8297175E87FB00FD7B4A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -98,7 +100,7 @@
 		E6BC8291175E87FB00FD7B4A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E6BC8290175E87FB00FD7B4A /* cocoa-easy6502.app */,
+				E6BC8290175E87FB00FD7B4A /* v6502-cez.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,6 +174,7 @@
 		E6BC82B7175E885E00FD7B4A /* as6502 */ = {
 			isa = PBXGroup;
 			children = (
+				E63FDF1B1B891F5F00261C07 /* token.c */,
 				E6C2082A196E679700660FBE /* error.c */,
 				E6C2082B196E679700660FBE /* error.h */,
 				E6C20827196E678400660FBE /* symbols.c */,
@@ -223,7 +226,7 @@
 			);
 			name = "v6502-cez";
 			productName = "cocoa-easy6502";
-			productReference = E6BC8290175E87FB00FD7B4A /* cocoa-easy6502.app */;
+			productReference = E6BC8290175E87FB00FD7B4A /* v6502-cez.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -276,6 +279,7 @@
 				E6C20831196E67B700660FBE /* flat.c in Sources */,
 				E6BC82A0175E87FB00FD7B4A /* main.m in Sources */,
 				E6BC82A7175E87FB00FD7B4A /* HCAppDelegate.m in Sources */,
+				E63FDF1C1B891F5F00261C07 /* token.c in Sources */,
 				E6C20825196E676800660FBE /* object.c in Sources */,
 				E6BC82B4175E883600FD7B4A /* cpu.c in Sources */,
 				E6BC82B5175E883600FD7B4A /* mem.c in Sources */,
