@@ -13,6 +13,8 @@
 
 #import <HIToolbox/Events.h>
 
+#define DEFAULT_RESET_VECTOR	0x0600
+
 volatile static int faulted;
 
 @interface VMWindowController ()
@@ -33,16 +35,21 @@ volatile static int faulted;
     return self;
 }
 
-void loadProgram(v6502_memory *mem, const char *fname) {
+BOOL loadProgram(v6502_memory *mem, const char *fname) {
 	FILE *f = fopen(fname, "r");
 	uint8_t byte;
 	uint16_t offset = 0;
+	
+	if (!f) {
+		return NO;
+	}
 	
 	while (fread(&byte, 1, 1, f)) {
 		mem->bytes[0x600 + (offset++)] = byte;
 	}
 		
 	fclose(f);
+	return YES;
 }
 
 - (void) update {
@@ -152,13 +159,20 @@ void loadProgram(v6502_memory *mem, const char *fname) {
     
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
 	cpu = v6502_createCPU();
-	cpu->memory = v6502_createMemory(2048);
+	cpu->memory = v6502_createMemory(v6502_memoryStartCeiling);
 	[video setMem:cpu->memory];
 	[video setDelegate:self];
 	
 	// Load program code into memory
-	loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/easy6502/snake.o");
+	if (!loadProgram(cpu->memory, "/Users/kojiro/Code/v6502/tests/snake.o")) {
+		NSAlert *alert = [NSAlert alertWithMessageText:@"Failed to open" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"There was a problem trying to open the file."];
+		[alert beginSheetModalForWindow:self.window completionHandler:nil];
+	}
 	
+	// Set the reset vector
+	v6502_write(cpu->memory, v6502_memoryVectorResetLow, DEFAULT_RESET_VECTOR & 0xFF);
+	v6502_write(cpu->memory, v6502_memoryVectorResetHigh, DEFAULT_RESET_VECTOR >> 8);
+
 	// Reset the cpu
 	v6502_reset(cpu);
 	
