@@ -28,7 +28,7 @@
 
 #include <stdint.h>
 
-#include "token.h"
+#include <as6502/token.h>
 
 /** @defgroup sym_type_macros Symbol Type Test Macros */
 /**@{*/

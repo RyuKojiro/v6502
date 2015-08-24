@@ -28,7 +28,7 @@
 
 #include <stdint.h>
 
-#include "mem.h"
+#include <v6502/mem.h>
 
 /** @struct */
 /** @brief Virtual CPU Object */

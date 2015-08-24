@@ -26,7 +26,7 @@
 #ifndef as6502_aout_h
 #define as6502_aout_h
 
-#include "object.h"
+#include <ld6502/object.h>
 
 /** @brief Writes an ld6502_object directly to an a.out file */
 void as6502_writeObjectToAOFile(ld6502_object *obj, FILE *file);
