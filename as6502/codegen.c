@@ -1,0 +1,150 @@
+/*
+ * Copyright (c) 2013 Daniel Loffgren
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+#include "codegen.h"
+#include "parser.h"
+#include "linectl.h"
+#include "error.h"
+#include "token.h"
+
+#include <string.h>
+#include <strings.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#define MAX_HEX_LEN 8
+
+as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
+	// There can be multiple arithmetical operations per line, so just loop until all are solved.
+	
+	as6502_token *lhs, *op, *rhs;
+	while (as6502_tokenListFindTokenLiteral(head, "+") ||
+			as6502_tokenListFindTokenLiteral(head, "-") ) {
+		lhs = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
+		op = lhs->next;
+
+		// actually detect an operator
+		if (!op || op->len != 1 || !(op->text[0] == '+' || op->text[0] == '-')) {
+			continue; 
+		}
+		rhs = op->next;
+
+		// Calculate value, variables are initialized for lint
+		uint16_t result = 0;
+		int lwide = NO;
+		int rwide = NO;
+		switch (op->text[0]) {
+			case '+': {
+				result = as6502_valueForString(&lwide, lhs->text) + as6502_valueForString(&rwide, rhs->text);
+			} break;
+			case '-': {
+				result = as6502_valueForString(&lwide, lhs->text) - as6502_valueForString(&rwide, rhs->text);
+			} break;
+			default:
+				assert(op);
+		}
+
+		// replace lhs value with result
+		char *newValue = malloc(MAX_HEX_LEN);
+		if (lwide || rwide) {
+			snprintf(newValue, MAX_HEX_LEN, "$%4x", result);
+		}
+		else {
+			snprintf(newValue, MAX_HEX_LEN, "$%2x", result);
+		}
+		free(lhs->text);
+		lhs->text = newValue;
+		lhs->len = strlen(newValue);
+
+		// remove op and rhs from list
+		lhs->next = rhs->next;
+
+		// free op and rhs
+		as6502_tokenDestroy(op);
+		as6502_tokenDestroy(rhs);
+	}
+
+	return head;
+}
+
+// NOTE: We only support single byte declarations
+int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_table *table, const char *line, size_t len) {
+	/* This will take 1 line in and output 4 lines
+	 * e.g.	 IN: var1 = $ff
+	 *		OUT:	pha;
+	 *				lda #$ff;
+	 *				sta var1;
+	 *				pla;
+	 */
+	uint8_t low;
+	uint8_t high;
+	int wide;
+	
+	if (!strnchr(line, '=', len)) {
+		// No assignments on the line
+		return NO;
+	}
+	
+	const char *cur = rev_strnspc(line, line + len - 1);
+	if (!cur) {
+		// Couldn't find a space
+		return NO;
+	}
+	
+	// TODO: A sanity check here to make sure our label lines up with where we are appending blob data
+	//if(as6502_addressForLabel(table, <#const char *name#>) == blob->len) {
+	
+	as6502_byteValuesForString(&high, &low, &wide, cur + 1);
+	
+	ld6502_appendByteToBlob(blob, low);
+	if (wide) {
+		ld6502_appendByteToBlob(blob, high);
+	}
+	
+	return YES;
+}
+
+void as6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len) {
+	assert(obj);
+	
+	if (len <= 3) {
+		return;
+	}
+	
+	if (!strncasecmp(line + 1, "data", 3)) {
+		// start new blob
+		ld6502_addBlobToObject(obj, v6502_memoryStartProgram);
+		*currentBlob = obj->count - 1;
+	}
+	else if (!strncasecmp(line + 1, "org", 3)) {
+		// start new blob
+		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, line + 5));
+		*currentBlob = obj->count - 1;
+	}
+	else if (!strncasecmp(line + 1, "end", 3)) {
+		// revert to top blob
+		*currentBlob = 0;
+	}
+	else {
+		as6502_warn(0, strnspc(line, len) - line, "Unknown assembler directive");
+	}
+}

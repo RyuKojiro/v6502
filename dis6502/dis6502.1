@@ -1,0 +1,38 @@
+.Dd 7/10/14
+.Dt dis6502 1
+.Os Darwin
+.Sh NAME
+.Nm dis6502
+.Nd MOS 6502 Disassembler
+.Sh SYNOPSIS
+.Nm
+.Op Fl F Ar format
+.Op Fl o Ar output_file
+.Op Ar
+.Sh DESCRIPTION
+.Nm
+is an automatic disassembler based on the v6502 toolchain.
+Any number of binaries may be specified and they will all be disassembled, individually.
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent
+.It Fl F
+Specify the binary input format for disassembly.
+
+The supported input formats are:
+.Bl -tag -width -indent
+.It flat
+A flat binary blob
+.It ines
+The iNES ROM format
+.El
+.It Fl o
+Specify the file path of the output.
+.El
+.Pp
+.Sh NOTES
+Depending on how well engineered/accurate the ROM/header information is in an NES ROM, the program code may overrun into the CHR ROM, or might have padding which will be assembled inline (but should not hinder disassembler byte alignment.)
+.Sh SEE ALSO 
+.Xr as6502 1 , 
+.Xr v6502 1 ,
+.Xr ld6502 1

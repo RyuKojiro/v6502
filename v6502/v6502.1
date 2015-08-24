@@ -1,0 +1,34 @@
+.Dd 7/10/14 
+.Dt v6502 1 
+.Os Darwin
+.Sh NAME 
+.Nm v6502
+.Nd MOS 6502 Virtual Machine Reference Platform
+.Sh SYNOPSIS
+.Nm
+.Op Ar image
+.Sh DESCRIPTION
+.Nm
+is a fully functional virtual machine implementation of libv6502, with textmode video, keyboard input, and interactive debugger included.
+The debugger has several commands, which can be listed by issuing the `help' command.
+The debug prompt can also take assembly code, and will execute it in-place without incrementing the program counter.
+.Pp
+You can specify a binary
+.Ar image
+to load by handing it in as an argument.
+The
+.Ar image
+will be loaded at 0x0600, the default reset vector.
+.Pp
+On start,
+.Nm
+will load the
+.Ar image
+specified (if specified), and immediately start running from the reset vector. Upon encountering a BRK instruction, or recieving a SIGINT,
+.Nm
+will drop to the interactive debugger. 
+.Pp
+.Sh SEE ALSO 
+.Xr as6502 1 , 
+.Xr dis6502 1 ,
+.Xr ld6502 1

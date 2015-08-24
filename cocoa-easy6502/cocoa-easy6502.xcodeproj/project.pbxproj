@@ -1,0 +1,440 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E63FDF1C1B891F5F00261C07 /* token.c in Sources */ = {isa = PBXBuildFile; fileRef = E63FDF1B1B891F5F00261C07 /* token.c */; };
+		E6BC8294175E87FB00FD7B4A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6BC8293175E87FB00FD7B4A /* Cocoa.framework */; };
+		E6BC829E175E87FB00FD7B4A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6BC829C175E87FB00FD7B4A /* InfoPlist.strings */; };
+		E6BC82A0175E87FB00FD7B4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC829F175E87FB00FD7B4A /* main.m */; };
+		E6BC82A4175E87FB00FD7B4A /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E6BC82A2175E87FB00FD7B4A /* Credits.rtf */; };
+		E6BC82A7175E87FB00FD7B4A /* HCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82A6175E87FB00FD7B4A /* HCAppDelegate.m */; };
+		E6BC82AA175E87FB00FD7B4A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6BC82A8175E87FB00FD7B4A /* MainMenu.xib */; };
+		E6BC82B4175E883600FD7B4A /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82B0175E883600FD7B4A /* cpu.c */; };
+		E6BC82B5175E883600FD7B4A /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82B2175E883600FD7B4A /* mem.c */; };
+		E6BC82C4175E886E00FD7B4A /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82B8175E886E00FD7B4A /* linectl.c */; };
+		E6BC82D0175E8C9100FD7B4A /* VMWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82CE175E8C9100FD7B4A /* VMWindowController.m */; };
+		E6BC82D1175E8C9100FD7B4A /* VMWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E6BC82CF175E8C9100FD7B4A /* VMWindowController.xib */; };
+		E6BC82D4175E8DB900FD7B4A /* VMVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BC82D3175E8DB900FD7B4A /* VMVideoView.m */; };
+		E6C2081B196E66F800660FBE /* Icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = E6C2081A196E66F800660FBE /* Icon.icns */; };
+		E6C2081E196E672B00660FBE /* reverse.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C2081C196E672B00660FBE /* reverse.c */; };
+		E6C20822196E675000660FBE /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C20820196E675000660FBE /* parser.c */; };
+		E6C20825196E676800660FBE /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C20823196E676800660FBE /* object.c */; };
+		E6C20829196E678400660FBE /* symbols.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C20827196E678400660FBE /* symbols.c */; };
+		E6C2082C196E679700660FBE /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C2082A196E679700660FBE /* error.c */; };
+		E6C20831196E67B700660FBE /* flat.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C2082D196E67B700660FBE /* flat.c */; };
+		E6C20832196E67B700660FBE /* ines.c in Sources */ = {isa = PBXBuildFile; fileRef = E6C2082F196E67B700660FBE /* ines.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E63FDF1B1B891F5F00261C07 /* token.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = token.c; path = ../as6502/token.c; sourceTree = "<group>"; };
+		E6829A73177829C8003A31E1 /* VMInputWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VMInputWindow.h; sourceTree = "<group>"; };
+		E6829A74177829C8003A31E1 /* VMInputWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VMInputWindow.m; sourceTree = "<group>"; };
+		E6829A7517782A7D003A31E1 /* HIToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HIToolbox.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework; sourceTree = "<group>"; };
+		E6BC8290175E87FB00FD7B4A /* v6502-cez.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "v6502-cez.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6BC8293175E87FB00FD7B4A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		E6BC8296175E87FB00FD7B4A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		E6BC8297175E87FB00FD7B4A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		E6BC8298175E87FB00FD7B4A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E6BC829B175E87FB00FD7B4A /* cocoa-easy6502-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "cocoa-easy6502-Info.plist"; sourceTree = "<group>"; };
+		E6BC829D175E87FB00FD7B4A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E6BC829F175E87FB00FD7B4A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E6BC82A1175E87FB00FD7B4A /* cocoa-easy6502-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cocoa-easy6502-Prefix.pch"; sourceTree = "<group>"; };
+		E6BC82A3175E87FB00FD7B4A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		E6BC82A5175E87FB00FD7B4A /* HCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HCAppDelegate.h; sourceTree = "<group>"; };
+		E6BC82A6175E87FB00FD7B4A /* HCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HCAppDelegate.m; sourceTree = "<group>"; };
+		E6BC82A9175E87FB00FD7B4A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E6BC82B0175E883600FD7B4A /* cpu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cpu.c; path = ../v6502/cpu.c; sourceTree = "<group>"; };
+		E6BC82B1175E883600FD7B4A /* cpu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu.h; path = ../v6502/cpu.h; sourceTree = "<group>"; };
+		E6BC82B2175E883600FD7B4A /* mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mem.c; path = ../v6502/mem.c; sourceTree = "<group>"; };
+		E6BC82B3175E883600FD7B4A /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mem.h; path = ../v6502/mem.h; sourceTree = "<group>"; };
+		E6BC82B8175E886E00FD7B4A /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = ../as6502/linectl.c; sourceTree = "<group>"; };
+		E6BC82B9175E886E00FD7B4A /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = ../as6502/linectl.h; sourceTree = "<group>"; };
+		E6BC82CD175E8C9100FD7B4A /* VMWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMWindowController.h; sourceTree = "<group>"; };
+		E6BC82CE175E8C9100FD7B4A /* VMWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMWindowController.m; sourceTree = "<group>"; };
+		E6BC82CF175E8C9100FD7B4A /* VMWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VMWindowController.xib; sourceTree = "<group>"; };
+		E6BC82D2175E8DB900FD7B4A /* VMVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VMVideoView.h; sourceTree = "<group>"; };
+		E6BC82D3175E8DB900FD7B4A /* VMVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VMVideoView.m; sourceTree = "<group>"; };
+		E6C2081A196E66F800660FBE /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = SOURCE_ROOT; };
+		E6C2081C196E672B00660FBE /* reverse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = reverse.c; path = ../dis6502/reverse.c; sourceTree = "<group>"; };
+		E6C2081D196E672B00660FBE /* reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reverse.h; path = ../dis6502/reverse.h; sourceTree = "<group>"; };
+		E6C20820196E675000660FBE /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = ../as6502/parser.c; sourceTree = "<group>"; };
+		E6C20821196E675000660FBE /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = ../as6502/parser.h; sourceTree = "<group>"; };
+		E6C20823196E676800660FBE /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = object.c; path = ../ld6502/object.c; sourceTree = "<group>"; };
+		E6C20824196E676800660FBE /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = object.h; path = ../ld6502/object.h; sourceTree = "<group>"; };
+		E6C20827196E678400660FBE /* symbols.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = symbols.c; path = ../as6502/symbols.c; sourceTree = "<group>"; };
+		E6C20828196E678400660FBE /* symbols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = symbols.h; path = ../as6502/symbols.h; sourceTree = "<group>"; };
+		E6C2082A196E679700660FBE /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = ../as6502/error.c; sourceTree = "<group>"; };
+		E6C2082B196E679700660FBE /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = error.h; path = ../as6502/error.h; sourceTree = "<group>"; };
+		E6C2082D196E67B700660FBE /* flat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = flat.c; path = ../ld6502/flat.c; sourceTree = "<group>"; };
+		E6C2082E196E67B700660FBE /* flat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = flat.h; path = ../ld6502/flat.h; sourceTree = "<group>"; };
+		E6C2082F196E67B700660FBE /* ines.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ines.c; path = ../ld6502/ines.c; sourceTree = "<group>"; };
+		E6C20830196E67B700660FBE /* ines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ines.h; path = ../ld6502/ines.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E6BC828D175E87FB00FD7B4A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6BC8294175E87FB00FD7B4A /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E6BC8287175E87FB00FD7B4A = {
+			isa = PBXGroup;
+			children = (
+				E6BC8299175E87FB00FD7B4A /* cocoa-easy6502 */,
+				E6BC8292175E87FB00FD7B4A /* Frameworks */,
+				E6BC8291175E87FB00FD7B4A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E6BC8291175E87FB00FD7B4A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E6BC8290175E87FB00FD7B4A /* v6502-cez.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E6BC8292175E87FB00FD7B4A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E6C20826196E676C00660FBE /* ld6502 */,
+				E6C2081F196E673000660FBE /* dis6502 */,
+				E6BC82B7175E885E00FD7B4A /* as6502 */,
+				E6BC82B6175E883A00FD7B4A /* v6502 */,
+				E6BC8295175E87FB00FD7B4A /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E6BC8295175E87FB00FD7B4A /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E6BC8293175E87FB00FD7B4A /* Cocoa.framework */,
+				E6829A7517782A7D003A31E1 /* HIToolbox.framework */,
+				E6BC8296175E87FB00FD7B4A /* AppKit.framework */,
+				E6BC8297175E87FB00FD7B4A /* CoreData.framework */,
+				E6BC8298175E87FB00FD7B4A /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		E6BC8299175E87FB00FD7B4A /* cocoa-easy6502 */ = {
+			isa = PBXGroup;
+			children = (
+				E6BC82A5175E87FB00FD7B4A /* HCAppDelegate.h */,
+				E6BC82A6175E87FB00FD7B4A /* HCAppDelegate.m */,
+				E6BC82A8175E87FB00FD7B4A /* MainMenu.xib */,
+				E6BC829A175E87FB00FD7B4A /* Supporting Files */,
+				E6BC82CD175E8C9100FD7B4A /* VMWindowController.h */,
+				E6BC82CE175E8C9100FD7B4A /* VMWindowController.m */,
+				E6BC82CF175E8C9100FD7B4A /* VMWindowController.xib */,
+				E6BC82D2175E8DB900FD7B4A /* VMVideoView.h */,
+				E6BC82D3175E8DB900FD7B4A /* VMVideoView.m */,
+				E6829A73177829C8003A31E1 /* VMInputWindow.h */,
+				E6829A74177829C8003A31E1 /* VMInputWindow.m */,
+				E6C2081A196E66F800660FBE /* Icon.icns */,
+			);
+			path = "cocoa-easy6502";
+			sourceTree = "<group>";
+		};
+		E6BC829A175E87FB00FD7B4A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E6BC829B175E87FB00FD7B4A /* cocoa-easy6502-Info.plist */,
+				E6BC829C175E87FB00FD7B4A /* InfoPlist.strings */,
+				E6BC829F175E87FB00FD7B4A /* main.m */,
+				E6BC82A1175E87FB00FD7B4A /* cocoa-easy6502-Prefix.pch */,
+				E6BC82A2175E87FB00FD7B4A /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E6BC82B6175E883A00FD7B4A /* v6502 */ = {
+			isa = PBXGroup;
+			children = (
+				E6BC82B0175E883600FD7B4A /* cpu.c */,
+				E6BC82B1175E883600FD7B4A /* cpu.h */,
+				E6BC82B2175E883600FD7B4A /* mem.c */,
+				E6BC82B3175E883600FD7B4A /* mem.h */,
+			);
+			name = v6502;
+			sourceTree = "<group>";
+		};
+		E6BC82B7175E885E00FD7B4A /* as6502 */ = {
+			isa = PBXGroup;
+			children = (
+				E63FDF1B1B891F5F00261C07 /* token.c */,
+				E6C2082A196E679700660FBE /* error.c */,
+				E6C2082B196E679700660FBE /* error.h */,
+				E6C20827196E678400660FBE /* symbols.c */,
+				E6C20828196E678400660FBE /* symbols.h */,
+				E6C20820196E675000660FBE /* parser.c */,
+				E6C20821196E675000660FBE /* parser.h */,
+				E6BC82B8175E886E00FD7B4A /* linectl.c */,
+				E6BC82B9175E886E00FD7B4A /* linectl.h */,
+			);
+			name = as6502;
+			sourceTree = "<group>";
+		};
+		E6C2081F196E673000660FBE /* dis6502 */ = {
+			isa = PBXGroup;
+			children = (
+				E6C2081C196E672B00660FBE /* reverse.c */,
+				E6C2081D196E672B00660FBE /* reverse.h */,
+			);
+			name = dis6502;
+			sourceTree = "<group>";
+		};
+		E6C20826196E676C00660FBE /* ld6502 */ = {
+			isa = PBXGroup;
+			children = (
+				E6C2082D196E67B700660FBE /* flat.c */,
+				E6C2082E196E67B700660FBE /* flat.h */,
+				E6C2082F196E67B700660FBE /* ines.c */,
+				E6C20830196E67B700660FBE /* ines.h */,
+				E6C20823196E676800660FBE /* object.c */,
+				E6C20824196E676800660FBE /* object.h */,
+			);
+			name = ld6502;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E6BC828F175E87FB00FD7B4A /* v6502-cez */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6BC82AD175E87FB00FD7B4A /* Build configuration list for PBXNativeTarget "v6502-cez" */;
+			buildPhases = (
+				E6BC828C175E87FB00FD7B4A /* Sources */,
+				E6BC828D175E87FB00FD7B4A /* Frameworks */,
+				E6BC828E175E87FB00FD7B4A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "v6502-cez";
+			productName = "cocoa-easy6502";
+			productReference = E6BC8290175E87FB00FD7B4A /* v6502-cez.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E6BC8288175E87FB00FD7B4A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = HC;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Hello-Channel, LLC";
+			};
+			buildConfigurationList = E6BC828B175E87FB00FD7B4A /* Build configuration list for PBXProject "cocoa-easy6502" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E6BC8287175E87FB00FD7B4A;
+			productRefGroup = E6BC8291175E87FB00FD7B4A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E6BC828F175E87FB00FD7B4A /* v6502-cez */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E6BC828E175E87FB00FD7B4A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6BC829E175E87FB00FD7B4A /* InfoPlist.strings in Resources */,
+				E6BC82A4175E87FB00FD7B4A /* Credits.rtf in Resources */,
+				E6C2081B196E66F800660FBE /* Icon.icns in Resources */,
+				E6BC82AA175E87FB00FD7B4A /* MainMenu.xib in Resources */,
+				E6BC82D1175E8C9100FD7B4A /* VMWindowController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E6BC828C175E87FB00FD7B4A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6C20831196E67B700660FBE /* flat.c in Sources */,
+				E6BC82A0175E87FB00FD7B4A /* main.m in Sources */,
+				E6BC82A7175E87FB00FD7B4A /* HCAppDelegate.m in Sources */,
+				E63FDF1C1B891F5F00261C07 /* token.c in Sources */,
+				E6C20825196E676800660FBE /* object.c in Sources */,
+				E6BC82B4175E883600FD7B4A /* cpu.c in Sources */,
+				E6BC82B5175E883600FD7B4A /* mem.c in Sources */,
+				E6C20822196E675000660FBE /* parser.c in Sources */,
+				E6C2082C196E679700660FBE /* error.c in Sources */,
+				E6BC82C4175E886E00FD7B4A /* linectl.c in Sources */,
+				E6BC82D0175E8C9100FD7B4A /* VMWindowController.m in Sources */,
+				E6C2081E196E672B00660FBE /* reverse.c in Sources */,
+				E6C20829196E678400660FBE /* symbols.c in Sources */,
+				E6C20832196E67B700660FBE /* ines.c in Sources */,
+				E6BC82D4175E8DB900FD7B4A /* VMVideoView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E6BC829C175E87FB00FD7B4A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6BC829D175E87FB00FD7B4A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E6BC82A2175E87FB00FD7B4A /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6BC82A3175E87FB00FD7B4A /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		E6BC82A8175E87FB00FD7B4A /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E6BC82A9175E87FB00FD7B4A /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E6BC82AB175E87FB00FD7B4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E6BC82AC175E87FB00FD7B4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E6BC82AE175E87FB00FD7B4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Versions/A/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "cocoa-easy6502/cocoa-easy6502-Prefix.pch";
+				INFOPLIST_FILE = "cocoa-easy6502/cocoa-easy6502-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		E6BC82AF175E87FB00FD7B4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Versions/A/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "cocoa-easy6502/cocoa-easy6502-Prefix.pch";
+				INFOPLIST_FILE = "cocoa-easy6502/cocoa-easy6502-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E6BC828B175E87FB00FD7B4A /* Build configuration list for PBXProject "cocoa-easy6502" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6BC82AB175E87FB00FD7B4A /* Debug */,
+				E6BC82AC175E87FB00FD7B4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6BC82AD175E87FB00FD7B4A /* Build configuration list for PBXNativeTarget "v6502-cez" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6BC82AE175E87FB00FD7B4A /* Debug */,
+				E6BC82AF175E87FB00FD7B4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E6BC8288175E87FB00FD7B4A /* Project object */;
+}

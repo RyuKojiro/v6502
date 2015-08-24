@@ -1,0 +1,47 @@
+.Dd H.25/04/10
+.Dt as6502 1
+.Os Darwin
+.Sh NAME
+.Nm as6502
+.Nd MOS 6502 Assembler
+.Sh SYNOPSIS
+.Nm
+.Op Fl dST
+.Op Fl F Ar format
+.Op Fl o Ar output_file
+.Op Ar
+.Sh DESCRIPTION
+This is the assembler portion of the v6502 virtual machine infrastructure and toolchain for the MOS 6502 family of microprocessors.
+.Pp
+Any number of files may be specified and they will all be assembled, individually. To create useful binaries, rather than just object files, either specify flat as the format, or link the binaries with the Linker. If no files are specified, as6502 will assemble from stdin, line-buffered. See the caveats section for more information.
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent
+.It Fl d
+Output graphviz dot code from the lexer.
+This is primarily useful for debug the lexing step of the assembler.
+.It Fl S
+Output human readable assembly source side-by-side with the resulting assembled machine code bytes.
+This is useful for seeing what the assembler is producing in a human readable way.
+.It Fl T
+After first pass, dumps a human readable representation of the symbol table as stored in memory during assembly.
+.It Fl F
+Specify the assembled output format for later linking or execution.
+
+The supported output formats are:
+.Bl -tag -width -indent
+.It flat
+A flat binary blob
+.It ines
+The iNES ROM format
+.El
+.It Fl o
+Specify the file path of the output file.
+.El
+.Pp
+.Sh CAVEATS
+When assembling from stdin, label parsing and dereferencing is not supported. This is because the labels are all determined in advance on a first pass that only cares about instruction size, and then the second pass actually begins converting the assembly to machine code, while dereferencing the labels along the way via the pre-built table. 
+.Sh SEE ALSO 
+.Xr ld6502 1 , 
+.Xr dis6502 1 ,
+.Xr v6502 1 
