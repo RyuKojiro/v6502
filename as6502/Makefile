@@ -14,14 +14,14 @@ install: $(PROG) $(LIBAS6502)
 	install $(MANPAGE) $(MANDEST)
 	install $(PROG) $(BINDEST)
 	install $(LIBAS6502) $(LIBDEST)
-	install -d $(INCDEST)/as6502/
-	install $(HEADERS) $(INCDEST)/as6502/
+	install -d $(INCDEST)/$(PROG)/
+	install $(HEADERS) $(INCDEST)/$(PROG)/
 
 uninstall: $(PROG) $(LIBAS6502)
 	rm -f $(MANDEST)/$(MANPAGE)
 	rm -f $(BINDEST)/$(PROG)
 	rm -f $(LIBDEST)/$(LIBAS6502)
-	rm -rf $(INCDEST)/as6502/
+	rm -rf $(INCDEST)/$(PROG)/
 
 lib: $(LIBAS6502_OBJS)
 	$(AR) $(ARFLAGS) libas6502.a $(LIBAS6502_OBJS)

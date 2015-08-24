@@ -5,8 +5,23 @@ PROG=		dis6502
 SRCS=		main.c
 LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502
 OBJS=		$(SRCS:.c=.o)
+MANPAGE=	dis6502.1
+HEADERS=	reverse.h
 
 all: $(PROG)
+
+install: $(PROG) $(LIBDISS6502)
+	install $(MANPAGE) $(MANDEST)
+	install $(PROG) $(BINDEST)
+	install $(LIBDIS6502) $(LIBDEST)
+	install -d $(INCDEST)/$(PROG)/
+	install $(HEADERS) $(INCDEST)/$(PROG)/
+
+uninstall: $(PROG) $(LIBDISS6502)
+	rm -f $(MANDEST)/$(MANPAGE)
+	rm -f $(BINDEST)/$(PROG)
+	rm -f $(LIBDEST)/$(LIBDISS6502)
+	rm -rf $(INCDEST)/$(PROG)/
 
 lib: $(LIBDIS6502_OBJS)
 	$(AR) $(ARFLAGS) libdis6502.a $(LIBDIS6502_OBJS)
