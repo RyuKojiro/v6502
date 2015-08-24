@@ -10,17 +10,17 @@ HEADERS=	reverse.h
 
 all: $(PROG)
 
-install: $(PROG) $(LIBDISS6502)
+install: $(PROG) $(LIBDIS6502)
 	install $(MANPAGE) $(MANDEST)
 	install $(PROG) $(BINDEST)
 	install $(LIBDIS6502) $(LIBDEST)
 	install -d $(INCDEST)/$(PROG)/
 	install $(HEADERS) $(INCDEST)/$(PROG)/
 
-uninstall: $(PROG) $(LIBDISS6502)
+uninstall: $(PROG) $(LIBDIS6502)
 	rm -f $(MANDEST)/$(MANPAGE)
 	rm -f $(BINDEST)/$(PROG)
-	rm -f $(LIBDEST)/$(LIBDISS6502)
+	rm -f $(LIBDEST)/$(LIBDIS6502)
 	rm -rf $(INCDEST)/$(PROG)/
 
 lib: $(LIBDIS6502_OBJS)
