@@ -26,7 +26,7 @@
 #include <stdlib.h>
 
 #include "ines.h"
-#include "parser.h"
+#include <as6502/parser.h>
 
 #define ines_16kUnits					16384
 #define ines_8kUnits					8192

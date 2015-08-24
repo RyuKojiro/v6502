@@ -26,9 +26,9 @@
 #include <stdlib.h>
 
 #include "object.h"
-#include "error.h"
+#include <as6502/error.h>
 #include "flat.h"
-#include "symbols.h"
+#include <as6502/symbols.h>
 #include "ines.h"
 
 #define MAX_FILENAME_LEN	255
