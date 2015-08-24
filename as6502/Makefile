@@ -5,8 +5,23 @@ PROG=		as6502
 SRCS=		main.c
 LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502 
 OBJS=		$(SRCS:.c=.o)
+MANPAGE=	as6502.1
+HEADERS=	parser.h codegen.h symbols.h token.h
 
 all: $(PROG)
+
+install: $(PROG) $(LIBAS6502)
+	install $(MANPAGE) $(MANDEST)
+	install $(PROG) $(BINDEST)
+	install $(LIBAS6502) $(LIBDEST)
+	install -d $(INCDEST)/as6502/
+	install $(HEADERS) $(INCDEST)/as6502/
+
+uninstall: $(PROG) $(LIBAS6502)
+	rm -f $(MANDEST)/$(MANPAGE)
+	rm -f $(BINDEST)/$(PROG)
+	rm -f $(LIBDEST)/$(LIBAS6502)
+	rm -rf $(INCDEST)/as6502/
 
 lib: $(LIBAS6502_OBJS)
 	$(AR) $(ARFLAGS) libas6502.a $(LIBAS6502_OBJS)
