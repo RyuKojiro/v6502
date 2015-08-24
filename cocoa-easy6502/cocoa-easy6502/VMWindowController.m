@@ -161,6 +161,7 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 
 - (IBAction)reset:(id)sender {
 	v6502_reset(cpu);
+	[video resetVideoMemory];
 	[self update];
 }
 
