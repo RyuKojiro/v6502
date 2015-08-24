@@ -24,10 +24,10 @@
 #include <sysexits.h>
 #include <unistd.h>
 
-#include "color.h"
-#include "cpu.h"
-#include "log.h"
-#include "parser.h"
+#include <as6502/color.h>
+#include <v6502/cpu.h>
+#include <v6502/log.h>
+#include <as6502/parser.h>
 
 #pragma mark Test Harness
 
