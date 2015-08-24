@@ -19,7 +19,7 @@ FUZZOUT=afl_results
 
 all: compiledTests expectedAssemblyResultSnake circularAssemble #expectedAssemblyResultTextModeTest wozfp
 
-install:
+install uninstall:
 
 # This requires the afl fuzzer to be present, and does fuzzing of the snake code to find assembler bugs
 fuzz_as: $(AS) $(FUZZIN)
