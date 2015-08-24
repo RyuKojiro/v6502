@@ -117,6 +117,11 @@ BOOL loadProgram(v6502_memory *mem, const char *fname) {
 	[self update];
 }
 
+- (IBAction)videoReset:(id)sender {
+	[video resetVideoMemory];
+	[video setNeedsDisplay:YES];
+}
+
 - (IBAction)testPattern:(id)sender {
 	[video testPattern];
 	[video setNeedsDisplay:YES];
