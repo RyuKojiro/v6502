@@ -60,8 +60,13 @@ BOOL saveFreeze(v6502_cpu *cpu, const char *fname) {
 		return NO;
 	}
 	
-	fwrite(&cpu, sizeof(cpu), 1, f);
-	
+	fwrite(&cpu->pc, sizeof(uint16_t), 1, f);
+	fwrite(&cpu->sp, sizeof(uint8_t), 1, f);
+	fwrite(&cpu->sr, sizeof(uint8_t), 1, f);
+	fwrite(&cpu->x, sizeof(uint8_t), 1, f);
+	fwrite(&cpu->y, sizeof(uint8_t), 1, f);
+	fwrite(&cpu->ac, sizeof(uint8_t), 1, f);
+
 	for (uint16_t offset = 0; offset < v6502_memoryStartCeiling; offset++) {
 		uint8_t byte = v6502_read(cpu->memory, offset, NO);
 		fwrite(&byte, sizeof(uint8_t), 1, f);
@@ -77,15 +82,12 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 		return NO;
 	}
 	
-	v6502_cpu tempCpu;
-	
-	fread(&tempCpu, sizeof(v6502_cpu), 1, f);
-	cpu->pc = tempCpu.pc;
-	cpu->sp = tempCpu.sp;
-	cpu->sr = tempCpu.sr;
-	cpu->x = tempCpu.x;
-	cpu->y = tempCpu.y;
-	cpu->ac = tempCpu.ac;
+	fread(&cpu->pc, sizeof(uint16_t), 1, f);
+	fread(&cpu->sp, sizeof(uint8_t), 1, f);
+	fread(&cpu->sr, sizeof(uint8_t), 1, f);
+	fread(&cpu->x, sizeof(uint8_t), 1, f);
+	fread(&cpu->y, sizeof(uint8_t), 1, f);
+	fread(&cpu->ac, sizeof(uint8_t), 1, f);
 	
 	for (uint16_t offset = 0; offset < v6502_memoryStartCeiling; offset++) {
 		uint8_t byte;
