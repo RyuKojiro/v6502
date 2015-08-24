@@ -283,7 +283,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = HC;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Hello-Channel, LLC";
 			};
 			buildConfigurationList = E6BC828B175E87FB00FD7B4A /* Build configuration list for PBXProject "cocoa-easy6502" */;
@@ -465,7 +465,6 @@
 		E6BC82AB175E87FB00FD7B4A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -501,7 +500,6 @@
 		E6BC82AC175E87FB00FD7B4A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
