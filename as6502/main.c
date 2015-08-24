@@ -28,14 +28,14 @@
 #include "linectl.h"
 #include "parser.h"
 #include "symbols.h"
-#include "object.h"
+#include <ld6502/object.h>
 #include "codegen.h"
 #include "error.h"
 #include "color.h"
 #include "token.h"
 
-#include "flat.h"
-#include "ines.h"
+#include <ld6502/flat.h>
+#include <ld6502/ines.h>
 
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255

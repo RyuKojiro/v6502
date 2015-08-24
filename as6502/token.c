@@ -23,7 +23,7 @@
 #include "token.h"
 #include "linectl.h"
 #include "error.h"
-#include "mem.h"
+#include <v6502/mem.h>
 
 #include <string.h>
 #include <strings.h>

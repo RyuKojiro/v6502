@@ -1,5 +1,5 @@
 # Compilation
-INCLUDE+=       -I../as6502/ -I../v6502/ -I../dis6502/ -I../ld6502/
+INCLUDE+=       -I..
 CFLAGS+=		-Wall -Wno-unknown-pragmas -std=c99 -ggdb $(INCLUDE) -D_XOPEN_SOURCE
 
 # Installation

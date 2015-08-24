@@ -32,8 +32,8 @@
 #include "linectl.h"
 #include "parser.h"
 
-#include "mem.h"
-#include "cpu.h"
+#include <v6502/mem.h>
+#include <v6502/cpu.h>
 
 #define v6502_DesymbolicationErrorText	"Could not shift string far enough while desymbolicating"
 #define v6502_DuplicateSymbolErrorText	"Encountered duplicate symbol declaration '%s'"
