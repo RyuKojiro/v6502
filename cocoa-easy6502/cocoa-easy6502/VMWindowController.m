@@ -168,10 +168,10 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 	
 	NSSavePanel *p = [NSSavePanel savePanel];
 	p.title = @"Freeze State";
-	p.requiredFileType = kCEZFreezeFileType;
+	p.allowedFileTypes = @[kCEZFreezeFileType];
 	[p beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
 		if (result == NSFileHandlingPanelOKButton) {
-			if (!saveFreeze(cpu, [p.filename cStringUsingEncoding:NSUTF8StringEncoding])) {
+			if (!saveFreeze(cpu, [p.URL.path cStringUsingEncoding:NSUTF8StringEncoding])) {
 				NSAlert *alert = [NSAlert alertWithMessageText:@"Failed to save" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"There was a problem trying to open the freeze file for writing."];
 				[alert beginSheetModalForWindow:self.window completionHandler:nil];
 			}
@@ -188,10 +188,10 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 	
 	NSOpenPanel *p = [NSOpenPanel openPanel];
 	p.title = @"Load Freeze State";
-	p.requiredFileType = kCEZFreezeFileType;
+	p.allowedFileTypes = @[kCEZFreezeFileType];
 	[p beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
 		if (result == NSFileHandlingPanelOKButton) {
-			if (!loadFreeze(cpu, [p.filename cStringUsingEncoding:NSUTF8StringEncoding])) {
+			if (!loadFreeze(cpu, [p.URL.path cStringUsingEncoding:NSUTF8StringEncoding])) {
 				NSAlert *alert = [NSAlert alertWithMessageText:@"Failed to open" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"There was a problem trying to open the freeze file for reading."];
 				[alert beginSheetModalForWindow:self.window completionHandler:nil];
 			}
