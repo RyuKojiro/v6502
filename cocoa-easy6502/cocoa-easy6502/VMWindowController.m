@@ -45,9 +45,24 @@ BOOL loadProgram(v6502_memory *mem, const char *fname) {
 	}
 	
 	while (fread(&byte, 1, 1, f)) {
-		mem->bytes[0x600 + (offset++)] = byte;
+		mem->bytes[DEFAULT_RESET_VECTOR + (offset++)] = byte;
 	}
 		
+	fclose(f);
+	return YES;
+}
+
+BOOL saveFreeze(v6502_cpu *cpu, const char *fname) {
+	FILE *f = fopen(fname, "w");
+	if (!f) {
+		return NO;
+	}
+	
+	for (uint16_t offset = 0; offset < v6502_memoryStartCeiling; offset++) {
+		uint8_t byte = v6502_read(cpu->memory, offset, NO);
+		fwrite(&byte, sizeof(uint8_t), 1, f);
+	}
+
 	fclose(f);
 	return YES;
 }
@@ -117,6 +132,31 @@ BOOL loadProgram(v6502_memory *mem, const char *fname) {
 	[self update];
 }
 
+- (IBAction)freeze:(id)sender {
+	BOOL wasRunning = !faulted;
+	[self stop:sender];
+	
+	NSSavePanel *p = [NSSavePanel savePanel];
+	p.title = @"Freeze State";
+	p.requiredFileType = @"v6freeze";
+	[p beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
+		if (result == NSFileHandlingPanelOKButton) {
+			if (!saveFreeze(cpu, [p.filename cStringUsingEncoding:NSUTF8StringEncoding])) {
+				NSAlert *alert = [NSAlert alertWithMessageText:@"Failed to save" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"There was a problem trying to open the freeze file for writing."];
+				[alert beginSheetModalForWindow:self.window completionHandler:nil];
+			}
+		}
+		
+		if (wasRunning) {
+			[self start:sender];
+		}
+	}];
+}
+
+- (IBAction)loadFreeze:(id)sender {
+	[self stop:sender];
+}
+
 - (IBAction)videoReset:(id)sender {
 	[video resetVideoMemory];
 	[video setNeedsDisplay:YES];
@@ -127,16 +167,24 @@ BOOL loadProgram(v6502_memory *mem, const char *fname) {
 	[video setNeedsDisplay:YES];
 }
 
+- (IBAction)start:(id)sender {
+	[toggleButton setTitle:@"Halt"];
+	faulted = 0;
+	[self cycle];
+	[self refresh];
+}
+
+- (IBAction)stop:(id)sender {
+	[toggleButton setTitle:@"Run"];
+	faulted++;
+}
+
 - (IBAction)toggleRunning:(id)sender {
 	if (faulted) {
-		[toggleButton setTitle:@"Halt"];
-		faulted = 0;
-		[self cycle];
-		[self refresh];
+		[self start:sender];
 	}
 	else {
-		[toggleButton setTitle:@"Run"];
-		faulted++;
+		[self stop:sender];
 	}
 }
 
