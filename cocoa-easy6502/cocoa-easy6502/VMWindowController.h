@@ -7,8 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <v6502/cpu.h>
+
 #import "VMVideoView.h"
-#import "cpu.h"
 
 @interface VMWindowController : NSWindowController <VMVideoViewDelegate> {
 	v6502_cpu *cpu;

@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "mem.h"
+#import <v6502/mem.h>
 
 @protocol VMVideoViewDelegate <NSObject>
 

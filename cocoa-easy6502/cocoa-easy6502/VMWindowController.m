@@ -6,12 +6,12 @@
 //  Copyright (c) 平成25年 Hello-Channel, LLC. All rights reserved.
 //
 
-#import "VMWindowController.h"
-#import "cpu.h"
-#import "mem.h"
-#import "reverse.h"
-
 #import <HIToolbox/Events.h>
+#import <v6502/cpu.h>
+#import <v6502/mem.h>
+#import <dis6502/reverse.h>
+
+#import "VMWindowController.h"
 
 #define DEFAULT_RESET_VECTOR	0x0600
 
