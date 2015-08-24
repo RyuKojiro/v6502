@@ -15,6 +15,8 @@
 
 #define DEFAULT_RESET_VECTOR	0x0600
 
+#define kCEZFreezeFileType		@"v6freeze"
+
 volatile static int faulted;
 
 @interface VMWindowController ()
@@ -65,6 +67,32 @@ BOOL saveFreeze(v6502_cpu *cpu, const char *fname) {
 		fwrite(&byte, sizeof(uint8_t), 1, f);
 	}
 
+	fclose(f);
+	return YES;
+}
+
+BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
+	FILE *f = fopen(fname, "r");
+	if (!f) {
+		return NO;
+	}
+	
+	v6502_cpu tempCpu;
+	
+	fread(&tempCpu, sizeof(v6502_cpu), 1, f);
+	cpu->pc = tempCpu.pc;
+	cpu->sp = tempCpu.sp;
+	cpu->sr = tempCpu.sr;
+	cpu->x = tempCpu.x;
+	cpu->y = tempCpu.y;
+	cpu->ac = tempCpu.ac;
+	
+	for (uint16_t offset = 0; offset < v6502_memoryStartCeiling; offset++) {
+		uint8_t byte;
+		fread(&byte, sizeof(uint8_t), 1, f);
+		v6502_write(cpu->memory, offset, byte);
+	}
+	
 	fclose(f);
 	return YES;
 }
@@ -140,7 +168,7 @@ BOOL saveFreeze(v6502_cpu *cpu, const char *fname) {
 	
 	NSSavePanel *p = [NSSavePanel savePanel];
 	p.title = @"Freeze State";
-	p.requiredFileType = @"v6freeze";
+	p.requiredFileType = kCEZFreezeFileType;
 	[p beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
 		if (result == NSFileHandlingPanelOKButton) {
 			if (!saveFreeze(cpu, [p.filename cStringUsingEncoding:NSUTF8StringEncoding])) {
@@ -157,6 +185,18 @@ BOOL saveFreeze(v6502_cpu *cpu, const char *fname) {
 
 - (IBAction)loadFreeze:(id)sender {
 	[self stop:sender];
+	
+	NSOpenPanel *p = [NSOpenPanel openPanel];
+	p.title = @"Load Freeze State";
+	p.requiredFileType = kCEZFreezeFileType;
+	[p beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
+		if (result == NSFileHandlingPanelOKButton) {
+			if (!loadFreeze(cpu, [p.filename cStringUsingEncoding:NSUTF8StringEncoding])) {
+				NSAlert *alert = [NSAlert alertWithMessageText:@"Failed to open" defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"There was a problem trying to open the freeze file for reading."];
+				[alert beginSheetModalForWindow:self.window completionHandler:nil];
+			}
+		}
+	}];
 }
 
 - (IBAction)videoReset:(id)sender {
