@@ -28,7 +28,6 @@
 #include <as6502/error.h>
 #include <dis6502/reverse.h>
 #include <as6502/symbols.h>
-
 #include <ld6502/flat.h>
 #include <ld6502/ines.h>
 

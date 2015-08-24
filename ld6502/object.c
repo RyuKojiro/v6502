@@ -25,11 +25,11 @@
 #include <strings.h>
 #include <assert.h>
 
-#include "object.h"
 #include <as6502/error.h>
 #include <as6502/parser.h>
 #include <dis6502/reverse.h>
 
+#include "object.h"
 #include "flat.h"
 #include "ines.h"
 

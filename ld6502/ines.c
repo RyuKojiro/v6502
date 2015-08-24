@@ -25,8 +25,9 @@
 #include <strings.h>
 #include <stdlib.h>
 
-#include "ines.h"
 #include <as6502/parser.h>
+
+#include "ines.h"
 
 #define ines_16kUnits					16384
 #define ines_8kUnits					8192

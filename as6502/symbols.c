@@ -27,13 +27,13 @@
 #include <ctype.h> // isspace
 #include <assert.h>
 
+#include <v6502/mem.h>
+#include <v6502/cpu.h>
+
 #include "symbols.h"
 #include "error.h"
 #include "linectl.h"
 #include "parser.h"
-
-#include <v6502/mem.h>
-#include <v6502/cpu.h>
 
 #define v6502_DesymbolicationErrorText	"Could not shift string far enough while desymbolicating"
 #define v6502_DuplicateSymbolErrorText	"Encountered duplicate symbol declaration '%s'"

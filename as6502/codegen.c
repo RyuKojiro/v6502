@@ -20,16 +20,16 @@
  * IN THE SOFTWARE.
  */
 
+#include <string.h>
+#include <strings.h>
+#include <stdlib.h>
+#include <assert.h>
+
 #include "codegen.h"
 #include "parser.h"
 #include "linectl.h"
 #include "error.h"
 #include "token.h"
-
-#include <string.h>
-#include <strings.h>
-#include <stdlib.h>
-#include <assert.h>
 
 #define MAX_HEX_LEN 8
 

@@ -20,10 +20,11 @@
  * IN THE SOFTWARE.
  */
 
-#include "reverse.h"
+#include <string.h>
+
 #include <as6502/error.h>
 
-#include <string.h>
+#include "reverse.h"
 
 /** @brief The maximum allowed buffer size for symbol names */
 #define dis6502_maximumSymbolNameLength		255

@@ -25,17 +25,17 @@
 #include <unistd.h> // getopt
 #include <stdlib.h> // free
 
+#include <ld6502/object.h>
+#include <ld6502/flat.h>
+#include <ld6502/ines.h>
+
 #include "linectl.h"
 #include "parser.h"
 #include "symbols.h"
-#include <ld6502/object.h>
 #include "codegen.h"
 #include "error.h"
 #include "color.h"
 #include "token.h"
-
-#include <ld6502/flat.h>
-#include <ld6502/ines.h>
 
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255

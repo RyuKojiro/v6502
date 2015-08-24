@@ -28,13 +28,14 @@
 #include <signal.h>
 #include <histedit.h>
 
-#include "cpu.h"
-#include "mem.h"
-#include "log.h"
 #include <as6502/parser.h>
 #include <as6502/error.h>
 #include <dis6502/reverse.h>
 #include <as6502/linectl.h>
+
+#include "cpu.h"
+#include "mem.h"
+#include "log.h"
 #include "breakpoint.h"
 #include "textmode.h"
 
