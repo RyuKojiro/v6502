@@ -58,6 +58,8 @@ BOOL saveFreeze(v6502_cpu *cpu, const char *fname) {
 		return NO;
 	}
 	
+	fwrite(&cpu, sizeof(cpu), 1, f);
+	
 	for (uint16_t offset = 0; offset < v6502_memoryStartCeiling; offset++) {
 		uint8_t byte = v6502_read(cpu->memory, offset, NO);
 		fwrite(&byte, sizeof(uint8_t), 1, f);
