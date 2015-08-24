@@ -24,13 +24,13 @@
 #include <unistd.h>
 #include <ctype.h>
 
-#include "object.h"
-#include "error.h"
-#include "reverse.h"
-#include "symbols.h"
+#include <ld6502/object.h>
+#include <as6502/error.h>
+#include <dis6502/reverse.h>
+#include <as6502/symbols.h>
 
-#include "flat.h"
-#include "ines.h"
+#include <ld6502/flat.h>
+#include <ld6502/ines.h>
 
 #define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80

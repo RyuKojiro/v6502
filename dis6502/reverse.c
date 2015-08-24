@@ -21,7 +21,7 @@
  */
 
 #include "reverse.h"
-#include "error.h"
+#include <as6502/error.h>
 
 #include <string.h>
 
