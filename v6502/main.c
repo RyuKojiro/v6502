@@ -31,10 +31,10 @@
 #include "cpu.h"
 #include "mem.h"
 #include "log.h"
-#include "parser.h"
-#include "error.h"
-#include "reverse.h"
-#include "linectl.h"
+#include <as6502/parser.h>
+#include <as6502/error.h>
+#include <dis6502/reverse.h>
+#include <as6502/linectl.h>
 #include "breakpoint.h"
 #include "textmode.h"
 

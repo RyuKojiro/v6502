@@ -6,7 +6,7 @@ SRCS=		main.c
 LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502 
 OBJS=		$(SRCS:.c=.o)
 MANPAGE=	as6502.1
-HEADERS=	parser.h codegen.h symbols.h token.h
+HEADERS=	parser.h codegen.h symbols.h token.h linectl.h color.h
 
 all: $(PROG)
 

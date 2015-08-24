@@ -24,7 +24,7 @@
 #include <assert.h>
 
 #include "breakpoint.h"
-#include "parser.h"
+#include <as6502/parser.h>
 
 v6502_breakpoint_list *v6502_createBreakpointList(void) {
 	v6502_breakpoint_list *result = malloc(sizeof(v6502_breakpoint_list));
