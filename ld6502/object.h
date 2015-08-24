@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "symbols.h"
+#include <as6502/symbols.h>
 
 /** @struct */
 /** @brief A single blob of typeless object data */

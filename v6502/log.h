@@ -26,8 +26,8 @@
 #ifndef v6502_core_h
 #define v6502_core_h
 
-#include "cpu.h"
-#include "breakpoint.h"
+#include <v6502/cpu.h>
+#include <v6502/breakpoint.h>
 
 /** @defgroup log VM State Logging */
 /**@{*/

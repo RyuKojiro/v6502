@@ -22,8 +22,9 @@
 
 #include <stdio.h>
 
+#include <as6502/error.h>
+
 #include "flat.h"
-#include "error.h"
 
 void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file) {
 	if (obj->count > 1) {

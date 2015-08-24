@@ -25,10 +25,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <as6502/error.h>
+#include <as6502/symbols.h>
+
 #include "object.h"
-#include "error.h"
 #include "flat.h"
-#include "symbols.h"
 #include "ines.h"
 
 #define MAX_FILENAME_LEN	255

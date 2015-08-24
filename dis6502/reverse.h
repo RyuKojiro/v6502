@@ -28,9 +28,9 @@
 
 #include <stdio.h>
 
-#include "cpu.h"
-#include "parser.h"
-#include "object.h"
+#include <v6502/cpu.h>
+#include <as6502/parser.h>
+#include <ld6502/object.h>
 
 /** @defgroup rev Instruction Disassembly */
 /**@{*/

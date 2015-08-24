@@ -26,7 +26,7 @@
 #ifndef ld6502_ines_h
 #define ld6502_ines_h
 
-#include "object.h"
+#include <ld6502/object.h>
 
 /** @brief An enum to denote possible NES video modes */
 typedef enum {

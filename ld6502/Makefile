@@ -5,8 +5,24 @@ PROG=		ld6502
 SRCS=		main.c
 LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502
 OBJS=		$(SRCS:.c=.o)
+MANPAGE=	ld6502.1
+HEADERS=	object.h aout.h flat.h ines.h
 
 all: $(PROG)
+
+install: $(PROG) $(LIBLD6502)
+	install $(MANPAGE) $(MANDEST)
+	install $(PROG) $(BINDEST)
+	install $(LIBLD6502) $(LIBDEST)
+	install -d $(INCDEST)/$(PROG)/
+	install $(HEADERS) $(INCDEST)/$(PROG)/
+
+uninstall: $(PROG) $(LIBLD6502)
+	rm -f $(MANDEST)/$(MANPAGE)
+	rm -f $(BINDEST)/$(PROG)
+	rm -f $(LIBDEST)/$(LIBLD6502)
+	rm -rf $(INCDEST)/$(PROG)/
+
 
 lib: $(LIBLD6502_OBJS)
 	$(AR) $(ARFLAGS) libld6502.a $(LIBLD6502_OBJS)

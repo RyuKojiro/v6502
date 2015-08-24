@@ -20,17 +20,17 @@
  * IN THE SOFTWARE.
  */
 
-#include "token.h"
-#include "linectl.h"
-#include "error.h"
-#include "mem.h"
-
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
 #include <stdlib.h>
-
 #include <sys/time.h>
+
+#include <v6502/mem.h>
+
+#include "token.h"
+#include "linectl.h"
+#include "error.h"
 
 as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 	as6502_token *result = malloc(sizeof(as6502_token));

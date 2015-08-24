@@ -26,7 +26,7 @@
 #ifndef as6502_flat_h
 #define as6502_flat_h
 
-#include "object.h"
+#include <ld6502/object.h>
 
 /** @brief Writes an ld6502_object directly to a flat file */
 void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file);

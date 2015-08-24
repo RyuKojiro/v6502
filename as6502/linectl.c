@@ -20,10 +20,10 @@
  * IN THE SOFTWARE.
  */
 
-#include "linectl.h"
-
 #include <string.h>
 #include <ctype.h>
+
+#include "linectl.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-qual"

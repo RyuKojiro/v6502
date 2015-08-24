@@ -28,8 +28,8 @@
 
 #include <string.h>
 
-#include "cpu.h"
-#include "token.h"
+#include <v6502/cpu.h>
+#include <as6502/token.h>
 
 /** @defgroup parser_translit Instruction Transliteration */
 /**@{*/

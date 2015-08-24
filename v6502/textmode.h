@@ -28,7 +28,7 @@
 
 #include <curses.h>
 
-#include "mem.h"
+#include <v6502/mem.h>
 
 /** @brief The start address of character data in memory */
 #define textMode_characterMemoryStart	0x2000
