@@ -224,6 +224,7 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 
 - (IBAction)step:(id)sender {
 	[self cycle];
+	[self update];
 }
 
 - (IBAction)dumpMemory:(id)sender {
