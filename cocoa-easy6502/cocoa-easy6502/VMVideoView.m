@@ -8,10 +8,34 @@
 
 #import "VMVideoView.h"
 
-#define VIDEO_OFFSET	0x0200
+#define VIDEO_OFFSET		0x0200
+#define VIDEO_WIDTH			32
+#define VIDEO_HEIGHT		32
+#define VIDEO_PIXELCOUNT	(VIDEO_WIDTH * VIDEO_HEIGHT)
 
 @implementation VMVideoView
 @synthesize mem, selectedPixel, delegate;
+
+#pragma mark - Callback Support and Memory Mapping
+
+void video_writeCallback(v6502_memory *memory, uint16_t offset, uint8_t value, void *context) {
+	// TODO: In the future this should only update the single pixel that changed.
+	memory->bytes[offset] = value;
+	
+	VMVideoView *self = context;
+	[self setNeedsDisplay:YES];
+}
+
+- (void) setMem:(v6502_memory *)m {
+	mem = m;
+	v6502_map(mem, VIDEO_OFFSET, VIDEO_PIXELCOUNT, NULL, video_writeCallback, self);
+}
+
+- (v6502_memory *)mem {
+	return mem;
+}
+
+#pragma mark - Object Lifecycle
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -21,7 +45,7 @@
 		NSLayoutConstraint *square = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:0 toItem:self attribute:NSLayoutAttributeWidth multiplier:1 constant:0];
 		[self addConstraint:square];
     }
-    
+	
     return self;
 }
 
@@ -105,13 +129,13 @@
 
 - (void) testPattern {
 	char v = 0;
-	for (uint16_t addr = VIDEO_OFFSET; addr < VIDEO_OFFSET + (32 * 32); addr++) {
+	for (uint16_t addr = VIDEO_OFFSET; addr < VIDEO_OFFSET + VIDEO_PIXELCOUNT; addr++) {
 		mem->bytes[addr] = v++;
 	}
 }
 
 - (void) resetVideoMemory {
-	for (uint16_t addr = VIDEO_OFFSET; addr < VIDEO_OFFSET + (32 * 32); addr++) {
+	for (uint16_t addr = VIDEO_OFFSET; addr < VIDEO_OFFSET + VIDEO_PIXELCOUNT; addr++) {
 		mem->bytes[addr] = 0;
 	}
 }
@@ -128,8 +152,8 @@
 	uint8_t byte;
 		
 	NSPoint point;
-	for (point.x = 0; point.x < 32; point.x++) {
-		for (point.y = 0; point.y < 32; point.y++) {
+	for (point.x = 0; point.x < VIDEO_WIDTH; point.x++) {
+		for (point.y = 0; point.y < VIDEO_HEIGHT; point.y++) {
 			byte = mem->bytes[addressForRawPoint(point)];
 			if (byte) {
 				[VMVideoView setColorForByte:byte];

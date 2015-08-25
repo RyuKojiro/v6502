@@ -145,18 +145,9 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 	else {
 		[toggleButton setTitle:@"Run"];
 	}
-}
-
-- (void) refresh {
-	// Refresh Video
-	[video setNeedsDisplay:YES];
 	
 	// Update fields
 	[self update];
-
-	if (!faulted && !(cpu->sr & v6502_cpu_status_break)) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.02f];
-	}
 }
 
 - (IBAction)reset:(id)sender {
@@ -216,7 +207,6 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 	[toggleButton setTitle:@"Halt"];
 	faulted = 0;
 	[self cycle];
-	[self refresh];
 }
 
 - (IBAction)stop:(id)sender {
@@ -235,7 +225,6 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 
 - (IBAction)step:(id)sender {
 	[self cycle];
-	[self refresh];
 }
 
 - (IBAction)dumpMemory:(id)sender {
