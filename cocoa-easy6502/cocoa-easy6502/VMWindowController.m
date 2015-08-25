@@ -24,12 +24,6 @@
 
 volatile static int faulted;
 
-@interface VMWindowController () {
-	NSTimer *oscillator;
-}
-
-@end
-
 @implementation VMWindowController
 @synthesize video;
 @synthesize pcField, acField, xField, yField, spField, srField, instructionField, logCheckBox, toggleButton, pixelField;
