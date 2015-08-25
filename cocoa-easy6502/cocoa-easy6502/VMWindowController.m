@@ -131,7 +131,6 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 - (void) cycle {
 	// Update keypress byte, hold for clock cycle, and refresh random byte
 	//mem->bytes[0xff] = (uint8_t)getch();
-	cpu->memory->bytes[0xfe] = (uint8_t)arc4random();
 
 	// Processor time
 	v6502_step(cpu);
@@ -245,6 +244,10 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 	}
 }
 
+uint8_t randomByteCallback(struct _v6502_memory *memory, uint16_t offset, int trap, void *context) {
+	return (uint8_t)arc4random();
+}
+
 - (void)windowDidLoad
 {
     [super windowDidLoad];
@@ -265,6 +268,9 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 	v6502_write(cpu->memory, v6502_memoryVectorResetLow, DEFAULT_RESET_VECTOR & 0xFF);
 	v6502_write(cpu->memory, v6502_memoryVectorResetHigh, DEFAULT_RESET_VECTOR >> 8);
 
+	// Wire the random byte to the randomizer
+	v6502_map(cpu->memory, 0xfe, 1, randomByteCallback, NULL, NULL);
+	
 	// Reset the cpu
 	v6502_reset(cpu);
 	
