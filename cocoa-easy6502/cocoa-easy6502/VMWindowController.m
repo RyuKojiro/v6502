@@ -15,6 +15,9 @@
 
 #define DEFAULT_RESET_VECTOR	0x0600
 
+#define MEM_RANDOM_BYTE			0x00FE
+#define MEM_KEYBOARD_BYTE		0x00FF
+
 #define kCEZFreezeFileType		@"v6freeze"
 
 volatile static int faulted;
@@ -269,7 +272,7 @@ uint8_t randomByteCallback(struct _v6502_memory *memory, uint16_t offset, int tr
 	v6502_write(cpu->memory, v6502_memoryVectorResetHigh, DEFAULT_RESET_VECTOR >> 8);
 
 	// Wire the random byte to the randomizer
-	v6502_map(cpu->memory, 0xfe, 1, randomByteCallback, NULL, NULL);
+	v6502_map(cpu->memory, MEM_RANDOM_BYTE, 1, randomByteCallback, NULL, NULL);
 	
 	// Reset the cpu
 	v6502_reset(cpu);
@@ -281,16 +284,16 @@ uint8_t randomByteCallback(struct _v6502_memory *memory, uint16_t offset, int tr
 - (void) keyDown:(NSEvent *)theEvent {
 	switch ([theEvent keyCode]) {
 		case kVK_ANSI_W: {
-			cpu->memory->bytes[0xFF] = 'w';
+			cpu->memory->bytes[MEM_KEYBOARD_BYTE] = 'w';
 		} break;
 		case kVK_ANSI_A: {
-			cpu->memory->bytes[0xFF] = 'a';
+			cpu->memory->bytes[MEM_KEYBOARD_BYTE] = 'a';
 		} break;
 		case kVK_ANSI_S: {
-			cpu->memory->bytes[0xFF] = 's';
+			cpu->memory->bytes[MEM_KEYBOARD_BYTE] = 's';
 		} break;
 		case kVK_ANSI_D: {
-			cpu->memory->bytes[0xFF] = 'd';
+			cpu->memory->bytes[MEM_KEYBOARD_BYTE] = 'd';
 		} break;
 		default:
 			break;
