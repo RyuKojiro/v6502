@@ -18,6 +18,8 @@
 #define MEM_RANDOM_BYTE			0x00FE
 #define MEM_KEYBOARD_BYTE		0x00FF
 
+#define CPU_PERIOD				100 // µs
+
 #define kCEZFreezeFileType		@"v6freeze"
 
 volatile static int faulted;
@@ -132,24 +134,25 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 }
 
 - (void) cycle {
-	// Update keypress byte, hold for clock cycle, and refresh random byte
-	//mem->bytes[0xff] = (uint8_t)getch();
-
-	// Processor time
-	v6502_step(cpu);
-	
-	// Exit on break
-	if (cpu->sr & v6502_cpu_status_break) {
-		return;
-	}
-			
-	if (faulted) {
-		[oscillator invalidate];
-		[toggleButton setTitle:@"Run"];
+	if (![NSThread isMainThread]) {
+		[[NSThread currentThread] setName:@"v6502 CPU"];
 	}
 	
-	// Update fields
-	//[self update];
+	do {
+		// Processor time
+		v6502_step(cpu);
+		
+		// Exit on break
+		if (cpu->sr & v6502_cpu_status_break) {
+			return;
+		}
+		
+		// Update fields
+		//[self update];
+		
+		// Throttle CPU Frequency
+		usleep(CPU_PERIOD);
+	} while (!faulted);
 }
 
 - (IBAction)reset:(id)sender {
@@ -208,12 +211,7 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 - (IBAction)start:(id)sender {
 	[toggleButton setTitle:@"Halt"];
 	faulted = 0;
-	oscillator = [NSTimer scheduledTimerWithTimeInterval:0.0001f
-												  target:self
-												selector:@selector(cycle)
-												userInfo:nil
-												 repeats:YES];
-	[self cycle];
+	[self performSelectorInBackground:@selector(cycle) withObject:nil];
 }
 
 - (IBAction)stop:(id)sender {
