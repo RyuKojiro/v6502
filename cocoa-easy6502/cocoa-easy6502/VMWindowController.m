@@ -19,7 +19,9 @@
 
 volatile static int faulted;
 
-@interface VMWindowController ()
+@interface VMWindowController () {
+	NSTimer *oscillator;
+}
 
 @end
 
@@ -139,15 +141,13 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 		return;
 	}
 			
-	if (!faulted) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.0001f];
-	}
-	else {
+	if (faulted) {
+		[oscillator invalidate];
 		[toggleButton setTitle:@"Run"];
 	}
 	
 	// Update fields
-	[self update];
+	//[self update];
 }
 
 - (IBAction)reset:(id)sender {
@@ -206,6 +206,11 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 - (IBAction)start:(id)sender {
 	[toggleButton setTitle:@"Halt"];
 	faulted = 0;
+	oscillator = [NSTimer scheduledTimerWithTimeInterval:0.0001f
+												  target:self
+												selector:@selector(cycle)
+												userInfo:nil
+												 repeats:YES];
 	[self cycle];
 }
 
