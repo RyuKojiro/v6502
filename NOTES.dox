@@ -113,7 +113,13 @@ IN THE SOFTWARE.
 
 \page mem_cache Memory Map Cache
 
+\section Background
 Basically, the memory map cache is two arrays of pointers that are the length of the entire memory in bytes. That is to say, for a 64 kilobyte virtual memory object (the maximum addressable) you will get a 32 or 64 bit (depending on host architecture) times 64 kilobit array of pointers to v6502_readFunction's, and a same-sized array of v6502_writeFunction's. This is a classic space-time tradeoff that reduces the memory mapping lookups to the subscripting of a C-array, rather than the traditional linked list traversal that was used in the v6502 earlier on. The time overhead is slightly increased during v6502_map calls, since it has to update the map, but only the portions of the map that change are updated, and the map is not intended to be changed rapidly during runtime, so the performance hit should be negligible.
+
+\section Caveats
+The large memory overhead is the obvious downside. This is somewhat mitigated by the fact that read, write, and context caches are allocated separately, and lazily. In the case where there are only context-free write-trap style mappings, this saves two-thirds of the cache size.
+
+A more important and much more dangerous caveat is that the map cache should not be toggled. There is currently no cache rebuild function (although one will probably come soon). When map caching is disabled, maps will not be added to the caches (which will also not be dynamically allocated). So, if mappings are made with caching off, and then caching is turned on, the cache will be hit without a hard lookup, causing cache misses that trick the mapper into thinking that the mappings don't exist at runtime. This can all be avoided by setting the map caching as early as possible, and not altering it later.
 
 \page dis Disassembler
 \section dis_usage Arguments and Usage
