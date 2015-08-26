@@ -84,14 +84,14 @@ int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFun
 	// Finally, if caching is enabled, update the cache
 	if (memory->mapCacheEnabled) {
 		// Make sure allocations are safe, first
-		if (!memory->readCache && read) {
-			// allocate the read cache
+		if (read && !memory->readCache) {
+			memory->readCache = malloc(sizeof(v6502_readFunction *) * memory->size);
 		}
-		if (!memory->writeCache && write) {
-			// allocate the write cache
+		if (write && !memory->writeCache) {
+			memory->writeCache = malloc(sizeof(v6502_writeFunction *) * memory->size);
 		}
-		if (!memory->contextCache && context) {
-			// allocate the context cache
+		if (context && !memory->contextCache) {
+			memory->contextCache = malloc(sizeof(void *) * memory->size);
 		}
 
 		// Blit the map
