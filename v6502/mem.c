@@ -117,7 +117,8 @@ void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
 	if (memory->mapCacheEnabled) {
 		// Check cache
 		if (memory->writeCache && memory->writeCache[offset]) {
-			memory->writeCache[offset](memory, offset, value, memory->contextCache[offset]);
+			void *context = memory->contextCache ? memory->contextCache[offset] : NULL;
+			memory->writeCache[offset](memory, offset, value, context);
 			return;
 		}
 	}
@@ -142,8 +143,9 @@ uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap) {
 	
 	if (memory->mapCacheEnabled) {
 		// Check cache
-		if (memory->readCache) {
-			return memory->readCache[offset](memory, offset, trap, memory->contextCache[offset]);
+		if (memory->readCache && memory->readCache[offset]) {
+			void *context = memory->contextCache ? memory->contextCache[offset] : NULL;
+			return memory->readCache[offset](memory, offset, trap, context);
 		}
 	}
 	else {
