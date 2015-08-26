@@ -6,16 +6,12 @@
 //  Copyright (c) 平成25年 Hello-Channel, LLC. All rights reserved.
 //
 
-#include <mach/mach_time.h>
-#include <CoreServices/CoreServices.h>
-
 #import "VMVideoView.h"
 
-#define VIDEO_OFFSET			0x0200
-#define VIDEO_WIDTH				32
-#define VIDEO_HEIGHT			32
-#define VIDEO_PIXELCOUNT		(VIDEO_WIDTH * VIDEO_HEIGHT)
-#define VIDEO_REFRESH_PERIOD	3.333E7 // ns (30Hz)
+#define VIDEO_OFFSET		0x0200
+#define VIDEO_WIDTH			32
+#define VIDEO_HEIGHT		32
+#define VIDEO_PIXELCOUNT	(VIDEO_WIDTH * VIDEO_HEIGHT)
 
 @implementation VMVideoView
 @synthesize mem, selectedPixel, delegate;
@@ -27,15 +23,7 @@ void video_writeCallback(v6502_memory *memory, uint16_t offset, uint8_t value, v
 	memory->bytes[offset] = value;
 	
 	VMVideoView *self = context;
-	
-	// This throttles -setNeedsDisplay:, since it's the real CPU hog
-	uint64_t t = mach_absolute_time();
-	uint64_t diff = t - self.lastRefresh;
-	Nanoseconds elapsed = AbsoluteToNanoseconds(*(AbsoluteTime *)&diff);
-	if ((*(uint64_t *)&elapsed) > VIDEO_REFRESH_PERIOD) {
-		self.lastRefresh = t;
-		[self setNeedsDisplay:YES];
-	}
+	[self setNeedsDisplay:YES];
 }
 
 - (void) setMem:(v6502_memory *)m {
