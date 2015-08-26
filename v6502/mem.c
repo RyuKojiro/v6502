@@ -195,6 +195,7 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	// Zero out the Map
 	memory->rangeCount = 0;
 	memory->mappedRanges = NULL;
+	
 	memory->mapCacheEnabled = NO;
 	memory->readCache = NULL;
 	memory->writeCache = NULL;
@@ -207,6 +208,10 @@ void v6502_destroyMemory(v6502_memory *memory) {
 	if (!memory) {
 		return;
 	}
+	
+	free(memory->readCache);
+	free(memory->writeCache);
+	free(memory->contextCache);
 	
 	free(memory->mappedRanges);
 	free(memory->bytes);
