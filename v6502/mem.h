@@ -130,6 +130,14 @@ typedef struct _v6502_memory {
 	v6502_mappedRange *mappedRanges;
 	/** @brief Number of memory map ranges in array */
 	size_t rangeCount;
+	/** @brief @ref mem_cache control */
+	int mapCacheEnabled;
+	/** @brief Memory map read cache (See: @ref mem_cache) */
+	v6502_readFunction **readCache;
+	/** @brief Memory map write cache (See: @ref mem_cache) */
+	v6502_writeFunction **writeCache;
+	/** @brief Memory map context cache (See: @ref mem_cache) */
+	void **contextCache;
 } v6502_memory;
 
 /** @defgroup mem_lifecycle Memory Lifecycle Functions */

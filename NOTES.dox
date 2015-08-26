@@ -14,6 +14,7 @@ subsections. (L) indicates that a module is a member of its library target.
 		- \ref mem_boundaries
 		- \ref mem_lifecycle
 		- \ref mem_access
+		- \ref mem_cache
 	- \ref log.h
 		- \ref log
 	- \ref breakpoint.h
@@ -109,6 +110,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 \endverbatim
+
+\page mem_cache Memory Map Cache
+
+Basically, the memory map cache is two arrays of pointers that are the length of the entire memory in bytes. That is to say, for a 64 kilobyte virtual memory object (the maximum addressable) you will get a 32 or 64 bit (depending on host architecture) times 64 kilobit array of pointers to v6502_readFunction's, and a same-sized array of v6502_writeFunction's. This is a classic space-time tradeoff that reduces the memory mapping lookups to the subscripting of a C-array, rather than the traditional linked list traversal that was used in the v6502 earlier on. The time overhead is slightly increased during v6502_map calls, since it has to update the map, but only the portions of the map that change are updated, and the map is not intended to be changed rapidly during runtime, so the performance hit should be negligible.
 
 \page dis Disassembler
 \section dis_usage Arguments and Usage

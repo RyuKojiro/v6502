@@ -81,39 +81,84 @@ int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFun
 	
 	memory->rangeCount++;
 
+	// Finally, if caching is enabled, update the cache
+	if (memory->mapCacheEnabled) {
+		// Make sure allocations are safe, first
+		if (!memory->readCache && read) {
+			// allocate the read cache
+		}
+		if (!memory->writeCache && write) {
+			// allocate the write cache
+		}
+		if (!memory->contextCache && context) {
+			// allocate the context cache
+		}
+
+		// Blit the map
+		for (uint16_t i = start; i < start + size; i++) {
+			if (read) {
+				memory->readCache[i] = read;
+			}
+			if (write) {
+				memory->writeCache[i] = write;
+			}
+			if (context) {
+				memory->contextCache[i] = context;
+			}
+		}
+	}
+
 	return NO;
 }
 
 void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
 	assert(memory);
-
-	// Check map
-	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
-	assert((offset < memory->size) || (range && range->write));
-
-	if (range && range->write) {
-		range->write(memory, offset, value, range->context);
+	
+	if (memory->mapCacheEnabled) {
+		// Check cache
+		if (memory->writeCache && memory->writeCache[offset]) {
+			memory->writeCache[offset](memory, offset, value, memory->contextCache[offset]);
+			return;
+		}
 	}
 	else {
-		assert(memory->bytes);
-		memory->bytes[offset] = value;
+		// Check hard map
+		v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
+		assert((offset < memory->size) || (range && range->write));
+
+		if (range && range->write) {
+			range->write(memory, offset, value, range->context);
+			return;
+		}
 	}
+
+	// Not memory mapped
+	assert(memory->bytes);
+	memory->bytes[offset] = value;
 }
 
 uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap) {
 	assert(memory);
 	
-	// Search mapped memory regions to see if we should defer to the map
-	v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
-	assert((offset < memory->size) || (range && range->read));
-
-	if (range && range->read) {
-		return range->read(memory, offset, trap, range->context);
+	if (memory->mapCacheEnabled) {
+		// Check cache
+		if (memory->readCache) {
+			return memory->readCache[offset](memory, offset, trap, memory->contextCache[offset]);
+		}
 	}
 	else {
-		assert(memory->bytes);
-		return memory->bytes[offset];
+		// Search mapped memory regions to see if we should defer to the map
+		v6502_mappedRange *range = v6502_mappedRangeForOffset(memory, offset);
+		assert((offset < memory->size) || (range && range->read));
+
+		if (range && range->read) {
+			return range->read(memory, offset, trap, range->context);
+		}
 	}
+
+	// Not memory mapped
+	assert(memory->bytes);
+	return memory->bytes[offset];
 }
 
 void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16_t size) {
@@ -150,7 +195,11 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	// Zero out the Map
 	memory->rangeCount = 0;
 	memory->mappedRanges = NULL;
-	
+	memory->mapCacheEnabled = NO;
+	memory->readCache = NULL;
+	memory->writeCache = NULL;
+	memory->contextCache = NULL;
+
 	return memory;
 }
 
