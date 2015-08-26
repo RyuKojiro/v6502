@@ -28,6 +28,10 @@ void video_writeCallback(v6502_memory *memory, uint16_t offset, uint8_t value, v
 
 - (void) setMem:(v6502_memory *)m {
 	mem = m;
+	
+	// Enable map caching
+	mem->mapCacheEnabled = NO;
+
 	v6502_map(mem, VIDEO_OFFSET, VIDEO_PIXELCOUNT, NULL, video_writeCallback, self);
 }
 
