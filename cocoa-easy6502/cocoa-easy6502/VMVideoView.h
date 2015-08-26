@@ -21,6 +21,7 @@
 	id <VMVideoViewDelegate> delegate;
 }
 
+@property (readwrite) uint64_t lastRefresh;
 @property (readwrite) v6502_memory *mem;
 @property (readonly) uint16_t selectedPixel;
 @property (nonatomic, assign) id <VMVideoViewDelegate> delegate;
