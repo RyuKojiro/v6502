@@ -126,12 +126,12 @@ int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_ta
 void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentBlob, as6502_token *head) {
 	assert(obj);
 
-	if (as6502_tokenIsEqualToStringLiteral(head, "data")) {
+	if (as6502_tokenIsEqualToStringLiteral(head, ".data")) {
 		// start new blob
 		ld6502_addBlobToObject(obj, v6502_memoryStartProgram);
 		*currentBlob = obj->count - 1;
 	}
-	else if (as6502_tokenIsEqualToStringLiteral(head, "org")) {
+	else if (as6502_tokenIsEqualToStringLiteral(head, ".org")) {
 		if (!head->next) {
 			as6502_error(head->loc, head->len, "Encountered .org directive without an address afterwards.");
 			return;
@@ -141,7 +141,7 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, head->next->text));
 		*currentBlob = obj->count - 1;
 	}
-	else if (as6502_tokenIsEqualToStringLiteral(head, "end")) {
+	else if (as6502_tokenIsEqualToStringLiteral(head, ".end")) {
 		// revert to top blob
 		*currentBlob = 0;
 	}
