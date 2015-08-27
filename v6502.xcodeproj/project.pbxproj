@@ -357,6 +357,7 @@
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6FE6FB117376FCD00B4D249 /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = as6502/error.c; sourceTree = "<group>"; };
 		E6FE6FB317376FEB00B4D249 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = error.h; path = as6502/error.h; sourceTree = "<group>"; };
+		E6FF45471B8EEF5B0008611D /* print.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = print.s; sourceTree = "<group>"; };
 		E6FF8995193FA292000DD391 /* libtermcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtermcap.dylib; path = /usr/lib/libtermcap.dylib; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -461,6 +462,7 @@
 				E61D402E1799B5A1009BA763 /* overflow.s */,
 				E6828B2D1992E0C900442439 /* wozfp1.s */,
 				E6DCD51D1A56A048002008BE /* main.c */,
+				E6FF45471B8EEF5B0008611D /* print.s */,
 			);
 			name = Tests;
 			path = tests;
