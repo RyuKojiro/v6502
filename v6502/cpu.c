@@ -21,6 +21,7 @@
  */
 
 #include <stdlib.h>
+#include <unistd.h> // for WAI instruction's sleep()
 
 #include "cpu.h"
 
@@ -500,8 +501,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->y = _executeInPlaceIncrement(cpu, cpu->y);
 		} return;
 		case v6502_opcode_wai: {
-			// Do nothing, to be platform independent
-			// sleep(1);
+			// sleep is POSIX compliant, let's just do that for now
+			sleep(1);
 		} return;
 
 		// Branch Instructions
