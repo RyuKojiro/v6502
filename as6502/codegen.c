@@ -123,28 +123,29 @@ int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_ta
 	return YES;
 }
 
-void as6502_processObjectDirectiveForLine(ld6502_object *obj, int *currentBlob, const char *line, size_t len) {
+void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentBlob, as6502_token *head) {
 	assert(obj);
-	
-	if (len <= 3) {
-		return;
-	}
-	
-	if (!strncasecmp(line + 1, "data", 3)) {
+
+	if (as6502_tokenIsEqualToStringLiteral(head, "data")) {
 		// start new blob
 		ld6502_addBlobToObject(obj, v6502_memoryStartProgram);
 		*currentBlob = obj->count - 1;
 	}
-	else if (!strncasecmp(line + 1, "org", 3)) {
+	else if (as6502_tokenIsEqualToStringLiteral(head, "org")) {
+		if (!head->next) {
+			as6502_error(head->loc, head->len, "Encountered .org directive without an address afterwards.");
+			return;
+		}
+		
 		// start new blob
-		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, line + 5));
+		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, head->next->text));
 		*currentBlob = obj->count - 1;
 	}
-	else if (!strncasecmp(line + 1, "end", 3)) {
+	else if (as6502_tokenIsEqualToStringLiteral(head, "end")) {
 		// revert to top blob
 		*currentBlob = 0;
 	}
 	else {
-		as6502_warn(0, strnspc(line, len) - line, "Unknown assembler directive");
+		as6502_warn(head->loc, head->len, "Unknown assembler directive");
 	}
 }
