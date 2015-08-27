@@ -143,6 +143,12 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 		switch (*cur) {
 			case ';':
 				return head;
+			case '"': {
+				char *closingQuote = strnchr(cur, '"', len);
+				as6502_token *t = as6502_tokenCreate(cur, cur - line, closingQuote - cur);
+				insert(t);
+				cur = closingQuote + 1;
+			} break;
 			case '.': {
 				size_t tlen = as6502_lengthOfToken(cur + 1, remaining - 1);
 				as6502_token *t = as6502_tokenCreate(cur, consumed, tlen + 1);
