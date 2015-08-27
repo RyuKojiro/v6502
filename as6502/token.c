@@ -144,7 +144,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 			case ';':
 				return head;
 			case '"': {
-				char *closingQuote = strnchr(cur, '"', len);
+				char *closingQuote = strnchr(cur + 1, '"', len);
 				as6502_token *t = as6502_tokenCreate(cur, cur - line, closingQuote - cur);
 				insert(t);
 				cur = closingQuote + 1;
