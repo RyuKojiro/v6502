@@ -51,7 +51,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	as6502_instructionForExpression(&opcode, &low, &high, &mode, desymedHead);
 	if (printDot) as6502_printDotRankForList(stdout, desymedHead);
 	as6502_tokenListDestroy(desymedHead);
-
+	
 	addrLen = as6502_instructionLengthForAddressMode(mode);
 	
 	if (addrLen >= 1) {
@@ -196,6 +196,11 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 		// Dot Directives
 		if (head->text[0] == '.') {
+			/* FIXME: This should probably be taken care of in the
+			 * as6502_processObjectDirectiveInExpression that follows, but since
+			 * this does preallocation in the first pass, and works quickly, we
+			 * are going to keep it around for now.
+			 */
 			if (!strncmp(head->text, ".org", 5)) {
 				// Find the preallocated blob and change to it
 				uint16_t start = as6502_valueForString(NULL, head->next->text);
@@ -206,6 +211,9 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 						break;
 					}
 				}
+			}
+			else {
+				as6502_processObjectDirectiveInExpression(obj, &currentBlob, head);
 			}
 		}
 		// Variable assignments
