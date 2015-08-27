@@ -23,19 +23,19 @@
 ;
 
 
-	lda string
-	ldy string+1
+	lda #19
+	ldy #06
 	jsr print
 end:
 	jmp end
 
 print:	; expects string in $YYAA
 	sta *$00 ; create a pointer in *$01,00 that contains the string start
-	sty *$01
 nextChar:
-	lda ($0001),X
+	lda ($00,X)
 	sta $2000,X
 	inx
+	iny
 	beq donePrinting
 	jmp nextChar
 donePrinting:
