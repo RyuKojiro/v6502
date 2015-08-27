@@ -17,7 +17,7 @@ VM=	$(VMDIR)/v6502
 FUZZIN=afl_tests
 FUZZOUT=afl_results
 
-all: compiledTests expectedAssemblyResultSnake circularAssemble #expectedAssemblyResultTextModeTest wozfp
+all: compiledTests expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest #wozfp
 
 install uninstall:
 
@@ -54,7 +54,6 @@ expectedAssemblyResultSnake: $(AS)
 	$(AS) snake.s
 	cksum snake.o > snake.tmp.crc
 	diff snake.o.crc snake.tmp.crc
-
 
 # This attempts to assemble the snake code, comparing the result with an MD5
 # hash of a known-working-good binary.
