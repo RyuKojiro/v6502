@@ -145,6 +145,20 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 		// revert to top blob
 		*currentBlob = 0;
 	}
+	else if (as6502_tokenIsEqualToStringLiteral(head, ".asciiz")) {
+		if (!head->next || head->next->text[0] != '"') {
+			as6502_error(head->loc, head->len, "Encountered .asciiz directive without a string afterwards.");
+			return;
+		}
+
+		const char *string = head->next->text;
+		size_t len = head->next->len;
+		ld6502_object_blob *blob = &obj->blobs[*currentBlob];
+		for (const char *cur = string + 1; *cur && (cur < string + len) && *cur != '"'; cur++) {
+			ld6502_appendByteToBlob(blob, *cur);
+		}
+		ld6502_appendByteToBlob(blob, '\0'); // the 'z' means null terminate
+	}
 	else {
 		as6502_warn(head->loc, head->len, "Unknown assembler directive");
 	}
