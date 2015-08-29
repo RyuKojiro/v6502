@@ -647,6 +647,16 @@ static int _valueLengthInChars(const char *string) {
 	return i;
 }
 
+static int _containsNonDecimals(const char *string) {
+	while (*string) {
+		if (!isdigit(*string)) {
+			return YES;
+		}
+		string++;
+	}
+	return NO;
+}
+
 uint16_t as6502_valueForString(int *wide, const char *string) {
 	char workString[80];
 	uint16_t result;
@@ -707,6 +717,19 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
 			}
+			
+			/* FIXME: Is there a more efficient way to figure out width for
+			 * things that care, without having to get this deep?
+			 *
+			 * NOTE: The logic here is that it must start with a digit to be a
+			 * non-label, and then that means it should be decimal, if it then
+			 * contains any non-digits beyond the first one, this is probably
+			 * a typo/programmer error in the assembly.
+			 */
+			if (isdigit(workString[0]) && _containsNonDecimals(workString)) {
+				as6502_warn(0, 0, "Encountered an undecorated number (implying decimal) containing non-decimal characters.");
+			}
+			
 			result = strtol(workString, NULL, 10);
 		} break;
 	}
