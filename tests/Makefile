@@ -59,7 +59,7 @@ expectedAssemblyResultSnake: $(AS)
 # hash of a known-working-good binary.
 expectedAssemblyResultTextModeTest: $(AS)
 	$(AS) textmode_test.s
-	cksum textmode_test.o > snake.tmp.crc
+	cksum textmode_test.o > textmode_test.tmp.crc
 	diff textmode_test.o.crc textmode_test.tmp.crc
 
 # This simply tries to assemble the Apple II floating point routines originally
