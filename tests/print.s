@@ -23,16 +23,19 @@
 ;
 
 
-	lda #$1d
+	lda #$1f
 	ldy #$06
-	jsr print
+	jsr PRINT
 end:				; This loop is effectively a WAI instruction
 	jmp end
 	jmp string			; This only exists to emit the string label address
 
-print:				; expects string in $YYAA
+;; PRINT ;; line print the string located at $YYAA
+PRINT:
 	sta *$00			; create a pointer in *$01,00 that contains the string start
 	sty *$01			; the lower byte of the target string
+	ldy #$00			; Reset the Y register to zero, since it is next used ¬
+							; as the iterator over the strings
 nextChar:			; This is basically a strcpy loop
 	lda ($00),Y			; load the byte (Y is required for this kind of indirection)
 	sta $2000,Y			; store the byte in the same offset at the target location
