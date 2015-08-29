@@ -66,6 +66,10 @@ void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld65
 	
 	FILE *in = fopen(fileName, "r");
 	
+	if (!in) {
+		as6502_fatal("Failed to open binary file");
+	}
+	
 	// Try to detect the file format if none is specified
 	if (type == ld6502_file_type_None && fileIsINES(in)) {
 		type = ld6502_file_type_iNES;
