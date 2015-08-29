@@ -116,13 +116,16 @@ void as6502_underline(unsigned long loc, unsigned long len) {
 		fprintf(stderr, "\n");
 	}
 
+	// Only render the underline if we have a valid range (non-zero length)
+	if (!len) {
+		return;
+	}
+	
 	printSpaces(loc);
 	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
 
-	if (len) {
-		for (len--; len; len--) {
-			fprintf(stderr, "~");
-		}
+	for (len--; len; len--) {
+		fprintf(stderr, "~");
 	}
 
 	fprintf(stderr, ANSI_COLOR_RESET "\n");
