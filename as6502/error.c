@@ -37,7 +37,12 @@ unsigned long startOfProblem;
 unsigned long lengthOfProblem;
 
 __attribute((noreturn)) void as6502_fatal(const char *reason) {
-	fprintf(stderr, "as6502: fatal: %s\n", reason);
+	if (isatty(fileno(stdin))) {
+		fprintf(stderr, ANSI_COLOR_BRIGHT_WHITE "as6502: " ANSI_COLOR_BRIGHT_RED "fatal:" ANSI_COLOR_BRIGHT_WHITE " %s\n" ANSI_COLOR_RESET, reason);
+	}
+	else {
+		fprintf(stderr, "as6502: fatal: %s\n", reason);
+	}
 	exit(EXIT_FAILURE);
 }
 
