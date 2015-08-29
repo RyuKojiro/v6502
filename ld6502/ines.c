@@ -41,6 +41,10 @@
 #define ines_headerZeroPaddingStart		11
 
 int fileIsINES(FILE *infile) {
+	if (!infile) {
+		return NO;
+	}
+	
 	// Read Magic
 	char magic[ines_magicLength];
 	fread(magic, ines_magicLength, 1, infile);
