@@ -23,23 +23,24 @@
 ;
 
 
-	lda #19
+	lda #1d
 	ldy #06
 	jsr print
-end:
+end:				; This loop is effectively a WAI instruction
 	jmp end
+	jmp string			; This only exists to emit the string label address
 
-print:	; expects string in $YYAA
-	sta *$00 ; create a pointer in *$01,00 that contains the string start
-nextChar:
-	lda ($00,X)
-	sta $2000,X
-	inx
-	iny
-	beq donePrinting
-	jmp nextChar
-donePrinting:
-	rts
+print:				; expects string in $YYAA
+	sta *$00			; create a pointer in *$01,00 that contains the string start
+	sty *$01			; the lower byte of the target string
+nextChar:			; This is basically a strcpy loop
+	lda ($00),Y			; load the byte (Y is required for this kind of indirection)
+	sta $2000,Y			; store the byte in the same offset at the target location
+	iny					; increment the byte offset
+	beq donePrinting	; If the next byte is null, we're done
+	jmp nextChar		; otherwise, rinse and repeat
+donePrinting:		; we hit a null byte
+	rts					; return
 
 string:
 .asciiz "This is line test"
