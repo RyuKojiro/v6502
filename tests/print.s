@@ -23,8 +23,8 @@
 ;
 
 
-	lda #1d
-	ldy #06
+	lda #$1d
+	ldy #$06
 	jsr print
 end:				; This loop is effectively a WAI instruction
 	jmp end
@@ -43,4 +43,4 @@ donePrinting:		; we hit a null byte
 	rts					; return
 
 string:
-.asciiz "This is line test"
+.asciiz "This is a line test"
