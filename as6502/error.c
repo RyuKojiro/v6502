@@ -114,11 +114,14 @@ static void printSpaces(unsigned long num) {
 }
 
 void as6502_underline(unsigned long loc, unsigned long len) {
-	fprintf(stderr, "%s", currentLineText);
-	
-	// FIXME: Shouldn't this always need a newline or always not need a newline?
-	if (currentLineText[strlen(currentLineText)] != '\n') {
-		fprintf(stderr, "\n");
+	// Sometimes we might be called from things that don't have a currentLineText
+	if (currentLineText) {
+		fprintf(stderr, "%s", currentLineText);
+		
+		// FIXME: Shouldn't this always need a newline or always not need a newline?
+		if (currentLineText[strlen(currentLineText)] != '\n') {
+			fprintf(stderr, "\n");
+		}
 	}
 
 	// Only render the underline if we have a valid range (non-zero length)
