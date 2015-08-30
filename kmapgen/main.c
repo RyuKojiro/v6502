@@ -69,8 +69,17 @@ void generateTable(FILE *out) {
 	char modeString[MODE_STRING_LEN];
 	
 	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"opctable\">\n");
+	
+	// Print low nibble header
+	fprintf(out, "<tr valign=\"top\"><td nowrap=\"\">&nbsp;</td>");
+	for (uint8_t low = 0; low < 0x10; low++) {
+		fprintf(out, "<td nowrap>%02x</td>", low);
+	}
+	fprintf(out, "</tr>\n");
+
+	// Print the entire table
 	for (uint8_t high = 0; high < 0x10; high++) {
-		fprintf(out, "<tr valign=\"top\"><td nowrap=\"\">%2x</td>", high << 4);
+		fprintf(out, "<tr valign=\"top\"><td nowrap=\"\">%02x</td>", high << 4);
 		for (uint8_t low = 0; low < 0x10; low++) {
 			uint8_t opcode = ((high << 4) | low);
 			v6502_address_mode mode = v6502_addressModeForOpcode(opcode);
@@ -99,6 +108,8 @@ void generateAllTables(FILE *out) {
 }
 
 int main(int argc, const char * argv[]) {
-	generateAllTables(stdout);
+	FILE *out = fopen("test.html", "w");
+	generateAllTables(out);
+	fclose(out);
     return 0;
 }
