@@ -41,7 +41,6 @@ subsections. (L) indicates that a module is a member of its library target.
 	- \ref object.h (L)
 		- \ref obj_lifecycle
 		- \ref obj_access
-		- \ref obj_mutate
 	- \ref ines.h (L)
 	- \ref flat.h (L)
 	- \ref aout.h (L)

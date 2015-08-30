@@ -29,6 +29,8 @@
 #include <sys/types.h>
 #include <stdio.h> // Required for dot output
 
+/** @enum */
+/** @brief A simple enumeration type to differentiate values from other types of tokens. This could, in the future, be used for indicating other token types, such as assembler directives, instructions, etc. */
 typedef enum {
 	as6502_token_type_other,
 	as6502_token_type_value

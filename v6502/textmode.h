@@ -70,5 +70,6 @@ void textMode_refreshVideo(v6502_textmode_video *vid);
 void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y);
 /** @brief Convert x, y coordinates to the address in memory that is expected to hold the character */
 uint16_t textMode_addressForLocation(int x, int y);
+/**@}*/
 
 #endif
