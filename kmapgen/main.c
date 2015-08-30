@@ -151,6 +151,24 @@ const char *addressModeByRegisterCallback(v6502_opcode opcode) {
 	}
 }
 
+#define addressModeByOperandCount 5
+
+static const char *addressModeByOperandColors[] = {
+	HTML_BGCOLOR HTML_GREEN,
+	HTML_BGCOLOR HTML_YELLOW,
+	HTML_BGCOLOR HTML_PURPLE,
+	HTML_BGCOLOR HTML_RED,
+	HTML_BGCOLOR HTML_BLUE
+};
+
+static const char *addressModeByOperandLabels[] = {
+	"Accumulator/Implied",
+	"Zeropage",
+	"Relative/Immediate",
+	"Absolute",
+	"Indirect"
+};
+
 const char *addressModeByOperandCallback(v6502_opcode opcode) {
 	switch (v6502_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_implied:
@@ -318,6 +336,7 @@ void generateAllMaps(FILE *out) {
 
 	// Address Mode by Operand
 	generateMap(out, addressModeByOperandCallback, "Address Mode by Operand");
+	generateLegend(out, addressModeByOperandColors, addressModeByOperandLabels, addressModeByOperandCount);
 	
 	fprintf(out, "</html></body>\n");
 }
