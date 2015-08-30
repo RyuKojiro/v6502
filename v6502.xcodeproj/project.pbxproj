@@ -74,7 +74,6 @@
 		E6723EE61AB80A120045F8F6 /* reverse.c in Sources */ = {isa = PBXBuildFile; fileRef = E640F6BD182C180500A4C6A5 /* reverse.c */; };
 		E6817C30185565BA008A58A9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E640F6D1182D77AC00A4C6A5 /* main.c */; };
 		E68C9A3E193FA00300AD9E00 /* libedit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A3D193FA00300AD9E00 /* libedit.dylib */; };
-		E6A306231B92F83F00B259E8 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A306221B92F83F00B259E8 /* main.c */; };
 		E6A3062B1B92F9F300B259E8 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A3062A1B92F9F300B259E8 /* main.c */; };
 		E6A3062F1B92FCC300B259E8 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
 		E6A306301B92FCC300B259E8 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
@@ -369,8 +368,6 @@
 		E68821CD175DBC2300BA1FE2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = easy6502/Makefile; sourceTree = SOURCE_ROOT; };
 		E68C9A3D193FA00300AD9E00 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = /usr/lib/libedit.dylib; sourceTree = "<absolute>"; };
 		E6A079101737321800E0027B /* NOTES.dox */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTES.dox; sourceTree = "<group>"; };
-		E6A306211B92F82B00B259E8 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		E6A306221B92F83F00B259E8 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E6A306281B92F9F200B259E8 /* kmapgen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kmapgen; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6A3062A1B92F9F300B259E8 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E6A4808A1758355A005ABE54 /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = as6502/parser.c; sourceTree = "<group>"; };
@@ -577,7 +574,6 @@
 			isa = PBXGroup;
 			children = (
 				E6DCD5181A5642F6002008BE /* Top Level Makefiles */,
-				E6A306201B92F82B00B259E8 /* kmapgen */,
 				E640F6CF182D721000A4C6A5 /* ld6502 */,
 				E666A8111715D1A800EDBF95 /* as6502 */,
 				E640E21117DFD81B009C0718 /* dis6502 */,
@@ -648,15 +644,6 @@
 				E6723EE71AB80D4B0045F8F6 /* token.c */,
 			);
 			name = as6502;
-			sourceTree = "<group>";
-		};
-		E6A306201B92F82B00B259E8 /* kmapgen */ = {
-			isa = PBXGroup;
-			children = (
-				E6A306211B92F82B00B259E8 /* Makefile */,
-				E6A306221B92F83F00B259E8 /* main.c */,
-			);
-			path = kmapgen;
 			sourceTree = "<group>";
 		};
 		E6A306291B92F9F300B259E8 /* kmapgen */ = {
@@ -1213,7 +1200,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6A306231B92F83F00B259E8 /* main.c in Sources */,
 				E64198EB17373A6200D0EE25 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2343,6 +2329,7 @@
 				E6A3062E1B92F9F300B259E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E6B33F1F17597E9300F0D8C2 /* Build configuration list for PBXLegacyTarget "Doxygen" */ = {
 			isa = XCConfigurationList;
