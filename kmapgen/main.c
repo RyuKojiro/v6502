@@ -59,7 +59,7 @@ void _shortStringForAddressMode(char *out, size_t len, v6502_address_mode mode) 
 		} return;
 		case v6502_address_mode_unknown:
 		default:
-			out[0] = '\0';
+			strncpy(out, "---", len);
 			break;
 	}
 }
