@@ -109,6 +109,22 @@ void generateMap(FILE *out, kmapCallback colorizer, const char *title) {
 	fprintf(out, "</table>");
 }
 
+#define addressModeByRegisterCount 4
+
+static const char *addressModeByRegisterColors[] = {
+	HTML_BGCOLOR HTML_GREEN,
+	HTML_BGCOLOR HTML_YELLOW,
+	HTML_BGCOLOR HTML_RED,
+	HTML_BGCOLOR HTML_BLUE
+};
+
+static const char *addressModeByRegisterLabels[] = {
+	"Accumulator",
+	"Non-Register",
+	"X Register",
+	"Y Register"
+};
+
 const char *addressModeByRegisterCallback(v6502_opcode opcode) {
 	switch (v6502_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_accumulator:
@@ -162,6 +178,8 @@ const char *addressModeByOperandCallback(v6502_opcode opcode) {
 	}
 }
 
+#define instructionLengthCount 3
+
 static const char *instructionLengthColors[] = {
 	HTML_BGCOLOR HTML_GREEN,
 	HTML_BGCOLOR HTML_YELLOW,
@@ -186,6 +204,8 @@ const char *instructionLengthCallback(v6502_opcode opcode) {
 			return HTML_BGCOLOR HTML_BLACK;
 	}
 }
+
+#define instructionTypeCount 6
 
 static const char *instructionTypeColors[] = {
 	HTML_BGCOLOR HTML_GREEN,
@@ -284,17 +304,18 @@ void generateAllMaps(FILE *out) {
 
 	// Instruction Length
 	generateMap(out, instructionLengthCallback, "Instruction Length");
-	generateLegend(out, instructionLengthColors, instructionLengthLabels, 3);
+	generateLegend(out, instructionLengthColors, instructionLengthLabels, instructionLengthCount);
 
 	// Instruction Type
 	generateMap(out, instructionTypeCallback, "Instruction Type");
-	generateLegend(out, instructionTypeColors, instructionTypeLabels, 6);
+	generateLegend(out, instructionTypeColors, instructionTypeLabels, instructionTypeCount);
 
 	// Opcode
 	
 	// Address Mode by Register
 	generateMap(out, addressModeByRegisterCallback, "Address Mode by Register");
-	
+	generateLegend(out, addressModeByRegisterColors, addressModeByRegisterLabels, addressModeByRegisterCount);
+
 	// Address Mode by Operand
 	generateMap(out, addressModeByOperandCallback, "Address Mode by Operand");
 	
