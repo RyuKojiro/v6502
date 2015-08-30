@@ -74,11 +74,14 @@ void _shortStringForAddressMode(char *out, size_t len, v6502_address_mode mode) 
 	}
 }
 
-void generateTable(FILE *out, kmapCallback colorizer) {
+void generateTable(FILE *out, kmapCallback colorizer, const char *title) {
 	char opcodeString[OPCODE_STRING_LEN];
 	char modeString[MODE_STRING_LEN];
 	
-	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"opctable\">\n");
+	if (title) {
+		fprintf(out, "<h1>%s</h1>\n", title);
+	}
+	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"3\">\n");
 	
 	// Print low nibble header
 	fprintf(out, "<tr valign=\"top\"><td nowrap=\"\">&nbsp;</td>");
@@ -131,14 +134,14 @@ const char *addressModeByRegisterCallback(v6502_opcode opcode) {
 }
 
 void generateAllTables(FILE *out) {
-	fprintf(out, "<html><body>\n");
+	fprintf(out, "<html><head><style>table{ border-style: solid; border-width: 1px; border-color: " HTML_BLACK "; font-family: courier,fixed,sans-serif; font-size: 10px; }</style></head><body>\n");
 	
 	// Instruction Length
 	
 	// Opcode
 	
 	// Address Mode by Register
-	generateTable(out, addressModeByRegisterCallback);
+	generateTable(out, addressModeByRegisterCallback, "Address Mode by Register");
 	
 	// Address Mode by Operand
 	
