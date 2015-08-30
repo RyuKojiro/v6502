@@ -13,6 +13,16 @@
 #define OPCODE_STRING_LEN	4
 #define MODE_STRING_LEN		6
 
+#define HTML_BGCOLOR		"bgcolor="
+#define HTML_RED			"#FF91A4"	// Salmon
+#define HTML_BLUE			"#A4DDED"	// Non-photo Blue
+#define HTML_GREEN			"#7FFF00"	// Chartreuse
+#define HTML_YELLOW			"#FFC000"	// Sodium-vapor Lamp
+#define HTML_PURPLE			"#DF73FF"	// Heliotrope
+#define HTML_BLACK			"#000000"
+
+typedef const char *(kmapCallback)(v6502_opcode opcode);
+
 void _shortStringForAddressMode(char *out, size_t len, v6502_address_mode mode) {
 	switch (mode) {
 		case v6502_address_mode_accumulator: {
@@ -64,7 +74,7 @@ void _shortStringForAddressMode(char *out, size_t len, v6502_address_mode mode) 
 	}
 }
 
-void generateTable(FILE *out) {
+void generateTable(FILE *out, kmapCallback colorizer) {
 	char opcodeString[OPCODE_STRING_LEN];
 	char modeString[MODE_STRING_LEN];
 	
@@ -87,22 +97,50 @@ void generateTable(FILE *out) {
 			dis6502_stringForOpcode(opcodeString, OPCODE_STRING_LEN, opcode);
 			_shortStringForAddressMode(modeString, MODE_STRING_LEN, mode);
 			
-			fprintf(out, "<td nowrap>%s %s</td>", opcodeString, modeString);
+			fprintf(out, "<td nowrap %s>%s %s</td>", colorizer ? colorizer(opcode) : "", opcodeString, modeString);
 		}
 		fprintf(out, "</tr>\n");
 	}
 	fprintf(out, "</table>");
 }
 
+const char *addressModeByRegisterCallback(v6502_opcode opcode) {
+	switch (v6502_addressModeForOpcode(opcode)) {
+		case v6502_address_mode_accumulator:
+			return HTML_BGCOLOR HTML_GREEN;
+		case v6502_address_mode_implied:
+		case v6502_address_mode_zeropage:
+		case v6502_address_mode_indirect:
+		case v6502_address_mode_relative:
+		case v6502_address_mode_immediate:
+		case v6502_address_mode_absolute:
+			return HTML_BGCOLOR HTML_YELLOW;
+		case v6502_address_mode_zeropage_x:
+		case v6502_address_mode_absolute_x:
+		case v6502_address_mode_indirect_x:
+			return HTML_BGCOLOR HTML_RED;
+		case v6502_address_mode_zeropage_y:
+		case v6502_address_mode_absolute_y:
+		case v6502_address_mode_indirect_y:
+			return HTML_BGCOLOR HTML_BLUE;
+		case v6502_address_mode_symbol:
+		case v6502_address_mode_unknown:
+		default:
+			return HTML_BGCOLOR HTML_BLACK;
+	}
+}
+
 void generateAllTables(FILE *out) {
 	fprintf(out, "<html><body>\n");
-	
-	// Address Mode
-	generateTable(out);
 	
 	// Instruction Length
 	
 	// Opcode
+	
+	// Address Mode by Register
+	generateTable(out, addressModeByRegisterCallback);
+	
+	// Address Mode by Operand
 	
 	fprintf(out, "</html></body>\n");
 }
