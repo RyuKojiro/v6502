@@ -43,6 +43,8 @@
 	B = Bright C = Color data
 	<- fg -><- bg ->
 	B C C C  B C C C
+ 
+	\image html textmode.png
  */
 
 /** @defgroup textmode Reference Platform Video/Keyboard */
