@@ -33,8 +33,6 @@ const char *currentLineText;
 unsigned long currentLineNum;
 const char *currentFileName;
 unsigned long lastProblematicLine;
-unsigned long startOfProblem;
-unsigned long lengthOfProblem;
 
 __attribute((noreturn)) void as6502_fatal(const char *reason) {
 	if (isatty(fileno(stdin))) {
@@ -46,17 +44,8 @@ __attribute((noreturn)) void as6502_fatal(const char *reason) {
 	exit(EXIT_FAILURE);
 }
 
-static void _setProblemLocation(unsigned long loc, unsigned long len) {
-	lastProblematicLine = currentLineNum;
-
-	startOfProblem = loc;
-	lengthOfProblem = len;
-}
-
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
 static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len, const char *color, const char *type, const char *reason, va_list ap) {
-	_setProblemLocation(loc, len);
-	
 	// Only use color codes on real TTYs
 	if (isatty(fileno(stdin))) {
 		fprintf(stderr,

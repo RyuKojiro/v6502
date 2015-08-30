@@ -34,8 +34,6 @@ extern unsigned long currentLineNum;
 extern const char *currentFileName;
 /** @brief Last line number that encountered an error or warning */
 extern unsigned long lastProblematicLine;
-extern unsigned long startOfProblem;
-extern unsigned long lengthOfProblem;
 
 /** @defgroup as_error Assembler Error Handling */
 /**@{*/
