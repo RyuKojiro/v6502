@@ -309,7 +309,7 @@ int v6502_instructionLengthForOpcode(v6502_opcode opcode);
 /** @brief Return the v6502_address_mode of an instruction based on the opcode */
 v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode);
 /** @brief Execute an instruction on a v6502_cpu. */
-/** It is important to note that this does not alter the program counter, step
+/** It is important to note that this does not alter the program counter, \ref v6502_step
  is required in order for that to happen. This is because some operations (like
  the interrupt sequence) actually inject instructions directly into the cpu,
  mid-execution.  */
