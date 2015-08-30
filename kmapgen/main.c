@@ -162,6 +162,18 @@ const char *addressModeByOperandCallback(v6502_opcode opcode) {
 	}
 }
 
+static const char *instructionLengthColors[] = {
+	HTML_BGCOLOR HTML_GREEN,
+	HTML_BGCOLOR HTML_YELLOW,
+	HTML_BGCOLOR HTML_RED
+};
+
+static const char *instructionLengthLabels[] = {
+	"1 byte",
+	"2 bytes",
+	"3 bytes"
+};
+
 const char *instructionLengthCallback(v6502_opcode opcode) {
 	switch (v6502_instructionLengthForOpcode(opcode)) {
 		case 1:
@@ -174,6 +186,25 @@ const char *instructionLengthCallback(v6502_opcode opcode) {
 			return HTML_BGCOLOR HTML_BLACK;
 	}
 }
+
+static const char *instructionTypeColors[] = {
+	HTML_BGCOLOR HTML_GREEN,
+	HTML_BGCOLOR HTML_BLUE,
+	HTML_BGCOLOR HTML_RED,
+	HTML_BGCOLOR HTML_PURPLE,
+	HTML_BGCOLOR HTML_YELLOW,
+	""
+};
+
+static const char *instructionTypeLabels[] = {
+	"Branch Instruction",
+	"Load Instruction",
+	"Store Instruction",
+	"Transfer Instruction",
+	"Special Instruction",
+	"Arithmetic Instruction"
+};
+
 
 const char *instructionTypeCallback(v6502_opcode opcode) {
 	if (_instructionIsUnknown(opcode)) {
@@ -234,6 +265,17 @@ const char *instructionTypeCallback(v6502_opcode opcode) {
 	}
 }
 
+void generateLegend(FILE *out, const char *colors[], const char *labels[], int count) {
+	fprintf(out, "<p><table border=\"1\" cellspacing=\"0\" cellpadding=\"3\">\n");
+	
+	fprintf(out, "<tr valign=\"top\">");
+	for (int i = 0; i < count; i++) {
+		fprintf(out, "<td nowrap %s>%s</td>", colors[i], labels[i]);
+	}
+	fprintf(out, "</tr>\n");
+	fprintf(out, "</table></p>");
+}
+
 void generateAllMaps(FILE *out) {
 	fprintf(out, "<html><head><style>table{ border-style: solid; border-width: 1px; border-color: " HTML_BLACK "; font-family: courier,fixed,sans-serif; font-size: 10px; }</style></head><body>\n");
 
@@ -242,10 +284,12 @@ void generateAllMaps(FILE *out) {
 
 	// Instruction Length
 	generateMap(out, instructionLengthCallback, "Instruction Length");
+	generateLegend(out, instructionLengthColors, instructionLengthLabels, 3);
 
 	// Instruction Type
 	generateMap(out, instructionTypeCallback, "Instruction Type");
-	
+	generateLegend(out, instructionTypeColors, instructionTypeLabels, 6);
+
 	// Opcode
 	
 	// Address Mode by Register
