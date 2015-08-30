@@ -23,6 +23,8 @@
 
 typedef const char *(kmapCallback)(v6502_opcode opcode);
 
+#define _instructionIsUnknown(opcode)	(v6502_addressModeForOpcode(opcode) == v6502_address_mode_unknown)
+
 void _shortStringForAddressMode(char *out, size_t len, v6502_address_mode mode) {
 	switch (mode) {
 		case v6502_address_mode_accumulator: {
@@ -173,12 +175,77 @@ const char *instructionLengthCallback(v6502_opcode opcode) {
 	}
 }
 
+const char *instructionTypeCallback(v6502_opcode opcode) {
+	if (_instructionIsUnknown(opcode)) {
+		return HTML_BGCOLOR HTML_BLACK;
+	}
+
+	if (dis6502_isBranchOpcode(opcode)) {
+		return HTML_BGCOLOR HTML_GREEN;
+	}
+	
+	switch (opcode) {
+		case v6502_opcode_lda_imm:
+		case v6502_opcode_lda_zpg:
+		case v6502_opcode_lda_zpgx:
+		case v6502_opcode_lda_abs:
+		case v6502_opcode_lda_absx:
+		case v6502_opcode_lda_absy:
+		case v6502_opcode_lda_indx:
+		case v6502_opcode_lda_indy:
+		case v6502_opcode_ldx_imm:
+		case v6502_opcode_ldx_zpg:
+		case v6502_opcode_ldx_zpgy:
+		case v6502_opcode_ldx_abs:
+		case v6502_opcode_ldx_absy:
+		case v6502_opcode_ldy_imm:
+		case v6502_opcode_ldy_zpg:
+		case v6502_opcode_ldy_zpgx:
+		case v6502_opcode_ldy_abs:
+		case v6502_opcode_ldy_absx:
+			return HTML_BGCOLOR HTML_BLUE;
+		case v6502_opcode_sta_zpg:
+		case v6502_opcode_sta_zpgx:
+		case v6502_opcode_sta_abs:
+		case v6502_opcode_sta_absx:
+		case v6502_opcode_sta_absy:
+		case v6502_opcode_sta_indx:
+		case v6502_opcode_sta_indy:
+		case v6502_opcode_stx_zpg:
+		case v6502_opcode_stx_zpgy:
+		case v6502_opcode_stx_abs:
+		case v6502_opcode_sty_zpg:
+		case v6502_opcode_sty_zpgx:
+		case v6502_opcode_sty_abs:
+			return HTML_BGCOLOR HTML_RED;
+		case v6502_opcode_tax:
+		case v6502_opcode_tay:
+		case v6502_opcode_tsx:
+		case v6502_opcode_txa:
+		case v6502_opcode_txs:
+		case v6502_opcode_tya:
+			return HTML_BGCOLOR HTML_PURPLE;
+		case v6502_opcode_brk:
+		case v6502_opcode_nop:
+		case v6502_opcode_wai:
+			return HTML_BGCOLOR HTML_YELLOW;
+		default:
+			return "";
+	}
+}
+
 void generateAllMaps(FILE *out) {
 	fprintf(out, "<html><head><style>table{ border-style: solid; border-width: 1px; border-color: " HTML_BLACK "; font-family: courier,fixed,sans-serif; font-size: 10px; }</style></head><body>\n");
-	
+
+	// Standard Opcode Table
+	generateMap(out, NULL, "Standard Opcode Table");
+
 	// Instruction Length
 	generateMap(out, instructionLengthCallback, "Instruction Length");
 
+	// Instruction Type
+	generateMap(out, instructionTypeCallback, "Instruction Type");
+	
 	// Opcode
 	
 	// Address Mode by Register
