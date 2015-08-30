@@ -228,11 +228,11 @@ drawApple:
 
 
 drawSnake:
-	ldx #0
-	lda #1
-	sta ($10,x)
 	ldx *$03
 	lda #0
+	sta ($10,x)
+	ldx #0
+	lda #1
 	sta ($10,x)
 	rts
 
