@@ -160,11 +160,25 @@ const char *addressModeByOperandCallback(v6502_opcode opcode) {
 	}
 }
 
+const char *instructionLengthCallback(v6502_opcode opcode) {
+	switch (v6502_instructionLengthForOpcode(opcode)) {
+		case 1:
+			return HTML_BGCOLOR HTML_GREEN;
+		case 2:
+			return HTML_BGCOLOR HTML_YELLOW;
+		case 3:
+			return HTML_BGCOLOR HTML_RED;
+		default:
+			return HTML_BGCOLOR HTML_BLACK;
+	}
+}
+
 void generateAllMaps(FILE *out) {
 	fprintf(out, "<html><head><style>table{ border-style: solid; border-width: 1px; border-color: " HTML_BLACK "; font-family: courier,fixed,sans-serif; font-size: 10px; }</style></head><body>\n");
 	
 	// Instruction Length
-	
+	generateMap(out, instructionLengthCallback, "Instruction Length");
+
 	// Opcode
 	
 	// Address Mode by Register
