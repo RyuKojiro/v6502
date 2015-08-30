@@ -76,6 +76,9 @@
 		E68C9A3E193FA00300AD9E00 /* libedit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A3D193FA00300AD9E00 /* libedit.dylib */; };
 		E6A306231B92F83F00B259E8 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A306221B92F83F00B259E8 /* main.c */; };
 		E6A3062B1B92F9F300B259E8 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A3062A1B92F9F300B259E8 /* main.c */; };
+		E6A3062F1B92FCC300B259E8 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
+		E6A306301B92FCC300B259E8 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
+		E6A306351B92FCDA00B259E8 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
 		E6DCD5291A56A7FB002008BE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6DCD51D1A56A048002008BE /* main.c */; };
 		E6DCD52A1A56A8B4002008BE /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E6DCD52B1A56A8BF002008BE /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
@@ -217,6 +220,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = E66662EF1A5A3671007025FA;
 			remoteInfo = "make-v6502";
+		};
+		E6A306311B92FCCD00B259E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E638A4901B8AAA2300B71420;
+			remoteInfo = libv6502;
+		};
+		E6A306331B92FCCD00B259E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E638A4C71B8AAABC00B71420;
+			remoteInfo = libdis6502;
+		};
+		E6A306361B92FCDD00B259E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E638A49D1B8AAA6300B71420;
+			remoteInfo = libas6502;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -449,6 +473,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6A306351B92FCDA00B259E8 /* liblibas6502.a in Frameworks */,
+				E6A3062F1B92FCC300B259E8 /* liblibdis6502.a in Frameworks */,
+				E6A306301B92FCC300B259E8 /* liblibv6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -989,6 +1016,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				E6A306371B92FCDD00B259E8 /* PBXTargetDependency */,
+				E6A306321B92FCCD00B259E8 /* PBXTargetDependency */,
+				E6A306341B92FCCD00B259E8 /* PBXTargetDependency */,
 			);
 			name = kmapgen;
 			productName = kmapgen;
@@ -1091,6 +1121,7 @@
 				E6FB94AA1791140B0053EB7E /* v6502 */,
 				E640E21817DFDCC9009C0718 /* dis6502 */,
 				E640F6D8182D95B600A4C6A5 /* ld6502 */,
+				E6A306271B92F9F200B259E8 /* kmapgen */,
 				E6DCD5211A56A7DE002008BE /* tests */,
 				E66662F31A5A3695007025FA /* make-as6502 */,
 				E66662F71A5A36B2007025FA /* make-dis6502 */,
@@ -1101,7 +1132,6 @@
 				E638A49D1B8AAA6300B71420 /* libas6502 */,
 				E638A4AB1B8AAA7800B71420 /* libld6502 */,
 				E638A4C71B8AAABC00B71420 /* libdis6502 */,
-				E6A306271B92F9F200B259E8 /* kmapgen */,
 			);
 		};
 /* End PBXProject section */
@@ -1322,6 +1352,21 @@
 			isa = PBXTargetDependency;
 			target = E66662EF1A5A3671007025FA /* make-v6502 */;
 			targetProxy = E66663131A5A37C8007025FA /* PBXContainerItemProxy */;
+		};
+		E6A306321B92FCCD00B259E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E638A4901B8AAA2300B71420 /* libv6502 */;
+			targetProxy = E6A306311B92FCCD00B259E8 /* PBXContainerItemProxy */;
+		};
+		E6A306341B92FCCD00B259E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E638A4C71B8AAABC00B71420 /* libdis6502 */;
+			targetProxy = E6A306331B92FCCD00B259E8 /* PBXContainerItemProxy */;
+		};
+		E6A306371B92FCDD00B259E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E638A49D1B8AAA6300B71420 /* libas6502 */;
+			targetProxy = E6A306361B92FCDD00B259E8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

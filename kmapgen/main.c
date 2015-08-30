@@ -8,17 +8,26 @@
 
 #include <stdio.h>
 #include <v6502/cpu.h>
+#include <dis6502/reverse.h>
+
+#define OPCODE_STRING_LEN	4
 
 void generateTable(FILE *out) {
-	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"opctable\">");
+	char opcodeString[OPCODE_STRING_LEN];
+	
+	fprintf(out, "<html><body>\n");
+	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"opctable\">\n");
 	for (uint8_t high = 0; high < 0x10; high++) {
 		fprintf(out, "<tr valign=\"top\"><td nowrap=\"\">%2x</td>", high << 4);
 		for (uint8_t low = 0; low < 0x10; low++) {
-//			<#statements#>
+			uint8_t opcode = ((high << 4) | low);
+			dis6502_stringForOpcode(opcodeString, OPCODE_STRING_LEN, opcode);
+			fprintf(out, "<td nowrap>%s</td>", opcodeString);
 		}
-		fprintf(out, "</tr>");
+		fprintf(out, "</tr>\n");
 	}
 	fprintf(out, "</table>");
+	fprintf(out, "</html></body>\n");
 }
 
 
