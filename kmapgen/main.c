@@ -74,7 +74,7 @@ void _shortStringForAddressMode(char *out, size_t len, v6502_address_mode mode) 
 	}
 }
 
-void generateTable(FILE *out, kmapCallback colorizer, const char *title) {
+void generateMap(FILE *out, kmapCallback colorizer, const char *title) {
 	char opcodeString[OPCODE_STRING_LEN];
 	char modeString[MODE_STRING_LEN];
 	
@@ -133,7 +133,34 @@ const char *addressModeByRegisterCallback(v6502_opcode opcode) {
 	}
 }
 
-void generateAllTables(FILE *out) {
+const char *addressModeByOperandCallback(v6502_opcode opcode) {
+	switch (v6502_addressModeForOpcode(opcode)) {
+		case v6502_address_mode_implied:
+		case v6502_address_mode_accumulator:
+			return HTML_BGCOLOR HTML_GREEN;
+		case v6502_address_mode_zeropage:
+		case v6502_address_mode_zeropage_y:
+		case v6502_address_mode_zeropage_x:
+			return HTML_BGCOLOR HTML_YELLOW;
+		case v6502_address_mode_relative:
+		case v6502_address_mode_immediate:
+			return HTML_BGCOLOR HTML_PURPLE;
+		case v6502_address_mode_absolute:
+		case v6502_address_mode_absolute_x:
+		case v6502_address_mode_absolute_y:
+			return HTML_BGCOLOR HTML_RED;
+		case v6502_address_mode_indirect:
+		case v6502_address_mode_indirect_y:
+		case v6502_address_mode_indirect_x:
+			return HTML_BGCOLOR HTML_BLUE;
+		case v6502_address_mode_symbol:
+		case v6502_address_mode_unknown:
+		default:
+			return HTML_BGCOLOR HTML_BLACK;
+	}
+}
+
+void generateAllMaps(FILE *out) {
 	fprintf(out, "<html><head><style>table{ border-style: solid; border-width: 1px; border-color: " HTML_BLACK "; font-family: courier,fixed,sans-serif; font-size: 10px; }</style></head><body>\n");
 	
 	// Instruction Length
@@ -141,16 +168,17 @@ void generateAllTables(FILE *out) {
 	// Opcode
 	
 	// Address Mode by Register
-	generateTable(out, addressModeByRegisterCallback, "Address Mode by Register");
+	generateMap(out, addressModeByRegisterCallback, "Address Mode by Register");
 	
 	// Address Mode by Operand
+	generateMap(out, addressModeByOperandCallback, "Address Mode by Operand");
 	
 	fprintf(out, "</html></body>\n");
 }
 
 int main(int argc, const char * argv[]) {
 	FILE *out = fopen("test.html", "w");
-	generateAllTables(out);
+	generateAllMaps(out);
 	fclose(out);
     return 0;
 }
