@@ -78,6 +78,7 @@
 		E6A3062F1B92FCC300B259E8 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
 		E6A306301B92FCC300B259E8 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
 		E6A306351B92FCDA00B259E8 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
+		E6CADD341B93CC5400C5BE9A /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = E6CADD331B93CC5400C5BE9A /* Makefile */; };
 		E6DCD5291A56A7FB002008BE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6DCD51D1A56A048002008BE /* main.c */; };
 		E6DCD52A1A56A8B4002008BE /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E6DCD52B1A56A8BF002008BE /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
@@ -378,6 +379,7 @@
 		E6B33F1B1759748C00F0D8C2 /* linectl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linectl.c; path = as6502/linectl.c; sourceTree = "<group>"; };
 		E6B33F1C1759748C00F0D8C2 /* linectl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linectl.h; path = as6502/linectl.h; sourceTree = "<group>"; };
 		E6B33F221759821E00F0D8C2 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
+		E6CADD331B93CC5400C5BE9A /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		E6CD3C001975C602006E2E2B /* Chip.sketch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Chip.sketch; sourceTree = "<group>"; };
 		E6CD3C011975C602006E2E2B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		E6D604B91A54FCDB00EF2B10 /* snake.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = snake.s; sourceTree = "<group>"; };
@@ -649,6 +651,7 @@
 		E6A306291B92F9F300B259E8 /* kmapgen */ = {
 			isa = PBXGroup;
 			children = (
+				E6CADD331B93CC5400C5BE9A /* Makefile */,
 				E6A3062A1B92F9F300B259E8 /* main.c */,
 			);
 			path = kmapgen;
@@ -1208,6 +1211,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6CADD341B93CC5400C5BE9A /* Makefile in Sources */,
 				E6A3062B1B92F9F300B259E8 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
