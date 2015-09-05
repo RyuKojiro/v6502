@@ -79,6 +79,7 @@
 		E6A306301B92FCC300B259E8 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
 		E6A306351B92FCDA00B259E8 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
 		E6CADD341B93CC5400C5BE9A /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = E6CADD331B93CC5400C5BE9A /* Makefile */; };
+		E6D32FF51B9A824600DCBCA6 /* token.c in Sources */ = {isa = PBXBuildFile; fileRef = E6723EE71AB80D4B0045F8F6 /* token.c */; };
 		E6DCD5291A56A7FB002008BE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6DCD51D1A56A048002008BE /* main.c */; };
 		E6DCD52A1A56A8B4002008BE /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E6DCD52B1A56A8BF002008BE /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
@@ -1220,6 +1221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6D32FF51B9A824600DCBCA6 /* token.c in Sources */,
 				E6723EE51AB80A070045F8F6 /* ines.c in Sources */,
 				E6723EE41AB809FC0045F8F6 /* aout.c in Sources */,
 				E6723EE11AB809E30045F8F6 /* codegen.c in Sources */,
