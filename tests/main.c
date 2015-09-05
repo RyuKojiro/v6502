@@ -47,7 +47,196 @@ uint8_t returnHigh(struct _v6502_memory *memory, uint16_t offset, int trap, void
 	return ~0;
 }
 
+v6502_address_mode bruteForce_addressModeForOpcode(v6502_opcode opcode) {
+	switch (opcode) {
+		case v6502_opcode_brk:
+		case v6502_opcode_nop:
+		case v6502_opcode_clc:
+		case v6502_opcode_cld:
+		case v6502_opcode_cli:
+		case v6502_opcode_clv:
+		case v6502_opcode_sec:
+		case v6502_opcode_sed:
+		case v6502_opcode_sei:
+		case v6502_opcode_dex:
+		case v6502_opcode_dey:
+		case v6502_opcode_tax:
+		case v6502_opcode_tay:
+		case v6502_opcode_tsx:
+		case v6502_opcode_txa:
+		case v6502_opcode_txs:
+		case v6502_opcode_tya:
+		case v6502_opcode_inx:
+		case v6502_opcode_iny:
+		case v6502_opcode_rti:
+		case v6502_opcode_rts:
+		case v6502_opcode_wai:
+		case v6502_opcode_pha:
+		case v6502_opcode_pla:
+		case v6502_opcode_php:
+		case v6502_opcode_plp:
+			return v6502_address_mode_implied;
+		case v6502_opcode_bcc:
+		case v6502_opcode_bcs:
+		case v6502_opcode_beq:
+		case v6502_opcode_bne:
+		case v6502_opcode_bmi:
+		case v6502_opcode_bpl:
+		case v6502_opcode_bvc:
+		case v6502_opcode_bvs:
+			return v6502_address_mode_relative;
+		case v6502_opcode_asl_acc:
+		case v6502_opcode_lsr_acc:
+		case v6502_opcode_rol_acc:
+		case v6502_opcode_ror_acc:
+			return v6502_address_mode_accumulator;
+		case v6502_opcode_adc_imm:
+		case v6502_opcode_and_imm:
+		case v6502_opcode_cmp_imm:
+		case v6502_opcode_cpx_imm:
+		case v6502_opcode_cpy_imm:
+		case v6502_opcode_eor_imm:
+		case v6502_opcode_ora_imm:
+		case v6502_opcode_lda_imm:
+		case v6502_opcode_ldx_imm:
+		case v6502_opcode_ldy_imm:
+		case v6502_opcode_sbc_imm:
+			return v6502_address_mode_immediate;
+		case v6502_opcode_adc_abs:
+		case v6502_opcode_and_abs:
+		case v6502_opcode_asl_abs:
+		case v6502_opcode_bit_abs:
+		case v6502_opcode_cmp_abs:
+		case v6502_opcode_cpx_abs:
+		case v6502_opcode_cpy_abs:
+		case v6502_opcode_dec_abs:
+		case v6502_opcode_eor_abs:
+		case v6502_opcode_inc_abs:
+		case v6502_opcode_jmp_abs:
+		case v6502_opcode_ora_abs:
+		case v6502_opcode_lda_abs:
+		case v6502_opcode_ldx_abs:
+		case v6502_opcode_ldy_abs:
+		case v6502_opcode_lsr_abs:
+		case v6502_opcode_rol_abs:
+		case v6502_opcode_ror_abs:
+		case v6502_opcode_sbc_abs:
+		case v6502_opcode_sta_abs:
+		case v6502_opcode_stx_abs:
+		case v6502_opcode_sty_abs:
+		case v6502_opcode_jsr:
+			return v6502_address_mode_absolute;
+		case v6502_opcode_adc_absx:
+		case v6502_opcode_and_absx:
+		case v6502_opcode_asl_absx:
+		case v6502_opcode_cmp_absx:
+		case v6502_opcode_dec_absx:
+		case v6502_opcode_eor_absx:
+		case v6502_opcode_inc_absx:
+		case v6502_opcode_ora_absx:
+		case v6502_opcode_lda_absx:
+		case v6502_opcode_ldy_absx:
+		case v6502_opcode_lsr_absx:
+		case v6502_opcode_rol_absx:
+		case v6502_opcode_ror_absx:
+		case v6502_opcode_sbc_absx:
+		case v6502_opcode_sta_absx:
+			return v6502_address_mode_absolute_x;
+		case v6502_opcode_adc_absy:
+		case v6502_opcode_and_absy:
+		case v6502_opcode_cmp_absy:
+		case v6502_opcode_eor_absy:
+		case v6502_opcode_ora_absy:
+		case v6502_opcode_lda_absy:
+		case v6502_opcode_ldx_absy:
+		case v6502_opcode_sbc_absy:
+		case v6502_opcode_sta_absy:
+			return v6502_address_mode_absolute_y;
+		case v6502_opcode_jmp_ind:
+			return v6502_address_mode_indirect;
+		case v6502_opcode_adc_indx:
+		case v6502_opcode_and_indx:
+		case v6502_opcode_cmp_indx:
+		case v6502_opcode_eor_indx:
+		case v6502_opcode_ora_indx:
+		case v6502_opcode_lda_indx:
+		case v6502_opcode_sbc_indx:
+		case v6502_opcode_sta_indx:
+			return v6502_address_mode_indirect_x;
+		case v6502_opcode_adc_indy:
+		case v6502_opcode_and_indy:
+		case v6502_opcode_cmp_indy:
+		case v6502_opcode_eor_indy:
+		case v6502_opcode_ora_indy:
+		case v6502_opcode_lda_indy:
+		case v6502_opcode_sbc_indy:
+		case v6502_opcode_sta_indy:
+			return v6502_address_mode_indirect_y;
+		case v6502_opcode_adc_zpg:
+		case v6502_opcode_and_zpg:
+		case v6502_opcode_asl_zpg:
+		case v6502_opcode_bit_zpg:
+		case v6502_opcode_cmp_zpg:
+		case v6502_opcode_cpx_zpg:
+		case v6502_opcode_cpy_zpg:
+		case v6502_opcode_dec_zpg:
+		case v6502_opcode_eor_zpg:
+		case v6502_opcode_inc_zpg:
+		case v6502_opcode_ora_zpg:
+		case v6502_opcode_lda_zpg:
+		case v6502_opcode_ldx_zpg:
+		case v6502_opcode_ldy_zpg:
+		case v6502_opcode_lsr_zpg:
+		case v6502_opcode_rol_zpg:
+		case v6502_opcode_ror_zpg:
+		case v6502_opcode_sbc_zpg:
+		case v6502_opcode_sta_zpg:
+		case v6502_opcode_stx_zpg:
+		case v6502_opcode_sty_zpg:
+			return v6502_address_mode_zeropage;
+		case v6502_opcode_adc_zpgx:
+		case v6502_opcode_and_zpgx:
+		case v6502_opcode_asl_zpgx:
+		case v6502_opcode_cmp_zpgx:
+		case v6502_opcode_dec_zpgx:
+		case v6502_opcode_eor_zpgx:
+		case v6502_opcode_inc_zpgx:
+		case v6502_opcode_ora_zpgx:
+		case v6502_opcode_lda_zpgx:
+		case v6502_opcode_ldy_zpgx:
+		case v6502_opcode_lsr_zpgx:
+		case v6502_opcode_rol_zpgx:
+		case v6502_opcode_ror_zpgx:
+		case v6502_opcode_sbc_zpgx:
+		case v6502_opcode_sta_zpgx:
+		case v6502_opcode_sty_zpgx:
+			return v6502_address_mode_zeropage_x;
+		case v6502_opcode_ldx_zpgy:
+		case v6502_opcode_stx_zpgy:
+			return v6502_address_mode_zeropage_y;
+		default:
+			return v6502_address_mode_unknown;
+	}
+}
+
 #pragma mark - Tests
+
+int test_addressModeForOpcode() {
+	TEST_START;
+	int rc = 0;
+	
+	for(v6502_opcode opcode = v6502_opcode_brk; opcode < 0xFF; opcode++) {
+		v6502_address_mode knownMode = bruteForce_addressModeForOpcode(opcode);
+		// Make sure we actually even support this instruction
+		if(knownMode != v6502_address_mode_unknown) {
+			if (v6502_addressModeForOpcode(opcode) != knownMode) {
+				printf("Bad address mode for opcode %02x!\n", opcode);
+				rc++;
+			}
+		}
+	}
+	return rc;
+}
 
 int test_sbc() {
 	TEST_START;
@@ -192,7 +381,8 @@ static testFunction testFunctions[] = {
 	test_jumpInstructionLength,
 	test_wideJumpWithParsing,
 	test_intersectingMemoryMapping,
-	test_contiguousMemoryMapping
+	test_contiguousMemoryMapping,
+	test_addressModeForOpcode
 };
 
 int main(int argc, const char *argv[]) {
