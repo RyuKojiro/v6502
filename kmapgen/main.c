@@ -83,7 +83,7 @@ void generateMap(FILE *out, kmapCallback colorizer, const char *title) {
 	if (title) {
 		fprintf(out, "<h1>%s</h1>\n", title);
 	}
-	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"3\">\n");
+	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"3\" class=\"optable\">\n");
 	
 	// Print low nibble header
 	fprintf(out, "<tr valign=\"top\"><td nowrap=\"\">&nbsp;</td>");
@@ -315,7 +315,7 @@ void generateLegend(FILE *out, const char *colors[], const char *labels[], int c
 }
 
 void generateAllMaps(FILE *out) {
-	fprintf(out, "<html><head><style>table{ border-style: solid; border-width: 1px; border-color: " HTML_BLACK "; font-family: courier,fixed,sans-serif; font-size: 10px; }</style></head><body>\n");
+	fprintf(out, "<html><head><style>table.optable{ border-style: solid; border-width: 1px; border-color: " HTML_BLACK "; font-family: courier,fixed,sans-serif; font-size: 10px; }</style></head><body>\n");
 
 	// Standard Opcode Table
 	generateMap(out, NULL, "Standard Opcode Table");
