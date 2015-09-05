@@ -219,6 +219,29 @@ v6502_address_mode bruteForce_addressModeForOpcode(v6502_opcode opcode) {
 	}
 }
 
+v6502_address_mode bruteForce_instructionLengthForOpcode(v6502_opcode opcode) {
+	switch (bruteForce_addressModeForOpcode(opcode)) {
+		case v6502_address_mode_implied:
+		case v6502_address_mode_accumulator:
+			return 1;
+		case v6502_address_mode_immediate:
+		case v6502_address_mode_relative:
+		case v6502_address_mode_zeropage:
+		case v6502_address_mode_zeropage_x:
+		case v6502_address_mode_zeropage_y:
+		case v6502_address_mode_indirect_x:
+		case v6502_address_mode_indirect_y:
+			return 2;
+		case v6502_address_mode_absolute:
+		case v6502_address_mode_absolute_x:
+		case v6502_address_mode_absolute_y:
+		case v6502_address_mode_indirect:
+			return 3;
+		default:
+			return 0;
+	}
+}
+
 #pragma mark - Tests
 
 int test_addressModeForOpcode() {
@@ -231,6 +254,23 @@ int test_addressModeForOpcode() {
 		if(knownMode != v6502_address_mode_unknown) {
 			if (v6502_addressModeForOpcode(opcode) != knownMode) {
 				printf("Bad address mode for opcode %02x!\n", opcode);
+				rc++;
+			}
+		}
+	}
+	return rc;
+}
+
+int test_instructionLengthForOpcode() {
+	TEST_START;
+	int rc = 0;
+	
+	for(v6502_opcode opcode = v6502_opcode_brk; opcode < 0xFF; opcode++) {
+		int knownLen = bruteForce_instructionLengthForOpcode(opcode);
+		// Make sure we actually even support this instruction
+		if(knownLen) {
+			if (v6502_instructionLengthForOpcode(opcode) != knownLen) {
+				printf("Bad instruction length for opcode %02x!\n", opcode);
 				rc++;
 			}
 		}
@@ -382,7 +422,8 @@ static testFunction testFunctions[] = {
 	test_wideJumpWithParsing,
 	test_intersectingMemoryMapping,
 	test_contiguousMemoryMapping,
-	test_addressModeForOpcode
+	test_addressModeForOpcode,
+	test_instructionLengthForOpcode
 };
 
 int main(int argc, const char *argv[]) {
