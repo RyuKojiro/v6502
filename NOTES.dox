@@ -10,6 +10,7 @@ subsections. (L) indicates that a module is a member of its library target.
 	- \ref cpu.h (L)
 		- \ref cpu_lifecycle
 		- \ref cpu_exec
+		- \ref cpu_kmap
 	- \ref mem.h (L)
 		- \ref mem_boundaries
 		- \ref mem_lifecycle
@@ -109,6 +110,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 \endverbatim
+
+\page cpu_kmap Karnaugh Map Analysis
+
+\htmlinclude kmapgen/kmap.html
 
 \page mem_cache Memory Map Cache
 
