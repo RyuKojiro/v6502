@@ -342,7 +342,10 @@ void generateAllMaps(FILE *out) {
 }
 
 int main(int argc, const char * argv[]) {
-	FILE *out = fopen("test.html", "w");
+	FILE *out = stdout;
+	if(argc > 1) { 
+		out = fopen(argv[argc-1], "w");
+	}
 	generateAllMaps(out);
 	fclose(out);
     return 0;
