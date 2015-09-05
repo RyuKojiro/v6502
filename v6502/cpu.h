@@ -304,9 +304,9 @@ void v6502_destroyCPU(v6502_cpu *cpu);
 
 /** @defgroup cpu_exec Instruction Execution */
 /**@{*/
-/** @brief Return the byte-length of an instruction based on the opcode */
+/** @brief Return the byte-length of an instruction based on the opcode (See: @ref cpu_kmap) */
 int v6502_instructionLengthForOpcode(v6502_opcode opcode);
-/** @brief Return the v6502_address_mode of an instruction based on the opcode */
+/** @brief Return the v6502_address_mode of an instruction based on the opcode (See: @ref cpu_kmap) */
 v6502_address_mode v6502_addressModeForOpcode(v6502_opcode opcode);
 /** @brief Execute an instruction on a v6502_cpu. */
 /** It is important to note that this does not alter the program counter, \ref v6502_step
