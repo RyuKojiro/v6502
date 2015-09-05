@@ -113,6 +113,10 @@ IN THE SOFTWARE.
 
 \page cpu_kmap Karnaugh Map Analysis
 
+<a href="https://en.wikipedia.org/wiki/Karnaugh_map">Karnaugh Maps</a> are used in v6502's CPU design to optimize and reduce large switch statements, which result in large jump tables, to a small number of bitwise operations. These all also have unit tests to make sure that the K-map reduction is sane. These maps make the hardware design decisions of the MOS 6502 microprocessor very quickly visually apparrent in a way that is easy to reduce based on goal. For example, it is obvious that the length of an instruction only relies on the high nibble if the low nibble is 0 or 9. This reduces what would otherwise be a giant switch statement to a few conditionals.
+
+A tool called kmapgen is included in the project, which generates these K-maps colorized for different goals. It's output can be seen below.
+
 \htmlinclude kmapgen/kmap.html
 
 \page mem_cache Memory Map Cache
