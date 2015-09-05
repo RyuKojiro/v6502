@@ -390,7 +390,6 @@
 		E6DCD51C1A56496B002008BE /* libtargets.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libtargets.mk; sourceTree = "<group>"; };
 		E6DCD51D1A56A048002008BE /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E6DCD5221A56A7DE002008BE /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6DCD5241A56A7DE002008BE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E6EE9E9F1948FD6E0088B705 /* breakpoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = breakpoint.c; sourceTree = "<group>"; };
 		E6EE9EA11948FD7A0088B705 /* breakpoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = breakpoint.h; sourceTree = "<group>"; };
 		E6FB94AB1791140B0053EB7E /* v6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = v6502; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -585,7 +584,6 @@
 				E61D402B1799B5A1009BA763 /* Tests */,
 				E640E21417DFD828009C0718 /* Documentation */,
 				E6FF899A193FA645000DD391 /* Libraries */,
-				E6DCD5231A56A7DE002008BE /* xcode-tests */,
 				E6A306291B92F9F300B259E8 /* kmapgen */,
 				E65212A71704B90D009CE919 /* Products */,
 			);
@@ -667,14 +665,6 @@
 				E6DCD51C1A56496B002008BE /* libtargets.mk */,
 			);
 			name = "Top Level Makefiles";
-			sourceTree = "<group>";
-		};
-		E6DCD5231A56A7DE002008BE /* xcode-tests */ = {
-			isa = PBXGroup;
-			children = (
-				E6DCD5241A56A7DE002008BE /* main.c */,
-			);
-			path = "xcode-tests";
 			sourceTree = "<group>";
 		};
 		E6FF8998193FA615000DD391 /* xcodebuild */ = {
