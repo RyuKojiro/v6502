@@ -324,11 +324,11 @@ The simplest fault tolerant implementation of a v6502 instance, using the v6502
 API, is as follows:
 
 \code
-#include "cpu.h"
-#include "mem.h"
+#include <v6502/cpu.h>
+#include <v6502/mem.h>
 
 void fault(void *ctx, const char *e) {
-	((int)*ctx)++;
+	(*(int *)ctx)++;
 }
 
 int main(int argc, const char * argv[])
