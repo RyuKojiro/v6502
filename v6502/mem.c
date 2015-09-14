@@ -59,7 +59,7 @@ int v6502_memoryRangesIntersect(uint16_t start1, uint16_t size1, uint16_t start2
 	return NO;
 }
 
-int v6502_map(v6502_memory *memory, uint16_t start, uint16_t size, v6502_readFunction *read, v6502_writeFunction *write, void *context) {
+int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunction *read, v6502_writeFunction *write, void *context) {
 	// Make sure it's not already mapped
 	for (size_t i = 0; i < memory->rangeCount; i++) {
 		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
@@ -174,7 +174,7 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 /**
  *	If there are allocation problems, v6502_createMemory will return NULL.
  */
-v6502_memory *v6502_createMemory(uint16_t size) {
+v6502_memory *v6502_createMemory(size_t size) {
 	// Allocate Memory Struct
 	v6502_memory *memory = malloc(sizeof(v6502_memory));
 	if (!memory) {
@@ -190,7 +190,7 @@ v6502_memory *v6502_createMemory(uint16_t size) {
 	memory->size = size;
 	
 	// Zero memory
-	for (uint16_t i = 0; i < size; i++) {
+	for (size_t i = 0; i < size; i++) {
 		memory->bytes[i] = 0x00;
 	}
 	
