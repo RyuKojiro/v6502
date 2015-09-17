@@ -46,6 +46,8 @@ void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode,
 void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_object_blob *blob);
 /** @brief Create symbols for all branch instructions that do not already have corresponding entries for all ld6502_object_blobs in a given ld6502_object. */
 void dis6502_deriveSymbolsForObject(ld6502_object *obj);
+/** @brief Print, to file pointer, an address and byte annotated disassembled line of assembly at the given address on a given cpu. */
+int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t address);
 /**@}*/
 
 #endif

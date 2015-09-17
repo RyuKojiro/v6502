@@ -29,6 +29,37 @@
 /** @brief The maximum allowed buffer size for symbol names */
 #define dis6502_maximumSymbolNameLength		255
 
+#define MAX_INSTRUCTION_LEN		32
+
+// TODO: Add desymbolication support
+int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t address) {
+	char instruction[MAX_INSTRUCTION_LEN];
+	int instructionLength;
+	dis6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[address], cpu->memory->bytes[address + 2], cpu->memory->bytes[address + 1]);
+	instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[address]);
+	
+	fprintf(out, "0x%04x: ", address);
+	
+	switch (instructionLength) {
+		case 1: {
+			fprintf(out, "%02x      ", cpu->memory->bytes[address]);
+		} break;
+		case 2: {
+			fprintf(out, "%02x %02x   ", cpu->memory->bytes[address], cpu->memory->bytes[address + 1]);
+		} break;
+		case 3: {
+			fprintf(out, "%02x %02x %02x", cpu->memory->bytes[address], cpu->memory->bytes[address + 1], cpu->memory->bytes[address + 2]);
+		} break;
+		default: {
+			fprintf(out, "        ");
+		} break;
+	}
+	
+	fprintf(out, " - %s\n", instruction);
+	
+	return instructionLength;
+}
+
 int dis6502_isBranchOpcode(v6502_opcode opcode) {
 	switch (opcode) {
 		case v6502_opcode_bcc:

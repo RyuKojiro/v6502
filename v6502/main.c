@@ -40,7 +40,6 @@
 #include "textmode.h"
 
 #define MAX_COMMAND_LEN			80
-#define MAX_INSTRUCTION_LEN		32
 #define DISASSEMBLY_COUNT		10
 #define MEMORY_SIZE				0xFFFF
 #define DEFAULT_RESET_VECTOR	0x0600
@@ -82,34 +81,6 @@ static void loadProgram(v6502_memory *mem, const char *fname, uint16_t address) 
 	fclose(f);
 }
 
-static int printSingleInstruction(v6502_cpu *cpu, uint16_t address) {
-	char instruction[MAX_INSTRUCTION_LEN];
-	int instructionLength;
-	dis6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[address], cpu->memory->bytes[address + 2], cpu->memory->bytes[address + 1]);
-	instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[address]);
-	
-	printf("0x%04x: ", address);
-	
-	switch (instructionLength) {
-		case 1: {
-			printf("%02x      ", cpu->memory->bytes[address]);
-		} break;
-		case 2: {
-			printf("%02x %02x   ", cpu->memory->bytes[address], cpu->memory->bytes[address + 1]);
-		} break;
-		case 3: {
-			printf("%02x %02x %02x", cpu->memory->bytes[address], cpu->memory->bytes[address + 1], cpu->memory->bytes[address + 2]);
-		} break;
-		default: {
-			printf("        ");
-		} break;
-	}
-	
-	printf(" - %s\n", instruction);
-	
-	return instructionLength;
-}
-
 static void run(v6502_cpu *cpu) {
 	cpu->sr &= ~v6502_cpu_status_break;
 	interrupt = 0;
@@ -117,7 +88,7 @@ static void run(v6502_cpu *cpu) {
 	// Step once if we are starting from a breakpoint, so that we don't hit it again
 	if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
 		if (verbose) {
-			printSingleInstruction(cpu, cpu->pc);
+			dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
 		}
 		v6502_step(cpu);
 	}
@@ -131,7 +102,7 @@ static void run(v6502_cpu *cpu) {
 		}
 		
 		if (verbose) {
-			printSingleInstruction(cpu, cpu->pc);
+			dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
 		}
 		v6502_step(cpu);
 	} while (!(cpu->sr & v6502_cpu_status_break) && !interrupt);
@@ -312,13 +283,13 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		}
 		
 		for (int i = 0; i < DISASSEMBLY_COUNT; i++) {
-			start += printSingleInstruction(cpu, start);
+			start += dis6502_printAnnotatedInstruction(stderr, cpu, start);
 		}
 		
 		return YES;
 	}
 	if (compareCommand(command, "step")) {
-		printSingleInstruction(cpu, cpu->pc);
+		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
 		v6502_step(cpu);
 		return YES;
 	}
