@@ -36,7 +36,8 @@ void v6502_printCpuState(FILE *out, v6502_cpu *cpu) {
 			cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
 			cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
 			cpu->sr & v6502_cpu_status_carry ? 'C' : '-');
-	fprintf(out, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sr = 0x%02x, sp = 0x%02x\nMEM %p: memsize = %zu (0x%04zx)\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
+	fprintf(out, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sr = 0x%02x, sp = 0x%02x\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp);
+	//fprintf(out, "MEM %p: memsize = %zu (0x%04zx)\n", cpu->memory, cpu->memory->size, cpu->memory->size);
 }
 
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) {
