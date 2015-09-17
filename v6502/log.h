@@ -32,7 +32,7 @@
 /** @defgroup log VM State Logging */
 /**@{*/
 /** @brief Prints the current states and values of the CPU's registers. */
-void v6502_printCpuState(v6502_cpu *cpu);
+void v6502_printCpuState(FILE *out, v6502_cpu *cpu);
 /** @brief Neatly prints a 52 column wide hex dump of a specified memory range. */
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len);
 /** @brief Neatly prints the contents of a v6502_breakpoint_list. */

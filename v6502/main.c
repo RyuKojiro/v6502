@@ -208,7 +208,7 @@ static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
 		return YES;
 	}
 	if (compareCommand(command, "cpu")) {
-		v6502_printCpuState(cpu);
+		v6502_printCpuState(stderr, cpu);
 		return YES;
 	}
 	if (compareCommand(command, "nmi")) {
