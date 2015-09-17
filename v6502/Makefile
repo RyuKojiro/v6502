@@ -2,11 +2,11 @@ include ../config.mk
 include ../libvars.mk
 
 PROG=		v6502
-SRCS=		main.c log.c breakpoint.c textmode.c
+SRCS=		main.c log.c breakpoint.c textmode.c debugger.c
 LDFLAGS+=	-ledit -lcurses -ldis6502 -las6502 -lv6502
 OBJS=		$(SRCS:.c=.o)
 MANPAGE=	v6502.1
-HEADERS=	textmode.h mem.h cpu.h log.h breakpoint.h
+HEADERS=	textmode.h mem.h cpu.h log.h breakpoint.h debugger.h
 
 all: $(PROG)
 
