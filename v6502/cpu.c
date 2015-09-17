@@ -112,7 +112,7 @@ static uint8_t _executeInPlaceIncrement(v6502_cpu *cpu, uint8_t operand) {
 
 static void _executeInPlaceCompare(v6502_cpu *cpu, uint8_t reg, uint8_t operand) {
 	uint8_t result = reg - operand;
-	FLAG_CARRY_WITH_COMPARISON(operand, result);
+	FLAG_CARRY_WITH_COMPARISON(result, operand); // FIXME: This doesn't work right
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
@@ -363,8 +363,8 @@ void v6502_reset(v6502_cpu *cpu) {
 
 void v6502_step(v6502_cpu *cpu) {
 	v6502_opcode opcode = v6502_read(cpu->memory, cpu->pc, YES);
-	uint8_t low = v6502_read(cpu->memory, cpu->pc + 1, YES);
-	uint8_t high = v6502_read(cpu->memory, cpu->pc + 2, YES);
+	uint8_t low = v6502_read(cpu->memory, (cpu->pc + 1) % v6502_memoryStartCeiling, YES);
+	uint8_t high = v6502_read(cpu->memory, (cpu->pc + 2) % v6502_memoryStartCeiling, YES);
 	v6502_execute(cpu, opcode, low, high);
 	cpu->pc += v6502_instructionLengthForOpcode(opcode);
 }

@@ -409,6 +409,33 @@ int test_contiguousMemoryMapping() {
 	return 0;
 }
 
+int test_cmpCarrySet() {
+	TEST_START;
+	int rc = 0;
+
+	v6502_cpu before;
+	v6502_cpu *cpu = v6502_createCPU();
+	cpu->memory = v6502_createMemory(0);
+	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
+	
+	printf("Making sure 0xB4 (cmp) 0x8D sets the carry flag...\n");
+	
+	v6502_reset(cpu);
+	TEST_ASM("lda #$b4");
+	memcpy(&before, cpu, sizeof(v6502_cpu));
+	TEST_ASM("cmp #$8d");
+	if (!(cpu->sr & v6502_cpu_status_carry)) {
+		rc++;
+		v6502_printCpuState(stderr, &before);
+		v6502_printCpuState(stderr, cpu);
+	}
+	
+	v6502_destroyMemory(cpu->memory);
+	v6502_destroyCPU(cpu);
+
+	return rc;
+}
+
 #pragma mark - Test Harness
 
 /* All you have to do to add a test is make a function that returns int,
@@ -423,7 +450,8 @@ static testFunction testFunctions[] = {
 	test_intersectingMemoryMapping,
 	test_contiguousMemoryMapping,
 	test_addressModeForOpcode,
-	test_instructionLengthForOpcode
+	test_instructionLengthForOpcode,
+	test_cmpCarrySet
 };
 
 int main(int argc, const char *argv[]) {
