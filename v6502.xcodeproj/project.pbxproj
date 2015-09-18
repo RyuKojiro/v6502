@@ -85,6 +85,7 @@
 		E6DCD52A1A56A8B4002008BE /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E6DCD52B1A56A8BF002008BE /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
 		E6DCD52C1A573CDD002008BE /* log.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B81704BC42009CE919 /* log.c */; };
+		E6ECE7B71BABE40F00D1812C /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = E61FA7531BAAB5B80022E2EB /* debugger.c */; };
 		E6FB94B4179114230053EB7E /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212A91704B90D009CE919 /* main.c */; };
 		E6FF8996193FA292000DD391 /* libtermcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E6FF8995193FA292000DD391 /* libtermcap.dylib */; };
 /* End PBXBuildFile section */
@@ -1139,6 +1140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6ECE7B71BABE40F00D1812C /* debugger.c in Sources */,
 				E638A4951B8AAA3500B71420 /* textmode.c in Sources */,
 				E638A4961B8AAA3500B71420 /* cpu.c in Sources */,
 				E638A4971B8AAA3500B71420 /* mem.c in Sources */,

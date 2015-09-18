@@ -184,7 +184,7 @@ int main(int argc, const char * argv[])
 			continue;
 		}
 
-		if (v6502_handleDebuggerCommand(cpu, command, MAX_COMMAND_LEN, breakpoint_list)) {
+		if (v6502_handleDebuggerCommand(cpu, command, MAX_COMMAND_LEN, breakpoint_list, run, &verbose)) {
 			continue;
 		}
 		else if (command[0] != ';') {

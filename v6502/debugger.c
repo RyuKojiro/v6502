@@ -7,10 +7,10 @@
 //
 
 #include <stdio.h>
-#include <as6502/linectl.h>
-#include <as6502/parser.h>
 #include <string.h>
 #include <stdlib.h>
+#include <as6502/linectl.h>
+#include <as6502/parser.h>
 #include <dis6502/reverse.h>
 
 #include "debugger.h"
@@ -39,24 +39,25 @@ void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t addr
 	fclose(f);
 }
 
-static int compareCommand(const char * command, const char * literal) {
-	char cmd[MAX_COMMAND_LEN];
-	strncpy(cmd, command, MAX_COMMAND_LEN);
+static int compareCommand(const char * command, size_t len, const char * literal) {
+	char *cmd = malloc(len);
+	strncpy(cmd, command, len);
 	
 	trimgreedytaild(cmd);
 	
-	size_t len = strlen(cmd);
 	for (size_t i = 0; i < len && cmd[i]; i++) {
 		if (cmd[i] != literal[i]) {
+			free(cmd);
 			return NO;
 		}
 	}
+	free(cmd);
 	return YES;
 }
 
 /** return YES if handled */
-int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list) {
-	if (compareCommand(command, "help")) {
+int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, v6502_debuggerRunCallback runCallback, int *verbose) {
+	if (compareCommand(command, len, "help")) {
 		printf("breakpoint <addr>   Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.\n"
 			   "cpu                 Displays the current state of the CPU.\n"
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
@@ -74,7 +75,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
 	}
-	if (compareCommand(command, "breakpoint")) {
+	if (compareCommand(command, len, "breakpoint")) {
 		command = trimheadtospc(command, len);
 		
 		if(command[0]) {
@@ -98,28 +99,28 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
-	if (compareCommand(command, "cpu")) {
+	if (compareCommand(command, len, "cpu")) {
 		v6502_printCpuState(stderr, cpu);
 		return YES;
 	}
-	if (compareCommand(command, "nmi")) {
+	if (compareCommand(command, len, "nmi")) {
 		v6502_nmi(cpu);
 		return YES;
 	}
-	if (compareCommand(command, "iv")) {
+	if (compareCommand(command, len, "iv")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
 		uint16_t vector_address = 0;
 		
 		// Determine IV address based on vector type
-		if (compareCommand(command, "nmi")) {
+		if (compareCommand(command, len, "nmi")) {
 			vector_address = v6502_memoryVectorNMILow;
 		}
-		else if (compareCommand(command, "reset")) {
+		else if (compareCommand(command, len, "reset")) {
 			vector_address = v6502_memoryVectorResetLow;
 		}
-		else if (compareCommand(command, "interrupt")) {
+		else if (compareCommand(command, len, "interrupt")) {
 			vector_address = v6502_memoryVectorInterruptLow;
 		}
 		else {
@@ -146,7 +147,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		}
 		return YES;
 	}
-	if (compareCommand(command, "load")) {
+	if (compareCommand(command, len, "load")) {
 		const char *c2 = command;
 		command = trimheadtospc(command, len);
 		
@@ -185,7 +186,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
-	if (compareCommand(command, "disassemble")) {
+	if (compareCommand(command, len, "disassemble")) {
 		command = trimheadtospc(command, len);
 		
 		if (command[0]) {
@@ -208,12 +209,12 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
-	if (compareCommand(command, "step")) {
+	if (compareCommand(command, len, "step")) {
 		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
 		v6502_step(cpu);
 		return YES;
 	}
-	if (compareCommand(command, "peek")) {
+	if (compareCommand(command, len, "peek")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
@@ -233,7 +234,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		v6502_printMemoryRange(cpu->memory, start, 0x30);
 		return YES;
 	}
-	if (compareCommand(command, "poke")) {
+	if (compareCommand(command, len, "poke")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
@@ -254,7 +255,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		v6502_write(cpu->memory, address, value);
 		return YES;
 	}
-	if (compareCommand(command, "jmp")) {
+	if (compareCommand(command, len, "jmp")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
@@ -263,28 +264,28 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
-	if (compareCommand(command, "quit")) {
+	if (compareCommand(command, len, "quit")) {
 		v6502_destroyMemory(cpu->memory);
 		v6502_destroyCPU(cpu);
 		
 		exit(EXIT_SUCCESS);
 		return NO;
 	}
-	if (compareCommand(command, "run")) {
-		run(cpu);
+	if (compareCommand(command, len, "run")) {
+		runCallback(cpu);
 		return YES;
 	}
-	if (compareCommand(command, "reset")) {
+	if (compareCommand(command, len, "reset")) {
 		v6502_reset(cpu);
 		return YES;
 	}
-	if (compareCommand(command, "mreset")) {
+	if (compareCommand(command, len, "mreset")) {
 		bzero(cpu->memory->bytes, cpu->memory->size * sizeof(uint8_t));
 		return YES;
 	}
-	if (compareCommand(command, "verbose")) {
-		printf("Verbose mode %s.\n", verbose ? "disabled" : "enabled");
-		verbose ^= 1;
+	if (compareCommand(command, len, "verbose")) {
+		printf("Verbose mode %s.\n", *verbose ? "disabled" : "enabled");
+		*verbose ^= 1;
 		return YES;
 	}
 	return NO;
