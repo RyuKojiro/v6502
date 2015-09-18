@@ -20,6 +20,8 @@ subsections. (L) indicates that a module is a member of its library target.
 		- \ref log
 	- \ref breakpoint.h
 		- \ref breakpoint
+	- \ref debugger.h
+		- \ref debugger
 	- \ref textmode.h
 		- \ref textmode
 - \subpage as (as6502)
@@ -246,7 +248,7 @@ Offset  Op Lo Hi   Line  Label / Instruction
 
 \page vm Virtual Machine
 
-\section debugger Interactive VM
+\section referenceplatform Interactive VM
 
 The included v6502 executable that is built using the v6502 API provides an
 interactive debugger to a v6502 instance that allows arbitrary manipulation of
