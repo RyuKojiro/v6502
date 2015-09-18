@@ -38,9 +38,9 @@
 #include "log.h"
 #include "breakpoint.h"
 #include "textmode.h"
+#include "debugger.h"
 
 #define MAX_COMMAND_LEN			80
-#define DISASSEMBLY_COUNT		10
 #define MEMORY_SIZE				0xFFFF
 #define DEFAULT_RESET_VECTOR	0x0600
 
@@ -59,26 +59,6 @@ static void fault(void *ctx, const char *error) {
 	if (error[strlen(error)] != '\n') {
 		fprintf(stderr, "\n");
 	}
-}
-
-static void loadProgram(v6502_memory *mem, const char *fname, uint16_t address) {
-	FILE *f = fopen(fname, "r");
-	
-	if (!f) {
-		fprintf(stderr, "Could not read from \"%s\"!\n", fname);
-		return;
-	}
-	
-	uint8_t byte;
-	uint16_t offset = 0;
-	
-	while (fread(&byte, 1, 1, f)) {
-		mem->bytes[address + (offset++)] = byte;
-	}
-	
-	printf("Loaded %u bytes at 0x%x.\n", offset, address);
-	
-	fclose(f);
 }
 
 static void run(v6502_cpu *cpu) {
@@ -119,257 +99,6 @@ static void run(v6502_cpu *cpu) {
 	}
 }
 
-static int compareCommand(const char * command, const char * literal) {
-	char cmd[MAX_COMMAND_LEN];
-	strncpy(cmd, command, MAX_COMMAND_LEN);
-	
-	trimgreedytaild(cmd);
-	
-	size_t len = strlen(cmd);
-	for (size_t i = 0; i < len && cmd[i]; i++) {
-		if (cmd[i] != literal[i]) {
-			return NO;
-		}
-	}
-	return YES;
-}
-
-/** return YES if handled */
-static int handleDebugCommand(v6502_cpu *cpu, char *command, size_t len) {
-	if (compareCommand(command, "help")) {
-		printf("breakpoint <addr>   Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.\n"
-			   "cpu                 Displays the current state of the CPU.\n"
-			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
-			   "help                Displays this help.\n"
-			   "iv <type> <addr>    Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.\n"
-			   "load <file> <addr>  Load binary image into memory at the address specified. If no address is specified, then the reset vector is used.\n"
-			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
-			   "peek <addr>         Dumps the memory at and around a given address.\n"
-			   "poke <addr> <value> Sets the location in memory to the value specified.\n"
-			   "quit                Exits v6502.\n"
-			   "run                 Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
-			   "reset               Resets the CPU.\n"
-			   "mreset              Zeroes all memory.\n"
-			   "step                Forcibly steps the CPU once.\n"
-			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
-		return YES;
-	}
-	if (compareCommand(command, "breakpoint")) {
-		command = trimheadtospc(command, len);
-
-		if(command[0]) {
-			command++;
-			// Get address
-			uint16_t address = as6502_valueForString(NULL, command);
-			
-			// Toggle breakpoint
-			if (v6502_breakpointIsInList(breakpoint_list, address)) {
-				v6502_removeBreakpointFromList(breakpoint_list, address);
-				printf("Removed breakpoint 0x%04x.\n", address);
-			}
-			else {
-				v6502_addBreakpointToList(breakpoint_list, address);
-				printf("Added breakpoint 0x%04x.\n", address);
-			}
-		}
-		else {
-			v6502_printBreakpointList(breakpoint_list);
-		}
-
-		return YES;
-	}
-	if (compareCommand(command, "cpu")) {
-		v6502_printCpuState(stderr, cpu);
-		return YES;
-	}
-	if (compareCommand(command, "nmi")) {
-		v6502_nmi(cpu);
-		return YES;
-	}
-	if (compareCommand(command, "iv")) {
-		command = trimheadtospc(command, len);
-		command++;
-		
-		uint16_t vector_address = 0;
-		
-		// Determine IV address based on vector type
-		if (compareCommand(command, "nmi")) {
-			vector_address = v6502_memoryVectorNMILow;
-		}
-		else if (compareCommand(command, "reset")) {
-			vector_address = v6502_memoryVectorResetLow;
-		}
-		else if (compareCommand(command, "interrupt")) {
-			vector_address = v6502_memoryVectorInterruptLow;
-		}
-		else {
-			printf("Unknown vector type. Valid types are nmi, reset, interrupt.\n");
-			return YES;
-		}
-		
-		// Set or display IV based on what was set
-		command = trimheadtospc(command, len);
-		
-		if (command[0]) {
-			command++;
-
-			uint8_t low, high;
-			as6502_byteValuesForString(&high, &low, NULL, command);
-
-			v6502_write(cpu->memory, vector_address, low);
-			v6502_write(cpu->memory, vector_address + 1, high);
-		}
-		else {
-			// Low first, little endian
-			uint16_t value = v6502_read(cpu->memory, vector_address, NO) | (v6502_read(cpu->memory, vector_address + 1, NO) << 8);
-			printf("0x%04x\n", value);
-		}
-		return YES;
-	}
-	if (compareCommand(command, "load")) {
-		const char *c2 = command;
-		command = trimheadtospc(command, len);
-		
-		// Make sure we have at least one argument
-		if (!command[0]) {
-			printf("You must specify a file to load.\n");
-			return YES;
-		}
-		// Bump past space
-		command++;
-		
-		// We have at least one argument, so extract the filename
-		size_t fLen = strnspc(command, len - (c2 - command)) - command;
-		char *filename = malloc(fLen + 1);
-		memcpy(filename, command, fLen);
-		filename[fLen] = '\0';
-		
-		// Next arg
-		command = trimheadtospc(command, len);
-
-		// Now check for a load address, or fall back to the reset vector
-		uint16_t addr;
-		if(command[0]) {
-			command++;
-			
-			uint8_t low, high;
-			as6502_byteValuesForString(&high, &low, NULL, command);
-			addr = (high << 8) | low;
-		}
-		else {
-			addr = v6502_read(cpu->memory, v6502_memoryVectorResetLow, NO) | (v6502_read(cpu->memory, v6502_memoryVectorResetHigh, NO) << 8);
-		}
-
-		loadProgram(cpu->memory, filename, addr);
-		free(filename);
-		
-		return YES;
-	}
-	if (compareCommand(command, "disassemble")) {
-		command = trimheadtospc(command, len);
-		
-		if (command[0]) {
-			command++;
-		}
-		else {
-			return YES;
-		}
-		
-		uint8_t high, low;
-		uint16_t start = cpu->pc;
-		if (command[0] && command[0] != '\n') {
-			as6502_byteValuesForString(&high, &low, NULL, command);
-			start = (high << 8) | low;
-		}
-		
-		for (int i = 0; i < DISASSEMBLY_COUNT; i++) {
-			start += dis6502_printAnnotatedInstruction(stderr, cpu, start);
-		}
-		
-		return YES;
-	}
-	if (compareCommand(command, "step")) {
-		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
-		v6502_step(cpu);
-		return YES;
-	}
-	if (compareCommand(command, "peek")) {
-		command = trimheadtospc(command, len);
-		command++;
-		
-		uint16_t start = as6502_valueForString(NULL, command);
-		
-		// Make sure we don't go out of bounds either direction
-		if (start <= 0x10) {
-			start = 0x00;
-		}
-		else if (start >= cpu->memory->size - 0x30) {
-			start = cpu->memory->size - 0x30;
-		}
-		else {
-			start -= 0x10;
-		}
-		
-		v6502_printMemoryRange(cpu->memory, start, 0x30);
-		return YES;
-	}
-	if (compareCommand(command, "poke")) {
-		command = trimheadtospc(command, len);
-		command++;
-		
-		// Make sure we don't go out of bounds either direction
-		uint16_t address = as6502_valueForString(NULL, command);
-		uint8_t value;
-		
-		command = trimheadtospc(command, len);
-		command++;
-		as6502_byteValuesForString(NULL, &value, NULL, command);
-		
-		// Make sure we don't go out of bounds either direction
-		if (address >= cpu->memory->size) {
-			printf("Cannot poke memory that is out of bounds.\n");
-			return YES;
-		}
-		
-		v6502_write(cpu->memory, address, value);
-		return YES;
-	}
-	if (compareCommand(command, "jmp")) {
-		command = trimheadtospc(command, len);
-		command++;
-
-		uint16_t address = as6502_valueForString(NULL, command);
-		cpu->pc = address;
-
-		return YES;
-	}
-	if (compareCommand(command, "quit")) {
-		v6502_destroyMemory(cpu->memory);
-		v6502_destroyCPU(cpu);
-		
-		exit(EXIT_SUCCESS);
-		return NO;
-	}
-	if (compareCommand(command, "run")) {
-		run(cpu);
-		return YES;
-	}
-	if (compareCommand(command, "reset")) {
-		v6502_reset(cpu);
-		return YES;
-	}
-	if (compareCommand(command, "mreset")) {
-		bzero(cpu->memory->bytes, cpu->memory->size * sizeof(uint8_t));
-		return YES;
-	}
-	if (compareCommand(command, "verbose")) {
-		printf("Verbose mode %s.\n", verbose ? "disabled" : "enabled");
-		verbose ^= 1;
-		return YES;
-	}
-	return NO;
-}
-
 static void handleSignal(int signal) {
 	if (signal == SIGINT) {
 		interrupt++;
@@ -403,7 +132,7 @@ int main(int argc, const char * argv[])
 	if (argc > 1) {
 		const char *filename = argv[argc - 1];
 		printf("Loading binary image \"%s\" into memory...\n", filename);
-		loadProgram(cpu->memory, filename, DEFAULT_RESET_VECTOR);
+		v6502_loadFileAtAddress(cpu->memory, filename, DEFAULT_RESET_VECTOR);
 	}
 	
 	// Set the reset vector
@@ -455,7 +184,7 @@ int main(int argc, const char * argv[])
 			continue;
 		}
 
-		if (handleDebugCommand(cpu, command, MAX_COMMAND_LEN)) {
+		if (v6502_handleDebuggerCommand(cpu, command, MAX_COMMAND_LEN, breakpoint_list, run, &verbose)) {
 			continue;
 		}
 		else if (command[0] != ';') {
