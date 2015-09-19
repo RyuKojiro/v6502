@@ -362,11 +362,15 @@ void v6502_reset(v6502_cpu *cpu) {
 }
 
 void v6502_step(v6502_cpu *cpu) {
+	// This could potentially be faster without the lint zeroing
+	uint8_t low = 0;
+	uint8_t high = 0;
 	v6502_opcode opcode = v6502_read(cpu->memory, cpu->pc, YES);
-	uint8_t low = v6502_read(cpu->memory, cpu->pc + 1, YES);
-	uint8_t high = v6502_read(cpu->memory, cpu->pc + 2, YES);
+	int instructionLength = v6502_instructionLengthForOpcode(opcode);
+	if (instructionLength > 1) { low = v6502_read(cpu->memory, cpu->pc + 1, YES); }
+	if (instructionLength > 2) { high = v6502_read(cpu->memory, cpu->pc + 2, YES); }
 	v6502_execute(cpu, opcode, low, high);
-	cpu->pc += v6502_instructionLengthForOpcode(opcode);
+	cpu->pc += instructionLength;
 }
 
 /* 	1) Determine address mode, and form an operand pointer based on that
