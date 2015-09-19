@@ -35,20 +35,24 @@
 int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t address) {
 	char instruction[MAX_INSTRUCTION_LEN];
 	int instructionLength;
-	dis6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, cpu->memory->bytes[address], cpu->memory->bytes[address + 2], cpu->memory->bytes[address + 1]);
-	instructionLength = v6502_instructionLengthForOpcode(cpu->memory->bytes[address]);
+	v6502_opcode opcode = v6502_read(cpu->memory, address, NO);
+	uint8_t low = v6502_read(cpu->memory, address + 1, NO);
+	uint8_t high = v6502_read(cpu->memory, address + 2, NO);
+	
+	dis6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, opcode, high, low);
+	instructionLength = v6502_instructionLengthForOpcode(opcode);
 	
 	fprintf(out, "0x%04x: ", address);
-	
+
 	switch (instructionLength) {
 		case 1: {
-			fprintf(out, "%02x      ", cpu->memory->bytes[address]);
+			fprintf(out, "%02x      ", opcode);
 		} break;
 		case 2: {
-			fprintf(out, "%02x %02x   ", cpu->memory->bytes[address], cpu->memory->bytes[address + 1]);
+			fprintf(out, "%02x %02x   ", opcode, low);
 		} break;
 		case 3: {
-			fprintf(out, "%02x %02x %02x", cpu->memory->bytes[address], cpu->memory->bytes[address + 1], cpu->memory->bytes[address + 2]);
+			fprintf(out, "%02x %02x %02x", opcode, low, high);
 		} break;
 		default: {
 			fprintf(out, "        ");
