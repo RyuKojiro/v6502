@@ -154,7 +154,7 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
 /** @defgroup mem_access Memory Access */
 /**@{*/
 /** @brief Map an address in v6502_memory */
-/** This works by registering an v6502_memoryAccessor as the handler for that range of v6502_memory. Anytime an access is made to that range of memory, the v6502_memoryAccessor is called instead, and is expected to return a byte ready for access. When this function is called, it is also assumed that an access is actually going to happen, which means it is safe to use calls to your callback as trap signals. */
+/** This works by registering an v6502_memoryAccessor as the handler for that range of v6502_memory. Anytime an access is made to that range of memory, the v6502_memoryAccessor is called instead, and is expected to return a byte ready for access. When this function is called, it is also assumed that an access is actually going to happen, which means it is safe to use calls to your callback as trap signals. This function returns YES if the mapping succeedsm, and NO if it fails. It is highly reccomended that you assert, or at least check the return code. */
 int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunction *read, v6502_writeFunction *write, void *context);
 /** @brief Read a byte from v6502_memory */
 /** All accesses made by the v6502_cpu should travel through these functions, so that they respect any hardware memory mapping.

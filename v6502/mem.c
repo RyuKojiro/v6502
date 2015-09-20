@@ -64,7 +64,7 @@ int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunct
 	for (size_t i = 0; i < memory->rangeCount; i++) {
 		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
 		if (v6502_memoryRangesIntersect(start, size, currentRange->start, currentRange->size)) {
-			return YES;
+			return NO;
 		}
 	}
 
@@ -108,7 +108,7 @@ int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunct
 		}
 	}
 
-	return NO;
+	return YES;
 }
 
 void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {

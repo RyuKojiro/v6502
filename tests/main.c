@@ -375,12 +375,12 @@ int test_intersectingMemoryMapping() {
 	
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
-	if (v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
+	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
 		printf("Couldn't map the first range!\n");
 		return 1;
 	}
 	
-	if (v6502_map(cpu->memory, 50, 100, returnHigh, NULL, NULL)) {
+	if (!v6502_map(cpu->memory, 50, 100, returnHigh, NULL, NULL)) {
 		return 0;
 	}
 	
@@ -396,12 +396,12 @@ int test_contiguousMemoryMapping() {
 	
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
-	if (v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
+	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
 		printf("Couldn't map the first range!\n");
 		return 1;
 	}
 	
-	if (v6502_map(cpu->memory, 200, 100, returnHigh, NULL, NULL)) {
+	if (!v6502_map(cpu->memory, 200, 100, returnHigh, NULL, NULL)) {
 		printf("Second range was not allowed!\n");
 		return 1;
 	}
