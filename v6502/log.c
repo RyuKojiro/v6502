@@ -41,16 +41,16 @@ void v6502_printCpuState(FILE *out, v6502_cpu *cpu) {
 }
 
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) {
-	uint16_t end = start + len;
+	uint16_t end = start + len - 1;
 	
 	// Make sure we go to at least the same range specified, but then also round up to the nearest 0x0F
 	start &= ~15;
 	end |= 15;
 	
 	printf("      0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F\n");
-	for (uint16_t y = start; y < end - 0x10; y += 0x10) {
+	for (uint16_t y = start; y <= end - 0x0F && y >= start; y += 0x10) {
 		printf("%04x ", y);
-		for (uint16_t x = y; x <= y + 0x0F; x++) {
+		for (uint16_t x = y; x <= y + 0x0F && x >= start; x++) {
 			printf("%02x ", v6502_read(memory, x, NO));
 		}
 		printf("\n");
