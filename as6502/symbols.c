@@ -297,8 +297,8 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 		as6502_token *cur = NULL;
 
 		// Find it in the symbol table and create a new token with it's address, or just copy it into the new token
-		for (as6502_symbol *t = table->first_symbol; t; t = t->next) {
-			if (!strncmp(t->name, head->text, head->len + 1)) {
+		for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
+			if (!strncmp(this->name, head->text, head->len + 1)) {
 				char address[MAX_ADDRESS_TEXT_LEN];
 
 				if (width) {
@@ -307,15 +307,15 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 					 * relative-only, have zero page modes for all possible register
 					 * combinations.
 					 */
-					if (t->address <= 0xFF) {
-						snprintf(address, MAX_ADDRESS_TEXT_LEN, "*$%02x", t->address);
+					if (this->address <= 0xFF) {
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "*$%02x", this->address);
 					}
 					else {
-						snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%04x", t->address);
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%04x", this->address);
 					}
 				}
 				else {
-					snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%02x", v6502_byteValueOfSigned(t->address - offset));
+					snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%02x", v6502_byteValueOfSigned(this->address - offset));
 				}
 
 				cur = as6502_tokenCreate(address, head->loc, strlen(address));
