@@ -37,7 +37,7 @@
 ld6502_object *ld6502_createObject() {
 	ld6502_object *obj = malloc(sizeof(ld6502_object));
 	if (obj) {
-		obj->count = 0;
+		obj->count = 1;
 		obj->blobs = malloc(sizeof(ld6502_object_blob));
         obj->table = NULL;
 		bzero(obj->blobs, sizeof(ld6502_object_blob));
@@ -101,18 +101,16 @@ void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld65
 void ld6502_addBlobToObject(ld6502_object *obj, uint16_t start) {	
 	assert(obj);
 	
-	int newCount = obj->count + 1;
-	
-	obj->blobs = realloc(obj->blobs, sizeof(ld6502_object_blob) * (newCount));
+	obj->blobs = realloc(obj->blobs, sizeof(ld6502_object_blob) * (obj->count + 1));
 	if (!obj->blobs) {
 		as6502_fatal("blobs realloc in ld6502_addBlobToObject");
 	}
 	
-	obj->blobs[newCount].start = start;
-	obj->blobs[newCount].len = 0;
-	obj->blobs[newCount].data = NULL;
+	obj->blobs[obj->count].start = start;
+	obj->blobs[obj->count].len = 0;
+	obj->blobs[obj->count].data = NULL;
 
-	obj->count = newCount;
+	obj->count++;
 }
 
 void ld6502_appendByteToBlob(ld6502_object_blob *blob, uint8_t byte) {
