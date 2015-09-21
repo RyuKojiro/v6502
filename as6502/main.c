@@ -145,7 +145,10 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 		// Variable
 		else if(as6502_tokenListFindTokenLiteral(head, "=")) {
-			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address, as6502_symbol_type_variable);
+			// These should always be: <varname>, '=', <target_address>
+			uint16_t target = as6502_valueForString(NULL, head->next->next->text);
+			
+			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, target, as6502_symbol_type_variable);
 		}
 		// Instruction (needed to keep track of offset)
 		else {
