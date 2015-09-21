@@ -11,6 +11,7 @@
 ; $02    => direction (1 => up, 2 => right, 4 => down, 8 => left)
 ; $03    => snake length
 
+.org $0600 ;The easy6502 machine's default reset vector expects a ROM at 0x0600
 
 	jsr init
 	jsr loop
