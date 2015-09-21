@@ -159,6 +159,18 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 		}
 		ld6502_appendByteToBlob(blob, '\0'); // the 'z' means null terminate
 	}
+	else if (as6502_tokenIsEqualToStringLiteral(head, ".byte")) {
+		int wide;
+		uint8_t low, high;
+		
+		as6502_byteValuesForString(&high, &low, &wide, head->next->text);
+
+		ld6502_object_blob *blob = &obj->blobs[*currentBlob];
+		ld6502_appendByteToBlob(blob, low);
+		if (wide) {
+			ld6502_appendByteToBlob(blob, high);
+		}
+	}
 	else {
 		as6502_warn(head->loc, head->len, "Unknown assembler directive");
 	}
