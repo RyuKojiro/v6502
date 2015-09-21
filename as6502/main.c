@@ -45,7 +45,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	int addrLen;
 	v6502_address_mode mode;
 
-	as6502_token *desymedHead = as6502_desymbolicateExpression(table, head, v6502_memoryStartProgram, offset, YES); // FIXME: Should pstart even exist? If this isn't $600 it breaks snake
+	as6502_token *desymedHead = as6502_desymbolicateExpression(table, head, offset, YES); // FIXME: Should pstart even exist? If this isn't $600 it breaks snake
 	desymedHead = as6502_resolveArithmeticInExpression(desymedHead);
 	if (printDot) as6502_printDotRankForList(stdout, desymedHead);
 	as6502_instructionForExpression(&opcode, &low, &high, &mode, desymedHead);
@@ -141,7 +141,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 		// Label
 		else if (head->next && head->next->len == 1 && head->next->text[0] == ':') {
-			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address, as6502_symbol_type_label);
+			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address + obj->blobs[currentBlob].start, as6502_symbol_type_label);
 		}
 		// Variable
 		else if(as6502_tokenListFindTokenLiteral(head, "=")) {
