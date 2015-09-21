@@ -423,7 +423,7 @@ void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_objec
 		v6502_opcode opcode = blob->data[offset];
 		if (dis6502_isBranchOpcode(opcode)) {
 			if (opcode == v6502_opcode_jmp_abs || opcode == v6502_opcode_jmp_ind || opcode == v6502_opcode_jsr) {
-				address = (blob->data[offset + 2] << 8 | blob->data[offset + 1]) - v6502_memoryStartProgram;
+				address = (blob->data[offset + 2] << 8 | blob->data[offset + 1] - blob->start);
 			}
 			else {
 				address = offset + 2 + v6502_signedValueOfByte(blob->data[offset + 1]);

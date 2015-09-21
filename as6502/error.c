@@ -103,6 +103,10 @@ static void printSpaces(unsigned long num) {
 }
 
 void as6502_underline(unsigned long loc, unsigned long len) {
+	// Don't do anything if we don't have a valid range (non-zero length)
+	if (!len) {
+		return;
+	}
 	// Sometimes we might be called from things that don't have a currentLineText
 	if (currentLineText) {
 		fprintf(stderr, "%s", currentLineText);
@@ -111,11 +115,6 @@ void as6502_underline(unsigned long loc, unsigned long len) {
 		if (currentLineText[strlen(currentLineText)] != '\n') {
 			fprintf(stderr, "\n");
 		}
-	}
-
-	// Only render the underline if we have a valid range (non-zero length)
-	if (!len) {
-		return;
 	}
 	
 	printSpaces(loc);

@@ -22,6 +22,8 @@
 ; This file is a sample of some assembly to interact with text mode video.
 ;
 
+.org $0600
+
 	ldx #$00
 nextChar:
 	lda string,X

@@ -47,8 +47,6 @@
 #define v6502_memoryStartWorkMemory			0x0000
 /** @brief Start of memory reserved for CPU stack */
 #define v6502_memoryStartStack				0x0100
-/** @brief Start of program code memory region */
-#define v6502_memoryStartProgram			0x0600
 /** @brief Start of PPU registers for the RP2C02 chipset */
 #define v6502_memoryStartPPURegisters		0x2000
 /** @brief Start of APU registers for the RP2A03 chipset */

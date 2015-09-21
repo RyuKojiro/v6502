@@ -278,7 +278,7 @@ int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction) {
 	return 1;
 }
 
-as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t pstart, uint16_t offset, int caseSensitive) {
+as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_token *head, uint16_t offset, int caseSensitive) {
 	/** FIXME: This needs to be smart about address formation, based on address mode
 	 * This is absurdly inefficient, but works, given the current symbol table implementation
 	 */
@@ -307,11 +307,11 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 					 * relative-only, have zero page modes for all possible register
 					 * combinations.
 					 */
-					if (pstart + this->address <= 0xFF) {
-						snprintf(address, MAX_ADDRESS_TEXT_LEN, "*$%02x", pstart + this->address);
+					if (this->address <= 0xFF) {
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "*$%02x", this->address);
 					}
 					else {
-						snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%04x", pstart + this->address);
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%04x", this->address);
 					}
 				}
 				else {
