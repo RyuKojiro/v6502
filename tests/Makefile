@@ -44,7 +44,7 @@ compiledTestsExecutable: $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6
 # the reassembled binary.
 circularAssemble: $(AS) $(DIS)
 	$(AS) snake.s
-	$(DIS) snake.o > snake2.s
+	$(DIS) -s 600 snake.o > snake2.s
 	$(AS) snake2.s
 	diff snake.o snake2.o
 
