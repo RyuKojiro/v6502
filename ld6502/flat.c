@@ -30,7 +30,7 @@ void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file) {
 	if (obj->count > 1) {
 		as6502_warn(0, 0, "Writing flat file with multiple segments will result in loss of object data");
 	}
-	fwrite(obj->blobs[0].data, 1, obj->blobs[0].len, file);
+	fwrite(obj->blobs[obj->count - 1].data, 1, obj->blobs[obj->count - 1].len, file);
 }
 
 void as6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file) {
