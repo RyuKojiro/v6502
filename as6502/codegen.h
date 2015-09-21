@@ -35,8 +35,6 @@
 /**@{*/
 /** @brief Resolves arithmetical operations down to their literal result */
 as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head);
-/** @brief Replaces variable declarations with the instructions needed to initialize a variable without altering the current running state of the CPU */
-int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_table *table, const char *line, size_t len);
 /** @brief Automatically processes any dot directive in a given line and updates an ld6502_object_context */
 void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentBlob, as6502_token *head);
 /**@}*/

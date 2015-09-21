@@ -86,43 +86,6 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 	return head;
 }
 
-// NOTE: We only support single byte declarations
-int as6502_resolveVariableDeclaration(ld6502_object_blob *blob, as6502_symbol_table *table, const char *line, size_t len) {
-	/* This will take 1 line in and output 4 lines
-	 * e.g.	 IN: var1 = $ff
-	 *		OUT:	pha;
-	 *				lda #$ff;
-	 *				sta var1;
-	 *				pla;
-	 */
-	uint8_t low;
-	uint8_t high;
-	int wide;
-	
-	if (!strnchr(line, '=', len)) {
-		// No assignments on the line
-		return NO;
-	}
-	
-	const char *cur = rev_strnspc(line, line + len - 1);
-	if (!cur) {
-		// Couldn't find a space
-		return NO;
-	}
-	
-	// TODO: A sanity check here to make sure our label lines up with where we are appending blob data
-	//if(as6502_addressForLabel(table, <#const char *name#>) == blob->len) {
-	
-	as6502_byteValuesForString(&high, &low, &wide, cur + 1);
-	
-	ld6502_appendByteToBlob(blob, low);
-	if (wide) {
-		ld6502_appendByteToBlob(blob, high);
-	}
-	
-	return YES;
-}
-
 void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentBlob, as6502_token *head) {
 	assert(obj);
 
