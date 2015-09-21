@@ -69,7 +69,11 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 			snprintf(newValue, MAX_HEX_LEN, "$%4x", result);
 		}
 		else {
-			snprintf(newValue, MAX_HEX_LEN, "$%2x", result);
+			/* NOTE: It's possible that the arithmetic here isn't zeropage, but
+			 * is actually a relative branch being operated on, although this
+			 * sort of assembly code would be written only by an insane person.
+			 */
+			snprintf(newValue, MAX_HEX_LEN, "*$%2x", result);
 		}
 		free(lhs->text);
 		lhs->text = newValue;
