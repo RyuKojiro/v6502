@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #include <ld6502/object.h>
 #include <as6502/error.h>
@@ -34,7 +35,7 @@
 #define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80
 
-static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) {
+static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart) {
 	char line[MAX_LINE_LEN];
 	int insideOfString = 0;
 	
@@ -45,7 +46,8 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 	
 	for (int i = 0; i < obj->count; i++) {
 		ld6502_object_blob *blob = &obj->blobs[i];
-
+		blob->start += pstart;
+		
 		// Build Symbol Table
 		currentLineNum = 1;
 		dis6502_deriveSymbolsForObjectBlob(table, blob);
@@ -107,16 +109,17 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format) 
 }
 
 static void usage() {
-	fprintf(stderr, "usage: dis6502 [-o out_file] [-F format] [file ...]\n");
+	fprintf(stderr, "usage: dis6502 [-o out_file] [-F format] [-s load_address] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
 	FILE *out = stdout;
 	ld6502_file_type format = ld6502_file_type_None;
 	char outName[MAX_FILENAME_LEN] = "";
+	uint16_t programStart = 0;
 	
 	int ch;
-	while ((ch = getopt(argc, argv, "o:F:")) != -1) {
+	while ((ch = getopt(argc, argv, "o:F:s:")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "ines", 4)) {
@@ -128,6 +131,9 @@ int main(int argc, char * const argv[]) {
 			} break;
 			case 'o': {
 				strncpy(outName, optarg, MAX_FILENAME_LEN);
+			} break;
+			case 's': {
+				programStart = strtol(optarg, NULL, 16);
 			} break;
 			case '?':
 			default:
@@ -144,7 +150,7 @@ int main(int argc, char * const argv[]) {
 		if (*outName) {
 			out = fopen(outName, "w");
 		}
-		disassembleFile(argv[i], out, format);
+		disassembleFile(argv[i], out, format, programStart);
 		fclose(out);
 	}
 }
