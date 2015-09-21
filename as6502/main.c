@@ -89,8 +89,8 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 			} break;
 		}
 
-		char line[80];
-		as6502_stringForTokenList(line, 80, head->next);
+		char line[MAX_LINE_LEN];
+		as6502_stringForTokenList(line, MAX_LINE_LEN, head->next);
 		fprintf(lineout, " - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
 	}
 	
