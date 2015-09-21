@@ -221,17 +221,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		}
 		// Variable assignments
 		else if (as6502_tokenListFindTokenLiteral(head, "=")) {
-			as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
-			
-			if (value) {
-				// TODO: This should handle floating point values
-				uint8_t low;
-				as6502_byteValuesForString(NULL, &low, NULL, value->text);
-				ld6502_appendByteToBlob(&obj->blobs[currentBlob], low);
-			}
-			else {
-				as6502_error(head->loc, head->len, "Encountered variable assignment with no right hand value");
-			}
+			// This is now merely here to prevent the else from handling them, but continuing would leak the token list
 		}
 		// Normal instructions
 		else {
