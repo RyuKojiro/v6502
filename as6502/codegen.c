@@ -89,12 +89,7 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentBlob, as6502_token *head) {
 	assert(obj);
 
-	if (as6502_tokenIsEqualToStringLiteral(head, ".data")) {
-		// start new blob
-		ld6502_addBlobToObject(obj, v6502_memoryStartProgram);
-		*currentBlob = obj->count - 1;
-	}
-	else if (as6502_tokenIsEqualToStringLiteral(head, ".org")) {
+	if (as6502_tokenIsEqualToStringLiteral(head, ".org")) {
 		if (!head->next) {
 			as6502_error(head->loc, head->len, "Encountered .org directive without an address afterwards.");
 			return;
