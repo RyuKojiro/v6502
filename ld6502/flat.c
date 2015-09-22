@@ -26,8 +26,18 @@
 
 #include "flat.h"
 
+int _nonZeroBlobCount(ld6502_object *obj) {
+	int total = 0;
+	for (int i = 0; i < obj->count; i++) {
+		if (obj->blobs[i].len) {
+			total++;
+		}
+	}
+	return total;
+}
+
 void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file) {
-	if (obj->count > 1) {
+	if (_nonZeroBlobCount(obj) > 1) {
 		as6502_warn(0, 0, "Writing flat file with multiple segments will result in loss of object data");
 	}
 	fwrite(obj->blobs[obj->count - 1].data, 1, obj->blobs[obj->count - 1].len, file);
