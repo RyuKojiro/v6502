@@ -157,9 +157,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		else {
 			v6502_address_mode mode = as6502_addressModeForExpression(head);
 			address += as6502_instructionLengthForAddressMode(mode);
-			char mstr[20];
-			as6502_stringForAddressMode(mstr, mode);
-			printf("[%lu] mode = %s, len = %d\n", currentLineNum, mstr, as6502_instructionLengthForAddressMode(mode));
 		}
 
 		as6502_tokenListDestroy(_head);
