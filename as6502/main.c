@@ -116,6 +116,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 		currentLineText = line;
 
 		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
+		as6502_token *_head = head; // For memory management purposes if we bump the head forward for a label
 		if (!head) {
 			continue;
 		}
@@ -124,6 +125,12 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			printf("%lu -> ", currentLineNum);
 		}
 
+		// Label First
+		if (head->next && head->next->len == 1 && head->next->text[0] == ':') {
+			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address + obj->blobs[currentBlob].start, as6502_symbol_type_label);
+			head = head->next->next;
+		}
+		
 		// Dot Directives
 		if (head->text[0] == '.') {
 			if (!strncmp(head->text, ".org", 5)) {
@@ -139,10 +146,6 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 				address = 0;
 			}
 		}
-		// Label
-		else if (head->next && head->next->len == 1 && head->next->text[0] == ':') {
-			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address + obj->blobs[currentBlob].start, as6502_symbol_type_label);
-		}
 		// Variable
 		else if(as6502_tokenListFindTokenLiteral(head, "=")) {
 			// These should always be: <varname>, '=', <target_address>
@@ -156,7 +159,7 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 			address += as6502_instructionLengthForAddressMode(mode);
 		}
 
-		as6502_tokenListDestroy(head);
+		as6502_tokenListDestroy(_head);
 	}
 
 	// TODO: Allocate last open blob
