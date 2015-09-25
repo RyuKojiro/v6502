@@ -77,6 +77,10 @@ as6502_token *as6502_firstTokenOfTypeInList(as6502_token *head, as6502_token_typ
 size_t as6502_lengthOfToken(const char *start, size_t len);
 /** @brief Lexes a line of text into a linked list of tokens for later parsing */
 as6502_token *as6502_lex(const char *line, size_t len);
+/**@}*/
+
+/** @defgroup tok_list Token List Manipulation */
+/**@{*/
 /** @brief Searches through a linked list of tokens to find a token matching a given string of a given length */
 as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, size_t len);
 /** @brief Searches through a linked list of tokens to find a token matching a given string literal */
