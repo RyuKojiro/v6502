@@ -148,6 +148,9 @@ int main(int argc, const char * argv[])
 	 */
 	breakpoint_list = v6502_createBreakpointList();
 
+	// An empty symbol table is allocated, since they are dynamically created
+	table = as6502_createSymbolTable();
+	
 	printf("Starting Text Mode Video...\n");
 	video = textMode_create(cpu->memory);
 	
@@ -194,6 +197,7 @@ int main(int argc, const char * argv[])
 	}
 	
 	textMode_destroy(video);
+	as6502_destroySymbolTable(table);
 	v6502_destroyBreakpointList(breakpoint_list);
 	history_end(hist);
 	el_end(el);
