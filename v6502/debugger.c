@@ -70,7 +70,7 @@ static int compareCommand(const char * command, size_t len, const char * literal
 }
 
 /** Returns YES if handled */
-int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, v6502_debuggerRunCallback runCallback, int *verbose) {
+int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose) {
 	if (compareCommand(command, len, "help")) {
 		printf("breakpoint <addr>   Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.\n"
 			   "cpu                 Displays the current state of the CPU.\n"
@@ -218,13 +218,13 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		}
 		
 		for (int i = 0; i < DISASSEMBLY_COUNT; i++) {
-			start += dis6502_printAnnotatedInstruction(stderr, cpu, start);
+			start += dis6502_printAnnotatedInstruction(stderr, cpu, start, table);
 		}
 		
 		return YES;
 	}
 	if (compareCommand(command, len, "step")) {
-		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
+		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		v6502_step(cpu);
 		return YES;
 	}

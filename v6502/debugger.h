@@ -37,7 +37,11 @@ typedef void(v6502_debuggerRunCallback)(v6502_cpu *cpu);
 /** @brief Loads the binary data from file at fname into memory mem at given starting address */
 void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address);
 /** @brief Handle a command given by an external debugger line editor on a given v6502_cpu */
-int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, v6502_debuggerRunCallback runCallback, int *verbose);
+int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len,
+								v6502_breakpoint_list *breakpoint_list,
+								as6502_symbol_table *table,
+								v6502_debuggerRunCallback runCallback,
+								int *verbose);
 /**@}*/
 
 #endif /* defined(__v6502__debugger__) */
