@@ -77,6 +77,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
 			   "help                Displays this help.\n"
 			   "iv <type> <addr>    Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.\n"
+			   "label <name> <addr> Define a new label for automatic symbolication during disassembly.\n"
 			   "load <file> <addr>  Load binary image into memory at the address specified. If no address is specified, then the reset vector is used.\n"
 			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
 			   "peek <addr>         Dumps the memory at and around a given address.\n"
@@ -198,6 +199,26 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		v6502_loadFileAtAddress(cpu->memory, filename, addr);
 		free(filename);
 		
+		return YES;
+	}
+	if (compareCommand(command, len, "label")) {
+		if (!table) {
+			return YES;
+		}
+		
+		// Extract name
+		const char *c2 = command;
+		command = trimheadtospc(command, len) + 1;
+		size_t sLen = strnspc(command, len - (c2 - command)) - command;
+		char *name = malloc(sLen + 1);
+		memcpy(name, command, sLen);
+		name[sLen] = '\0';
+		
+		command = trimheadtospc(command, len);
+		uint16_t address = as6502_valueForString(NULL, command);
+		
+		as6502_addSymbolToTable(table, 0, name, address, as6502_symbol_type_label);
+		free(name);
 		return YES;
 	}
 	if (compareCommand(command, len, "disassemble")) {
