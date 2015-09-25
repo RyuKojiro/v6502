@@ -50,6 +50,7 @@ static int resist;
 static v6502_cpu *cpu;
 static v6502_breakpoint_list *breakpoint_list;
 static v6502_textmode_video *video;
+static as6502_symbol_table *table;
 
 static void fault(void *ctx, const char *error) {
 	(void)ctx;
@@ -68,7 +69,7 @@ static void run(v6502_cpu *cpu) {
 	// Step once if we are starting from a breakpoint, so that we don't hit it again
 	if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
 		if (verbose) {
-			dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
+			dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		}
 		v6502_step(cpu);
 	}
@@ -82,7 +83,7 @@ static void run(v6502_cpu *cpu) {
 		}
 		
 		if (verbose) {
-			dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc);
+			dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		}
 		v6502_step(cpu);
 	} while (!(cpu->sr & v6502_cpu_status_break) && !interrupt);
@@ -147,6 +148,9 @@ int main(int argc, const char * argv[])
 	 */
 	breakpoint_list = v6502_createBreakpointList();
 
+	// An empty symbol table is allocated, since they are dynamically created
+	table = as6502_createSymbolTable();
+	
 	printf("Starting Text Mode Video...\n");
 	video = textMode_create(cpu->memory);
 	
@@ -184,7 +188,7 @@ int main(int argc, const char * argv[])
 			continue;
 		}
 
-		if (v6502_handleDebuggerCommand(cpu, command, MAX_COMMAND_LEN, breakpoint_list, run, &verbose)) {
+		if (v6502_handleDebuggerCommand(cpu, command, MAX_COMMAND_LEN, breakpoint_list, table, run, &verbose)) {
 			continue;
 		}
 		else if (command[0] != ';') {
@@ -193,6 +197,7 @@ int main(int argc, const char * argv[])
 	}
 	
 	textMode_destroy(video);
+	as6502_destroySymbolTable(table);
 	v6502_destroyBreakpointList(breakpoint_list);
 	history_end(hist);
 	el_end(el);

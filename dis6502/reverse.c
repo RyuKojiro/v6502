@@ -32,7 +32,7 @@
 #define MAX_INSTRUCTION_LEN		32
 
 // TODO: Add desymbolication support
-int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t address) {
+int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t address, as6502_symbol_table *table) {
 	char instruction[MAX_INSTRUCTION_LEN];
 	int instructionLength;
 	v6502_opcode opcode = v6502_read(cpu->memory, address, NO);
@@ -40,6 +40,9 @@ int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t addres
 	uint8_t high = v6502_read(cpu->memory, address + 2, NO);
 	
 	dis6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, opcode, high, low);
+	if (table) {
+		as6502_symbolicateLine(table, instruction, MAX_INSTRUCTION_LEN, 0, address);
+	}
 	instructionLength = v6502_instructionLengthForOpcode(opcode);
 	
 	fprintf(out, "0x%04x: ", address);
