@@ -87,6 +87,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			   "reset               Resets the CPU.\n"
 			   "mreset              Zeroes all memory.\n"
 			   "step                Forcibly steps the CPU once.\n"
+			   "symbols             Print the entire symbol table as it currently exists.\n"
 			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
 	}
@@ -247,6 +248,10 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 	if (compareCommand(command, len, "step")) {
 		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		v6502_step(cpu);
+		return YES;
+	}
+	if (compareCommand(command, len, "symbols")) {
+		as6502_printSymbolTable(table);
 		return YES;
 	}
 	if (compareCommand(command, len, "peek")) {
