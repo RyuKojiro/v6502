@@ -88,6 +88,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			   "mreset              Zeroes all memory.\n"
 			   "step                Forcibly steps the CPU once.\n"
 			   "symbols             Print the entire symbol table as it currently exists.\n"
+			   "var <name> <addr>   Define a new variable for automatic symbolication during disassembly.\n"
 			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
 	}
@@ -202,7 +203,19 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
+	
+	as6502_symbol_type symbolType = as6502_symbol_type_unknown; // Initialized for lint
+	int makeSymbol = 0;
 	if (compareCommand(command, len, "label")) {
+		symbolType = as6502_symbol_type_label;
+		makeSymbol++;
+	}
+	else if (compareCommand(command, len, "var")) {
+		symbolType = as6502_symbol_type_variable;
+		makeSymbol++;
+	}
+	
+	if (makeSymbol) {
 		if (!table) {
 			return YES;
 		}
@@ -218,10 +231,11 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		command = trimheadtospc(command, len);
 		uint16_t address = as6502_valueForString(NULL, command);
 		
-		as6502_addSymbolToTable(table, 0, name, address, as6502_symbol_type_label);
+		as6502_addSymbolToTable(table, 0, name, address, symbolType);
 		free(name);
 		return YES;
 	}
+	
 	if (compareCommand(command, len, "disassemble")) {
 		command = trimheadtospc(command, len);
 		
