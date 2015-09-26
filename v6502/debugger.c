@@ -32,6 +32,7 @@
 #include "breakpoint.h"
 
 #define DISASSEMBLY_COUNT		10
+#define MAX_LINE_LEN			80
 
 void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address) {
 	FILE *f = fopen(fname, "r");
@@ -51,6 +52,13 @@ void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t addr
 	fprintf(stderr, "Loaded %u bytes at 0x%x.\n", offset, address);
 	
 	fclose(f);
+}
+
+void v6502_runDebuggerScript(v6502_cpu *cpu, FILE *file, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose) {
+	char line[MAX_LINE_LEN];
+	while (fgets(line, MAX_LINE_LEN, file)) {
+		v6502_handleDebuggerCommand(cpu, line, MAX_LINE_LEN, breakpoint_list, table, runCallback, verbose);
+	}
 }
 
 int v6502_compareDebuggerCommand(const char * command, size_t len, const char * literal) {
@@ -86,6 +94,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			   "run                 Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
 			   "reset               Resets the CPU.\n"
 			   "mreset              Zeroes all memory.\n"
+			   "script              Load a script of debugger commands.\n"
 			   "step                Forcibly steps the CPU once.\n"
 			   "symbols             Print the entire symbol table as it currently exists.\n"
 			   "var <name> <addr>   Define a new variable for automatic symbolication during disassembly.\n"
@@ -266,6 +275,30 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		}
 		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		v6502_step(cpu);
+		return YES;
+	}
+	if (v6502_compareDebuggerCommand(command, len, "script")) {
+		const char *c2 = command;
+		command = trimheadtospc(command, len);
+		
+		// Make sure we have at least one argument
+		if (!command[0]) {
+			printf("You must specify a file to load.\n");
+			return YES;
+		}
+		// Bump past space
+		command++;
+		
+		// We have at least one argument, so extract the filename
+		size_t fLen = strnspc(command, len - (c2 - command)) - command;
+		char *filename = malloc(fLen + 1);
+		memcpy(filename, command, fLen);
+		filename[fLen] = '\0';
+		
+		FILE *file = fopen(filename, "r");
+		v6502_runDebuggerScript(cpu, file, breakpoint_list, table, runCallback, verbose);
+		fclose(file);
+		
 		return YES;
 	}
 	if (v6502_compareDebuggerCommand(command, len, "symbols")) {
