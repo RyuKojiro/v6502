@@ -260,6 +260,10 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		return YES;
 	}
 	if (v6502_compareDebuggerCommand(command, len, "step")) {
+		as6502_symbol *symbol = as6502_symbolForAddress(table, cpu->pc);
+		if (symbol) {
+			fprintf(stderr, "0x%02x: %s:\n", symbol->address, symbol->name);
+		}
 		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		v6502_step(cpu);
 		return YES;
