@@ -53,7 +53,7 @@ void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t addr
 	fclose(f);
 }
 
-static int compareCommand(const char * command, size_t len, const char * literal) {
+int v6502_compareDebuggerCommand(const char * command, size_t len, const char * literal) {
 	char *cmd = malloc(len);
 	strncpy(cmd, command, len);
 	
@@ -71,7 +71,7 @@ static int compareCommand(const char * command, size_t len, const char * literal
 
 /** Returns YES if handled */
 int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose) {
-	if (compareCommand(command, len, "help")) {
+	if (v6502_compareDebuggerCommand(command, len, "help")) {
 		printf("breakpoint <addr>   Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.\n"
 			   "cpu                 Displays the current state of the CPU.\n"
 			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
@@ -92,7 +92,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
 	}
-	if (compareCommand(command, len, "breakpoint")) {
+	if (v6502_compareDebuggerCommand(command, len, "breakpoint")) {
 		command = trimheadtospc(command, len);
 		
 		if(command[0]) {
@@ -116,28 +116,28 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
-	if (compareCommand(command, len, "cpu")) {
+	if (v6502_compareDebuggerCommand(command, len, "cpu")) {
 		v6502_printCpuState(stderr, cpu);
 		return YES;
 	}
-	if (compareCommand(command, len, "nmi")) {
+	if (v6502_compareDebuggerCommand(command, len, "nmi")) {
 		v6502_nmi(cpu);
 		return YES;
 	}
-	if (compareCommand(command, len, "iv")) {
+	if (v6502_compareDebuggerCommand(command, len, "iv")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
 		uint16_t vector_address = 0;
 		
 		// Determine IV address based on vector type
-		if (compareCommand(command, len, "nmi")) {
+		if (v6502_compareDebuggerCommand(command, len, "nmi")) {
 			vector_address = v6502_memoryVectorNMILow;
 		}
-		else if (compareCommand(command, len, "reset")) {
+		else if (v6502_compareDebuggerCommand(command, len, "reset")) {
 			vector_address = v6502_memoryVectorResetLow;
 		}
-		else if (compareCommand(command, len, "interrupt")) {
+		else if (v6502_compareDebuggerCommand(command, len, "interrupt")) {
 			vector_address = v6502_memoryVectorInterruptLow;
 		}
 		else {
@@ -164,7 +164,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		}
 		return YES;
 	}
-	if (compareCommand(command, len, "load")) {
+	if (v6502_compareDebuggerCommand(command, len, "load")) {
 		const char *c2 = command;
 		command = trimheadtospc(command, len);
 		
@@ -206,11 +206,11 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 	
 	as6502_symbol_type symbolType = as6502_symbol_type_unknown; // Initialized for lint
 	int makeSymbol = 0;
-	if (compareCommand(command, len, "label")) {
+	if (v6502_compareDebuggerCommand(command, len, "label")) {
 		symbolType = as6502_symbol_type_label;
 		makeSymbol++;
 	}
-	else if (compareCommand(command, len, "var")) {
+	else if (v6502_compareDebuggerCommand(command, len, "var")) {
 		symbolType = as6502_symbol_type_variable;
 		makeSymbol++;
 	}
@@ -236,7 +236,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		return YES;
 	}
 	
-	if (compareCommand(command, len, "disassemble")) {
+	if (v6502_compareDebuggerCommand(command, len, "disassemble")) {
 		command = trimheadtospc(command, len);
 		
 		if (command[0]) {
@@ -259,16 +259,16 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
-	if (compareCommand(command, len, "step")) {
+	if (v6502_compareDebuggerCommand(command, len, "step")) {
 		dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		v6502_step(cpu);
 		return YES;
 	}
-	if (compareCommand(command, len, "symbols")) {
+	if (v6502_compareDebuggerCommand(command, len, "symbols")) {
 		as6502_printSymbolTable(table);
 		return YES;
 	}
-	if (compareCommand(command, len, "peek")) {
+	if (v6502_compareDebuggerCommand(command, len, "peek")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
@@ -288,7 +288,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		v6502_printMemoryRange(cpu->memory, start, 0x30);
 		return YES;
 	}
-	if (compareCommand(command, len, "poke")) {
+	if (v6502_compareDebuggerCommand(command, len, "poke")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
@@ -309,7 +309,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		v6502_write(cpu->memory, address, value);
 		return YES;
 	}
-	if (compareCommand(command, len, "jmp")) {
+	if (v6502_compareDebuggerCommand(command, len, "jmp")) {
 		command = trimheadtospc(command, len);
 		command++;
 		
@@ -318,26 +318,26 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		return YES;
 	}
-	if (compareCommand(command, len, "quit")) {
+	if (v6502_compareDebuggerCommand(command, len, "quit")) {
 		v6502_destroyMemory(cpu->memory);
 		v6502_destroyCPU(cpu);
 		
 		exit(EXIT_SUCCESS);
 		return NO;
 	}
-	if (compareCommand(command, len, "run")) {
+	if (v6502_compareDebuggerCommand(command, len, "run")) {
 		runCallback(cpu);
 		return YES;
 	}
-	if (compareCommand(command, len, "reset")) {
+	if (v6502_compareDebuggerCommand(command, len, "reset")) {
 		v6502_reset(cpu);
 		return YES;
 	}
-	if (compareCommand(command, len, "mreset")) {
+	if (v6502_compareDebuggerCommand(command, len, "mreset")) {
 		bzero(cpu->memory->bytes, cpu->memory->size * sizeof(uint8_t));
 		return YES;
 	}
-	if (compareCommand(command, len, "verbose")) {
+	if (v6502_compareDebuggerCommand(command, len, "verbose")) {
 		printf("Verbose mode %s.\n", *verbose ? "disabled" : "enabled");
 		*verbose ^= 1;
 		return YES;
