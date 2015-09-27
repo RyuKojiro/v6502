@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h> // isdigit
 #include <as6502/linectl.h>
 #include <as6502/parser.h>
 #include <dis6502/reverse.h>
@@ -107,7 +108,15 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		if(command[0]) {
 			command++;
 			// Get address
-			uint16_t address = as6502_valueForString(NULL, command);
+			uint16_t address;
+			
+			// Direct address or symbol name
+			if (isdigit(command[0]) || command[0] == '$') {
+				address = as6502_valueForString(NULL, command);
+			}
+			else {
+				address = as6502_addressForLabel(table, command);
+			}
 			
 			// Toggle breakpoint
 			if (v6502_breakpointIsInList(breakpoint_list, address)) {
