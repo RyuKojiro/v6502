@@ -256,19 +256,16 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 	
 	if (v6502_compareDebuggerCommand(command, len, "disassemble")) {
 		command = trimheadtospc(command, len);
+		uint16_t start = cpu->pc;
 		
 		if (command[0]) {
 			command++;
-		}
-		else {
-			return YES;
-		}
-		
-		uint8_t high, low;
-		uint16_t start = cpu->pc;
-		if (command[0] && command[0] != '\n') {
-			as6502_byteValuesForString(&high, &low, NULL, command);
-			start = (high << 8) | low;
+			
+			uint8_t high, low;
+			if (command[0] && command[0] != '\n') {
+				as6502_byteValuesForString(&high, &low, NULL, command);
+				start = (high << 8) | low;
+			}
 		}
 		
 		for (int i = 0; i < DISASSEMBLY_COUNT; i++) {
