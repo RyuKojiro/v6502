@@ -66,6 +66,25 @@ void as6502_destroySymbolTable(as6502_symbol_table *table) {
 	free(table);
 }
 
+void as6502_printSymbolScript(as6502_symbol_table *table, FILE *out) {
+	if(!table) {
+		fprintf(stderr, "Symbol table is NULL\n");
+		return;
+	}
+	
+	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
+		switch (this->type) {
+			case as6502_symbol_type_label: {
+				fprintf(out, "label %s 0x%x\n", this->name, this->address);
+			} break;
+			case as6502_symbol_type_variable: {
+				fprintf(out, "var %s 0x%x\n", this->name, this->address);
+			} break;
+			default: break;
+		}
+	}
+}
+
 void as6502_printSymbolTable(as6502_symbol_table *table) {
 	if(!table) {
 		printf("Symbol table is NULL\n");

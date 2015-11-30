@@ -40,6 +40,9 @@
 #define MAX_LINE_LEN		80
 #define MAX_FILENAME_LEN	255
 
+#define EXTENSION_OBJECT	"o"
+#define EXTENSION_SCRIPT	"dbg"
+
 static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess, int printDot, uint16_t offset) {
 	uint8_t opcode, low, high;
 	int addrLen;
@@ -98,7 +101,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	return addrLen;
 }
 
-static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, int printDot, ld6502_file_type format) {
+static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int printTable, int printDot, ld6502_file_type format) {
 	char line[MAX_LINE_LEN];
 	uint16_t address = 0;
 	currentLineNum = 0;
@@ -167,6 +170,9 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 
 	if (printTable) {
 		as6502_printSymbolTable(obj->table);
+	}
+	if (sym) {
+		as6502_printSymbolScript(obj->table, sym);
 	}
 	
 	if (printDot) {
@@ -255,35 +261,40 @@ static void assembleFile(FILE *in, FILE *out, int printProcess, int printTable, 
 	ld6502_destroyObject(obj);
 }
 
-static void outNameFromInName(char *out, int len, const char *in) {
-	int c;
-	for (c = 0; c < len && in[c] && in[c] != '.'; c++) {
-		out[c] = in[c];
+static char *outNameFromInName(const char *in, const char *ext) {
+	char *outName = strdup(in);
+	size_t inLen = strlen(in);
+	outName = realloc(outName, inLen + strlen(ext));
+	char *extStart = strchr(outName, '.');
+	if(!extStart) {
+		extStart = outName + inLen;
+		extStart[0] = '.';
 	}
-	out[c] = '.';
-	out[++c] = 'o';
-	out[++c] = '\0';
+	extStart++;
+
+	strcpy(extStart, ext);
+	return outName;
 }
 
 static void usage() {
-	fprintf(stderr, "usage: as6502 [-dST] [-F format] [-o outfile] [file ...]\n");
+	fprintf(stderr, "usage: as6502 [-dStT] [-F format] [-o outfile] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
 	FILE *in;
 	FILE *out;
-	char outName[MAX_FILENAME_LEN];
+	FILE *sym = NULL;
+	char *outName;
 	int printProcess = NO;
 	int printTable = NO;
 	int printDot = NO;
+	int makeSymScript = NO;
 	ld6502_file_type format = ld6502_file_type_FlatFile;
-	
-	outName[0] = '\0';
 	
 	// If no arguments
 	int ch;
 	
-	while ((ch = getopt(argc, argv, "dSTF:o:")) != -1) {
+	while ((ch = getopt(argc, argv, "dSTF:o:t")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "flat", 4)) {
@@ -299,11 +310,14 @@ int main(int argc, char * const argv[]) {
 			case 'T': {
 				printTable = YES;
 			} break;
+			case 't': {
+				makeSymScript = YES;
+			} break;
 			case 'd': {
 				printDot = YES;
 			} break;
 			case 'o': {
-				strncpy(outName, optarg, MAX_FILENAME_LEN);
+				outName = strdup(optarg);
 			} break;
 			case '?':
 			default:
@@ -320,7 +334,12 @@ int main(int argc, char * const argv[]) {
 		
 		as6502_warn(0, 0, "Assembling from stdin does not support symbols");
 		
-		assembleFile(stdin, stdout, NO, NO, NO, format);
+		if (makeSymScript) {
+			char *fname = outNameFromInName(argv[i], EXTENSION_SCRIPT);
+			sym = fopen(fname, "w");
+			free(fname);
+		}
+		assembleFile(stdin, stdout, sym, NO, NO, NO, format);
 	}
 	else {
 		for (/* i */; i < argc; i++) {
@@ -331,14 +350,24 @@ int main(int argc, char * const argv[]) {
 			}
 			
 			currentFileName = argv[i];
-			if (!outName[0]) {
-				outNameFromInName(outName, MAX_FILENAME_LEN, argv[i]);
+			if (!outName) {
+				outName = outNameFromInName(argv[i], EXTENSION_OBJECT);
 			}
 			out = fopen(outName, "w");
-			assembleFile(in, out, printProcess, printTable, printDot, format);
+			free(outName);
+
+			if (makeSymScript) {
+				char *fname = outNameFromInName(argv[i], EXTENSION_SCRIPT);
+				sym = fopen(fname, "w");
+				free(fname);
+			}
+			assembleFile(in, out, sym, printProcess, printTable, printDot, format);
 			fclose(in);
 			fclose(out);
 		}
+	}
+	if(sym) {
+		fclose(sym);
 	}
 }
 

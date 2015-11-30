@@ -83,6 +83,8 @@ as6502_symbol_table *as6502_createSymbolTable(void);
 void as6502_destroySymbolTable(as6502_symbol_table *table);
 /** @brief Prints a human readable representation of a as6502_symbol_table for debugging */
 void as6502_printSymbolTable(as6502_symbol_table *table);
+/** @brief Generates a debugger script containing all of the commands necessary for loading the symbol table generated during assembly into the debugger */
+void as6502_printSymbolScript(as6502_symbol_table *table, FILE *out);
 /**@}*/
 
 /** @defgroup sym_access Symbol Table Accessors */
