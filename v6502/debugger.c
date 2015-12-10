@@ -257,10 +257,10 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 	if (v6502_compareDebuggerCommand(command, len, "disassemble")) {
 		command = trimheadtospc(command, len);
 		uint16_t start = cpu->pc;
-		
+		int isFunction = NO;
+
 		if (command[0]) {
 			command++;
-
 
 			// Direct address or symbol name
 			if (isdigit(command[0]) || command[0] == '$') {
@@ -268,11 +268,16 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			}
 			else {
 				start = as6502_addressForLabel(table, command);
+				isFunction = YES;
 			}
 		}
 		
 		for (int i = 0; i < DISASSEMBLY_COUNT; i++) {
 			start += dis6502_printAnnotatedInstruction(stderr, cpu, start, table);
+			if (isFunction && v6502_read(cpu->memory, start, NO) == v6502_opcode_rts) {
+				dis6502_printAnnotatedInstruction(stderr, cpu, start, table);
+				break;
+			}
 		}
 		
 		return YES;
