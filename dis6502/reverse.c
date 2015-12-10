@@ -38,10 +38,16 @@ int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t addres
 	v6502_opcode opcode = v6502_read(cpu->memory, address, NO);
 	uint8_t low = v6502_read(cpu->memory, address + 1, NO);
 	uint8_t high = v6502_read(cpu->memory, address + 2, NO);
-	
+
 	dis6502_stringForInstruction(instruction, MAX_INSTRUCTION_LEN, opcode, high, low);
 	if (table) {
 		as6502_symbolicateLine(table, instruction, MAX_INSTRUCTION_LEN, 0, address);
+
+		// If we've got a symbol table, and this also happens to be a label site, print that too
+		as6502_symbol *symbol = as6502_symbolForAddress(table, address);
+		if (symbol) {
+			fprintf(out, "0x%02x: %s:\n", symbol->address, symbol->name);
+		}
 	}
 	instructionLength = v6502_instructionLengthForOpcode(opcode);
 	
