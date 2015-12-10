@@ -41,7 +41,8 @@
 #define FLAG_OVERFLOW_WITH_COMPARISON(a, b, c)		cpu->sr &= ~v6502_cpu_status_overflow; \
 													if ((~(a ^ b)) & 0x80) { cpu->sr |= (( (~(a ^ c)) & 0x80) ? 0 : v6502_cpu_status_overflow); }
 
-/** If addition, b = operand, a = result, subtraction reverses it */
+/** If addition, b = operand, a = result,
+ for subtraction b = register, a = operand */
 #define FLAG_CARRY_WITH_COMPARISON(a, b)			cpu->sr &= ~v6502_cpu_status_carry; \
 													cpu->sr |= ((a < b) ? v6502_cpu_status_carry : 0);
 #define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
@@ -112,7 +113,7 @@ static uint8_t _executeInPlaceIncrement(v6502_cpu *cpu, uint8_t operand) {
 
 static void _executeInPlaceCompare(v6502_cpu *cpu, uint8_t reg, uint8_t operand) {
 	uint8_t result = reg - operand;
-	FLAG_CARRY_WITH_COMPARISON(result, operand);
+	FLAG_CARRY_WITH_COMPARISON(operand, reg);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
 }
 
