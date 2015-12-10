@@ -35,7 +35,7 @@
 #define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80
 
-static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart) {
+static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, FILE *sym) {
 	char line[MAX_LINE_LEN];
 	int insideOfString = 0;
 	
@@ -51,6 +51,12 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 		// Build Symbol Table
 		currentLineNum = 1;
 		dis6502_deriveSymbolsForObjectBlob(table, blob);
+		if (printTable) {
+			as6502_printSymbolTable(table);
+		}
+		if (sym) {
+			as6502_printSymbolScript(table, sym);
+		}
 
 		/* Trim Symbol Table, so that we don't symbolicate addresses outside of
 		 * our address space. FIXME: This currently assumes only one blob!
@@ -104,12 +110,13 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 			currentLineNum++;
 		}
 	}
-	
+
+	as6502_destroySymbolTable(table);
 	ld6502_destroyObject(obj);
 }
 
 static void usage() {
-	fprintf(stderr, "usage: dis6502 [-o out_file] [-F format] [-s load_address] [file ...]\n");
+	fprintf(stderr, "usage: dis6502 [-tT] [-o out_file] [-F format] [-s load_address] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
@@ -117,9 +124,11 @@ int main(int argc, char * const argv[]) {
 	ld6502_file_type format = ld6502_file_type_None;
 	char outName[MAX_FILENAME_LEN] = "";
 	uint16_t programStart = 0;
-	
+	int printTable = NO;
+	FILE *sym = NULL;
+
 	int ch;
-	while ((ch = getopt(argc, argv, "o:F:s:")) != -1) {
+	while ((ch = getopt(argc, argv, "o:F:s:Tt:")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "ines", 4)) {
@@ -134,6 +143,12 @@ int main(int argc, char * const argv[]) {
 			} break;
 			case 's': {
 				programStart = strtol(optarg, NULL, 16);
+			} break;
+			case 'T': {
+				printTable = YES;
+			} break;
+			case 't': {
+				sym = fopen(optarg, "w");
 			} break;
 			case '?':
 			default:
@@ -150,7 +165,11 @@ int main(int argc, char * const argv[]) {
 		if (*outName) {
 			out = fopen(outName, "w");
 		}
-		disassembleFile(argv[i], out, format, programStart);
+
+		disassembleFile(argv[i], out, format, programStart, printTable, sym);
+		if (sym) {
+			fclose(sym);
+		}
 		fclose(out);
 	}
 }
