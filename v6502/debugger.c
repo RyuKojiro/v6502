@@ -260,11 +260,14 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		
 		if (command[0]) {
 			command++;
-			
-			uint8_t high, low;
-			if (command[0] && command[0] != '\n') {
-				as6502_byteValuesForString(&high, &low, NULL, command);
-				start = (high << 8) | low;
+
+
+			// Direct address or symbol name
+			if (isdigit(command[0]) || command[0] == '$') {
+				start = as6502_valueForString(NULL, command);
+			}
+			else {
+				start = as6502_addressForLabel(table, command);
 			}
 		}
 		
