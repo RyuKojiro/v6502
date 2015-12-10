@@ -126,7 +126,7 @@ as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *na
 
 	size_t len = strlen(name);
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
-		if (strncmp(this->name, name, len)) {
+		if (!strncmp(this->name, name, len)) {
 			return this;
 		}
 	}
