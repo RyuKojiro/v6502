@@ -284,7 +284,7 @@ int main(int argc, char * const argv[]) {
 	FILE *in;
 	FILE *out;
 	FILE *sym = NULL;
-	char *outName;
+	char *outName = NULL;
 	int printProcess = NO;
 	int printTable = NO;
 	int printDot = NO;
