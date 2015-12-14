@@ -43,7 +43,7 @@
 /** If addition, b = operand, a = result,
  for subtraction b = register, a = operand */
 #define FLAG_CARRY_WITH_COMPARISON(a, b)			cpu->sr &= ~v6502_cpu_status_carry; \
-													cpu->sr |= ((a < b) ? v6502_cpu_status_carry : 0);
+													cpu->sr |= ((a <= b) ? v6502_cpu_status_carry : 0);
 #define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
 													FLAG_ZERO_WITH_RESULT(a);
 
