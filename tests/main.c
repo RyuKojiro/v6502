@@ -290,11 +290,13 @@ int test_sbc() {
 	printf("Testing SBC instruction...\n");
 	
 	v6502_reset(cpu);
-	cpu->ac = 0xff;
+	TEST_ASM("lda #$ff");
 	
 	memcpy(&before, cpu, sizeof(v6502_cpu));
-	v6502_execute(cpu, v6502_opcode_sbc_imm, 0x04, 0x00);
-	if (!(cpu->ac == 0xfa && cpu->sr & v6502_cpu_status_carry)) {
+	TEST_ASM("sbc #$04");
+	if (!(cpu->ac == 0xfa &&
+		  cpu->sr & v6502_cpu_status_carry &&
+		  cpu->sr & v6502_cpu_status_negative)) {
 		rc++;
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
