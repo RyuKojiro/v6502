@@ -34,12 +34,11 @@
 													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
 #define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr &= ~ v6502_cpu_status_negative; \
 													cpu->sr |= (a & v6502_cpu_status_negative)
-/** The first if statement checks if both operands' signs agree (since we are
- normalized to addition at this point.) If they do, then the output sign must
- also agree after calculation, or we have overflown; this is checked in the
- following ternary. */
+/** B and C are interchangeable. After normalization to addition, arguments are:
+ a = accumulator pre-operation,
+ b OR c = accumulator result OR operand */
 #define FLAG_OVERFLOW_WITH_COMPARISON(a, b, c)		cpu->sr &= ~v6502_cpu_status_overflow; \
-													if ((~(a ^ b)) & 0x80) { cpu->sr |= (( (~(a ^ c)) & 0x80) ? 0 : v6502_cpu_status_overflow); }
+													cpu->sr |= (( ~(a ^ b) & ~(a ^ c) & 0x80) ? 0 : v6502_cpu_status_overflow);
 
 /** If addition, b = operand, a = result,
  for subtraction b = register, a = operand */
