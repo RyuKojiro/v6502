@@ -67,15 +67,15 @@ static uint8_t _executeInPlaceLSR(v6502_cpu *cpu, uint8_t operand) {
 }
 
 static uint8_t _executeInPlaceROL(v6502_cpu *cpu, uint8_t operand) {
+	operand = (operand << 1) | (cpu->sr & v6502_cpu_status_carry);
 	FLAG_CARRY_WITH_HIGH_BIT(operand);
-	operand = (operand << 1) | (operand >> 7);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
 }
 
 static uint8_t _executeInPlaceROR(v6502_cpu *cpu, uint8_t operand) {
+	operand = (operand >> 1) | ((cpu->sr & v6502_cpu_status_carry) << 7);
 	FLAG_CARRY_WITH_HIGH_BIT(operand);
-	operand = (operand >> 1) | (operand << 7);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
 }
