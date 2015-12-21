@@ -23,8 +23,8 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef __v6502__debugger__
-#define __v6502__debugger__
+#ifndef v6502_debugger_h
+#define v6502_debugger_h
 
 #include <v6502/cpu.h>
 #include <v6502/breakpoint.h>
@@ -48,4 +48,4 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len,
 								int *verbose);
 /**@}*/
 
-#endif /* defined(__v6502__debugger__) */
+#endif /* defined(v6502_debugger_h) */

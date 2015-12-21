@@ -23,8 +23,8 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef __v6502__token__
-#define __v6502__token__
+#ifndef as6502_token_h
+#define as6502_token_h
 
 #include <sys/types.h>
 #include <stdio.h> // Required for dot output
@@ -97,4 +97,4 @@ void as6502_printDotForList(FILE *stream, as6502_token *head);
 void as6502_printDotRankForList(FILE *stream, as6502_token *head);
 /**@}*/
 
-#endif /* defined(__v6502__token__) */
+#endif /* defined(as6502_token_h) */
