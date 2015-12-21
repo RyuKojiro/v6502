@@ -307,6 +307,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		filename[fLen] = '\0';
 		
 		FILE *file = fopen(filename, "r");
+		free(filename);
 		v6502_runDebuggerScript(cpu, file, breakpoint_list, table, runCallback, verbose);
 		fclose(file);
 		
