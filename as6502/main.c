@@ -67,7 +67,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	}
 
 	if (opcode == v6502_opcode_jmp_ind && low == 0xFF) {
-		as6502_warn(head->loc, head->len, "Indirect jumps on page boundaries are often not implemented correctly in hardware.");
+		as6502_warn(head->loc, head->len, "Indirect jumps that span page boundaries are often not implemented correctly in hardware.");
 	}
 
 	if (printProcess || (lastProblematicLine == currentLineNum)) {
