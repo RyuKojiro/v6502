@@ -38,7 +38,6 @@
 #include "token.h"
 
 #define MAX_LINE_LEN		80
-#define MAX_FILENAME_LEN	255
 
 #define EXTENSION_OBJECT	"o"
 #define EXTENSION_SCRIPT	"dbg"
@@ -66,7 +65,11 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	if (addrLen >= 3) {
 		ld6502_appendByteToBlob(blob, high);
 	}
-		
+
+	if (opcode == v6502_opcode_jmp_ind && low == 0xFF) {
+		as6502_warn(head->loc, head->len, "Indirect jumps on page boundaries are often not implemented correctly in hardware.");
+	}
+
 	if (printProcess || (lastProblematicLine == currentLineNum)) {
 		FILE *lineout = printProcess ? stdout : stderr;
 		
