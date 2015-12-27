@@ -694,18 +694,13 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->pc -= 3; // PC shift
 		} return;
 		case v6502_opcode_jmp_ind: {
-			// This is purely a non-machine optimization, we should not trigger any traps here
-			if (v6502_read(cpu->memory, low, NO) == cpu->pc) {
-				v6502_execute(cpu, v6502_opcode_wai, 0, 0);
-				cpu->pc -= 2; // PC shift
-				return;
-			}
+			uint16_t address = BOTH_BYTES;
+			low = v6502_read(cpu->memory, address, NO);
+			high = v6502_read(cpu->memory, address + 1, NO);
 			
-			
-			// FIXME: @bug Should v6502_opcode_jmp_ind really only use the low byte and be zeropage?
 			// Trap was already triggered by indirect memory classification in prior switch
-			cpu->pc = v6502_read(cpu->memory, low, NO);
-			cpu->pc -= 2; // PC shift
+			cpu->pc = BOTH_BYTES;
+			cpu->pc -= 3; // PC shift
 		} return;
 		
 		// ORA
