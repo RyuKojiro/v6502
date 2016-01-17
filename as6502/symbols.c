@@ -237,17 +237,18 @@ void as6502_removeSymbolFromTable(as6502_symbol_table *table, as6502_symbol *sym
 
 void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t start, uint16_t len) {
 	assert(table);
-	
+
+	return;
+
 	as6502_symbol *last = NULL;
 	
-start_over:
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if ((this->address < start) || (this->address > start + len)) {
 			if (!last) {
 				table->first_symbol = this->next;
 				free(this->name);
 				free(this);
-				goto start_over;
+				this = table->first_symbol;
 			}
 			else {
 				_removeConfirmedSymbol(this, last);
@@ -265,7 +266,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 	long difference = txtLen - symLen;
 	
 	if (difference < 0) { // Shift string left
-		for (char *cur = loc + txtLen; cur < line + len; cur++) {
+		for (char *cur = loc + txtLen; cur < line + len && cur < loc + symLen; cur++) {
 			cur[0] = cur[0 - difference];
 		}
 	}
@@ -273,8 +274,9 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 	if (difference > 0) { // Shift string right
 		if (strlen(line) + difference < len) {
 			char *start = strstr(line, symbol);
+			assert(start);
 			for (char *cur = start + txtLen + difference; cur > start; cur--) {
-				*cur = *(cur - difference);
+				cur[0] = cur[0 - difference];
 			}
 		}
 		else {
