@@ -28,7 +28,21 @@
 #pragma mark -
 #pragma mark Memory Lifecycle
 
+/**
+ * This function is the slow brute force way (the original implementation) of
+ * looking up v6502_mappedRange's for a given address. This function should
+ * never be hit if map caching is enabled.
+ *
+ * A notable side effect of the joined mapping system is that a given range can
+ * only ever be mapped once. This means, for example, that you can't map 0xA000
+ * through 0xB000 only for reading, and then follow it up with a map of 0xA700
+ * through 0xB700 only for writing. It is still possible to achieve this
+ * behavior, but three map calls would be required.
+ */
+
 v6502_mappedRange *v6502_mappedRangeForOffset(v6502_memory *memory, uint16_t offset) {
+	assert(!memory->mapCacheEnabled);
+
 	for (size_t i = 0; i < memory->rangeCount; i++) {
 		v6502_mappedRange *currentRange = &memory->mappedRanges[i];
 		if (offset >= currentRange->start && offset < (currentRange->start + currentRange->size)) {
