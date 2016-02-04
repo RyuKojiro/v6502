@@ -36,12 +36,12 @@
 #define DISASSEMBLY_COUNT		10
 #define MAX_LINE_LEN			80
 
-void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address) {
+int v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address) {
 	FILE *f = fopen(fname, "r");
 	
 	if (!f) {
-		fprintf(stderr, "Could not read from \"%s\"!\n", fname);
-		return;
+		fprintf(stderr, "Could not open \"%s\" for reading!\n", fname);
+		return NO;
 	}
 	
 	uint8_t byte;
@@ -54,6 +54,8 @@ void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t addr
 	fprintf(stderr, "Loaded %u bytes at 0x%x.\n", offset, address);
 	
 	fclose(f);
+
+	return YES;
 }
 
 void v6502_runDebuggerScript(v6502_cpu *cpu, FILE *file, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose) {

@@ -35,7 +35,7 @@
 typedef void(v6502_debuggerRunCallback)(v6502_cpu *cpu);
 
 /** @brief Loads the binary data from file at fname into memory mem at given starting address */
-void v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address);
+int v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address);
 /** @brief Runs all debugger commands contained in a FILE pointer */
 void v6502_runDebuggerScript(v6502_cpu *cpu, FILE *file, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose);
 /** @brief This is the exact function used by v6502_handleDebuggerCommand to do fuzzy string comparisons. It is exposed for extending the debugger to support other commands outside the v6502_handleDebuggerCommand function. */
