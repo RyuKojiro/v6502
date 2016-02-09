@@ -162,7 +162,10 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 		}
 		// Instruction (needed to keep track of offset)
 		else {
-			v6502_address_mode mode = as6502_addressModeForExpression(head);
+			as6502_token *desymedHead = as6502_desymbolicateExpression(obj->table, head, address, YES);
+			desymedHead = as6502_resolveArithmeticInExpression(desymedHead);
+			v6502_address_mode mode = as6502_addressModeForExpression(desymedHead);
+			as6502_tokenListDestroy(desymedHead);
 			address += as6502_instructionLengthForAddressMode(mode);
 		}
 
