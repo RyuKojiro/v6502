@@ -336,7 +336,12 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 					}
 				}
 				else {
-					snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%02x", v6502_byteValueOfSigned(this->address - offset));
+					if (mode == v6502_address_mode_relative) {
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%02x", v6502_byteValueOfSigned(this->address - offset));
+					}
+					else {
+						snprintf(address, MAX_ADDRESS_TEXT_LEN, "$%02x", v6502_byteValueOfSigned(this->address));
+					}
 				}
 
 				cur = as6502_tokenCreate(address, head->loc, strlen(address));
