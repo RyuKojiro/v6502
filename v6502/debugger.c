@@ -36,6 +36,8 @@
 #define DISASSEMBLY_COUNT		10
 #define MAX_LINE_LEN			80
 
+#define regeq(a, b)	(!strncasecmp(a, b, sizeof(a)))
+
 int v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address) {
 	FILE *f = fopen(fname, "r");
 	
@@ -382,6 +384,56 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 	}
 	if (v6502_compareDebuggerCommand(command, len, "reset")) {
 		v6502_reset(cpu);
+		return YES;
+	}
+	if (v6502_compareDebuggerCommand(command, len, "register")) {
+		// Extract register name
+		const char *c2 = command;
+		command = trimheadtospc(command, len) + 1;
+		size_t sLen = strnspc(command, len - (c2 - command)) - command;
+		char *name = malloc(sLen + 1);
+		memcpy(name, command, sLen);
+		name[sLen] = '\0';
+
+		command = trimheadtospc(command, len);
+		uint16_t value = as6502_valueForString(NULL, command);
+
+		int valid = 0;
+		// PC is a special case, in that it is 16-bit
+		if (regeq("pc", name)) {
+			cpu->pc = value;
+			printf("%s -> 0x%04x\n", name, value);
+			free(name);
+			return YES;
+		}
+		else if (regeq("a", name) || regeq("ac", name)) {
+			cpu->ac = value;
+			valid++;
+		}
+		else if (regeq("x", name)) {
+			cpu->x = value;
+			valid++;
+		}
+		else if (regeq("y", name)) {
+			cpu->y = value;
+			valid++;
+		}
+		else if (regeq("sp", name)) {
+			cpu->sp = value;
+			valid++;
+		}
+		else if (regeq("sr", name)) {
+			cpu->sr = value;
+			valid++;
+		}
+
+		if (valid) {
+			printf("%s -> 0x%02x\n", name, value);
+		}
+		else {
+			printf("Invalid register '%s'\n", name);
+		}
+		free(name);
 		return YES;
 	}
 	if (v6502_compareDebuggerCommand(command, len, "mreset")) {
