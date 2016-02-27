@@ -238,17 +238,16 @@ void as6502_removeSymbolFromTable(as6502_symbol_table *table, as6502_symbol *sym
 void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t start, uint16_t len) {
 	assert(table);
 
-	return;
-
 	as6502_symbol *last = NULL;
-	
+
+start_over:
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if ((this->address < start) || (this->address > start + len)) {
 			if (!last) {
 				table->first_symbol = this->next;
 				free(this->name);
 				free(this);
-				this = table->first_symbol;
+				goto start_over;
 			}
 			else {
 				_removeConfirmedSymbol(this, last);
