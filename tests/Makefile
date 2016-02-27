@@ -17,7 +17,7 @@ VM=	$(VMDIR)/v6502
 FUZZIN=afl_tests
 FUZZOUT=afl_results
 
-all: compiledTests expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest #wozfp
+all: compiledTests expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest wozmon #wozfp
 
 install uninstall:
 
@@ -66,6 +66,14 @@ expectedAssemblyResultTextModeTest: $(AS)
 # written by Steve Wozniak.
 wozfp: $(AS)
 	$(AS) wozfp1.s
+
+# Similar to the wozfp target, this attempts assembly of the Apple 1 "Woz Monitor"
+# originally written by Steve Wozniak, transcribed from the Apple 1 Operation
+# Manual. After building the checksum is compared with the known Apple 1 ROM hash.
+wozmon: $(AS)
+	$(AS) wozmon.s
+	cksum wozmon.o > wozmon.tmp.crc
+	diff wozmon.o.crc wozmon.tmp.crc
 
 # This attempts to load and run a binary in the VM, currently snake, which won't
 # do much with the terminal video.
