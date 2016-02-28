@@ -396,6 +396,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		memcpy(name, command, sLen);
 		name[sLen] = '\0';
 
+		// Extract value
 		command = trimheadtospc(command, len);
 		uint16_t value = as6502_valueForString(NULL, command);
 
@@ -407,7 +408,11 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			free(name);
 			return YES;
 		}
-		else if (regeq("a", name) || regeq("ac", name)) {
+
+		// Chop off anything above 8-bits for the remaining registers
+		value &= 0xFF;
+
+		if (regeq("a", name) || regeq("ac", name)) {
 			cpu->ac = value;
 			valid++;
 		}
