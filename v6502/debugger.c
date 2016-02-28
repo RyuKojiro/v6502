@@ -86,25 +86,26 @@ int v6502_compareDebuggerCommand(const char * command, size_t len, const char * 
 /** Returns YES if handled */
 int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose) {
 	if (v6502_compareDebuggerCommand(command, len, "help")) {
-		printf("breakpoint <addr>   Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.\n"
-			   "cpu                 Displays the current state of the CPU.\n"
-			   "disassemble <addr>  Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
-			   "help                Displays this help.\n"
-			   "iv <type> <addr>    Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.\n"
-			   "label <name> <addr> Define a new label for automatic symbolication during disassembly.\n"
-			   "load <file> <addr>  Load binary image into memory at the address specified. If no address is specified, then the reset vector is used.\n"
-			   "nmi                 Sends a non-maskable interrupt to the CPU.\n"
-			   "peek <addr>         Dumps the memory at and around a given address.\n"
-			   "poke <addr> <value> Sets the location in memory to the value specified.\n"
-			   "quit                Exits v6502.\n"
-			   "run                 Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
-			   "reset               Resets the CPU.\n"
-			   "mreset              Zeroes all memory.\n"
-			   "script              Load a script of debugger commands.\n"
-			   "step                Forcibly steps the CPU once.\n"
-			   "symbols             Print the entire symbol table as it currently exists.\n"
-			   "var <name> <addr>   Define a new variable for automatic symbolication during disassembly.\n"
-			   "verbose             Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
+		printf("breakpoint <addr>      Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.\n"
+			   "cpu                    Displays the current state of the CPU.\n"
+			   "disassemble <addr>     Disassemble %d instructions starting at a given address, or the program counter if no address is specified.\n"
+			   "help                   Displays this help.\n"
+			   "iv <type> <addr>       Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.\n"
+			   "label <name> <addr>    Define a new label for automatic symbolication during disassembly.\n"
+			   "load <file> <addr>     Load binary image into memory at the address specified. If no address is specified, then the reset vector is used.\n"
+			   "nmi                    Sends a non-maskable interrupt to the CPU.\n"
+			   "peek <addr>            Dumps the memory at and around a given address.\n"
+			   "poke <addr> <value>    Sets the location in memory to the value specified.\n"
+			   "quit                   Exits v6502.\n"
+			   "run                    Contunuously steps the cpu until a 'brk' instruction is encountered.\n"
+               "register <reg> <value> Sets the value of the specified register.\n"
+			   "reset                  Resets the CPU.\n"
+			   "mreset                 Zeroes all memory.\n"
+			   "script                 Load a script of debugger commands.\n"
+			   "step                   Forcibly steps the CPU once.\n"
+			   "symbols                Print the entire symbol table as it currently exists.\n"
+			   "var <name> <addr>      Define a new variable for automatic symbolication during disassembly.\n"
+			   "verbose                Toggle verbose mode; prints each instruction as they are executed when running.\n", DISASSEMBLY_COUNT);
 		return YES;
 	}
 	if (v6502_compareDebuggerCommand(command, len, "breakpoint")) {
