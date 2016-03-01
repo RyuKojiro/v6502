@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include <unistd.h> // getopt
 #include <stdlib.h> // free
+#include <sysexits.h>
 
 #include <ld6502/object.h>
 #include <ld6502/flat.h>
@@ -70,7 +71,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 		as6502_warn(head->loc, head->len, "Indirect jumps that span page boundaries are often not implemented correctly in hardware.");
 	}
 
-	if (printProcess || (lastProblematicLine == currentLineNum)) {
+	if (printProcess) {
 		FILE *lineout = printProcess ? stdout : stderr;
 		
 		uint16_t address = blob->len - addrLen;
@@ -296,10 +297,8 @@ int main(int argc, char * const argv[]) {
 	int printDot = NO;
 	int makeSymScript = NO;
 	ld6502_file_type format = ld6502_file_type_FlatFile;
-	
-	// If no arguments
+
 	int ch;
-	
 	while ((ch = getopt(argc, argv, "dSTF:o:t")) != -1) {
 		switch (ch) {
 			case 'F': {
@@ -328,7 +327,7 @@ int main(int argc, char * const argv[]) {
 			case '?':
 			default:
 				usage();
-				return 0;
+				return EX_USAGE;
 		}
 	}
 

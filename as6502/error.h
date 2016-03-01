@@ -33,7 +33,6 @@ extern unsigned long currentLineNum;
 /** @brief Current file name */
 extern const char *currentFileName;
 /** @brief Last line number that encountered an error or warning */
-extern unsigned long lastProblematicLine;
 
 /** @defgroup as_error Assembler Error Handling */
 /**@{*/

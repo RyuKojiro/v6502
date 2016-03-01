@@ -32,7 +32,6 @@
 const char *currentLineText;
 unsigned long currentLineNum;
 const char *currentFileName;
-unsigned long lastProblematicLine;
 
 __attribute((noreturn)) void as6502_fatal(const char *reason) {
 	if (isatty(fileno(stdin))) {
