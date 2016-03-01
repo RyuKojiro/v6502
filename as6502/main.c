@@ -25,6 +25,8 @@
 #include <unistd.h> // getopt
 #include <stdlib.h> // free
 #include <sysexits.h>
+#include <string.h> // strdup
+#include <strings.h> // strncasecmp
 
 #include <ld6502/object.h>
 #include <ld6502/flat.h>

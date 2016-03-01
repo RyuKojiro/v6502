@@ -1,6 +1,6 @@
 # Compilation
 INCLUDE+=       -I..
-CFLAGS+=		-Wall -Wno-unknown-pragmas -std=c99 -ggdb $(INCLUDE) -D_XOPEN_SOURCE
+CFLAGS+=		-Wall -Wno-unknown-pragmas -std=c99 -ggdb $(INCLUDE) -D_XOPEN_SOURCE=500
 
 # Installation
 DESTDIR?=		/
