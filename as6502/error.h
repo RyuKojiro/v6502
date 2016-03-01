@@ -32,7 +32,8 @@ extern const char *currentLineText;
 extern unsigned long currentLineNum;
 /** @brief Current file name */
 extern const char *currentFileName;
-/** @brief Last line number that encountered an error or warning */
+/** @brief Current total number of errors encountered */
+extern unsigned int currentErrorCount;
 
 /** @defgroup as_error Assembler Error Handling */
 /**@{*/

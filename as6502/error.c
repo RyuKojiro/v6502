@@ -32,6 +32,7 @@
 const char *currentLineText;
 unsigned long currentLineNum;
 const char *currentFileName;
+unsigned int currentErrorCount;
 
 __attribute((noreturn)) void as6502_fatal(const char *reason) {
 	if (isatty(fileno(stdin))) {
@@ -75,6 +76,7 @@ static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len
 #pragma clang diagnostic warning "-Wformat-nonliteral"
 
 void as6502_error(unsigned long loc, unsigned long len, const char *reason, ...) {
+	currentErrorCount++;
 	va_list ap;
 	va_start(ap, reason);
 	as6502_vlog(currentLineNum, loc, len, ANSI_COLOR_BRIGHT_RED, "error", reason, ap);

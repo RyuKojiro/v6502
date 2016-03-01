@@ -297,6 +297,7 @@ int main(int argc, char * const argv[]) {
 	int printDot = NO;
 	int makeSymScript = NO;
 	ld6502_file_type format = ld6502_file_type_FlatFile;
+	currentErrorCount = 0;
 
 	int ch;
 	while ((ch = getopt(argc, argv, "dSTF:o:t")) != -1) {
@@ -374,5 +375,8 @@ int main(int argc, char * const argv[]) {
 	if(sym) {
 		fclose(sym);
 	}
+
+	// FIXME: Should this return EX_DATAERR on non-zero error count instead of returning the count?
+	return currentErrorCount;
 }
 
