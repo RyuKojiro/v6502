@@ -24,7 +24,7 @@
 #include <strings.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
 
 #include <v6502/mem.h>
 
