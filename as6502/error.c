@@ -113,7 +113,7 @@ void as6502_underline(unsigned long loc, unsigned long len) {
 		fprintf(stderr, "%s", currentLineText);
 		
 		// FIXME: Shouldn't this always need a newline or always not need a newline?
-		if (currentLineText[strlen(currentLineText)] != '\n') {
+		if (currentLineText[strlen(currentLineText) - 1] != '\n') {
 			fprintf(stderr, "\n");
 		}
 	}
