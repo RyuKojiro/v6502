@@ -328,6 +328,7 @@
 		E6229370175D4AF100AD2866 /* state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = state.h; path = easy6502/state.h; sourceTree = SOURCE_ROOT; };
 		E62293D7175DB40400AD2866 /* state.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = state.c; path = easy6502/state.c; sourceTree = SOURCE_ROOT; };
 		E62293D9175DB92400AD2866 /* easy_test.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; name = easy_test.s; path = easy6502/easy_test.s; sourceTree = SOURCE_ROOT; };
+		E6305FCB1C823770007076AA /* wozmon.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = wozmon.s; sourceTree = "<group>"; };
 		E638A4911B8AAA2300B71420 /* liblibv6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibv6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E638A49E1B8AAA6300B71420 /* liblibas6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibas6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E638A4AC1B8AAA7800B71420 /* liblibld6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibld6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -507,6 +508,7 @@
 		E61D402B1799B5A1009BA763 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E6305FCB1C823770007076AA /* wozmon.s */,
 				E6B04B5E1974855100F8690A /* textmode_test.s */,
 				E6D604B91A54FCDB00EF2B10 /* snake.s */,
 				E61D402C1799B5A1009BA763 /* instructions.s */,
