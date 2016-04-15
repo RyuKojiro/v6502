@@ -192,7 +192,25 @@ int v6502_compareDebuggerCommand(const char * command, size_t len, const char * 
 }
 
 unsigned char v6502_completeDebuggerCommand(EditLine *e, int ch) {
-	el_insertstr(e, "<this is a test>");
+	const LineInfo *lineInfo = el_line(e);
+	size_t len = lineInfo->cursor - lineInfo->buffer;
+
+	// Find how many possible matches there are
+	int matches = 0;
+	const char *lastMatch = NULL;
+	for (int i = 0; i < v6502_debuggerCommand_NONE; i++) {
+		if (v6502_compareDebuggerCommand(lineInfo->buffer, len, _debuggerCommands[i])) {
+			matches++;
+			lastMatch = _debuggerCommands[i];
+		}
+	}
+
+	// Only one match? Complete it
+	if (matches == 1 && len < strlen(lastMatch)) {
+		el_insertstr(e, lastMatch + len);
+		el_insertstr(e, " ");
+	}
+
 	return CC_REFRESH;
 }
 
