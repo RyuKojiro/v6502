@@ -194,15 +194,30 @@ int v6502_compareDebuggerCommand(const char * command, size_t len, const char * 
 unsigned char v6502_completeDebuggerCommand(EditLine *e, int ch) {
 	const LineInfo *lineInfo = el_line(e);
 	size_t len = lineInfo->cursor - lineInfo->buffer;
+	int multiMatch = NO;
 
 	// Find how many possible matches there are
 	int matches = 0;
 	const char *lastMatch = NULL;
 	for (int i = 0; i < v6502_debuggerCommand_NONE; i++) {
 		if (v6502_compareDebuggerCommand(lineInfo->buffer, len, _debuggerCommands[i])) {
+			// Multiple matches? Dump them all!
+			if (matches) {
+				if (matches == 1) {
+					printf("\n");
+				}
+				printf("%s\t", lastMatch);
+				multiMatch = YES;
+			}
+
 			matches++;
 			lastMatch = _debuggerCommands[i];
 		}
+	}
+
+	if (multiMatch) {
+		printf("%s\n", lastMatch);
+		return CC_REDISPLAY;
 	}
 
 	// Only one match? Complete it
