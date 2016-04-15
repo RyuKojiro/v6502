@@ -42,27 +42,31 @@
 
 #define regeq(a, b)	(!strncasecmp(a, b, sizeof(a)))
 
+#define DEBUGGER_COMMAND_LIST(_) \
+	_(breakpoint) \
+	_(cpu) \
+	_(disassemble) \
+	_(help) \
+	_(iv) \
+	_(label) \
+	_(load) \
+	_(nmi) \
+	_(peek) \
+	_(poke) \
+	_(quit) \
+	_(run) \
+	_(register) \
+	_(reset) \
+	_(mreset) \
+	_(script) \
+	_(step) \
+	_(symbols) \
+	_(var) \
+	_(verbose)
+
+#define ARRAY_MEMBER(a)			XSTRINGIFY(a),
 static const char *_debuggerCommands[] = {
-	"breakpoint",
-	"cpu",
-	"disassemble",
-	"help",
-	"iv",
-	"label",
-	"load",
-	"nmi",
-	"peek",
-	"poke",
-	"quit",
-	"run",
-	"register",
-	"reset",
-	"mreset",
-	"script",
-	"step",
-	"symbols",
-	"var",
-	"verbose"
+	DEBUGGER_COMMAND_LIST(ARRAY_MEMBER)
 };
 
 static const char *_debuggerCommandArguments[] = {
