@@ -28,6 +28,7 @@
 
 #include <v6502/cpu.h>
 #include <v6502/breakpoint.h>
+#include <histedit.h>
 
 /** @defgroup debugger Interactive Debugger */
 /**@{*/
@@ -46,6 +47,8 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len,
 								as6502_symbol_table *table,
 								v6502_debuggerRunCallback runCallback,
 								int *verbose);
+/** @brief An editline compatible function for tab-completion */
+unsigned char v6502_completeDebuggerCommand(EditLine *e, int ch);
 /**@}*/
 
 #endif /* defined(v6502_debugger_h) */

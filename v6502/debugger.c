@@ -35,6 +35,7 @@
 
 #define DISASSEMBLY_COUNT		10
 #define MAX_LINE_LEN			80
+#define MAX_ARG_LEN				23
 
 #define XSTRINGIFY(a)			# a
 #define STRINGIFY(a)			XSTRINGIFY(a)
@@ -42,26 +43,49 @@
 #define regeq(a, b)	(!strncasecmp(a, b, sizeof(a)))
 
 static const char *_debuggerCommands[] = {
-	"breakpoint <addr>",
+	"breakpoint",
 	"cpu",
-	"disassemble <addr>",
+	"disassemble",
 	"help",
-	"iv <type> <addr>",
-	"label <name> <addr>",
-	"load <file> <addr>",
+	"iv",
+	"label",
+	"load",
 	"nmi",
-	"peek <addr>",
-	"poke <addr> <value>",
+	"peek",
+	"poke",
 	"quit",
 	"run",
-	"register <reg> <value>",
+	"register",
 	"reset",
 	"mreset",
 	"script",
 	"step",
 	"symbols",
-	"var <name> <addr>",
+	"var",
 	"verbose"
+};
+
+static const char *_debuggerCommandArguments[] = {
+	"<addr>",
+	NULL,
+	"<addr>",
+	NULL,
+	"<type> <addr>",
+	"<name> <addr>",
+	"<file> <addr>",
+	NULL,
+	"<addr>",
+	"<addr> <value>",
+	NULL,
+	NULL,
+	"<reg> <value>",
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	"<name> <addr>",
+	NULL
 };
 
 static const char *_debuggerHelp[] = {
@@ -132,11 +156,23 @@ int v6502_compareDebuggerCommand(const char * command, size_t len, const char * 
 	return YES;
 }
 
+unsigned char v6502_completeDebuggerCommand(EditLine *e, int ch) {
+	el_insertstr(e, "<this is a test>");
+	return CC_REFRESH;
+}
+
 /** Returns YES if handled */
 int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose) {
 	if (v6502_compareDebuggerCommand(command, len, "help")) {
 		for (size_t i = 0; i < (sizeof(_debuggerCommands) / sizeof(const char *)); i++) {
-			printf("%-23s %s\n", _debuggerCommands[i], _debuggerHelp[i]);
+			if (_debuggerCommandArguments[i]) {
+				char concat[MAX_ARG_LEN];
+				snprintf(concat, MAX_ARG_LEN, "%s %s", _debuggerCommands[i], _debuggerCommandArguments[i]);
+				printf("%-23s %s\n", concat, _debuggerHelp[i]);
+			}
+			else {
+				printf("%-23s %s\n", _debuggerCommands[i], _debuggerHelp[i]);
+			}
 		}
 		return YES;
 	}
