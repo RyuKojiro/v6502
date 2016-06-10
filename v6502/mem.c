@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <strings.h> // bzero
 
 #include "mem.h"
 
