@@ -241,6 +241,11 @@ void as6502_truncateTableToAddressSpace(as6502_symbol_table *table, uint16_t sta
 	as6502_symbol *last = NULL;
 
 start_over:
+	if (table->symbolCount == 0) {
+		// Nothing left to do for an empty table
+		return;
+	}
+
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		if ((this->address < start) || (this->address > start + len)) {
 			if (!last) {
