@@ -34,7 +34,7 @@ static void logCpuStatus(v6502_cpu *cpu) {
 			cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
 			cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
 			cpu->sr & v6502_cpu_status_carry ? 'C' : '-');
-	fprintf(logFile, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sr = 0x%02x, sp = 0x%02x\nMEM %p: memsize = %hu (0x%04x)\n\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
+	fprintf(logFile, "CPU %p: pc = %#04x, ac = %#02x, x = %#02x, y = %#02x, sr = %#02x, sp = %#02x\nMEM %p: memsize = %hu (%#04x)\n\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
 }
 
 void broken() {

@@ -145,7 +145,7 @@ int v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t addre
 		mem->bytes[address + (offset++)] = byte;
 	}
 	
-	fprintf(stderr, "Loaded %u bytes at 0x%x.\n", offset, address);
+	fprintf(stderr, "Loaded %u bytes at %#x.\n", offset, address);
 	
 	fclose(f);
 
@@ -277,7 +277,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 				// Toggle breakpoint
 				if (v6502_breakpointIsInList(breakpoint_list, address)) {
 					v6502_removeBreakpointFromList(breakpoint_list, address);
-					printf("Removed breakpoint 0x%04x.\n", address);
+					printf("Removed breakpoint %#04x.\n", address);
 				}
 				else {
 					v6502_addBreakpointToList(breakpoint_list, address);

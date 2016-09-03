@@ -78,7 +78,7 @@ static void run(v6502_cpu *cpu) {
 	resist = YES;
 	do {
 		if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
-			printf("Hit breakpoint at 0x%02x.\n", cpu->pc);
+			printf("Hit breakpoint at %#02x.\n", cpu->pc);
 			return;
 		}
 		
@@ -92,7 +92,7 @@ static void run(v6502_cpu *cpu) {
 	textMode_rest(video);
 	
 	if (cpu->sr & v6502_cpu_status_break) {
-		printf("Encountered 'brk' at 0x%02x.\n", cpu->pc - 1);
+		printf("Encountered 'brk' at %#02x.\n", cpu->pc - 1);
 	}
 	
 	if (interrupt) {
@@ -112,7 +112,7 @@ static void handleSignal(int signal) {
 
 static const char * prompt() {
 	static char prompt[10];
-	snprintf(prompt, 10, "(0x%04x) ", cpu->pc);
+	snprintf(prompt, 10, "(%#04x) ", cpu->pc);
 	return prompt;
 }
 

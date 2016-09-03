@@ -79,10 +79,10 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 		uint16_t address = blob->len - addrLen;
 		as6502_symbol *label = as6502_symbolForAddress(table, address + blob->start);
 		if (label) {
-			fprintf(lineout, "0x%04x:          - %4lu: %s:\n", address, label->line, label->name);
+			fprintf(lineout, "%#04x:          - %4lu: %s:\n", address, label->line, label->name);
 		}
 		
-		fprintf(lineout, "0x%04x: ", blob->len - addrLen);
+		fprintf(lineout, "%#04x: ", blob->len - addrLen);
 		
 		switch (addrLen) {
 			case 1: {

@@ -27,7 +27,7 @@
 #include "log.h"
 
 void v6502_printCpuState(FILE *out, v6502_cpu *cpu) {
-	fprintf(out, "CPU %p: pc = 0x%04x, ac = 0x%02x, x = 0x%02x, y = 0x%02x, sp = 0x%02x, sr = 0x%02x (%c%c%c%c%c%c%c%c)\n",
+	fprintf(out, "CPU %p: pc = %#04x, ac = %#02x, x = %#02x, y = %#02x, sp = %#02x, sr = %#02x (%c%c%c%c%c%c%c%c)\n",
 			cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sp, cpu->sr,
 			cpu->sr & v6502_cpu_status_negative ? 'N' : '-',
 			cpu->sr & v6502_cpu_status_overflow ? 'V' : '-',
@@ -37,7 +37,7 @@ void v6502_printCpuState(FILE *out, v6502_cpu *cpu) {
 			cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
 			cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
 			cpu->sr & v6502_cpu_status_carry ? 'C' : '-');
-	//fprintf(out, "MEM %p: memsize = %zu (0x%04zx)\n", cpu->memory, cpu->memory->size, cpu->memory->size);
+	//fprintf(out, "MEM %p: memsize = %zu (%#04zx)\n", cpu->memory, cpu->memory->size, cpu->memory->size);
 }
 
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) {
@@ -65,7 +65,7 @@ void v6502_printBreakpointList(v6502_breakpoint_list *list) {
 	
 	printf("Breakpoints set:\n");
 	for (size_t i = 0; i < list->count; i++) {
-		printf("Breakpoint #%zu: 0x%04x\n", i, list->breakpoints[i]);
+		printf("Breakpoint #%zu: %#04x\n", i, list->breakpoints[i]);
 	}
 }
 

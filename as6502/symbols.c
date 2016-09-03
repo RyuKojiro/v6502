@@ -75,10 +75,10 @@ void as6502_printSymbolScript(as6502_symbol_table *table, FILE *out) {
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		switch (this->type) {
 			case as6502_symbol_type_label: {
-				fprintf(out, "label %s 0x%x\n", this->name, this->address);
+				fprintf(out, "label %s %#x\n", this->name, this->address);
 			} break;
 			case as6502_symbol_type_variable: {
-				fprintf(out, "var %s 0x%x\n", this->name, this->address);
+				fprintf(out, "var %s %#x\n", this->name, this->address);
 			} break;
 			default: break;
 		}
@@ -111,7 +111,7 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 		}
 		
 		if (as6502_symbolTypeIsLinked(this->type)) {
-			printf("\t%s { name = \"%s\", addr = 0x%x, next = %p, line = %lu }\n", type, this->name, this->address, this->next, this->line);
+			printf("\t%s { name = \"%s\", addr = %#x, next = %p, line = %lu }\n", type, this->name, this->address, this->next, this->line);
 		}
 		else {
 			printf("\t%s { name = \"%s\", not linked!, next = %p, line = %lu }\n", type, this->name, this->next, this->line);

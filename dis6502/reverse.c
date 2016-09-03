@@ -46,12 +46,12 @@ int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t addres
 		// If we've got a symbol table, and this also happens to be a label site, print that too
 		as6502_symbol *symbol = as6502_symbolForAddress(table, address);
 		if (symbol) {
-			fprintf(out, "0x%02x: %s:\n", symbol->address, symbol->name);
+			fprintf(out, "%#02x: %s:\n", symbol->address, symbol->name);
 		}
 	}
 	instructionLength = v6502_instructionLengthForOpcode(opcode);
 	
-	fprintf(out, "0x%04x: ", address);
+	fprintf(out, "%#04x: ", address);
 
 	switch (instructionLength) {
 		case 1: {
