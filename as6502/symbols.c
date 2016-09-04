@@ -248,6 +248,7 @@ start_over:
 			}
 			else {
 				_removeConfirmedSymbol(this, last);
+				this = last;
 			}
 		}
 		last = this;
