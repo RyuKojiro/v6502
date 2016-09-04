@@ -32,7 +32,6 @@
 #include <ld6502/flat.h>
 #include <ld6502/ines.h>
 
-#define MAX_FILENAME_LEN	255
 #define MAX_LINE_LEN		80
 
 static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, FILE *sym) {
@@ -122,7 +121,7 @@ static void usage() {
 int main(int argc, char * const argv[]) {
 	FILE *out = stdout;
 	ld6502_file_type format = ld6502_file_type_None;
-	char outName[MAX_FILENAME_LEN] = "";
+	char outName[FILENAME_MAX] = "";
 	uint16_t programStart = 0;
 	int printTable = NO;
 	FILE *sym = NULL;
@@ -139,7 +138,7 @@ int main(int argc, char * const argv[]) {
 				}
 			} break;
 			case 'o': {
-				strncpy(outName, optarg, MAX_FILENAME_LEN);
+				strncpy(outName, optarg, FILENAME_MAX);
 			} break;
 			case 's': {
 				programStart = strtol(optarg, NULL, 16);

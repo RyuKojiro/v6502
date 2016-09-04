@@ -32,8 +32,6 @@
 #include "flat.h"
 #include "ines.h"
 
-#define MAX_FILENAME_LEN	255
-
 static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const files[]) {
 	ld6502_object *linkResult = ld6502_createObject();
 	ld6502_object **objects = malloc(numFiles * sizeof(ld6502_object *));
@@ -85,8 +83,8 @@ static void usage() {
 
 int main(int argc, char * const argv[]) {
 	ld6502_file_type format = ld6502_file_type_iNES;
-	char outName[MAX_FILENAME_LEN] = "out.nes";
-	char chrName[MAX_FILENAME_LEN] = "";
+	char outName[FILENAME_MAX] = "out.nes";
+	char chrName[FILENAME_MAX] = "";
 	
 	int ch;
 	while ((ch = getopt(argc, argv, "o:C:F:")) != -1) {
@@ -97,10 +95,10 @@ int main(int argc, char * const argv[]) {
 				}
 			} break;
 			case 'o': {
-				strncpy(outName, optarg, MAX_FILENAME_LEN);
+				strncpy(outName, optarg, FILENAME_MAX);
 			} break;
 			case 'C': {
-				strncpy(chrName, optarg, MAX_FILENAME_LEN);
+				strncpy(chrName, optarg, FILENAME_MAX);
 			} break;
 			case '?':
 			default:
