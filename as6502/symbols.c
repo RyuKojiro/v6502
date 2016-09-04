@@ -257,7 +257,7 @@ start_over:
 
 // Easy Symbol Table Access
 
-void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, char *symbol, const char *text) {
+void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *loc, const char * restrict symbol, const char * restrict text) {
 	size_t symLen = strlen(symbol);
 	size_t txtLen = strlen(text);
 	long difference = txtLen - symLen;
