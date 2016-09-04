@@ -27,8 +27,7 @@
 #include "reverse.h"
 
 /** @brief The maximum allowed buffer size for symbol names */
-#define dis6502_maximumSymbolNameLength		255
-
+#define MAX_SYMBOL_LEN			256
 #define MAX_INSTRUCTION_LEN		32
 
 // TODO: Add desymbolication support
@@ -424,7 +423,7 @@ void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode,
 }
 
 void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_object_blob *blob) {
-	char symbolName[dis6502_maximumSymbolNameLength];
+	char symbolName[MAX_SYMBOL_LEN];
 	int currentLabel = 1;
 	uint16_t address;
 
@@ -439,7 +438,7 @@ void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_objec
 			}
 			
 			if (!as6502_symbolForAddress(table, address)) {
-				snprintf(symbolName, dis6502_maximumSymbolNameLength, "Label%d", currentLabel++);
+				snprintf(symbolName, MAX_SYMBOL_LEN, "Label%d", currentLabel++);
 				as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
 			}
 		}
