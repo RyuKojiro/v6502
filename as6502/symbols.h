@@ -69,8 +69,6 @@ typedef struct _as6502_symbol {
 /** @struct */
 /** @brief The assembler's per-object symbol table structure, which holds all symbols. */
 typedef struct {
-	/** @brief The number of symbols in the symbol table */
-	long symbolCount;
 	/** @brief The head of the linked list of labels */
 	as6502_symbol *first_symbol;
 } as6502_symbol_table;
