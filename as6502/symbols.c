@@ -406,7 +406,7 @@ void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, 
 			for (x = 0; cur[x] && !isspace(CTYPE_CAST cur[x]); x++) {
 				buf[x] = cur[x];
 			}
-			buf[x + 1] = '\0';
+			buf[x] = '\0';
 			
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, buf, symbol->name);
 		}
