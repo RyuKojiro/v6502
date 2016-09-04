@@ -25,33 +25,33 @@
 
 #include "cpu.h"
 
-#define	BOTH_BYTES									(high << 8 | low)
-#define FLAG_CARRY_WITH_HIGH_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry; \
-													cpu->sr |= a >> 7;
-#define FLAG_CARRY_WITH_LOW_BIT(a)					cpu->sr &= ~v6502_cpu_status_carry; \
-													cpu->sr |= (a & v6502_cpu_status_carry);
-#define FLAG_ZERO_WITH_RESULT(a)					cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
-													cpu->sr |= (a ? 0 : v6502_cpu_status_zero);
-#define FLAG_NEGATIVE_WITH_RESULT(a)				cpu->sr &= ~ v6502_cpu_status_negative; \
-													cpu->sr |= (a & v6502_cpu_status_negative)
+#define	BOTH_BYTES								(high << 8 | low)
+#define FLAG_CARRY_WITH_HIGH_BIT(a)				{ cpu->sr &= ~v6502_cpu_status_carry; \
+												  cpu->sr |= a >> 7; }
+#define FLAG_CARRY_WITH_LOW_BIT(a)				{ cpu->sr &= ~v6502_cpu_status_carry; \
+												  cpu->sr |= (a & v6502_cpu_status_carry); }
+#define FLAG_ZERO_WITH_RESULT(a)				{ cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
+												  cpu->sr |= (a ? 0 : v6502_cpu_status_zero); }
+#define FLAG_NEGATIVE_WITH_RESULT(a)			{ cpu->sr &= ~ v6502_cpu_status_negative; \
+												  cpu->sr |= (a & v6502_cpu_status_negative); }
 /** After normalization to addition, arguments are:
  a = accumulator pre-operation,
  b = operand
  c = accumulator result */
-#define FLAG_OVERFLOW_WITH_COMPARISON(a, b, c)		cpu->sr &= ~v6502_cpu_status_overflow; \
-													cpu->sr |= (( ~(a ^ b) & (a ^ c) & 0x80) ? 0 : v6502_cpu_status_overflow);
+#define FLAG_OVERFLOW_WITH_COMPARISON(a, b, c)	{ cpu->sr &= ~v6502_cpu_status_overflow; \
+												  cpu->sr |= (( ~(a ^ b) & (a ^ c) & 0x80) ? 0 : v6502_cpu_status_overflow); }
 /** After normalization to addition, arguments are:
   a = result
   b = operand,
  for subtraction:
   a = operand
   b = register */
-#define FLAG_CARRY_WITH_COMPARISON(a, b)			cpu->sr &= ~v6502_cpu_status_carry; \
-													cpu->sr |= ((a <= b) ? v6502_cpu_status_carry : 0);
-#define FLAG_NEG_AND_ZERO_WITH_RESULT(a)			FLAG_NEGATIVE_WITH_RESULT(a); \
-													FLAG_ZERO_WITH_RESULT(a);
+#define FLAG_CARRY_WITH_COMPARISON(a, b)		{ cpu->sr &= ~v6502_cpu_status_carry; \
+												  cpu->sr |= ((a <= b) ? v6502_cpu_status_carry : 0); }
+#define FLAG_NEG_AND_ZERO_WITH_RESULT(a)		{ FLAG_NEGATIVE_WITH_RESULT(a); \
+												  FLAG_ZERO_WITH_RESULT(a); }
 
-#define v6502_unhandledInstructionErrorText			"Unhandled CPU Instruction"
+#define v6502_unhandledInstructionErrorText		"Unhandled CPU Instruction"
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution

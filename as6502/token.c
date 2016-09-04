@@ -129,8 +129,8 @@ size_t as6502_lengthOfToken(const char *start, size_t len) {
 	return i;
 }
 
-#define insert(t)	if(!head) { head = t; tail = t; } \
-					else { tail->next = t; tail = t; }
+#define insert(t)	{ if(!head) { head = t; tail = t; } \
+					  else { tail->next = t; tail = t; } }
 
 #define consumed	(cur - line)
 #define	remaining	(len - consumed)
