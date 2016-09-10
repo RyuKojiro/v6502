@@ -22,7 +22,6 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include <strings.h> // bzero
 
 #include "mem.h"
 
@@ -98,20 +97,15 @@ int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunct
 
 	// Finally, if caching is enabled, update the cache
 	if (memory->mapCacheEnabled) {
-		size_t cacheSize = sizeof(void *) * memory->size;
-
 		// Make sure allocations are safe, first
 		if (read && !memory->readCache) {
-			memory->readCache = malloc(cacheSize);
-			bzero(memory->readCache, cacheSize);
+			memory->readCache = calloc(sizeof(void *), memory->size);
 		}
 		if (write && !memory->writeCache) {
-			memory->writeCache = malloc(cacheSize);
-			bzero(memory->writeCache, cacheSize);
+			memory->writeCache = calloc(sizeof(void *), memory->size);
 		}
 		if (context && !memory->contextCache) {
-			memory->contextCache = malloc(cacheSize);
-			bzero(memory->contextCache, cacheSize);
+			memory->contextCache = calloc(sizeof(void *), memory->size);
 		}
 
 		// Blit the map
