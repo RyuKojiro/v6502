@@ -88,8 +88,10 @@
 /** @brief Maximum possible value of an 8-bit byte */
 #define BYTE_MAX	0xFF
 
+/** @cond STRUCT_FORWARD_DECLS */
 /* Forward declaration needed for circular dependency of mapping function and structures */
 struct _v6502_memory;
+/** @endcond */
 
 /** @ingroup mem_access */
 /** @brief The function prototype for memory mapped accessors to be used by external virtual hardware. */
@@ -114,7 +116,7 @@ typedef struct {
 
 /** @struct */
 /** @brief Virtual Memory Object */
-typedef struct _v6502_memory {
+typedef struct /** @cond STRUCT_FORWARD_DECLS */ _v6502_memory /** @endcond */ {
 	/** @brief Memory accessible as a byte-array */
 	uint8_t *bytes;
 	/** @brief Byte-length of memory object */

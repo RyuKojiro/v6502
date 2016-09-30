@@ -38,7 +38,7 @@ typedef enum {
 
 /** @struct */
 /** @brief An individual token which will often be a part of a linked list of tokens */
-typedef struct _as6502_token {
+typedef struct /** @cond STRUCT_FORWARD_DECLS */ _as6502_token /** @endcond */ {
 	/** @brief The raw text of a token */
 	char *text;
 	/** @brief The token's column location in the line */

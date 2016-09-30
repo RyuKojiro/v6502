@@ -53,7 +53,7 @@ typedef enum {
 
 /** @struct */
 /** @brief An individual symbol in a symbol table */
-typedef struct _as6502_symbol {
+typedef struct /** @cond STRUCT_FORWARD_DECLS */ _as6502_symbol /** @endcond */ {
 	/** @brief The next variable in the linked list */
 	struct _as6502_symbol *next;
 	/** @brief The line number of the symbol in the source file */
