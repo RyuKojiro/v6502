@@ -36,17 +36,22 @@
 // Object Lifecycle
 ld6502_object *ld6502_createObject() {
 	ld6502_object *obj = malloc(sizeof(ld6502_object));
-	if (obj) {
-		obj->count = 1;
-		obj->blobs = malloc(sizeof(ld6502_object_blob));
-        obj->table = NULL;
-		bzero(obj->blobs, sizeof(ld6502_object_blob));
-		
-		return obj;
+	if (!obj) {
+		as6502_fatal("obj malloc in ld6502_createObject");
+		return NULL;
 	}
-	
-	as6502_fatal("obj malloc in ld6502_createObject");
-	return NULL;
+
+	obj->blobs = calloc(1, sizeof(ld6502_object_blob));
+	if (!obj->blobs) {
+		free(obj);
+		as6502_fatal("obj->blobs malloc in ld6502_createObject");
+		return NULL;
+	}
+
+	obj->count = 1;
+	obj->table = NULL;
+
+	return obj;
 }
 
 void ld6502_destroyObject(ld6502_object *obj) {
