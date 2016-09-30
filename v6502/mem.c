@@ -190,32 +190,20 @@ void v6502_loadExpansionRomIntoMemory(v6502_memory *memory, uint8_t *rom, uint16
  */
 v6502_memory *v6502_createMemory(size_t size) {
 	// Allocate Memory Struct
-	v6502_memory *memory = malloc(sizeof(v6502_memory));
+	v6502_memory *memory = calloc(1, sizeof(v6502_memory));
 	if (!memory) {
 		return NULL;
 	}
 	
-	// Allocate Virtual Memory
-	memory->bytes = malloc(size);
+	// Allocate the backing storage
+	// Is doing it this way overly pedantic? The count and size are effectively reversed.
+	memory->bytes = calloc(size, sizeof(uint8_t));
 	if (!memory->bytes) {
 		free(memory);
 		return NULL;
 	}
+
 	memory->size = size;
-	
-	// Zero memory
-	for (size_t i = 0; i < size; i++) {
-		memory->bytes[i] = 0x00;
-	}
-	
-	// Zero out the Map
-	memory->rangeCount = 0;
-	memory->mappedRanges = NULL;
-	
-	memory->mapCacheEnabled = NO;
-	memory->readCache = NULL;
-	memory->writeCache = NULL;
-	memory->contextCache = NULL;
 
 	return memory;
 }
