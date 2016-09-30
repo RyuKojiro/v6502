@@ -43,9 +43,7 @@
 
 // Address Table Lifecycle Functions
 as6502_symbol_table *as6502_createSymbolTable() {
-	as6502_symbol_table *table = malloc(sizeof(as6502_symbol_table));
-	table->first_symbol = NULL;
-	return table;
+	return calloc(1, sizeof(as6502_symbol_table));
 }
 
 void as6502_destroySymbolTable(as6502_symbol_table *table) {

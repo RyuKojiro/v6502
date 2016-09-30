@@ -28,12 +28,7 @@
 #include "breakpoint.h"
 
 v6502_breakpoint_list *v6502_createBreakpointList(void) {
-	v6502_breakpoint_list *result = malloc(sizeof(v6502_breakpoint_list));
-	
-	result->breakpoints = NULL;
-	result->count = 0;
-	
-	return result;
+	return calloc(1, sizeof(v6502_breakpoint_list));
 }
 
 void v6502_destroyBreakpointList(v6502_breakpoint_list *list) {

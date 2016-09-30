@@ -133,15 +133,7 @@ static void _executeInPlaceBIT(v6502_cpu *cpu, uint8_t operand) {
 #pragma mark CPU Lifecycle
 
 v6502_cpu *v6502_createCPU(void) {
-	// Allocate CPU Struct
-	v6502_cpu *cpu = malloc(sizeof(v6502_cpu));
-	
-	if (cpu) {
-		cpu->fault_callback = NULL;
-		cpu->fault_context = NULL;
-	}
-	
-	return cpu;
+	return calloc(1, sizeof(v6502_cpu));
 }
 
 void v6502_destroyCPU(v6502_cpu *cpu) {
