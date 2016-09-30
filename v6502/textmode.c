@@ -25,7 +25,7 @@
 
 #include "textmode.h"
 
-void textMode_updateOffset(v6502_textmode_video *vid, uint16_t address) {
+static void textMode_updateOffset(v6502_textmode_video *vid, uint16_t address) {
 	if (!vid->screen) {
 		vid->screen = initscr();
 	}
@@ -42,7 +42,7 @@ void textMode_updateOffset(v6502_textmode_video *vid, uint16_t address) {
 	}
 }
 
-void textMode_write(v6502_memory *memory, uint16_t offset, uint8_t value, void *context) {
+static void textMode_write(v6502_memory *memory, uint16_t offset, uint8_t value, void *context) {
 	v6502_textmode_video *vid = context;
 	vid->memory->bytes[offset] = value;
 	textMode_updateOffset(vid, offset);

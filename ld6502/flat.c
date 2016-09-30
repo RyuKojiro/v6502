@@ -26,7 +26,7 @@
 
 #include "flat.h"
 
-int _nonZeroBlobCount(ld6502_object *obj) {
+static int _nonZeroBlobCount(ld6502_object *obj) {
 	int total = 0;
 	for (int i = 0; i < obj->count; i++) {
 		if (obj->blobs[i].len) {

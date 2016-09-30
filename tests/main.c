@@ -39,15 +39,15 @@ typedef int (* testFunction)(void);
 
 static const char *lastTest;
 
-uint8_t returnLow(struct _v6502_memory *memory, uint16_t offset, int trap, void *context) {
+static uint8_t returnLow(struct _v6502_memory *memory, uint16_t offset, int trap, void *context) {
 	return 0;
 }
 
-uint8_t returnHigh(struct _v6502_memory *memory, uint16_t offset, int trap, void *context) {
+static uint8_t returnHigh(struct _v6502_memory *memory, uint16_t offset, int trap, void *context) {
 	return ~0;
 }
 
-v6502_address_mode bruteForce_addressModeForOpcode(v6502_opcode opcode) {
+static v6502_address_mode bruteForce_addressModeForOpcode(v6502_opcode opcode) {
 	switch (opcode) {
 		case v6502_opcode_brk:
 		case v6502_opcode_nop:
@@ -219,7 +219,7 @@ v6502_address_mode bruteForce_addressModeForOpcode(v6502_opcode opcode) {
 	}
 }
 
-v6502_address_mode bruteForce_instructionLengthForOpcode(v6502_opcode opcode) {
+static v6502_address_mode bruteForce_instructionLengthForOpcode(v6502_opcode opcode) {
 	switch (bruteForce_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_implied:
 		case v6502_address_mode_accumulator:
@@ -244,7 +244,7 @@ v6502_address_mode bruteForce_instructionLengthForOpcode(v6502_opcode opcode) {
 
 #pragma mark - Tests
 
-int test_addressModeForOpcode() {
+static int test_addressModeForOpcode() {
 	TEST_START;
 	int rc = 0;
 	
@@ -261,7 +261,7 @@ int test_addressModeForOpcode() {
 	return rc;
 }
 
-int test_instructionLengthForOpcode() {
+static int test_instructionLengthForOpcode() {
 	TEST_START;
 	int rc = 0;
 	
@@ -278,7 +278,7 @@ int test_instructionLengthForOpcode() {
 	return rc;
 }
 
-int test_sbc() {
+static int test_sbc() {
 	TEST_START;
 	int rc = 0;
 	
@@ -308,7 +308,7 @@ int test_sbc() {
 	return rc;
 }
 
-int test_signedUnderflow() {
+static int test_signedUnderflow() {
 	TEST_START;
 	int rc = 0;
 	
@@ -335,7 +335,7 @@ int test_signedUnderflow() {
 	return rc;
 }
 
-int test_jumpInstructionLength() {
+static int test_jumpInstructionLength() {
 	TEST_START;
 	
 	printf("Making sure that the jump instruction is calculated as 3 bytes...\n");
@@ -343,7 +343,7 @@ int test_jumpInstructionLength() {
 	return v6502_instructionLengthForOpcode(v6502_opcode_jmp_abs) != 3;
 }
 
-int test_wideJumpWithParsing() {
+static int test_wideJumpWithParsing() {
 	TEST_START;
 	int rc = 0;
 	
@@ -370,7 +370,7 @@ int test_wideJumpWithParsing() {
 	return rc;
 }
 
-int test_intersectingMemoryMapping() {
+static int test_intersectingMemoryMapping() {
 	TEST_START;
 	
 	printf("Making sure the memory controller doesn't allow overlapping mapped regions...\n");
@@ -391,7 +391,7 @@ int test_intersectingMemoryMapping() {
 	return 1;
 }
 
-int test_contiguousMemoryMapping() {
+static int test_contiguousMemoryMapping() {
 	TEST_START;
 	
 	printf("Making sure the memory controller allows overlapping mapped regions...\n");
@@ -411,7 +411,7 @@ int test_contiguousMemoryMapping() {
 	return 0;
 }
 
-int test_cmpCarrySet() {
+static int test_cmpCarrySet() {
 	TEST_START;
 	int rc = 0;
 
@@ -438,7 +438,7 @@ int test_cmpCarrySet() {
 	return rc;
 }
 
-int test_adc1() {
+static int test_adc1() {
 	TEST_START;
 	int rc = 0;
 

@@ -52,7 +52,7 @@ v6502_mappedRange *v6502_mappedRangeForOffset(v6502_memory *memory, uint16_t off
 	return NULL;
 }
 
-int v6502_memoryRangesIntersect(uint16_t start1, uint16_t size1, uint16_t start2, uint16_t size2) {
+static int v6502_memoryRangesIntersect(uint16_t start1, uint16_t size1, uint16_t start2, uint16_t size2) {
 	// Curly braces are 1
 	// Square braces are 2
 	uint16_t end1 = start1 + size1;

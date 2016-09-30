@@ -64,7 +64,7 @@ typedef enum {
 /** @defgroup obj_lifecycle Object Lifecycle Functions */
 /**@{*/
 /** @brief Creates a new ld6502_object */
-ld6502_object *ld6502_createObject();
+ld6502_object *ld6502_createObject(void);
 /** @brief Destroys an ld6502_object */
 void ld6502_destroyObject(ld6502_object *obj);
 /** @brief Creates an ld6502_object with the contents of an object file */

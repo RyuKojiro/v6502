@@ -121,7 +121,7 @@ static const char *_debuggerHelp[] = {
 	"Toggle verbose mode; prints each instruction as they are executed when running."
 };
 
-v6502_debuggerCommand v6502_debuggerCommandParse(const char *command, size_t len) {
+static v6502_debuggerCommand v6502_debuggerCommandParse(const char *command, size_t len) {
 	for (int i = 0; i < v6502_debuggerCommand_NONE; i++) {
 		if (v6502_compareDebuggerCommand(command, len, _debuggerCommands[i])) {
 			return i;
@@ -159,7 +159,7 @@ void v6502_runDebuggerScript(v6502_cpu *cpu, FILE *file, v6502_breakpoint_list *
 	}
 }
 
-void _makeSymbolOfType(const char *command, size_t len, as6502_symbol_table *table, as6502_symbol_type symbolType) {
+static void _makeSymbolOfType(const char *command, size_t len, as6502_symbol_table *table, as6502_symbol_type symbolType) {
 	// Extract name
 	const char *c2 = command;
 	command = trimheadtospc(command, len) + 1;
