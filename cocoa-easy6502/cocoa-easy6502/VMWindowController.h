@@ -30,6 +30,8 @@
 
 @property (nonatomic, retain) IBOutlet NSButton *toggleButton;
 
+@property (nonatomic, retain) IBOutlet NSSlider *speedSlider;
+
 - (IBAction)reset:(id)sender;
 - (IBAction)toggleRunning:(id)sender;
 - (IBAction)step:(id)sender;

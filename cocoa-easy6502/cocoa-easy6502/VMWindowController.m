@@ -18,8 +18,6 @@
 #define MEM_RANDOM_BYTE			0x00FE
 #define MEM_KEYBOARD_BYTE		0x00FF
 
-#define CPU_PERIOD				100 // µs
-
 #define kCEZFreezeFileType		@"v6freeze"
 
 volatile static int faulted;
@@ -145,7 +143,8 @@ BOOL loadFreeze(v6502_cpu *cpu, const char *fname) {
 		//[self update];
 		
 		// Throttle CPU Frequency
-		usleep(CPU_PERIOD);
+		int t = 200 - _speedSlider.intValue;
+		usleep(t);
 	} while (!faulted);
 }
 
