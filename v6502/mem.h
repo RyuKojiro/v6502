@@ -123,8 +123,6 @@ typedef struct _v6502_memory {
 	void(*fault_callback)(void *context, const char *reason);
 	/** @brief Fault Callback Context */
 	void *fault_context;
-	/** @brief The three 16-bit (two 8-byte) interrupt vectors starting at address v6502_memoryVectorNMILow */
-	uint8_t interrupt_vectors[v6502_memorySizeInterruptVectors];
 	/** @brief Array of memory map ranges */
 	v6502_mappedRange *mappedRanges;
 	/** @brief Number of memory map ranges in array */
