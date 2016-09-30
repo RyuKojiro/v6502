@@ -363,6 +363,7 @@ int main(int argc, char * const argv[]) {
 			}
 			out = fopen(outName, "w");
 			free(outName);
+			outName = NULL;
 
 			if (makeSymScript) {
 				char *fname = outNameFromInName(argv[i], EXTENSION_SCRIPT);
