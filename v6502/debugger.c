@@ -164,9 +164,7 @@ static void _makeSymbolOfType(const char *command, size_t len, as6502_symbol_tab
 	const char *c2 = command;
 	command = trimheadtospc(command, len) + 1;
 	size_t sLen = strnspc(command, len - (c2 - command)) - command;
-	char *name = malloc(sLen + 1);
-	memcpy(name, command, sLen);
-	name[sLen] = '\0';
+	char *name = strndup(command, sLen);
 
 	command = trimheadtospc(command, len);
 	uint16_t address = as6502_valueForString(NULL, command);
