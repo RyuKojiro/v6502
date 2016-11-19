@@ -108,7 +108,9 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 }
 
 static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int printTable, int printDot, ld6502_file_type format) {
-	char line[MAX_LINE_LEN];
+	char *line = NULL;
+	ssize_t len;
+	size_t linecap = 0;
 	uint16_t address = 0;
 	currentLineNum = 0;
 	ld6502_object *obj = ld6502_createObject();
@@ -121,11 +123,11 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 		printf("{ node [shape = plaintext]; ");
 	}
 
-	while (fgets(line, MAX_LINE_LEN, in)) {
+	while ((len = getline(&line, &linecap, in)) > 0) {
 		currentLineNum++;
 		currentLineText = line;
 
-		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
+		as6502_token *head = as6502_lex(line, len);
 		as6502_token *_head = head; // For memory management purposes if we bump the head forward for a label
 		if (!head) {
 			continue;
@@ -193,10 +195,10 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 	address = 0;
 	currentLineNum = 0;
 
-	while (fgets(line, MAX_LINE_LEN, in)) {
+	while ((len = getline(&line, &linecap, in)) > 0) {
 		currentLineNum++;
 
-		as6502_token *head = as6502_lex(line, MAX_LINE_LEN);
+		as6502_token *head = as6502_lex(line, len);
 
 		if (printDot && head) {
 			as6502_printDotRankForList(stdout, head);
