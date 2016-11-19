@@ -143,7 +143,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 		
 		// Dot Directives
 		if (head && head->text[0] == '.') {
-			if (!strncasecmp(head->text, ".org", 5)) {
+			if (!strncasecmp(head->text, ".org", 5) && head->next) {
 				uint16_t start = as6502_valueForString(NULL, head->next->text);
 
 				// Close old blob (FIXME: This doesn't need to happen currently since we allocate a byte at a time)
@@ -223,7 +223,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 			 * this does preallocation in the first pass, and works quickly, we
 			 * are going to keep it around for now.
 			 */
-			if (!strncasecmp(head->text, ".org", 5)) {
+			if (!strncasecmp(head->text, ".org", 5) && head->next) {
 				// Find the preallocated blob and change to it
 				uint16_t start = as6502_valueForString(NULL, head->next->text);
 
