@@ -49,7 +49,7 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 		// actually detect an operator
 		op = lhs->next;
 		if (!op || op->len != 1 || !(op->text[0] == '+' || op->text[0] == '-')) {
-			continue;
+			break;
 		}
 
 		rhs = op->next;
