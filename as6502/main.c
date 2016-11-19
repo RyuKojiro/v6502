@@ -273,7 +273,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 static char *outNameFromInName(const char *in, const char *ext) {
 	char *outName = strdup(in);
 	size_t inLen = strlen(in);
-	outName = realloc(outName, inLen + strlen(ext));
+	outName = realloc(outName, inLen + sizeof('.') + strlen(ext));
 	char *extStart = strchr(outName, '.');
 	if(!extStart) {
 		extStart = outName + inLen;
