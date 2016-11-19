@@ -135,7 +135,7 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 		int wide;
 		uint8_t low, high;
 
-		if (!head->next || head->next->text[0] != '"') {
+		if (!head->next) {
 			as6502_error(head->loc, head->len, ".byte directive requires a value immediately afterwards.");
 			return;
 		}
