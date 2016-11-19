@@ -119,7 +119,7 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 	}
 	else if (as6502_tokenIsEqualToStringLiteral(head, ".asciiz")) {
 		if (!head->next || head->next->text[0] != '"') {
-			as6502_error(head->loc, head->len, "Encountered .asciiz directive without a string afterwards.");
+			as6502_error(head->loc, head->len, ".asciiz directive requires a string literal immediately afterwards.");
 			return;
 		}
 
@@ -134,7 +134,12 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 	else if (as6502_tokenIsEqualToStringLiteral(head, ".byte")) {
 		int wide;
 		uint8_t low, high;
-		
+
+		if (!head->next || head->next->text[0] != '"') {
+			as6502_error(head->loc, head->len, ".byte directive requires a value immediately afterwards.");
+			return;
+		}
+
 		as6502_byteValuesForString(&high, &low, &wide, head->next->text);
 
 		ld6502_object_blob *blob = &obj->blobs[*currentBlob];
