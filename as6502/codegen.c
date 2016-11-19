@@ -37,6 +37,7 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 	// There can be multiple arithmetical operations per line, so just loop until all are solved.
 	
 	as6502_token *lhs, *op, *rhs;
+	// TODO: Find the op first, then use that to determine the lhs/rhs, and error when one is missing.
 	while (as6502_tokenListFindTokenLiteral(head, "+") ||
 			as6502_tokenListFindTokenLiteral(head, "-") ) {
 		lhs = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
@@ -48,7 +49,7 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 		// actually detect an operator
 		op = lhs->next;
 		if (!op || op->len != 1 || !(op->text[0] == '+' || op->text[0] == '-')) {
-			continue; 
+			continue;
 		}
 
 		rhs = op->next;
