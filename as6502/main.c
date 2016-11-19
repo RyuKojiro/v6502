@@ -160,6 +160,17 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 		}
 		// Variable
 		else if(as6502_tokenListFindTokenLiteral(head, "=")) {
+			as6502_token *eq = head->next;
+			if (!eq) {
+				as6502_error(head->loc, head->len, "Variable declarations require a name before the equal operator.");
+				continue;
+			}
+
+
+			if (!eq->next) {
+				as6502_error(eq->loc, eq->len, "Variable declaration requires a value after the equal operator.");
+				continue;
+			}
 			// These should always be: <varname>, '=', <target_address>
 			uint16_t target = as6502_valueForString(NULL, head->next->next->text);
 			
