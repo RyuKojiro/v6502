@@ -138,13 +138,23 @@ size_t as6502_lengthOfToken(const char *start, size_t len) {
 as6502_token *as6502_lex(const char *line, size_t len) {
 	as6502_token *head = NULL;
 	as6502_token *tail = NULL;
+
+	// If there's a newline at the end, let's not bother with it
+	if (line[len - 1] == '\n') {
+		len--;
+	}
 	
 	for (const char *cur = line; *cur && cur < line + len;) {
 		switch (*cur) {
 			case ';':
 				return head;
 			case '"': {
-				char *closingQuote = strnchr(cur + 1, '"', len);
+				const char *closingQuote = strnchr(cur + 1, '"', len);
+				if (!closingQuote) {
+					size_t loc = cur - line;
+					as6502_error(loc, len - loc, "Unterminated string literal");
+					return head;
+				}
 				as6502_token *t = as6502_tokenCreate(cur, cur - line, closingQuote - cur);
 				insert(t);
 				cur = closingQuote + 1;
