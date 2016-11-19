@@ -97,9 +97,10 @@ void as6502_note(unsigned long lineNumber, const char *reason, ...) {
 	va_end(ap);
 }
 
-static void printSpaces(unsigned long num) {
+static void printSpaces(unsigned long num, const char *str) {
 	for (/* num */; num > 0; num--) {
-		fprintf(stderr, " ");
+		int whitespace = (str[num - 1] == '\t') ? '\t' : ' ';
+		fputc(whitespace, stderr);
 	}
 }
 
@@ -118,7 +119,7 @@ void as6502_underline(unsigned long loc, unsigned long len) {
 		}
 	}
 	
-	printSpaces(loc);
+	printSpaces(loc, currentLineText);
 	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
 
 	for (len--; len; len--) {
