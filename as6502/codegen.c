@@ -40,19 +40,22 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 	while (as6502_tokenListFindTokenLiteral(head, "+") ||
 			as6502_tokenListFindTokenLiteral(head, "-") ) {
 		lhs = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
-
 		if (!lhs) {
-			// There are operators without values, this is likely gibberish.
+			// This operator doesn't have a lhs value, this is likely gibberish.
 			break;
 		}
 
-		op = lhs->next;
-
 		// actually detect an operator
+		op = lhs->next;
 		if (!op || op->len != 1 || !(op->text[0] == '+' || op->text[0] == '-')) {
 			continue; 
 		}
+
 		rhs = op->next;
+		if (!rhs) {
+			// This operator doesn't have a rhs value, this is likely gibberish.
+			break;
+		}
 
 		// Calculate value, variables are initialized for lint
 		uint16_t result = 0;
