@@ -40,7 +40,6 @@
 #include "textmode.h"
 #include "debugger.h"
 
-#define MAX_COMMAND_LEN			80
 #define MEMORY_SIZE				0xFFFF
 #define DEFAULT_RESET_VECTOR	0x0600
 
@@ -190,7 +189,7 @@ int main(int argc, const char * argv[])
 			continue;
 		}
 
-		if (v6502_handleDebuggerCommand(cpu, command, MAX_COMMAND_LEN, breakpoint_list, table, run, &verbose)) {
+		if (v6502_handleDebuggerCommand(cpu, command, commandLen, breakpoint_list, table, run, &verbose)) {
 			continue;
 		}
 		else if (command[0] != ';') {
