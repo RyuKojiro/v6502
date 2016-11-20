@@ -6,7 +6,30 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		E6178C301DE24D7000A75476 /* Xcode-All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = E6178C331DE24D7000A75476 /* Build configuration list for PBXAggregateTarget "Xcode-All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				E6178C351DE24D7E00A75476 /* PBXTargetDependency */,
+				E6178C371DE24D7E00A75476 /* PBXTargetDependency */,
+				E6178C391DE24D7E00A75476 /* PBXTargetDependency */,
+				E6178C3B1DE24D7E00A75476 /* PBXTargetDependency */,
+				E6178C3D1DE24D7E00A75476 /* PBXTargetDependency */,
+				E6178C3F1DE24D7E00A75476 /* PBXTargetDependency */,
+				E6178C411DE24D7E00A75476 /* PBXTargetDependency */,
+				E6178C431DE24D7E00A75476 /* PBXTargetDependency */,
+			);
+			name = "Xcode-All";
+			productName = "Xcode-All";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
+		E6178C461DE24DE100A75476 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
+		E6178C491DE24DF100A75476 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
 		E61FA7551BAAB5B80022E2EB /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = E61FA7531BAAB5B80022E2EB /* debugger.c */; };
 		E622935D175D0C4000AD2866 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E622935A175D0C4000AD2866 /* main.c */; };
 		E622935E175D0C4000AD2866 /* video.c in Sources */ = {isa = PBXBuildFile; fileRef = E622935B175D0C4000AD2866 /* video.c */; };
@@ -90,6 +113,76 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		E6178C341DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6B33F1E17597E9300F0D8C2;
+			remoteInfo = Doxygen;
+		};
+		E6178C361DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E64198E017373A5A00D0EE25;
+			remoteInfo = as6502;
+		};
+		E6178C381DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E622934A175BB52900AD2866;
+			remoteInfo = easy6502;
+		};
+		E6178C3A1DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6FB94AA1791140B0053EB7E;
+			remoteInfo = v6502;
+		};
+		E6178C3C1DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E640E21817DFDCC9009C0718;
+			remoteInfo = dis6502;
+		};
+		E6178C3E1DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E640F6D8182D95B600A4C6A5;
+			remoteInfo = ld6502;
+		};
+		E6178C401DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6A306271B92F9F200B259E8;
+			remoteInfo = kmapgen;
+		};
+		E6178C421DE24D7E00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6DCD5211A56A7DE002008BE;
+			remoteInfo = tests;
+		};
+		E6178C441DE24DBB00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E638A49D1B8AAA6300B71420;
+			remoteInfo = libas6502;
+		};
+		E6178C471DE24DEC00A75476 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E652129E1704B90D009CE919 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E638A4C71B8AAABC00B71420;
+			remoteInfo = libdis6502;
+		};
 		E638A4D01B8AAAF200B71420 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E652129E1704B90D009CE919 /* Project object */;
@@ -457,6 +550,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6178C491DE24DF100A75476 /* liblibdis6502.a in Frameworks */,
+				E6178C461DE24DE100A75476 /* liblibas6502.a in Frameworks */,
 				E638A4FA1B8AAB5600B71420 /* liblibld6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -965,6 +1060,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				E6178C481DE24DEC00A75476 /* PBXTargetDependency */,
+				E6178C451DE24DBB00A75476 /* PBXTargetDependency */,
 				E638A4F91B8AAB5300B71420 /* PBXTargetDependency */,
 			);
 			name = ld6502;
@@ -1059,6 +1156,11 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Hello-Channel, LLC";
 				TargetAttributes = {
+					E6178C301DE24D7000A75476 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = N32V9A5A37;
+						ProvisioningStyle = Automatic;
+					};
 					E638A4901B8AAA2300B71420 = {
 						CreatedOnToolsVersion = 6.2;
 					};
@@ -1120,6 +1222,7 @@
 				E638A49D1B8AAA6300B71420 /* libas6502 */,
 				E638A4AB1B8AAA7800B71420 /* libld6502 */,
 				E638A4C71B8AAABC00B71420 /* libdis6502 */,
+				E6178C301DE24D7000A75476 /* Xcode-All */,
 			);
 		};
 /* End PBXProject section */
@@ -1248,6 +1351,56 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		E6178C351DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6B33F1E17597E9300F0D8C2 /* Doxygen */;
+			targetProxy = E6178C341DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C371DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E64198E017373A5A00D0EE25 /* as6502 */;
+			targetProxy = E6178C361DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C391DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E622934A175BB52900AD2866 /* easy6502 */;
+			targetProxy = E6178C381DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C3B1DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6FB94AA1791140B0053EB7E /* v6502 */;
+			targetProxy = E6178C3A1DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C3D1DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E640E21817DFDCC9009C0718 /* dis6502 */;
+			targetProxy = E6178C3C1DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C3F1DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E640F6D8182D95B600A4C6A5 /* ld6502 */;
+			targetProxy = E6178C3E1DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C411DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6A306271B92F9F200B259E8 /* kmapgen */;
+			targetProxy = E6178C401DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C431DE24D7E00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6DCD5211A56A7DE002008BE /* tests */;
+			targetProxy = E6178C421DE24D7E00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C451DE24DBB00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E638A49D1B8AAA6300B71420 /* libas6502 */;
+			targetProxy = E6178C441DE24DBB00A75476 /* PBXContainerItemProxy */;
+		};
+		E6178C481DE24DEC00A75476 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E638A4C71B8AAABC00B71420 /* libdis6502 */;
+			targetProxy = E6178C471DE24DEC00A75476 /* PBXContainerItemProxy */;
+		};
 		E638A4D11B8AAAF200B71420 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E638A4901B8AAA2300B71420 /* libv6502 */;
@@ -1361,6 +1514,22 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		E6178C311DE24D7000A75476 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = N32V9A5A37;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E6178C321DE24D7000A75476 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = N32V9A5A37;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		E6229352175BB52900AD2866 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2185,6 +2354,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E6178C331DE24D7000A75476 /* Build configuration list for PBXAggregateTarget "Xcode-All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6178C311DE24D7000A75476 /* Debug */,
+				E6178C321DE24D7000A75476 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		E6229351175BB52900AD2866 /* Build configuration list for PBXNativeTarget "easy6502" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
