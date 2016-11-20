@@ -678,13 +678,13 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 	switch (workString[0]) {
 		case '$': { // Hex
 			if (wide) {
-				*wide = (_valueLengthInChars(workString + 1) > 2) ? YES : NO;
+				*wide = (_valueLengthInChars(workString + 1) > 2);
 			}
 			result = strtol(workString + 1, NULL, 16);
 		} break;
 		case '%': { // Binary
 			if (wide) {
-				*wide = (_valueLengthInChars(workString + 1) > 8) ? YES : NO;
+				*wide = (_valueLengthInChars(workString + 1) > 8);
 			}
 			result = strtol(workString + 1, NULL, 2);
 		} break;
@@ -692,21 +692,21 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 			// Traditional Hex
 			if (workString[1] == 'x') {
 				if (wide) {
-					*wide = (_valueLengthInChars(workString + 1) > 2) ? YES : NO;
+					*wide = (_valueLengthInChars(workString + 1) > 2);
 				}
 				result = strtol(workString + 2, NULL, 16);
 			}
 			// Octal
 			else {
 				if (wide) {
-					*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
+					*wide = (_valueLengthInChars(workString + 1) > 3);
 				}
 				result = strtol(workString, NULL, 8);
 			}
 		} break;
 		default: { // Decimal
 			if (wide) {
-				*wide = (_valueLengthInChars(workString + 1) > 3) ? YES : NO;
+				*wide = (_valueLengthInChars(workString + 1) > 3);
 			}
 			
 			/* FIXME: Is there a more efficient way to figure out width for
