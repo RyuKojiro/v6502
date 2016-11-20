@@ -168,7 +168,7 @@ static void _makeSymbolOfType(const char *command, size_t len, as6502_symbol_tab
 	char *name = strndup(command, sLen);
 
 	command = trimheadtospc(command, len);
-	uint16_t address = as6502_valueForString(NULL, command);
+	uint16_t address = as6502_valueForString(NULL, command, len - (c2 - command));
 
 	as6502_addSymbolToTable(table, 0, name, address, symbolType);
 	free(name);
@@ -230,12 +230,15 @@ unsigned char v6502_completeDebuggerCommand(EditLine *e, int ch) {
 
 /** Returns YES if handled */
 int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502_breakpoint_list *breakpoint_list, as6502_symbol_table *table, v6502_debuggerRunCallback runCallback, int *verbose) {
+	// Make a backup for length calculation
+	const char *_command = command;
+
 	// jmp is a special override
 	if (v6502_compareDebuggerCommand(command, len, "jmp")) {
 		command = trimheadtospc(command, len);
 		command++;
 
-		uint16_t address = as6502_valueForString(NULL, command);
+		uint16_t address = as6502_valueForString(NULL, command, len - (_command - command));
 		cpu->pc = address;
 
 		return YES;
@@ -267,7 +270,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 
 				// Direct address or symbol name
 				if (isdigit(command[0]) || command[0] == '$') {
-					address = as6502_valueForString(NULL, command);
+					address = as6502_valueForString(NULL, command, len - (_command - command));
 				}
 				else {
 					address = as6502_addressForLabel(table, command);
@@ -325,7 +328,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 				command++;
 
 				uint8_t low, high;
-				as6502_byteValuesForString(&high, &low, NULL, command);
+				as6502_byteValuesForString(&high, &low, NULL, command, len - (_command - command));
 
 				v6502_write(cpu->memory, vector_address, low);
 				v6502_write(cpu->memory, vector_address + 1, high);
@@ -338,7 +341,6 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			return YES;
 		}
 		case v6502_debuggerCommand_load: {
-			const char *c2 = command;
 			command = trimheadtospc(command, len);
 
 			// Make sure we have at least one argument
@@ -350,7 +352,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			command++;
 
 			// We have at least one argument, so extract the filename
-			size_t fLen = strnspc(command, len - (c2 - command)) - command;
+			size_t fLen = strnspc(command, len - (_command - command)) - command;
 			char *filename = malloc(fLen + 1);
 			memcpy(filename, command, fLen);
 			filename[fLen] = '\0';
@@ -364,7 +366,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 				command++;
 
 				uint8_t low, high;
-				as6502_byteValuesForString(&high, &low, NULL, command);
+				as6502_byteValuesForString(&high, &low, NULL, command, len - (_command - command));
 				addr = (high << 8) | low;
 			}
 			else {
@@ -409,7 +411,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 
 				// Direct address or symbol name
 				if (isdigit(command[0]) || command[0] == '$') {
-					start = as6502_valueForString(NULL, command);
+					start = as6502_valueForString(NULL, command, len - (_command - command));
 				}
 				else {
 					start = as6502_addressForLabel(table, command);
@@ -428,7 +430,6 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			return YES;
 		}
 		case v6502_debuggerCommand_script: {
-			const char *c2 = command;
 			command = trimheadtospc(command, len);
 
 			// Make sure we have at least one argument
@@ -440,7 +441,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			command++;
 
 			// We have at least one argument, so extract the filename
-			size_t fLen = strnspc(command, len - (c2 - command)) - command;
+			size_t fLen = strnspc(command, len - (_command - command)) - command;
 			char *filename = malloc(fLen + 1);
 			memcpy(filename, command, fLen);
 			filename[fLen] = '\0';
@@ -460,7 +461,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			command = trimheadtospc(command, len);
 			command++;
 
-			uint16_t start = as6502_valueForString(NULL, command);
+			uint16_t start = as6502_valueForString(NULL, command, len - (_command - command));
 
 			// Make sure we don't go out of bounds either direction
 			if (start <= 0x10) {
@@ -481,12 +482,12 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			command++;
 
 			// Make sure we don't go out of bounds either direction
-			uint16_t address = as6502_valueForString(NULL, command);
+			uint16_t address = as6502_valueForString(NULL, command, len - (_command - command));
 			uint8_t value;
 
 			command = trimheadtospc(command, len);
 			command++;
-			as6502_byteValuesForString(NULL, &value, NULL, command);
+			as6502_byteValuesForString(NULL, &value, NULL, command, len - (_command - command));
 
 			// Make sure we don't go out of bounds either direction
 			if (address >= cpu->memory->size) {
@@ -515,16 +516,15 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 		}
 		case v6502_debuggerCommand_register: {
 			// Extract register name
-			const char *c2 = command;
 			command = trimheadtospc(command, len) + 1;
-			size_t sLen = strnspc(command, len - (c2 - command)) - command;
+			size_t sLen = strnspc(command, len - (_command - command)) - command;
 			char *name = malloc(sLen + 1);
 			memcpy(name, command, sLen);
 			name[sLen] = '\0';
 
 			// Extract value
 			command = trimheadtospc(command, len);
-			uint16_t value = as6502_valueForString(NULL, command);
+			uint16_t value = as6502_valueForString(NULL, command, len - (_command - command));
 
 			int valid = 0;
 			// PC is a special case, in that it is 16-bit

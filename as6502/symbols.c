@@ -389,7 +389,7 @@ void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, 
 	for (char *cur = line; *cur && ((size_t)(cur - line) < len); cur = (trimheadtospc(cur, len - (cur - line)) + 1)) {
 		
 		int wide;
-		uint16_t address = as6502_valueForString(&wide, cur);
+		uint16_t address = as6502_valueForString(&wide, cur, len - (cur - line));
 		as6502_symbol *symbol = as6502_symbolForAddress(table, address);
 		
 		// If we couldn't find one at that address, try a pstart offset symbol.

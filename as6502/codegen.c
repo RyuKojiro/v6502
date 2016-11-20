@@ -64,10 +64,10 @@ as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 		int rwide = NO;
 		switch (op->text[0]) {
 			case '+': {
-				result = as6502_valueForString(&lwide, lhs->text) + as6502_valueForString(&rwide, rhs->text);
+				result = as6502_valueForToken(&lwide, lhs) + as6502_valueForToken(&rwide, rhs);
 			} break;
 			case '-': {
-				result = as6502_valueForString(&lwide, lhs->text) - as6502_valueForString(&rwide, rhs->text);
+				result = as6502_valueForToken(&lwide, lhs) - as6502_valueForToken(&rwide, rhs);
 			} break;
 			default:
 				assert(op);
@@ -110,7 +110,7 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 		}
 		
 		// start new blob
-		ld6502_addBlobToObject(obj, as6502_valueForString(NULL, head->next->text));
+		ld6502_addBlobToObject(obj, as6502_valueForToken(NULL, head->next));
 		*currentBlob = obj->count - 1;
 	}
 	else if (as6502_tokenIsEqualToStringLiteral(head, ".end")) {
@@ -140,7 +140,7 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 			return;
 		}
 
-		as6502_byteValuesForString(&high, &low, &wide, head->next->text);
+		as6502_byteValuesForString(&high, &low, &wide, head->next->text, head->next->len);
 
 		ld6502_object_blob *blob = &obj->blobs[*currentBlob];
 		ld6502_appendByteToBlob(blob, low);

@@ -46,9 +46,11 @@ void as6502_stringForAddressMode(char *out, v6502_address_mode mode);
 /** @defgroup parser_line Line Based Assembly Parsing */
 /**@{*/
 /** @brief Returns the numeric value of a literal regardless of base */
-uint16_t as6502_valueForString(int *wide, const char *string);
+uint16_t as6502_valueForString(int *wide, const char *string, size_t len);
+/** @brief Returns the numeric value of a literal token regardless of base */
+#define as6502_valueForToken(wide, token)	as6502_valueForString(wide, token->text, token->len)
 /** @brief Determines the numeric value of a literal separated into its high and low bytes */
-void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string);
+void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string, size_t len);
 /** @brief Completely parses a line of text to extract the instruction and v6502_address_mode */
 void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, as6502_token *head);
 /** @brief Returns the byte-length of a given v6502_address_mode */

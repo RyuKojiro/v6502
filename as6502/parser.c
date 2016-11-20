@@ -648,8 +648,8 @@ static int _containsNonDecimals(const char *string) {
 	return NO;
 }
 
-uint16_t as6502_valueForString(int *wide, const char *string) {
-	char workString[80];
+uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
+	char *workString = malloc(len + 2);
 	uint16_t result;
 	
 	if (!string) {
@@ -670,9 +670,9 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 		starter++;
 	}
 
-	size_t len = as6502_lengthOfToken(cur + starter, (80 - (cur - string)) - starter);
-	strncpy(workString, cur, len + starter);
-	workString[len + starter] = '\0';
+	size_t tLen = as6502_lengthOfToken(cur + starter, (80 - (cur - string)) - starter);
+	strncpy(workString, cur, tLen + starter);
+	workString[tLen + starter] = '\0';
 	
 	// Check first char to determine base
 	switch (workString[0]) {
@@ -724,7 +724,8 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 			result = strtol(workString, NULL, 10);
 		} break;
 	}
-	
+	free(workString);
+
 	if (result > BYTE_MAX && wide) {
 		// Octal and decimal split digits
 		*wide = YES;
@@ -733,8 +734,8 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 	return result;
 }
 
-void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string) {
-	uint16_t result = as6502_valueForString(wide, string);
+void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string, size_t len) {
+	uint16_t result = as6502_valueForString(wide, string, len);
 
 	if (low) {
 		*low = result & BYTE_MAX;
@@ -810,7 +811,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	}
 
 	int wide;
-	as6502_valueForString(&wide, head->next->text); // FIXME: We really just want the width here.
+	as6502_valueForToken(&wide, head->next); // FIXME: We really just want the width here.
 	if (!wide) { // FIXME: Starting to doubt this logic
 		wide = as6502_symbolShouldBeReplacedDoubleWidth(head);
 	}
@@ -924,7 +925,7 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 		// We already know the address mode at this point, so we just want the actual value
 		as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
 		if (value) {
-			as6502_byteValuesForString(high, low, NULL, value->text);
+			as6502_byteValuesForString(high, low, NULL, value->text, value->len);
 		}
 	}
 }
