@@ -1896,6 +1896,8 @@
 					"-Wno-padded",
 					"-Wno-switch-enum",
 					"-Wno-covered-switch-default",
+					"-Wno-format-pedantic",
+					"-Wno-documentation-unknown-command",
 				);
 			};
 			name = Debug;
@@ -1929,6 +1931,8 @@
 					"-Wno-padded",
 					"-Wno-switch-enum",
 					"-Wno-covered-switch-default",
+					"-Wno-format-pedantic",
+					"-Wno-documentation-unknown-command",
 				);
 			};
 			name = Release;
