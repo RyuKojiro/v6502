@@ -648,8 +648,8 @@ static int _containsNonDecimals(const char *string) {
 	return NO;
 }
 
-uint16_t as6502_valueForString(int *wide, const char *string) {
-	char workString[80];
+uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
+	char *workString = malloc(len + 2);
 	uint16_t result;
 	
 	if (!string) {
@@ -670,9 +670,9 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 		starter++;
 	}
 
-	size_t len = as6502_lengthOfToken(cur + starter, (80 - (cur - string)) - starter);
-	strncpy(workString, cur, len + starter);
-	workString[len + starter] = '\0';
+	size_t tLen = as6502_lengthOfToken(cur + starter, (80 - (cur - string)) - starter);
+	strncpy(workString, cur, tLen + starter);
+	workString[tLen + starter] = '\0';
 	
 	// Check first char to determine base
 	switch (workString[0]) {
@@ -724,7 +724,8 @@ uint16_t as6502_valueForString(int *wide, const char *string) {
 			result = strtol(workString, NULL, 10);
 		} break;
 	}
-	
+	free(workString);
+
 	if (result > BYTE_MAX && wide) {
 		// Octal and decimal split digits
 		*wide = YES;
@@ -810,7 +811,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	}
 
 	int wide;
-	as6502_valueForString(&wide, head->next->text); // FIXME: We really just want the width here.
+	as6502_valueForString(&wide, head->next->text, head->next->len); // FIXME: We really just want the width here.
 	if (!wide) { // FIXME: Starting to doubt this logic
 		wide = as6502_symbolShouldBeReplacedDoubleWidth(head);
 	}
