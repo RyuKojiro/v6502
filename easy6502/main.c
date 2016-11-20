@@ -34,7 +34,7 @@ static void logCpuStatus(v6502_cpu *cpu) {
 			cpu->sr & v6502_cpu_status_interrupt ? 'I' : '-',
 			cpu->sr & v6502_cpu_status_zero ? 'Z' : '-',
 			cpu->sr & v6502_cpu_status_carry ? 'C' : '-');
-	fprintf(logFile, "CPU %p: pc = %#04x, ac = %#02x, x = %#02x, y = %#02x, sr = %#02x, sp = %#02x\nMEM %p: memsize = %hu (%#04x)\n\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
+	fprintf(logFile, "CPU %p: pc = %#04x, ac = %#02x, x = %#02x, y = %#02x, sr = %#02x, sp = %#02x\nMEM %p: memsize = %zu (%#04zx)\n\n", cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sr, cpu->sp, cpu->memory, cpu->memory->size, cpu->memory->size);
 }
 
 void broken() {
@@ -48,7 +48,7 @@ void loadProgram(v6502_memory *mem, const char *fname) {
 	uint8_t offset = 0;
 	
 	while (fread(&byte, 1, 1, f)) {
-		mem->bytes[v6502_memoryStartProgram + (offset++)] = byte;
+		mem->bytes[v6502_memoryStartWorkMemory + (offset++)] = byte;
 	}
 	
 	fprintf(logFile, "Loaded ROM of %d bytes\n\n", offset);
