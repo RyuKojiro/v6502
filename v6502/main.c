@@ -174,8 +174,6 @@ int main(int argc, const char * argv[])
 		currentLineNum++;
 		
 		const char *in = el_gets(el, &commandLen);
-		currentLineText = in;
-
 		if (!in) {
 			break;
 		}
@@ -195,6 +193,7 @@ int main(int argc, const char * argv[])
 			continue;
 		}
 		else if (command[0] != ';') {
+			currentLineText = in;
 			as6502_executeAsmLineOnCPU(cpu, command, strlen(command));
 		}
 	}
