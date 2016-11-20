@@ -811,7 +811,7 @@ v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	}
 
 	int wide;
-	as6502_valueForString(&wide, head->next->text, head->next->len); // FIXME: We really just want the width here.
+	as6502_valueForToken(&wide, head->next); // FIXME: We really just want the width here.
 	if (!wide) { // FIXME: Starting to doubt this logic
 		wide = as6502_symbolShouldBeReplacedDoubleWidth(head);
 	}

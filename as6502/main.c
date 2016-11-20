@@ -146,7 +146,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 		// Dot Directives
 		if (head && head->text[0] == '.') {
 			if (!strncasecmp(head->text, ".org", 5) && head->next) {
-				uint16_t start = as6502_valueForString(NULL, head->next->text, head->next->len);
+				uint16_t start = as6502_valueForToken(NULL, head->next);
 
 				// Close old blob (FIXME: This doesn't need to happen currently since we allocate a byte at a time)
 //				obj->blobs[currentBlob].data = malloc(sizeof(uint8_t) * address);
@@ -172,7 +172,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 				continue;
 			}
 			// These should always be: <varname>, '=', <target_address>
-			uint16_t target = as6502_valueForString(NULL, head->next->next->text, head->next->next->len);
+			uint16_t target = as6502_valueForToken(NULL, head->next->next);
 			
 			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, target, as6502_symbol_type_variable);
 		}
@@ -238,7 +238,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 			 */
 			if (!strncasecmp(head->text, ".org", 5) && head->next) {
 				// Find the preallocated blob and change to it
-				uint16_t start = as6502_valueForString(NULL, head->next->text, head->next->len);
+				uint16_t start = as6502_valueForToken(NULL, head->next);
 
 				for (int blob = 0; blob < obj->count; blob++) {
 					if (obj->blobs[blob].start == start) {
