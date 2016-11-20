@@ -174,6 +174,8 @@ int main(int argc, const char * argv[])
 		currentLineNum++;
 		
 		const char *in = el_gets(el, &commandLen);
+		currentLineText = in;
+
 		if (!in) {
 			break;
 		}
