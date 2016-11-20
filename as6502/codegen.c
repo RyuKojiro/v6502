@@ -140,7 +140,7 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 			return;
 		}
 
-		as6502_byteValuesForString(&high, &low, &wide, head->next->text);
+		as6502_byteValuesForString(&high, &low, &wide, head->next->text, head->next->len);
 
 		ld6502_object_blob *blob = &obj->blobs[*currentBlob];
 		ld6502_appendByteToBlob(blob, low);

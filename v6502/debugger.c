@@ -328,7 +328,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 				command++;
 
 				uint8_t low, high;
-				as6502_byteValuesForString(&high, &low, NULL, command);
+				as6502_byteValuesForString(&high, &low, NULL, command, len - (_command - command));
 
 				v6502_write(cpu->memory, vector_address, low);
 				v6502_write(cpu->memory, vector_address + 1, high);
@@ -366,7 +366,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 				command++;
 
 				uint8_t low, high;
-				as6502_byteValuesForString(&high, &low, NULL, command);
+				as6502_byteValuesForString(&high, &low, NULL, command, len - (_command - command));
 				addr = (high << 8) | low;
 			}
 			else {
@@ -487,7 +487,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 
 			command = trimheadtospc(command, len);
 			command++;
-			as6502_byteValuesForString(NULL, &value, NULL, command);
+			as6502_byteValuesForString(NULL, &value, NULL, command, len - (_command - command));
 
 			// Make sure we don't go out of bounds either direction
 			if (address >= cpu->memory->size) {

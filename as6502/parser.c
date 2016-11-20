@@ -734,8 +734,8 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 	return result;
 }
 
-void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string) {
-	uint16_t result = as6502_valueForString(wide, string);
+void as6502_byteValuesForString(uint8_t *high, uint8_t *low, int *wide, const char *string, size_t len) {
+	uint16_t result = as6502_valueForString(wide, string, len);
 
 	if (low) {
 		*low = result & BYTE_MAX;
@@ -925,7 +925,7 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 		// We already know the address mode at this point, so we just want the actual value
 		as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
 		if (value) {
-			as6502_byteValuesForString(high, low, NULL, value->text);
+			as6502_byteValuesForString(high, low, NULL, value->text, value->len);
 		}
 	}
 }
