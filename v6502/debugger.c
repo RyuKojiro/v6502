@@ -155,7 +155,7 @@ void v6502_runDebuggerScript(v6502_cpu *cpu, FILE *file, v6502_breakpoint_list *
 	char *line = NULL;
 	size_t cap = 0;
 	ssize_t len;
-	while ((len = getline(&line, &cap, file))) {
+	while ((len = getline(&line, &cap, file)) > 0) {
 		v6502_handleDebuggerCommand(cpu, line, len, breakpoint_list, table, runCallback, verbose);
 	}
 }
