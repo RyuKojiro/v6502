@@ -67,7 +67,7 @@ void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	headerData[ines_headerPrgRomSizeField8] = (prg_rom ? prg_rom->len : 0) / ines_8kUnits;
 	headerData[/* flags */ 9] = 0;
 	headerData[/* flags */ 10] = 0;
-	bzero(headerData + ines_headerZeroPaddingStart, ines_headerDataLength - ines_headerZeroPaddingStart);
+	memset(headerData + ines_headerZeroPaddingStart, 0, ines_headerDataLength - ines_headerZeroPaddingStart);
 	
 	// Write header
 	fwrite(headerData, ines_headerDataLength, 1, outfile);

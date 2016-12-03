@@ -568,7 +568,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			return YES;
 		}
 		case v6502_debuggerCommand_mreset: {
-			bzero(cpu->memory->bytes, cpu->memory->size * sizeof(uint8_t));
+			memset(cpu->memory->bytes, 0, cpu->memory->size * sizeof(uint8_t));
 			return YES;
 		}
 		case v6502_debuggerCommand_verbose: {

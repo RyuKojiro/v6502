@@ -25,6 +25,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 
 #include <v6502/mem.h>
 
@@ -76,10 +77,12 @@ int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t 
 }
 
 void as6502_stringForTokenList(char *output, size_t len, as6502_token *head) {
-	bzero(output, len);
+	assert(len > 1);
+	output[0] = '\0';
 	
 	while (head) {
-		strncat(output, head->text, len);
+		// If len is the size of the output buffer, and strncat() function appends up to n characters PLUS the null terminator, we need to compensate.
+		strncat(output, head->text, len - 1);
 		len -= head->len;
 
 		head = head->next;
