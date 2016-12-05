@@ -1,5 +1,5 @@
 # Compilation
-INCLUDE+=       -I..
+INCLUDE+=		-I..
 CFLAGS+=		-Wall -Wno-unknown-pragmas -std=c99 $(INCLUDE)
 CFLAGS+=		-D_XOPEN_SOURCE # For getopt
 CFLAGS+=		-D_XOPEN_SOURCE_EXTENDED # For strndup
