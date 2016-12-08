@@ -466,6 +466,7 @@
 		E6828B2F19933FBD00442439 /* color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = color.h; path = as6502/color.h; sourceTree = "<group>"; };
 		E68821CD175DBC2300BA1FE2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = easy6502/Makefile; sourceTree = SOURCE_ROOT; };
 		E68C9A3D193FA00300AD9E00 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = /usr/lib/libedit.dylib; sourceTree = "<absolute>"; };
+		E69684B31DF92A5A00D46D34 /* ld6502.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ld6502.1; sourceTree = "<group>"; };
 		E6A079101737321800E0027B /* NOTES.dox */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTES.dox; sourceTree = "<group>"; };
 		E6A306281B92F9F200B259E8 /* kmapgen */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = kmapgen; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6A3062A1B92F9F300B259E8 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
@@ -658,6 +659,7 @@
 		E640F6CF182D721000A4C6A5 /* ld6502 */ = {
 			isa = PBXGroup;
 			children = (
+				E69684B31DF92A5A00D46D34 /* ld6502.1 */,
 				E6817C271855658B008A58A9 /* aout.c */,
 				E6817C281855658B008A58A9 /* aout.h */,
 				E6817C291855658B008A58A9 /* flat.c */,
@@ -2381,6 +2383,7 @@
 				E6178C321DE24D7000A75476 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E6229351175BB52900AD2866 /* Build configuration list for PBXNativeTarget "easy6502" */ = {
 			isa = XCConfigurationList;
