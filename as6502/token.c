@@ -109,7 +109,7 @@ static int ishex(char c) {
 
 static int _valueLengthInChars(const char *string, size_t len) {
 	int i;
-	for (i = 0; string[i] && (ishex(string[i]) || string[i] == '.'); i++);
+	for (i = 0; string[i] && i < len && (ishex(string[i]) || string[i] == '.'); i++);
 
 	return i;
 }
