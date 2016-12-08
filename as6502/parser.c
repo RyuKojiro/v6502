@@ -783,19 +783,19 @@ int as6502_isBranchInstruction(const char *string) {
 
 v6502_address_mode as6502_addressModeForExpression(as6502_token *head) {
 	/*
-	 √ OPC			....	implied
-	 √ OPC A		....	Accumulator
-	 √ OPC #BB		....	immediate
-	 √ OPC HHLL		....	absolute
-	 √ OPC HHLL,X	....	absolute, X-indexed
-	 √ OPC HHLL,Y	....	absolute, Y-indexed
-	 √ OPC *LL		....	zeropage
-	 √ OPC *LL,X	....	zeropage, X-indexed
-	 √ OPC *LL,Y	....	zeropage, Y-indexed
-	 √ OPC (BB,X)	....	X-indexed, indirect
-	 √ OPC (LL),Y	....	indirect, Y-indexed
-	 √ OPC (HHLL)	....	indirect
-	 √ OPC BB		....	relative
+	 * OPC			....	implied
+	 * OPC A		....	Accumulator
+	 * OPC #BB		....	immediate
+	 * OPC HHLL		....	absolute
+	 * OPC HHLL,X	....	absolute, X-indexed
+	 * OPC HHLL,Y	....	absolute, Y-indexed
+	 * OPC *LL		....	zeropage
+	 * OPC *LL,X	....	zeropage, X-indexed
+	 * OPC *LL,Y	....	zeropage, Y-indexed
+	 * OPC (BB,X)	....	X-indexed, indirect
+	 * OPC (LL),Y	....	indirect, Y-indexed
+	 * OPC (HHLL)	....	indirect
+	 * OPC BB		....	relative
 	 */
 
 	if (!head) {
