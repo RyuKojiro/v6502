@@ -26,7 +26,7 @@
 #ifndef v6502_linectl_h
 #define v6502_linectl_h
 
-#include <sys/types.h>
+#include <stddef.h>
 
 /** @brief This is to cope with <ctype.h> functions, which all expect int sized chars */
 #define CTYPE_CAST	(int)

@@ -26,7 +26,7 @@
 #ifndef as6502_token_h
 #define as6502_token_h
 
-#include <sys/types.h>
+#include <stddef.h>
 #include <stdio.h> // Required for dot output
 
 /** @enum */
