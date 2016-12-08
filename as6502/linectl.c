@@ -102,7 +102,7 @@ char *trimheadtospc(const char *str, size_t len) {
 }
 
 char *strnspc(const char *str, size_t len) {
-	while (len && !isspace(*str)) {
+	while (len && !isspace((int)*str)) {
 		str++;
 		len--;
 	}
@@ -111,7 +111,7 @@ char *strnspc(const char *str, size_t len) {
 }
 
 char *strnpc(const char *str, size_t len) {
-	while (len && isspace(*str)) {
+	while (len && isspace((int)*str)) {
 		str++;
 		len--;
 	}

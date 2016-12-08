@@ -640,7 +640,7 @@ static int _valueLengthInChars(const char *string) {
 
 static int _containsNonDecimals(const char *string) {
 	while (*string) {
-		if (!isdigit(*string)) {
+		if (!isdigit((int)*string)) {
 			return YES;
 		}
 		string++;
@@ -717,7 +717,7 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 			 * contains any non-digits beyond the first one, this is probably
 			 * a typo/programmer error in the assembly.
 			 */
-			if (isdigit(workString[0]) && _containsNonDecimals(workString)) {
+			if (isdigit((int)workString[0]) && _containsNonDecimals(workString)) {
 				as6502_warn(0, 0, "Encountered an undecorated number (implying decimal) containing non-decimal characters.");
 			}
 			

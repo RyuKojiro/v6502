@@ -115,7 +115,7 @@ static int _valueLengthInChars(const char *string, size_t len) {
 }
 
 static int _isPartOfToken(char c) {
-	return isalnum(c) || c == '_';
+	return isalnum((int)c) || c == '_';
 }
 
 size_t as6502_lengthOfToken(const char *start, size_t len) {
@@ -167,7 +167,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 				as6502_token *t = as6502_tokenCreate(cur, consumed, tlen + 1);
 				int isFloat = YES;
 				for (const char *i = cur + 1; i < cur + tlen; i++) {
-					if (!isdigit(*i)) {
+					if (!isdigit((int)*i)) {
 						isFloat = NO;
 						break;
 					}
@@ -192,18 +192,18 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 				cur++;
 			} break;
 			default: {
-				if (isspace(*cur)) {
+				if (isspace((int)*cur)) {
 					// seek over whitespace
 					cur = strnpc(cur, remaining);
 				}
-				else if (isalpha(*cur)) {
+				else if (isalpha((int)*cur)) {
 					// handle alpha text, probably an instruction or symbol
 					size_t tlen = as6502_lengthOfToken(cur, remaining);
 					as6502_token *t = as6502_tokenCreate(cur, consumed, tlen);
 					insert(t);
 					cur += tlen;
 				}
-				else if (isdigit(*cur) || isprenum(*cur)) {
+				else if (isdigit((int)*cur) || isprenum(*cur)) {
 					// handle what is definitely a number
 					const char *start = cur;
 					size_t tlen = 0;
