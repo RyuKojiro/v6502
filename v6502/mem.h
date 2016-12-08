@@ -27,7 +27,7 @@
 #define v6502_mem_h
 
 #include <stdint.h>
-#include <sys/types.h>
+#include <stddef.h>
 
 #ifndef YES
 /** @brief Boolean true */
