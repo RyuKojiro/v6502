@@ -130,11 +130,19 @@ void as6502_underline(unsigned long loc, unsigned long len) {
 	}
 	
 	printSpaces(loc, currentLineText);
-	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
 
-	for (len--; len; len--) {
-		fprintf(stderr, "~");
+	int supportsColor = termcolors();
+	if (supportsColor) {
+		fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN);
 	}
 
-	fprintf(stderr, ANSI_COLOR_RESET "\n");
+	fputc('^', stderr);
+	for (len--; len; len--) {
+		fputc('~', stderr);
+	}
+
+	if (supportsColor) {
+		fprintf(stderr, ANSI_COLOR_RESET);
+	}
+	fputc('\n', stderr);
 }
