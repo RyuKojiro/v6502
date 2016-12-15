@@ -3,7 +3,7 @@ include ../libvars.mk
 
 PROG=		ld6502
 SRCS=		main.c
-LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502
+LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502 -lcurses
 OBJS=		$(SRCS:.c=.o)
 MANPAGE=	ld6502.1
 HEADERS=	object.h aout.h flat.h ines.h
