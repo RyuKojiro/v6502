@@ -366,7 +366,7 @@ int main(int argc, char * const argv[]) {
 		for (/* i */; i < argc; i++) {
 			in = fopen(argv[i], "r");
 			if (!in) {
-				perror("fopen");
+				perror("as6502");
 				return 1;
 			}
 			
