@@ -25,6 +25,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <term.h>
 
 #include "error.h"
 #include "color.h"
@@ -34,8 +35,17 @@ unsigned long currentLineNum;
 const char *currentFileName;
 unsigned int currentErrorCount;
 
+static int termcolors(void) {
+	int e;
+	if (setupterm(NULL, fileno(stdout), &e)) {
+		return 0;
+	}
+
+	return tigetnum("colors");
+}
+
 __attribute((noreturn)) void as6502_fatal(const char *reason) {
-	if (isatty(fileno(stdin))) {
+	if (termcolors()) {
 		fprintf(stderr, ANSI_COLOR_BRIGHT_WHITE "as6502: " ANSI_COLOR_BRIGHT_RED "fatal:" ANSI_COLOR_BRIGHT_WHITE " %s\n" ANSI_COLOR_RESET, reason);
 	}
 	else {
@@ -47,7 +57,7 @@ __attribute((noreturn)) void as6502_fatal(const char *reason) {
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
 static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len, const char *color, const char *type, const char *reason, va_list ap) {
 	// Only use color codes on real TTYs
-	if (isatty(fileno(stdin))) {
+	if (termcolors()) {
 		fprintf(stderr,
 				ANSI_COLOR_BRIGHT_WHITE "%s:%lu:", currentFileName, line);
 		
@@ -120,11 +130,19 @@ void as6502_underline(unsigned long loc, unsigned long len) {
 	}
 	
 	printSpaces(loc, currentLineText);
-	fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN "^");
 
-	for (len--; len; len--) {
-		fprintf(stderr, "~");
+	int supportsColor = termcolors();
+	if (supportsColor) {
+		fprintf(stderr, ANSI_COLOR_BRIGHT_GREEN);
 	}
 
-	fprintf(stderr, ANSI_COLOR_RESET "\n");
+	fputc('^', stderr);
+	for (len--; len; len--) {
+		fputc('~', stderr);
+	}
+
+	if (supportsColor) {
+		fprintf(stderr, ANSI_COLOR_RESET);
+	}
+	fputc('\n', stderr);
 }

@@ -3,7 +3,7 @@ include ../libvars.mk
 
 PROG=		dis6502
 SRCS=		main.c
-LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502
+LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502 -lcurses
 OBJS=		$(SRCS:.c=.o)
 MANPAGE=	dis6502.1
 HEADERS=	reverse.h
