@@ -28,8 +28,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		E6178C461DE24DE100A75476 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
-		E6178C491DE24DF100A75476 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
+		E6178C461DE24DE100A75476 /* libas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* libas6502.a */; };
+		E6178C491DE24DF100A75476 /* libdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* libdis6502.a */; };
 		E61FA7551BAAB5B80022E2EB /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = E61FA7531BAAB5B80022E2EB /* debugger.c */; };
 		E622935D175D0C4000AD2866 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E622935A175D0C4000AD2866 /* main.c */; };
 		E622935E175D0C4000AD2866 /* video.c in Sources */ = {isa = PBXBuildFile; fileRef = E622935B175D0C4000AD2866 /* video.c */; };
@@ -69,21 +69,21 @@
 		E638A4C31B8AAAAF00B71420 /* token.h in Headers */ = {isa = PBXBuildFile; fileRef = E6723EE81AB80D4B0045F8F6 /* token.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E638A4CC1B8AAAC300B71420 /* reverse.c in Sources */ = {isa = PBXBuildFile; fileRef = E640F6BD182C180500A4C6A5 /* reverse.c */; };
 		E638A4CD1B8AAACA00B71420 /* reverse.h in Headers */ = {isa = PBXBuildFile; fileRef = E640F6BE182C180500A4C6A5 /* reverse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E638A4CE1B8AAAE500B71420 /* liblibld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* liblibld6502.a */; };
-		E638A4CF1B8AAAE500B71420 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
-		E638A4D61B8AAB0B00B71420 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
-		E638A4D71B8AAB1A00B71420 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
-		E638A4D81B8AAB1A00B71420 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
-		E638A4D91B8AAB1A00B71420 /* liblibld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* liblibld6502.a */; };
-		E638A4DA1B8AAB1A00B71420 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
-		E638A4E31B8AAB3100B71420 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
-		E638A4E41B8AAB3100B71420 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
-		E638A4E51B8AAB3100B71420 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
-		E638A4F41B8AAB4A00B71420 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
-		E638A4F51B8AAB4A00B71420 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
-		E638A4F61B8AAB4A00B71420 /* liblibld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* liblibld6502.a */; };
-		E638A4F71B8AAB4A00B71420 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
-		E638A4FA1B8AAB5600B71420 /* liblibld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* liblibld6502.a */; };
+		E638A4CE1B8AAAE500B71420 /* libld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* libld6502.a */; };
+		E638A4CF1B8AAAE500B71420 /* libv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* libv6502.a */; };
+		E638A4D61B8AAB0B00B71420 /* libv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* libv6502.a */; };
+		E638A4D71B8AAB1A00B71420 /* libas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* libas6502.a */; };
+		E638A4D81B8AAB1A00B71420 /* libdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* libdis6502.a */; };
+		E638A4D91B8AAB1A00B71420 /* libld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* libld6502.a */; };
+		E638A4DA1B8AAB1A00B71420 /* libv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* libv6502.a */; };
+		E638A4E31B8AAB3100B71420 /* libas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* libas6502.a */; };
+		E638A4E41B8AAB3100B71420 /* libdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* libdis6502.a */; };
+		E638A4E51B8AAB3100B71420 /* libv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* libv6502.a */; };
+		E638A4F41B8AAB4A00B71420 /* libas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* libas6502.a */; };
+		E638A4F51B8AAB4A00B71420 /* libdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* libdis6502.a */; };
+		E638A4F61B8AAB4A00B71420 /* libld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* libld6502.a */; };
+		E638A4F71B8AAB4A00B71420 /* libv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* libv6502.a */; };
+		E638A4FA1B8AAB5600B71420 /* libld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* libld6502.a */; };
 		E640E22317DFDD93009C0718 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E640E21217DFD81B009C0718 /* main.c */; };
 		E64198EB17373A6200D0EE25 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E666A8121715D1C000EDBF95 /* main.c */; };
 		E66663151A5A3F1D007025FA /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
@@ -99,9 +99,9 @@
 		E6817C30185565BA008A58A9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E640F6D1182D77AC00A4C6A5 /* main.c */; };
 		E68C9A3E193FA00300AD9E00 /* libedit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E68C9A3D193FA00300AD9E00 /* libedit.dylib */; };
 		E6A3062B1B92F9F300B259E8 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A3062A1B92F9F300B259E8 /* main.c */; };
-		E6A3062F1B92FCC300B259E8 /* liblibdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */; };
-		E6A306301B92FCC300B259E8 /* liblibv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* liblibv6502.a */; };
-		E6A306351B92FCDA00B259E8 /* liblibas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* liblibas6502.a */; };
+		E6A3062F1B92FCC300B259E8 /* libdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* libdis6502.a */; };
+		E6A306301B92FCC300B259E8 /* libv6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4911B8AAA2300B71420 /* libv6502.a */; };
+		E6A306351B92FCDA00B259E8 /* libas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* libas6502.a */; };
 		E6D32FF51B9A824600DCBCA6 /* token.c in Sources */ = {isa = PBXBuildFile; fileRef = E6723EE71AB80D4B0045F8F6 /* token.c */; };
 		E6DCD5291A56A7FB002008BE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E6DCD51D1A56A048002008BE /* main.c */; };
 		E6DCD52A1A56A8B4002008BE /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
@@ -421,10 +421,10 @@
 		E62293D7175DB40400AD2866 /* state.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = state.c; path = easy6502/state.c; sourceTree = SOURCE_ROOT; };
 		E62293D9175DB92400AD2866 /* easy_test.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; name = easy_test.s; path = easy6502/easy_test.s; sourceTree = SOURCE_ROOT; };
 		E6305FCB1C823770007076AA /* wozmon.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = wozmon.s; sourceTree = "<group>"; };
-		E638A4911B8AAA2300B71420 /* liblibv6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibv6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E638A49E1B8AAA6300B71420 /* liblibas6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibas6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E638A4AC1B8AAA7800B71420 /* liblibld6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibld6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E638A4C81B8AAABC00B71420 /* liblibdis6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibdis6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E638A4911B8AAA2300B71420 /* libv6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libv6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E638A49E1B8AAA6300B71420 /* libas6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libas6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E638A4AC1B8AAA7800B71420 /* libld6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libld6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E638A4C81B8AAABC00B71420 /* libdis6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdis6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E640E21217DFD81B009C0718 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E640E21317DFD81B009C0718 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		E640E21917DFDCC9009C0718 /* dis6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dis6502; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -516,7 +516,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E638A4D61B8AAB0B00B71420 /* liblibv6502.a in Frameworks */,
+				E638A4D61B8AAB0B00B71420 /* libv6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -531,8 +531,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E638A4CE1B8AAAE500B71420 /* liblibld6502.a in Frameworks */,
-				E638A4CF1B8AAAE500B71420 /* liblibv6502.a in Frameworks */,
+				E638A4CE1B8AAAE500B71420 /* libld6502.a in Frameworks */,
+				E638A4CF1B8AAAE500B71420 /* libv6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,10 +540,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E638A4F41B8AAB4A00B71420 /* liblibas6502.a in Frameworks */,
-				E638A4F51B8AAB4A00B71420 /* liblibdis6502.a in Frameworks */,
-				E638A4F61B8AAB4A00B71420 /* liblibld6502.a in Frameworks */,
-				E638A4F71B8AAB4A00B71420 /* liblibv6502.a in Frameworks */,
+				E638A4F41B8AAB4A00B71420 /* libas6502.a in Frameworks */,
+				E638A4F51B8AAB4A00B71420 /* libdis6502.a in Frameworks */,
+				E638A4F61B8AAB4A00B71420 /* libld6502.a in Frameworks */,
+				E638A4F71B8AAB4A00B71420 /* libv6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,9 +551,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6178C491DE24DF100A75476 /* liblibdis6502.a in Frameworks */,
-				E6178C461DE24DE100A75476 /* liblibas6502.a in Frameworks */,
-				E638A4FA1B8AAB5600B71420 /* liblibld6502.a in Frameworks */,
+				E6178C491DE24DF100A75476 /* libdis6502.a in Frameworks */,
+				E6178C461DE24DE100A75476 /* libas6502.a in Frameworks */,
+				E638A4FA1B8AAB5600B71420 /* libld6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -561,10 +561,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E638A4D71B8AAB1A00B71420 /* liblibas6502.a in Frameworks */,
-				E638A4D81B8AAB1A00B71420 /* liblibdis6502.a in Frameworks */,
-				E638A4D91B8AAB1A00B71420 /* liblibld6502.a in Frameworks */,
-				E638A4DA1B8AAB1A00B71420 /* liblibv6502.a in Frameworks */,
+				E638A4D71B8AAB1A00B71420 /* libas6502.a in Frameworks */,
+				E638A4D81B8AAB1A00B71420 /* libdis6502.a in Frameworks */,
+				E638A4D91B8AAB1A00B71420 /* libld6502.a in Frameworks */,
+				E638A4DA1B8AAB1A00B71420 /* libv6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,9 +572,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6A306351B92FCDA00B259E8 /* liblibas6502.a in Frameworks */,
-				E6A3062F1B92FCC300B259E8 /* liblibdis6502.a in Frameworks */,
-				E6A306301B92FCC300B259E8 /* liblibv6502.a in Frameworks */,
+				E6A306351B92FCDA00B259E8 /* libas6502.a in Frameworks */,
+				E6A3062F1B92FCC300B259E8 /* libdis6502.a in Frameworks */,
+				E6A306301B92FCC300B259E8 /* libv6502.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,9 +589,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E638A4E31B8AAB3100B71420 /* liblibas6502.a in Frameworks */,
-				E638A4E41B8AAB3100B71420 /* liblibdis6502.a in Frameworks */,
-				E638A4E51B8AAB3100B71420 /* liblibv6502.a in Frameworks */,
+				E638A4E31B8AAB3100B71420 /* libas6502.a in Frameworks */,
+				E638A4E41B8AAB3100B71420 /* libdis6502.a in Frameworks */,
+				E638A4E51B8AAB3100B71420 /* libv6502.a in Frameworks */,
 				E6FF8996193FA292000DD391 /* libtermcap.dylib in Frameworks */,
 				E68C9A3E193FA00300AD9E00 /* libedit.dylib in Frameworks */,
 			);
@@ -697,10 +697,10 @@
 				E6FF8999193FA628000DD391 /* make */,
 				E6FF8998193FA615000DD391 /* xcodebuild */,
 				E6DCD5221A56A7DE002008BE /* tests */,
-				E638A4911B8AAA2300B71420 /* liblibv6502.a */,
-				E638A49E1B8AAA6300B71420 /* liblibas6502.a */,
-				E638A4AC1B8AAA7800B71420 /* liblibld6502.a */,
-				E638A4C81B8AAABC00B71420 /* liblibdis6502.a */,
+				E638A4911B8AAA2300B71420 /* libv6502.a */,
+				E638A49E1B8AAA6300B71420 /* libas6502.a */,
+				E638A4AC1B8AAA7800B71420 /* libld6502.a */,
+				E638A4C81B8AAABC00B71420 /* libdis6502.a */,
 				E6A306281B92F9F200B259E8 /* kmapgen */,
 			);
 			name = Products;
@@ -973,7 +973,7 @@
 			);
 			name = libv6502;
 			productName = libv6502;
-			productReference = E638A4911B8AAA2300B71420 /* liblibv6502.a */;
+			productReference = E638A4911B8AAA2300B71420 /* libv6502.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E638A49D1B8AAA6300B71420 /* libas6502 */ = {
@@ -991,7 +991,7 @@
 			);
 			name = libas6502;
 			productName = libas6502;
-			productReference = E638A49E1B8AAA6300B71420 /* liblibas6502.a */;
+			productReference = E638A49E1B8AAA6300B71420 /* libas6502.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E638A4AB1B8AAA7800B71420 /* libld6502 */ = {
@@ -1008,7 +1008,7 @@
 			);
 			name = libld6502;
 			productName = libld6502;
-			productReference = E638A4AC1B8AAA7800B71420 /* liblibld6502.a */;
+			productReference = E638A4AC1B8AAA7800B71420 /* libld6502.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E638A4C71B8AAABC00B71420 /* libdis6502 */ = {
@@ -1027,7 +1027,7 @@
 			);
 			name = libdis6502;
 			productName = libdis6502;
-			productReference = E638A4C81B8AAABC00B71420 /* liblibdis6502.a */;
+			productReference = E638A4C81B8AAABC00B71420 /* libdis6502.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		E640E21817DFDCC9009C0718 /* dis6502 */ = {
@@ -1612,7 +1612,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1643,7 +1642,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1667,7 +1665,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1698,7 +1695,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1722,7 +1718,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1753,7 +1748,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
