@@ -934,6 +934,15 @@ void as6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	uint8_t opcode, low, high;
 
 	as6502_token *head = as6502_lex(line, len);
+	if (!head) {
+		/* This function is intended to be a high-level parse-and-go style
+		 * convenience method. So, when garbage is thrown at the lexer, and
+		 * nothing useful comes out, we just rely on the lexer error being
+		 * printed, and don't attempt the execution.
+		 */
+		return;
+	}
+
 	as6502_instructionForExpression(&opcode, &low, &high, NULL, head);
 	as6502_tokenListDestroy(head);
 
