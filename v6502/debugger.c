@@ -174,11 +174,11 @@ static void _makeSymbolOfType(const char *command, size_t len, as6502_symbol_tab
 	free(name);
 }
 
-int v6502_compareDebuggerCommand(const char * command, size_t len, const char * literal) {
+int v6502_compareDebuggerCommand(const char *command, size_t len, const char *literal) {
 	char *cmd = strndup(command, len);
 
 	trimgreedytaild(cmd);
-	
+
 	for (size_t i = 0; i < len && cmd[i]; i++) {
 		if (cmd[i] != literal[i]) {
 			free(cmd);
