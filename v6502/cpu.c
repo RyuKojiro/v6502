@@ -56,51 +56,65 @@
 #pragma mark CPU Internal Instruction Execution
 
 static uint8_t _executeInPlaceASL(v6502_cpu *cpu, uint8_t operand) {
+	//! [impl_asl]
 	FLAG_CARRY_WITH_HIGH_BIT(operand);
 	operand <<= 1;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [impl_asl]
 }
 
 static uint8_t _executeInPlaceLSR(v6502_cpu *cpu, uint8_t operand) {
+	//! [impl_lsr]
 	FLAG_CARRY_WITH_LOW_BIT(operand);
 	operand >>= 1;
 	FLAG_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [impl_lsr]
 }
 
 static uint8_t _executeInPlaceROL(v6502_cpu *cpu, uint8_t operand) {
+	//! [impl_rol]
 	uint8_t carry = (cpu->sr & v6502_cpu_status_carry);
 	FLAG_CARRY_WITH_HIGH_BIT(operand);
 	operand = (operand << 1) | (carry);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [impl_rol]
 }
 
 static uint8_t _executeInPlaceROR(v6502_cpu *cpu, uint8_t operand) {
+	//! [impl_ror]
 	uint8_t carry = (cpu->sr & v6502_cpu_status_carry);
 	FLAG_CARRY_WITH_LOW_BIT(operand);
 	operand = (operand >> 1) | (carry << 7);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [impl_ror]
 }
 
 static void _executeInPlaceORA(v6502_cpu *cpu, uint8_t operand) {
+	//! [impl_ora]
 	cpu->ac |= operand;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
+	//! [impl_ora]
 }
 
 static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
+	//! [impl_and]
 	cpu->ac &= operand;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
+	//! [impl_and]
 }
 
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
+	//! [impl_adc]
 	uint8_t a = cpu->ac;
 	cpu->ac += operand + ((cpu->sr & v6502_cpu_status_carry) ? 1 : 0);
 	FLAG_OVERFLOW_WITH_COMPARISON(a, operand, cpu->ac);
 	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
+	//! [impl_adc]
 }
 
 static uint8_t _executeInPlaceDecrement(v6502_cpu *cpu, uint8_t operand) {

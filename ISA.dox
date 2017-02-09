@@ -1,0 +1,36 @@
+/**
+
+\page isa Instruction Set
+\tableofcontents
+
+\section isa_adc ADC - Add With Carry
+Opcodes
+\snippet v6502/cpu.h ADC
+Implementation
+\snippet v6502/cpu.c impl_adc
+
+\section isa_brk BRK - Break
+Opcodes
+\code
+	v6502_opcode_brk        = 0x00,
+\endcode
+
+\section isa_and AND - Bitwise And
+\snippet v6502/cpu.c impl_and
+
+\section isa_asl ASL - Arithmetic Shift Left
+\snippet v6502/cpu.c impl_asl
+
+\section isa_lsr LSR - Logical Shift Right
+\snippet v6502/cpu.c impl_lsr
+
+\section isa_ora ORA - Bitwise Or
+\snippet v6502/cpu.c impl_ora
+
+\section isa_rol ROL - Rotate Left
+\snippet v6502/cpu.c impl_rol
+
+\section isa_ror ROR - Rotate Right
+\snippet v6502/cpu.c impl_ror
+
+*/
