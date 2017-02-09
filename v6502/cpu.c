@@ -453,13 +453,17 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		// Single Byte Instructions
 		case v6502_opcode_brk: {
 			/** @todo TODO: Should this prevent the automatic pc shift? */
+			//! [impl_brk]
 			cpu->sr |= v6502_cpu_status_break;
 			cpu->sr |= v6502_cpu_status_interrupt;
+			//! [impl_brk]
 		} return;
 		case v6502_opcode_nop:
 			return;
 		case v6502_opcode_clc: {
+			//! [impl_clc]
 			cpu->sr &= ~v6502_cpu_status_carry;
+			//! [impl_clc]
 		} return;
 		case v6502_opcode_cld: {
 			cpu->sr &= ~v6502_cpu_status_decimal;
