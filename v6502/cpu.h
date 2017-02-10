@@ -57,25 +57,25 @@ typedef struct {
 /** @brief Instruction Set */
 typedef enum {
 	// Single Byte Instructions
-	v6502_opcode_brk		= 0x00,
-	v6502_opcode_nop		= 0xEA,
-	v6502_opcode_clc		= 0x18,
-	v6502_opcode_cld		= 0xD8,
-	v6502_opcode_cli		= 0x58,
-	v6502_opcode_clv		= 0xB8,
-	v6502_opcode_sec		= 0x38,
-	v6502_opcode_sed		= 0xF8,
-	v6502_opcode_sei		= 0x78,
-	v6502_opcode_dex		= 0xCA,
-	v6502_opcode_dey		= 0x88,
-	v6502_opcode_tax		= 0xAA,
-	v6502_opcode_tay		= 0xA8,
-	v6502_opcode_tsx		= 0xBA,
-	v6502_opcode_txa		= 0x8A,
-	v6502_opcode_txs		= 0x9A,
-	v6502_opcode_tya		= 0x98,
-	v6502_opcode_inx		= 0xE8,
-	v6502_opcode_iny		= 0xC8,
+	v6502_opcode_brk		= 0x00, // BRK - Break
+	v6502_opcode_nop		= 0xEA, // NOP - No-op
+	v6502_opcode_clc		= 0x18, // CLC - Clear Carry Flag
+	v6502_opcode_cld		= 0xD8, // CLD - Clear Decimal Flag
+	v6502_opcode_cli		= 0x58, // CLI - Clear Interrupt Flag
+	v6502_opcode_clv		= 0xB8, // CLV - Clear Overflow Flag
+	v6502_opcode_sec		= 0x38, // SEC - Set Carry Flag
+	v6502_opcode_sed		= 0xF8, // SED - Set Decimal Flag
+	v6502_opcode_sei		= 0x78, // SEI - Set Interrupt Flag
+	v6502_opcode_dex		= 0xCA, // DEX - Decrement X
+	v6502_opcode_dey		= 0x88, // DEY - Decrement Y
+	v6502_opcode_tax		= 0xAA, // TAX - Transfer Accumulator to X
+	v6502_opcode_tay		= 0xA8, // TAY - Transfer Accumulator to Y
+	v6502_opcode_tsx		= 0xBA, // TSX - Transfer Status Flags to X
+	v6502_opcode_txa		= 0x8A, // TXA - Transfer X to Accumulator
+	v6502_opcode_txs		= 0x9A, // TXS - Transfer X to Status Flags
+	v6502_opcode_tya		= 0x98, // TYA - Transfer Y to Accumulator
+	v6502_opcode_inx		= 0xE8, // INX - Increment X
+	v6502_opcode_iny		= 0xC8, // INY - Increment Y
 	
 	// Stack Instructions
 	v6502_opcode_jsr		= 0x20,
@@ -96,7 +96,7 @@ typedef enum {
 	v6502_opcode_bvc		= 0x50,
 	v6502_opcode_bvs		= 0x70,
 	
-	//! [ADC]
+	// ADC
 	v6502_opcode_adc_imm	= 0x69,
 	v6502_opcode_adc_zpg	= 0x65,
 	v6502_opcode_adc_zpgx	= 0x75,
@@ -105,7 +105,6 @@ typedef enum {
 	v6502_opcode_adc_absy	= 0x79,
 	v6502_opcode_adc_indx	= 0x61,
 	v6502_opcode_adc_indy	= 0x71,
-	//! [ADC]
 
 	// AND
 	v6502_opcode_and_imm	= 0x29,
