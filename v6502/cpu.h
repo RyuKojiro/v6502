@@ -78,23 +78,23 @@ typedef enum {
 	v6502_opcode_iny		= 0xC8, // INY - Increment Y
 	
 	// Stack Instructions
-	v6502_opcode_jsr		= 0x20,
-	v6502_opcode_rti		= 0x40,
-	v6502_opcode_rts		= 0x60,
-	v6502_opcode_pha		= 0x48,
-	v6502_opcode_php		= 0x08,
-	v6502_opcode_pla		= 0x68,
-	v6502_opcode_plp		= 0x28,
+	v6502_opcode_jsr		= 0x20, // JSR - Call Subroutine
+	v6502_opcode_rti		= 0x40, // RTI - Return from Interrupt
+	v6502_opcode_rts		= 0x60, // RTS - Return from Subroutine
+	v6502_opcode_pha		= 0x48, // PHA - Push Accumulator to Stack
+	v6502_opcode_php		= 0x08, // PHP - Push Program Counter to Stack
+	v6502_opcode_pla		= 0x68, // PLA - Pull Accumulator from Stack
+	v6502_opcode_plp		= 0x28, // PLP - Pull Program Counter from Stack
 
 	// Branch Instructions
-	v6502_opcode_bcc		= 0x90,
-	v6502_opcode_bcs		= 0xB0,
-	v6502_opcode_beq		= 0xF0,
-	v6502_opcode_bne		= 0xD0,
-	v6502_opcode_bmi		= 0x30,
-	v6502_opcode_bpl		= 0x10,
-	v6502_opcode_bvc		= 0x50,
-	v6502_opcode_bvs		= 0x70,
+	v6502_opcode_bcc		= 0x90, // BCC - Branch if Carry Clear
+	v6502_opcode_bcs		= 0xB0, // BCS - Branch if Carry Set
+	v6502_opcode_beq		= 0xF0, // BEQ - Branch if Equal (Zero Set)
+	v6502_opcode_bne		= 0xD0, // BNE - Branch if Not Equal (Zero Clear)
+	v6502_opcode_bmi		= 0x30, // BMI - Branch if Minus (Negative Set)
+	v6502_opcode_bpl		= 0x10, // BPL - Branch if Plus (Negative Clear)
+	v6502_opcode_bvc		= 0x50, // BVC - Branch if Overflow Clear
+	v6502_opcode_bvs		= 0x70, // BVS - Branch if Overflow Set
 	
 	// ADC
 	v6502_opcode_adc_imm	= 0x69,
