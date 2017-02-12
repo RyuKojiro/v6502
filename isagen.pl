@@ -35,11 +35,34 @@ while (my $line = <$f>) {
 	}
 }
 
+#foreach (sort keys %instructions) {
+#	my $x = $_;
+#	print "$_\n";
+#	foreach (sort keys $instructions{$x}) {
+#		print "\t$_ : $instructions{$x}{$_}\n";
+#	}
+#}
+
+open(my $out, '>', "ISA.dox");
+print $out "/**
+\\page isa Instruction Set Reference
+\\tableofcontents\n";
+
 foreach (sort keys %instructions) {
-	my $x = $_;
-	print "$_\n";
-	foreach (sort keys $instructions{$x}) {
-		print "\t$_ : $instructions{$x}{$_}\n";
+	my $nmemonic = $_;
+
+	print $out "\\section isa_$nmemonic $instructions{$nmemonic}{'comment'}\n";
+	print $out "Opcodes\n";
+	print $out "\\code\n";
+	foreach (sort keys $instructions{$nmemonic}) {
+		if ($_ ne 'comment') {
+			if ($_ eq 'imp') {
+				print $out "v6502_opcode_$nmemonic = $instructions{$nmemonic}{$_},\n";
+			}
+		}
 	}
+	print $out "\\endcode\n";
+	#print $out "Implementation\n";
 }
 
+print $out "*/\n"
