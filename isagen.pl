@@ -122,9 +122,7 @@ print $out "/**
 \\page isa Instruction Set Reference
 \\tableofcontents\n";
 
-foreach (sort keys %instructions) {
-	my $mnemonic = $_;
-
+foreach my $mnemonic (sort keys %instructions) {
 	print $out "\\section isa_$mnemonic $instructions{$mnemonic}{'comment'}\n";
 
 	print $out "<table><tr><th>Address Mode</th><th>Mnemonic</th><th>Opcode</th></tr>\n";
