@@ -137,7 +137,7 @@ foreach (sort keys %instructions) {
 	}
 	print $out "</td></tr>\n";
 	print $out "</table>\n";
-	print $out "<hr />\n";
+	print $out "<hr>\n"; # Self closing tags, and closed hr tags are not allowed by doxygen
 }
 
 print $out "*/\n"
