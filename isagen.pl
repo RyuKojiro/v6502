@@ -35,19 +35,19 @@ my %suffixes = (
 	"zpgy" => "*m8, Y",
 );
 my %extra_bytes = (
-	"imp"  => "",
-	"imm"  => "0xLL",
-	"acc"  => "",
-	"rel"  => "0xLL",
-	"abs"  => "0xLL 0xHH",
-	"absx" => "0xLL 0xHH",
-	"absy" => "0xLL 0xHH",
-	"ind"  => "0xLL 0xHH",
-	"indx" => "0xLL 0xHH",
-	"indy" => "0xLL 0xHH",
-	"zpg"  => "0xLL",
-	"zpgx" => "0xLL",
-	"zpgy" => "0xLL",
+	"imp"  => 0,
+	"imm"  => 1,
+	"acc"  => 0,
+	"rel"  => 1,
+	"abs"  => 2,
+	"absx" => 2,
+	"absy" => 2,
+	"ind"  => 2,
+	"indx" => 2,
+	"indy" => 2,
+	"zpg"  => 1,
+	"zpgx" => 1,
+	"zpgy" => 1,
 );
 my %implementations = (
 	"dec" => "Decrement",
@@ -131,7 +131,14 @@ foreach my $mnemonic (sort keys %instructions) {
 			print $out "<tr>";
 			print $out "<td>$address_modes{$_}</td>";
 			print $out "<td>$mnemonic $suffixes{$_}</td>";
-			print $out "<td>$instructions{$mnemonic}{$_} $extra_bytes{$_}</td>";
+			print $out "<td>$instructions{$mnemonic}{$_}";
+		   	if($extra_bytes{$_} >= 1) {
+				print $out " 0xLL";
+			}
+		   	if($extra_bytes{$_} >= 2) {
+				print $out " 0xHH";
+			}
+			print $out "</td>";
 			print $out "</tr>";
 		}
 	}
