@@ -75,7 +75,6 @@ while (my $line = <$f>) {
 			$addressmode = $2;
 		} else {
 			if ($mnemonic =~ /b[cvpemn][ciesql]/) {
-				print "$mnemonic relative?\n";
 				$addressmode = "rel";
 			}
 		}
@@ -96,6 +95,7 @@ while (my $line = <$f>) {
 	}
 }
 
+# Parse cpu.c into a table of implementations for those that are not snippet-able
 $cpu_source = "v6502/cpu.c";
 open $f, $cpu_source or die "Unable to read from cpu source";
 my $inside_instruction;
@@ -115,15 +115,6 @@ while (my $line = <$f>) {
 		$inside_instruction = $1;
 	}
 }
-
-#foreach (sort keys %source_implementations) {
-#	my $x = $_;
-#	print "$_\n";
-#	foreach (@{$source_implementations{$_}}) {
-#		print "$_";
-#	}
-#	print "\n";
-#}
 
 # Generate the doxygen file
 open(my $out, '>', "ISA.dox");
