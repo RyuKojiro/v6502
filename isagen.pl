@@ -56,6 +56,9 @@ my %implementations = (
 	"inc" => "Increment",
 	"inx" => "Increment",
 	"iny" => "Increment",
+	"cmp" => "Compare",
+	"cpx" => "Compare",
+	"cpy" => "Compare",
 );
 
 # Parse cpu.h into a table of instructions
