@@ -102,7 +102,9 @@ my $inside_instruction;
 my $lines;
 while (my $line = <$f>) {
 	if($line =~ /} return;/ and $inside_instruction) {
-		$source_implementations{$inside_instruction} = $lines;
+		if (not $implementations{$inside_instruction}) {
+			$source_implementations{$inside_instruction} = $lines;
+		}
 		undef $inside_instruction;
 		undef $lines;
 	}
