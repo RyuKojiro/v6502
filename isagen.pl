@@ -68,14 +68,14 @@ open my $f, $cpu_source or die "Unable to read from cpu header";
 my $comment;
 while (my $line = <$f>) {
 	if($line =~ /v6502_opcode_([[:alpha:]]+)_?([[:alpha:]]*)\s*=\s*(0x[[:xdigit:]]{2}),\s*\/{0,2}\s+(.*)/) {
-		my $nmemonic = $1;
+		my $mnemonic = $1;
 		my $opcode = $3;
 		my $addressmode = "imp";
 		if($2) {
 			$addressmode = $2;
 		} else {
-			if ($nmemonic =~ /b[cvpemn][ciesql]/) {
-				print "$nmemonic relative?\n";
+			if ($mnemonic =~ /b[cvpemn][ciesql]/) {
+				print "$mnemonic relative?\n";
 				$addressmode = "rel";
 			}
 		}
@@ -83,9 +83,9 @@ while (my $line = <$f>) {
 			$comment = $4;
 		}
 
-		$instructions{$nmemonic}{$addressmode} = $opcode;
+		$instructions{$mnemonic}{$addressmode} = $opcode;
 		if($comment) {
-			$instructions{$nmemonic}{'comment'} = $comment;
+			$instructions{$mnemonic}{'comment'} = $comment;
 		}
 		undef $comment;
 	}
@@ -112,17 +112,17 @@ print $out "/**
 \\tableofcontents\n";
 
 foreach (sort keys %instructions) {
-	my $nmemonic = $_;
+	my $mnemonic = $_;
 
-	print $out "\\section isa_$nmemonic $instructions{$nmemonic}{'comment'}\n";
+	print $out "\\section isa_$mnemonic $instructions{$mnemonic}{'comment'}\n";
 
-	print $out "<table><tr><th>Address Mode</th><th>Nmemonic</th><th>Opcode</th></tr>\n";
-	foreach (sort keys $instructions{$nmemonic}) {
+	print $out "<table><tr><th>Address Mode</th><th>Mnemonic</th><th>Opcode</th></tr>\n";
+	foreach (sort keys $instructions{$mnemonic}) {
 		if ($_ ne 'comment') {
 			print $out "<tr>";
 			print $out "<td>$address_modes{$_}</td>";
-			print $out "<td>$nmemonic $suffixes{$_}</td>";
-			print $out "<td>$instructions{$nmemonic}{$_} $extra_bytes{$_}</td>";
+			print $out "<td>$mnemonic $suffixes{$_}</td>";
+			print $out "<td>$instructions{$mnemonic}{$_} $extra_bytes{$_}</td>";
 			print $out "</tr>";
 		}
 	}
@@ -130,10 +130,10 @@ foreach (sort keys %instructions) {
 
 	print $out "<table><tr><th>Implementation</th></tr>\n";
 	print $out "<tr><td>\n";
-	if ($implementations{$nmemonic}) {
-		print $out "\\snippet v6502/cpu.c $implementations{$nmemonic}\n";
+	if ($implementations{$mnemonic}) {
+		print $out "\\snippet v6502/cpu.c $implementations{$mnemonic}\n";
 	} else {
-		print $out "\\snippet v6502/cpu.c $nmemonic\n";
+		print $out "\\snippet v6502/cpu.c $mnemonic\n";
 	}
 	print $out "</td></tr>\n";
 	print $out "</table>\n";
