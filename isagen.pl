@@ -8,6 +8,7 @@ my %address_modes = (
 	"imp"  => "Implied",
 	"imm"  => "Immediate",
 	"acc"  => "Accumulator",
+	"rel"  => "Relative",
 	"abs"  => "Absolute",
 	"absx" => "Absolute + X",
 	"absy" => "Absolute + Y",
@@ -18,6 +19,22 @@ my %address_modes = (
 	"zpgx" => "Zeropage + X",
 	"zpgy" => "Zeropage + Y",
 );
+my %suffixes = (
+	"imp"  => "",
+	"imm"  => "#imm8",
+	"acc"  => "A",
+	"rel"  => "m8",
+	"abs"  => "m16",
+	"absx" => "m16, X",
+	"absy" => "m16, Y",
+	"ind"  => "(m16)",
+	"indx" => "(m16, X)",
+	"indy" => "(m16), Y",
+	"zpg"  => "*m8",
+	"zpgx" => "*m8, X",
+	"zpgy" => "*m8, Y",
+);
+
 
 # Parse cpu.h into a table of instructions
 my $cpu_source = "v6502/cpu.h";
@@ -57,6 +74,8 @@ while (my $line = <$f>) {
 #	}
 #}
 
+
+# Generate the doxygen file
 open(my $out, '>', "ISA.dox");
 print $out "/**
 \\page isa Instruction Set Reference
@@ -67,11 +86,12 @@ foreach (sort keys %instructions) {
 
 	print $out "\\section isa_$nmemonic $instructions{$nmemonic}{'comment'}\n";
 	print $out "Opcodes\n";
-	print $out "<table><tr><th>Address Mode</th><th>Opcode</th></tr>\n";
+	print $out "<table><tr><th>Address Mode</th><th>Nmemonic</th><th>Opcode</th></tr>\n";
 	foreach (sort keys $instructions{$nmemonic}) {
 		if ($_ ne 'comment') {
 			print $out "<tr>";
 			print $out "<td>$address_modes{$_}</td>";
+			print $out "<td>$nmemonic $suffixes{$_}</td>";
 			print $out "<td>$instructions{$nmemonic}{$_}</td>";
 			print $out "</tr>";
 		}
