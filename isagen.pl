@@ -60,11 +60,11 @@ my %implementations = (
 	"cpx" => "Compare",
 	"cpy" => "Compare",
 );
+my %source_implementations;
 
 # Parse cpu.h into a table of instructions
 my $cpu_source = "v6502/cpu.h";
 open my $f, $cpu_source or die "Unable to read from cpu header";
-
 my $comment;
 while (my $line = <$f>) {
 	if($line =~ /v6502_opcode_([[:alpha:]]+)_?([[:alpha:]]*)\s*=\s*(0x[[:xdigit:]]{2}),\s*\/{0,2}\s+(.*)/) {
@@ -96,14 +96,34 @@ while (my $line = <$f>) {
 	}
 }
 
-#foreach (sort keys %instructions) {
+$cpu_source = "v6502/cpu.c";
+open $f, $cpu_source or die "Unable to read from cpu source";
+my $inside_instruction;
+my $lines;
+while (my $line = <$f>) {
+	if($line =~ /} return;/ and $inside_instruction) {
+		$source_implementations{$inside_instruction} = $lines;
+		undef $inside_instruction;
+		undef $lines;
+	}
+
+	if($inside_instruction) {
+		push @$lines, $line;
+	}
+
+	if($line =~ /case v6502_opcode_([[:alpha:]]{3}): {/) {
+		$inside_instruction = $1;
+	}
+}
+
+#foreach (sort keys %source_implementations) {
 #	my $x = $_;
 #	print "$_\n";
-#	foreach (sort keys $instructions{$x}) {
-#		print "\t$_ : $instructions{$x}{$_}\n";
+#	foreach (@{$source_implementations{$_}}) {
+#		print "$_";
 #	}
+#	print "\n";
 #}
-
 
 # Generate the doxygen file
 open(my $out, '>', "ISA.dox");
@@ -130,10 +150,18 @@ foreach (sort keys %instructions) {
 
 	print $out "<table><tr><th>Implementation</th></tr>\n";
 	print $out "<tr><td>\n";
-	if ($implementations{$mnemonic}) {
-		print $out "\\snippet v6502/cpu.c $implementations{$mnemonic}\n";
+	if ($source_implementations{$mnemonic}) {
+		print $out "\\code\n";
+		foreach (@{$source_implementations{$mnemonic}}) {
+			print $out "$_";
+		}
+		print $out "\\endcode\n";
 	} else {
-		print $out "\\snippet v6502/cpu.c $mnemonic\n";
+		if ($implementations{$mnemonic}) {
+			print $out "\\snippet v6502/cpu.c $implementations{$mnemonic}\n";
+		} else {
+			print $out "\\snippet v6502/cpu.c $mnemonic\n";
+		}
 	}
 	print $out "</td></tr>\n";
 	print $out "</table>\n";
