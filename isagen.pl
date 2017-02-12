@@ -49,7 +49,14 @@ my %extra_bytes = (
 	"zpgx" => "0xLL",
 	"zpgy" => "0xLL",
 );
-
+my %implementations = (
+	"dec" => "Decrement",
+	"dex" => "Decrement",
+	"dey" => "Decrement",
+	"inc" => "Increment",
+	"inx" => "Increment",
+	"iny" => "Increment",
+);
 
 # Parse cpu.h into a table of instructions
 my $cpu_source = "v6502/cpu.h";
@@ -105,6 +112,7 @@ foreach (sort keys %instructions) {
 	my $nmemonic = $_;
 
 	print $out "\\section isa_$nmemonic $instructions{$nmemonic}{'comment'}\n";
+
 	print $out "<table><tr><th>Address Mode</th><th>Nmemonic</th><th>Opcode</th></tr>\n";
 	foreach (sort keys $instructions{$nmemonic}) {
 		if ($_ ne 'comment') {
@@ -116,7 +124,17 @@ foreach (sort keys %instructions) {
 		}
 	}
 	print $out "</table>\n";
-	#print $out "Implementation\n";
+
+	print $out "<table><tr><th>Implementation</th></tr>\n";
+	print $out "<tr><td>\n";
+	if ($implementations{$nmemonic}) {
+		print $out "\\snippet v6502/cpu.c $implementations{$nmemonic}\n";
+	} else {
+		print $out "\\snippet v6502/cpu.c $nmemonic\n";
+	}
+	print $out "</td></tr>\n";
+	print $out "</table>\n";
+	print $out "<hr />\n";
 }
 
 print $out "*/\n"
