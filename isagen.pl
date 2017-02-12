@@ -34,6 +34,21 @@ my %suffixes = (
 	"zpgx" => "*m8, X",
 	"zpgy" => "*m8, Y",
 );
+my %extra_bytes = (
+	"imp"  => "",
+	"imm"  => "0xLL",
+	"acc"  => "",
+	"rel"  => "0xLL",
+	"abs"  => "0xLL 0xHH",
+	"absx" => "0xLL 0xHH",
+	"absy" => "0xLL 0xHH",
+	"ind"  => "0xLL 0xHH",
+	"indx" => "0xLL 0xHH",
+	"indy" => "0xLL 0xHH",
+	"zpg"  => "0xLL",
+	"zpgx" => "0xLL",
+	"zpgy" => "0xLL",
+);
 
 
 # Parse cpu.h into a table of instructions
@@ -90,14 +105,13 @@ foreach (sort keys %instructions) {
 	my $nmemonic = $_;
 
 	print $out "\\section isa_$nmemonic $instructions{$nmemonic}{'comment'}\n";
-	print $out "Opcodes\n";
 	print $out "<table><tr><th>Address Mode</th><th>Nmemonic</th><th>Opcode</th></tr>\n";
 	foreach (sort keys $instructions{$nmemonic}) {
 		if ($_ ne 'comment') {
 			print $out "<tr>";
 			print $out "<td>$address_modes{$_}</td>";
 			print $out "<td>$nmemonic $suffixes{$_}</td>";
-			print $out "<td>$instructions{$nmemonic}{$_}</td>";
+			print $out "<td>$instructions{$nmemonic}{$_} $extra_bytes{$_}</td>";
 			print $out "</tr>";
 		}
 	}
