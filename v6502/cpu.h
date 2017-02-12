@@ -142,7 +142,7 @@ typedef enum {
 	v6502_opcode_cpx_zpg	= 0xE4,
 	v6502_opcode_cpx_abs	= 0xEC,
 
-	// CPX - Compare Y
+	// CPY - Compare Y
 	v6502_opcode_cpy_imm	= 0xC0,
 	v6502_opcode_cpy_zpg	= 0xC4,
 	v6502_opcode_cpy_abs	= 0xCC,
