@@ -4,6 +4,20 @@ use strict;
 use warnings;
 
 my %instructions;
+my %address_modes = (
+	"imp"  => "Implied",
+	"imm"  => "Immediate",
+	"acc"  => "Accumulator",
+	"abs"  => "Absolute",
+	"absx" => "Absolute + X",
+	"absy" => "Absolute + Y",
+	"ind"  => "Indirect",
+	"indx" => "Indirect + X",
+	"indy" => "Indirect + Y",
+	"zpg"  => "Zeropage",
+	"zpgx" => "Zeropage + X",
+	"zpgy" => "Zeropage + Y",
+);
 
 # Parse cpu.h into a table of instructions
 my $cpu_source = "v6502/cpu.h";
@@ -53,15 +67,16 @@ foreach (sort keys %instructions) {
 
 	print $out "\\section isa_$nmemonic $instructions{$nmemonic}{'comment'}\n";
 	print $out "Opcodes\n";
-	print $out "\\code\n";
+	print $out "<table><tr><th>Address Mode</th><th>Opcode</th></tr>\n";
 	foreach (sort keys $instructions{$nmemonic}) {
 		if ($_ ne 'comment') {
-			if ($_ eq 'imp') {
-				print $out "v6502_opcode_$nmemonic = $instructions{$nmemonic}{$_},\n";
-			}
+			print $out "<tr>";
+			print $out "<td>$address_modes{$_}</td>";
+			print $out "<td>$instructions{$nmemonic}{$_}</td>";
+			print $out "</tr>";
 		}
 	}
-	print $out "\\endcode\n";
+	print $out "</table>\n";
 	#print $out "Implementation\n";
 }
 
