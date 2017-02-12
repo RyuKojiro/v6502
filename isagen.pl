@@ -48,6 +48,11 @@ while (my $line = <$f>) {
 		my $addressmode = "imp";
 		if($2) {
 			$addressmode = $2;
+		} else {
+			if ($nmemonic =~ /b[cvpemn][ciesql]/) {
+				print "$nmemonic relative?\n";
+				$addressmode = "rel";
+			}
 		}
 		if($4) {
 			$comment = $4;
