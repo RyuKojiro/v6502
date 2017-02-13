@@ -21,7 +21,7 @@ my %address_modes = (
 );
 my %suffixes = (
 	"imp"  => "",
-	"imm"  => "#imm8",
+	"imm"  => "\\#imm8",
 	"acc"  => "A",
 	"rel"  => "m8",
 	"abs"  => "m16",
