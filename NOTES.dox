@@ -35,12 +35,12 @@ subsections. (L) indicates that a module is a member of its library target.
 		- \ref codegen
 	- \ref error.h (L)
 		- \ref as_error
-- \subpage ld (ld6502)
 	- \ref symbols.h (L)
 		- \ref sym_lifecycle
 		- \ref sym_access
 		- \ref sym_ez
 		- \ref sym_rep
+- \subpage ld (ld6502)
 	- \ref object.h (L)
 		- \ref obj_lifecycle
 		- \ref obj_access
