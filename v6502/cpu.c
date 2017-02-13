@@ -56,76 +56,98 @@
 #pragma mark CPU Internal Instruction Execution
 
 static uint8_t _executeInPlaceASL(v6502_cpu *cpu, uint8_t operand) {
+	//! [asl]
 	FLAG_CARRY_WITH_HIGH_BIT(operand);
 	operand <<= 1;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [asl]
 }
 
 static uint8_t _executeInPlaceLSR(v6502_cpu *cpu, uint8_t operand) {
+	//! [lsr]
 	FLAG_CARRY_WITH_LOW_BIT(operand);
 	operand >>= 1;
 	FLAG_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [lsr]
 }
 
 static uint8_t _executeInPlaceROL(v6502_cpu *cpu, uint8_t operand) {
+	//! [rol]
 	uint8_t carry = (cpu->sr & v6502_cpu_status_carry);
 	FLAG_CARRY_WITH_HIGH_BIT(operand);
 	operand = (operand << 1) | (carry);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [rol]
 }
 
 static uint8_t _executeInPlaceROR(v6502_cpu *cpu, uint8_t operand) {
+	//! [ror]
 	uint8_t carry = (cpu->sr & v6502_cpu_status_carry);
 	FLAG_CARRY_WITH_LOW_BIT(operand);
 	operand = (operand >> 1) | (carry << 7);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 	return operand;
+	//! [ror]
 }
 
 static void _executeInPlaceORA(v6502_cpu *cpu, uint8_t operand) {
+	//! [ora]
 	cpu->ac |= operand;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
+	//! [ora]
 }
 
 static void _executeInPlaceAND(v6502_cpu *cpu, uint8_t operand) {
+	//! [and]
 	cpu->ac &= operand;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
+	//! [and]
 }
 
 static void _executeInPlaceADC(v6502_cpu *cpu, uint8_t operand) {
+	//! [adc]
 	uint8_t a = cpu->ac;
 	cpu->ac += operand + ((cpu->sr & v6502_cpu_status_carry) ? 1 : 0);
 	FLAG_OVERFLOW_WITH_COMPARISON(a, operand, cpu->ac);
 	FLAG_CARRY_WITH_COMPARISON(cpu->ac, operand);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
+	//! [adc]
 }
 
 static uint8_t _executeInPlaceDecrement(v6502_cpu *cpu, uint8_t operand) {
+	//! [Decrement]
 	operand--;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
+	//! [Decrement]
 	return operand;
 }
 
 static uint8_t _executeInPlaceIncrement(v6502_cpu *cpu, uint8_t operand) {
+	//! [Increment]
 	operand++;
 	FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
+	//! [Increment]
 	return operand;
 }
 
 static void _executeInPlaceCompare(v6502_cpu *cpu, uint8_t reg, uint8_t operand) {
+	//! [Compare]
 	uint8_t result = reg - operand;
 	FLAG_CARRY_WITH_COMPARISON(operand, reg);
 	FLAG_NEG_AND_ZERO_WITH_RESULT(result);
+	//! [Compare]
 }
 
 static void _executeInPlaceBIT(v6502_cpu *cpu, uint8_t operand) {
+	//! [BIT]
 	uint8_t result = cpu->ac & operand;
 	cpu->sr &= ~(v6502_cpu_status_overflow | v6502_cpu_status_negative);
 	cpu->sr |= (operand & (v6502_cpu_status_overflow | v6502_cpu_status_negative));
 	FLAG_ZERO_WITH_RESULT(result);
+	//! [BIT]
 }
 
 #pragma mark -
