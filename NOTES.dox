@@ -8,6 +8,7 @@ subsections. (L) indicates that a module is a member of its library target.
 
 - \subpage vm (v6502)
 	- \ref cpu.h (L)
+		- \ref isa
 		- \ref cpu_lifecycle
 		- \ref cpu_exec
 		- \ref cpu_kmap
