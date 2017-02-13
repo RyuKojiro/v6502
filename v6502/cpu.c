@@ -142,12 +142,12 @@ static void _executeInPlaceCompare(v6502_cpu *cpu, uint8_t reg, uint8_t operand)
 }
 
 static void _executeInPlaceBIT(v6502_cpu *cpu, uint8_t operand) {
-	//! [BIT]
+	//! [bit]
 	uint8_t result = cpu->ac & operand;
 	cpu->sr &= ~(v6502_cpu_status_overflow | v6502_cpu_status_negative);
 	cpu->sr |= (operand & (v6502_cpu_status_overflow | v6502_cpu_status_negative));
 	FLAG_ZERO_WITH_RESULT(result);
-	//! [BIT]
+	//! [bit]
 }
 
 #pragma mark -
