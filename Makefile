@@ -9,3 +9,7 @@ all clean cleandir depend analyze install uninstall lib:
 		rm -rf $(PACKAGE_DIR) ; \
 		rm -f $(PACKAGE_NAME) ; \
 	fi
+
+docs:
+	./isagen.pl
+	doxygen
