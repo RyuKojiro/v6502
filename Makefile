@@ -11,5 +11,6 @@ all clean cleandir depend analyze install uninstall lib:
 	fi
 
 docs:
+	$(MAKE) -C kmapgen
 	./isagen.pl
 	doxygen
