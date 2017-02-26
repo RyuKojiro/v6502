@@ -114,6 +114,23 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 \endverbatim
 
+\section Notice
+
+There are few foreign sources included in the tests directory.
+I do not attempt to claim them as my own.
+
+- wozmon.s\n
+This is the original "Woz Monitor" for the Apple 1, transcribed by me, by hand, from the original Apple 1 manual, which included the full source.\n
+http://archive.computerhistory.org/resources/text/Apple/Apple.AppleI.1976.102646518.pdf
+
+- wozfp1.s\n
+These are the original floating point routines written by Roy Rankin and Steve Wozniak for the 6502.\n
+http://www.6502.org/source/floats/wozfp1.txt
+
+- snake.s\n
+This is the snake game implementation included as part of the easy6502 project, by skilldrick.\n
+https://github.com/skilldrick/easy6502/blob/gh-pages/_includes/snake.html
+
 \page cpu_kmap Karnaugh Map Analysis
 
 <a href="https://en.wikipedia.org/wiki/Karnaugh_map">Karnaugh Maps</a> are used in v6502's CPU design to optimize and reduce large switch statements, which result in large jump tables, to a small number of bitwise operations. These all also have unit tests to make sure that the K-map reduction is sane. These maps make the hardware design decisions of the MOS 6502 microprocessor very quickly visually apparrent in a way that is easy to reduce based on goal. For example, it is obvious that the length of an instruction only relies on the high nibble if the low nibble is 0 or 9. This reduces what would otherwise be a giant switch statement to a few conditionals.
