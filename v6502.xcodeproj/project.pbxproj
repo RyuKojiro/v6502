@@ -15,7 +15,6 @@
 			dependencies = (
 				E6178C351DE24D7E00A75476 /* PBXTargetDependency */,
 				E6178C371DE24D7E00A75476 /* PBXTargetDependency */,
-				E6178C391DE24D7E00A75476 /* PBXTargetDependency */,
 				E6178C3B1DE24D7E00A75476 /* PBXTargetDependency */,
 				E6178C3D1DE24D7E00A75476 /* PBXTargetDependency */,
 				E6178C3F1DE24D7E00A75476 /* PBXTargetDependency */,
@@ -31,11 +30,6 @@
 		E6178C461DE24DE100A75476 /* libas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* libas6502.a */; };
 		E6178C491DE24DF100A75476 /* libdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* libdis6502.a */; };
 		E61FA7551BAAB5B80022E2EB /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = E61FA7531BAAB5B80022E2EB /* debugger.c */; };
-		E622935D175D0C4000AD2866 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E622935A175D0C4000AD2866 /* main.c */; };
-		E622935E175D0C4000AD2866 /* video.c in Sources */ = {isa = PBXBuildFile; fileRef = E622935B175D0C4000AD2866 /* video.c */; };
-		E622936E175D435300AD2866 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
-		E622936F175D435600AD2866 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
-		E62293D8175DB40400AD2866 /* state.c in Sources */ = {isa = PBXBuildFile; fileRef = E62293D7175DB40400AD2866 /* state.c */; };
 		E638A4951B8AAA3500B71420 /* textmode.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B04B5F1974855100F8690A /* textmode.c */; };
 		E638A4961B8AAA3500B71420 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E638A4971B8AAA3500B71420 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
@@ -126,13 +120,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = E64198E017373A5A00D0EE25;
 			remoteInfo = as6502;
-		};
-		E6178C381DE24D7E00A75476 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E652129E1704B90D009CE919 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E622934A175BB52900AD2866;
-			remoteInfo = easy6502;
 		};
 		E6178C3A1DE24D7E00A75476 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -340,15 +327,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		E6229349175BB52900AD2866 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		E640E21717DFDCC9009C0718 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -412,14 +390,6 @@
 		E61D402E1799B5A1009BA763 /* overflow.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = overflow.s; sourceTree = "<group>"; };
 		E61FA7531BAAB5B80022E2EB /* debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debugger.c; sourceTree = "<group>"; };
 		E61FA7541BAAB5B80022E2EB /* debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugger.h; sourceTree = "<group>"; };
-		E622934B175BB52900AD2866 /* easy6502 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = easy6502; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6229359175D0C4000AD2866 /* easy6502_xcode.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = easy6502_xcode.1; path = easy6502/easy6502_xcode.1; sourceTree = SOURCE_ROOT; };
-		E622935A175D0C4000AD2866 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = easy6502/main.c; sourceTree = SOURCE_ROOT; };
-		E622935B175D0C4000AD2866 /* video.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = video.c; path = easy6502/video.c; sourceTree = SOURCE_ROOT; };
-		E622935C175D0C4000AD2866 /* video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = video.h; path = easy6502/video.h; sourceTree = SOURCE_ROOT; };
-		E6229370175D4AF100AD2866 /* state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = state.h; path = easy6502/state.h; sourceTree = SOURCE_ROOT; };
-		E62293D7175DB40400AD2866 /* state.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = state.c; path = easy6502/state.c; sourceTree = SOURCE_ROOT; };
-		E62293D9175DB92400AD2866 /* easy_test.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; name = easy_test.s; path = easy6502/easy_test.s; sourceTree = SOURCE_ROOT; };
 		E6305FCB1C823770007076AA /* wozmon.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = wozmon.s; sourceTree = "<group>"; };
 		E638A4911B8AAA2300B71420 /* libv6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libv6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E638A49E1B8AAA6300B71420 /* libas6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libas6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -464,7 +434,6 @@
 		E6817C2C1855658B008A58A9 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = object.h; sourceTree = "<group>"; };
 		E6828B2D1992E0C900442439 /* wozfp1.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = wozfp1.s; sourceTree = "<group>"; };
 		E6828B2F19933FBD00442439 /* color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = color.h; path = as6502/color.h; sourceTree = "<group>"; };
-		E68821CD175DBC2300BA1FE2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = easy6502/Makefile; sourceTree = SOURCE_ROOT; };
 		E68C9A3D193FA00300AD9E00 /* libedit.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libedit.dylib; path = /usr/lib/libedit.dylib; sourceTree = "<absolute>"; };
 		E69684B31DF92A5A00D46D34 /* ld6502.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ld6502.1; sourceTree = "<group>"; };
 		E6A079101737321800E0027B /* NOTES.dox */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTES.dox; sourceTree = "<group>"; };
@@ -498,13 +467,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		E6229348175BB52900AD2866 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E638A48E1B8AAA2300B71420 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -617,22 +579,6 @@
 			path = tests;
 			sourceTree = "<group>";
 		};
-		E622934C175BB52900AD2866 /* easy6502 */ = {
-			isa = PBXGroup;
-			children = (
-				E68821CD175DBC2300BA1FE2 /* Makefile */,
-				E6229359175D0C4000AD2866 /* easy6502_xcode.1 */,
-				E622935A175D0C4000AD2866 /* main.c */,
-				E6229370175D4AF100AD2866 /* state.h */,
-				E62293D7175DB40400AD2866 /* state.c */,
-				E622935C175D0C4000AD2866 /* video.h */,
-				E622935B175D0C4000AD2866 /* video.c */,
-				E62293D9175DB92400AD2866 /* easy_test.s */,
-			);
-			name = easy6502;
-			path = "easy6502-xcode";
-			sourceTree = "<group>";
-		};
 		E640E21117DFD81B009C0718 /* dis6502 */ = {
 			isa = PBXGroup;
 			children = (
@@ -682,7 +628,6 @@
 				E666A8111715D1A800EDBF95 /* as6502 */,
 				E640E21117DFD81B009C0718 /* dis6502 */,
 				E65212A81704B90D009CE919 /* v6502 */,
-				E622934C175BB52900AD2866 /* easy6502 */,
 				E61D402B1799B5A1009BA763 /* Tests */,
 				E640E21417DFD828009C0718 /* Documentation */,
 				E6FF899A193FA645000DD391 /* Libraries */,
@@ -775,7 +720,6 @@
 			isa = PBXGroup;
 			children = (
 				E64198E117373A5A00D0EE25 /* as6502 */,
-				E622934B175BB52900AD2866 /* easy6502 */,
 				E6FB94AB1791140B0053EB7E /* v6502 */,
 				E640E21917DFDCC9009C0718 /* dis6502 */,
 				E640F6D9182D95B600A4C6A5 /* ld6502 */,
@@ -942,23 +886,6 @@
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
-		E622934A175BB52900AD2866 /* easy6502 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E6229351175BB52900AD2866 /* Build configuration list for PBXNativeTarget "easy6502" */;
-			buildPhases = (
-				E6229347175BB52900AD2866 /* Sources */,
-				E6229348175BB52900AD2866 /* Frameworks */,
-				E6229349175BB52900AD2866 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = easy6502;
-			productName = "easy6502-xcode";
-			productReference = E622934B175BB52900AD2866 /* easy6502 */;
-			productType = "com.apple.product-type.tool";
-		};
 		E638A4901B8AAA2300B71420 /* libv6502 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E638A4921B8AAA2300B71420 /* Build configuration list for PBXNativeTarget "libv6502" */;
@@ -1209,7 +1136,6 @@
 			targets = (
 				E6B33F1E17597E9300F0D8C2 /* Doxygen */,
 				E64198E017373A5A00D0EE25 /* as6502 */,
-				E622934A175BB52900AD2866 /* easy6502 */,
 				E6FB94AA1791140B0053EB7E /* v6502 */,
 				E640E21817DFDCC9009C0718 /* dis6502 */,
 				E640F6D8182D95B600A4C6A5 /* ld6502 */,
@@ -1230,18 +1156,6 @@
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		E6229347175BB52900AD2866 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E622935D175D0C4000AD2866 /* main.c in Sources */,
-				E622935E175D0C4000AD2866 /* video.c in Sources */,
-				E622936F175D435600AD2866 /* mem.c in Sources */,
-				E622936E175D435300AD2866 /* cpu.c in Sources */,
-				E62293D8175DB40400AD2866 /* state.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E638A48D1B8AAA2300B71420 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1362,11 +1276,6 @@
 			isa = PBXTargetDependency;
 			target = E64198E017373A5A00D0EE25 /* as6502 */;
 			targetProxy = E6178C361DE24D7E00A75476 /* PBXContainerItemProxy */;
-		};
-		E6178C391DE24D7E00A75476 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E622934A175BB52900AD2866 /* easy6502 */;
-			targetProxy = E6178C381DE24D7E00A75476 /* PBXContainerItemProxy */;
 		};
 		E6178C3B1DE24D7E00A75476 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1528,21 +1437,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = N32V9A5A37;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		E6229352175BB52900AD2866 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		E6229353175BB52900AD2866 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2377,15 +2271,6 @@
 			buildConfigurations = (
 				E6178C311DE24D7000A75476 /* Debug */,
 				E6178C321DE24D7000A75476 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E6229351175BB52900AD2866 /* Build configuration list for PBXNativeTarget "easy6502" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E6229352175BB52900AD2866 /* Debug */,
-				E6229353175BB52900AD2866 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
