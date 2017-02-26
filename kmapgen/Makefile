@@ -5,13 +5,17 @@ PROG=		kmapgen
 SRCS=		main.c
 LDFLAGS+=	-ledit -lcurses -ldis6502 -las6502 -lv6502
 OBJS=		$(SRCS:.c=.o)
+HTML=		kmap.html
 
-all: $(PROG)
+all: $(HTML)
+
+$(HTML): $(PROG)
+	./$(PROG) > $(HTML)
 
 $(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502)
 	$(CC) $(OBJS) -o $(PROG) $(LDFLAGS)
 
 clean:
-	rm -f $(PROG) $(OBJS)
+	rm -f $(HTML) $(PROG) $(OBJS)
 
 include ../libtargets.mk
