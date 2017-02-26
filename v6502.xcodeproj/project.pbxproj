@@ -1083,7 +1083,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0800;
-				ORGANIZATIONNAME = "Hello-Channel, LLC";
+				ORGANIZATIONNAME = "Daniel Loffgren";
 				TargetAttributes = {
 					E6178C301DE24D7000A75476 = {
 						CreatedOnToolsVersion = 8.0;
