@@ -64,8 +64,8 @@ directory.
 
 Currently, running make in the top level directory will automatically make all
 subdirectory targets with the final one being the tests directory. Inside the
-tests directory are unit tests and actual test runs of the assembler,
-disassembler, interactive VM, and a compiled set of C-based unit tests.
+tests directory are actual test runs of the assembler, disassembler, interactive
+reference VM, and a compiled set of C-based unit tests.
 
 v6502 has been successfully built and tested without modification on the
 following platforms:
