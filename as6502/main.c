@@ -338,7 +338,7 @@ int main(int argc, char * const argv[]) {
 				printDot = YES;
 			} break;
 			case 'o': {
-				outName = strdup(optarg);
+				outName = optarg;
 			} break;
 			case '?':
 			default:
@@ -352,7 +352,7 @@ int main(int argc, char * const argv[]) {
 	if (argc - i == 0) {
 		currentFileName = "stdin";
 		currentLineNum = 0;
-		
+
 		as6502_warn(0, 0, "Assembling from stdin does not support symbols");
 		
 		if (makeSymScript) {
@@ -371,11 +371,15 @@ int main(int argc, char * const argv[]) {
 			}
 			
 			currentFileName = argv[i];
+			int generatedOutName = NO;
 			if (!outName) {
 				outName = outNameFromInName(argv[i], EXTENSION_OBJECT);
+				generatedOutName = YES;
 			}
 			out = fopen(outName, "w");
-			free(outName);
+			if (generatedOutName) {
+				free(outName);
+			}
 			outName = NULL;
 
 			if (makeSymScript) {
