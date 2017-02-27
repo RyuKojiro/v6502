@@ -93,6 +93,6 @@ $(DIS):
 	cd $(DISDIR) ; make
 
 clean:
-	rm -f *.o snake.dis.s snake.tmp.crc snake2.s compiledTestsExecutable
+	rm -f *.o *.tmp.crc snake.dis.s snake2.s compiledTestsExecutable
 
 include ../libtargets.mk
