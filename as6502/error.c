@@ -26,6 +26,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <term.h>
+#include <assert.h>
 
 #include "error.h"
 #include "color.h"
@@ -108,6 +109,7 @@ void as6502_note(unsigned long lineNumber, const char *reason, ...) {
 }
 
 static void printSpaces(unsigned long num, const char *str) {
+	assert(str);
 	for (/* num */; num > 0; num--) {
 		int whitespace = (str[num - 1] == '\t') ? '\t' : ' ';
 		fputc(whitespace, stderr);
