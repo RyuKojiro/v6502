@@ -1,4 +1,4 @@
-SUBDIRS=	as6502 dis6502 ld6502 v6502 tests
+SUBDIRS=	as6502 dis6502 ld6502 v6502 tests docs
 
 all clean cleandir depend analyze install uninstall lib:
 	@for dir in $(SUBDIRS) ; do			\
@@ -9,8 +9,3 @@ all clean cleandir depend analyze install uninstall lib:
 		rm -rf $(PACKAGE_DIR) ; \
 		rm -f $(PACKAGE_NAME) ; \
 	fi
-
-docs:
-	$(MAKE) -C kmapgen
-	./isagen.pl
-	doxygen

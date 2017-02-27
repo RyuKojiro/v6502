@@ -63,7 +63,7 @@ my %implementations = (
 my %source_implementations;
 
 # Parse cpu.h into a table of instructions
-my $cpu_source = "v6502/cpu.h";
+my $cpu_source = "../v6502/cpu.h";
 open my $f, $cpu_source or die "Unable to read from cpu header";
 my $comment;
 while (my $line = <$f>) {
@@ -96,7 +96,7 @@ while (my $line = <$f>) {
 }
 
 # Parse cpu.c into a table of implementations for those that are not snippet-able
-$cpu_source = "v6502/cpu.c";
+$cpu_source = "../v6502/cpu.c";
 open $f, $cpu_source or die "Unable to read from cpu source";
 my $inside_instruction;
 my $lines;
