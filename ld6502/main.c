@@ -34,8 +34,8 @@
 
 static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const files[]) {
 	ld6502_object *linkResult = ld6502_createObject();
-	ld6502_object **objects = malloc(numFiles * sizeof(ld6502_object *));
-	
+	ld6502_object **objects = calloc(numFiles, sizeof(ld6502_object *));
+
 	// Read in a flat file as the only object
 	FILE *flatFile = fopen(files[numFiles - 1], "r");
 	as6502_readObjectFromFlatFile(linkResult, flatFile);
