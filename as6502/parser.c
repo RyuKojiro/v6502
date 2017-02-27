@@ -933,6 +933,17 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 void as6502_executeAsmLineOnCPU(v6502_cpu *cpu, const char *line, size_t len) {
 	uint8_t opcode, low, high;
 
+#ifdef __clang_analyzer__
+	/*
+	 * These arguments are only initialized if the opcode will cause them to
+	 * be read by v6502_execute, and clang's static analyzer cannot make this
+	 * distant logic connection. So, when linting, we'll zero initialize them
+	 * to satisfy ONLY this false positive.
+	 */
+	low = 0;
+	high = 0;
+#endif
+
 	as6502_token *head = as6502_lex(line, len);
 	if (!head) {
 		/* This function is intended to be a high-level parse-and-go style
