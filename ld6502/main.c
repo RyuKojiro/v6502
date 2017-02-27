@@ -33,7 +33,7 @@
 #include "flat.h"
 #include "ines.h"
 
-static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const files[]) {
+static void linkObjects(FILE *outFile, ld6502_file_type format, FILE *chrFile, int numFiles, char * const files[]) {
 	ld6502_object *linkResult = ld6502_createObject();
 	ld6502_object **objects = calloc(numFiles, sizeof(ld6502_object *));
 
@@ -76,7 +76,11 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 	// Create the property struct
 	ines_properties props;
 
-	writeToINES(outFile, &linkResult->blobs[0], chrRom ? &chrRom->blobs[0] : NULL, &props);
+	switch (format) {
+	  default:
+			writeToINES(outFile, &linkResult->blobs[0], chrRom ? &chrRom->blobs[0] : NULL, &props);
+			break;
+	}
 	ld6502_destroyObject(linkResult);
 }
 
@@ -122,7 +126,7 @@ int main(int argc, char * const argv[]) {
 		chrFile = fopen(chrName, "r");
 	}
 	
-	linkObjects(out, chrFile, argc, argv);
+	linkObjects(out, format, chrFile, argc, argv);
 	fclose(chrFile);
 	fclose(out);
 }
