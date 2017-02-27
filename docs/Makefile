@@ -15,3 +15,5 @@ $(KMAP):
 
 clean:
 	rm -rf $(ISA) $(HTML)
+
+.PHONY: $(HTML)
