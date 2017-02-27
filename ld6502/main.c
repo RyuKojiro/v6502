@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include <as6502/error.h>
 #include <as6502/symbols.h>
@@ -58,9 +59,10 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 	// Iterate thorugh unlinked objects
 	for (int o = 0; o < numFiles; o++) {
 		ld6502_object *currentObject = objects[o];
+		assert(currentObject);
 		for (as6502_symbol *currentSymbol = currentObject->table->first_symbol; currentSymbol; currentSymbol = currentSymbol->next) {
 			// Does symbol already exist in linkResult, if not, we know it doesn't exist on any objects before objects[o + 1]
-			
+
 			// If not, copy required symbol, otherwise change symbol address
 		}
 	}
@@ -69,11 +71,12 @@ static void linkObjects(FILE *outFile, FILE *chrFile, int numFiles, char * const
 	for (int o = 0; o < numFiles; o++) {
 		ld6502_destroyObject(objects[o]);
 	}
+	free(objects);
 	
 	// Create the property struct
 	ines_properties props;
-	
-	writeToINES(outFile, &linkResult->blobs[0], &chrRom->blobs[0], &props);
+
+	writeToINES(outFile, &linkResult->blobs[0], chrRom ? &chrRom->blobs[0] : NULL, &props);
 	ld6502_destroyObject(linkResult);
 }
 
