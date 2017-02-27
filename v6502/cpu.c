@@ -599,8 +599,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_eor_absy:
 		case v6502_opcode_eor_indx:
 		case v6502_opcode_eor_indy:
+			//! [eor]
 			cpu->ac ^= operand;
 			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
+			//! [eor]
 			return;
 		
 		// INC
@@ -612,6 +614,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			return;
 
 		// JMP
+		//! [jmp]
 		case v6502_opcode_jmp_abs: {
 			if (BOTH_BYTES == cpu->pc) {
 				v6502_execute(cpu, v6502_opcode_wai, 0, 0);
@@ -631,7 +634,8 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->pc = BOTH_BYTES;
 			cpu->pc -= 3; // PC shift
 		} return;
-		
+		//! [jmp]
+
 		// ORA
 		case v6502_opcode_ora_imm:
 		case v6502_opcode_ora_zpg:
@@ -719,7 +723,9 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sbc_absy:
 		case v6502_opcode_sbc_indx:
 		case v6502_opcode_sbc_indy:
+			//! [sbc]
 			_executeInPlaceADC(cpu, operand ^ BYTE_MAX);
+			//! [sbc]
 			return;
 
 		// STA
