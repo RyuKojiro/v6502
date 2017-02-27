@@ -2,6 +2,8 @@ ISA=ISA.dox
 HTML=html
 KMAP=../kmapgen/kmap.html
 
+all: $(HTML)
+
 $(HTML): $(ISA) $(KMAP)
 	doxygen
 
