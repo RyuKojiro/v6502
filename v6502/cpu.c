@@ -381,8 +381,9 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			cpu->sr |= v6502_cpu_status_break;
 			cpu->sr |= v6502_cpu_status_interrupt;
 		} return;
-		case v6502_opcode_nop:
-			return;
+		case v6502_opcode_nop: {
+			/* Do nothing */
+		} return;
 		case v6502_opcode_clc: {
 			cpu->sr &= ~v6502_cpu_status_carry;
 		} return;
@@ -657,8 +658,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_lda_absy:
 		case v6502_opcode_lda_indx:
 		case v6502_opcode_lda_indy:
+			//! [lda]
 			cpu->ac = operand;
 			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
+			//! [lda]
 			return;
 		
 		// LDX
@@ -667,8 +670,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ldx_zpgy:
 		case v6502_opcode_ldx_abs:
 		case v6502_opcode_ldx_absy:
+			//! [ldx]
 			cpu->x = operand;
 			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
+			//! [ldx]
 			return;
 
 		// LDY
@@ -677,8 +682,10 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ldy_zpgx:
 		case v6502_opcode_ldy_abs:
 		case v6502_opcode_ldy_absx:
+			//! [ldy]
 			cpu->y = operand;
 			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
+			//! [ldy]
 			return;
 		
 		// LSR
@@ -736,21 +743,27 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_sta_absy:
 		case v6502_opcode_sta_indx:
 		case v6502_opcode_sta_indy:
+			//! [sta]
 			v6502_write(cpu->memory, ref, cpu->ac);
+			//! [sta]
 			return;
 			
 		// STX
 		case v6502_opcode_stx_zpg:
 		case v6502_opcode_stx_zpgy:
 		case v6502_opcode_stx_abs:
+			//! [stx]
 			v6502_write(cpu->memory, ref, cpu->x);
+			//! [stx]
 			return;
 			
 		// STY
 		case v6502_opcode_sty_zpg:
 		case v6502_opcode_sty_zpgx:
 		case v6502_opcode_sty_abs:
+			//! [sty]
 			v6502_write(cpu->memory, ref, cpu->y);
+			//! [sty]
 			return;
 			
 		// Failure
