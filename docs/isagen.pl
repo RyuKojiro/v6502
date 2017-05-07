@@ -113,7 +113,7 @@ while (my $line = <$f>) {
 		push @$lines, $line;
 	}
 
-	if($line =~ /case v6502_opcode_([[:alpha:]]{3}): {/) {
+	if($line =~ /case v6502_opcode_([[:alpha:]]{3}): \{/) {
 		$inside_instruction = $1;
 	}
 }
