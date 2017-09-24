@@ -3,7 +3,7 @@ include ../libvars.mk
 
 PROG=		kmapgen
 SRCS=		main.c
-LDFLAGS+=	-ledit -lcurses -ldis6502 -las6502 -lv6502
+LDFLAGS+=	-ldis6502 -las6502 -lv6502 -ledit -lcurses
 OBJS=		$(SRCS:.c=.o)
 HTML=		kmap.html
 

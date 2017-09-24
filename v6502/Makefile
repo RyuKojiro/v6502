@@ -4,7 +4,7 @@ include ../libvars.mk
 PROG=		v6502
 SRCS=		main.c log.c breakpoint.c textmode.c debugger.c
 LIBSRCS=	cpu.c mem.c cpu.c
-LDFLAGS+=	-ledit -lcurses -ldis6502 -las6502 -lv6502
+LDFLAGS+=	-ldis6502 -las6502 -lv6502 -ledit -lcurses
 OBJS=		$(SRCS:.c=.o)
 LIBOBJS=	$(LIBSRCS:.c=.o)
 MANPAGE=	v6502.1
