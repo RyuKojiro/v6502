@@ -4,4 +4,4 @@ compiler:
     - gcc
 script: make
 install:
-    - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install libedit-dev doxygen; fi
+    - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install libedit-dev libncurses5-dev doxygen; fi
