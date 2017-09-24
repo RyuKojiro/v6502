@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/RyuKojiro/v6502.svg?branch=master)](https://travis-ci.org/RyuKojiro/v6502)
+
 # Documentation
 http://ryukojiro.github.io/v6502
 
