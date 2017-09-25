@@ -23,7 +23,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <time.h>
 #include <assert.h>
 
 #include <v6502/mem.h>
@@ -275,6 +274,9 @@ void as6502_printDotForList(FILE *stream, as6502_token *head) {
 	fprintf(stream, "}\n");
 }
 
+#if 0
+#include <time.h>
+
 void as6502_showDotForLinkedList(as6502_token *head) {
 	char command[100];
 
@@ -289,3 +291,4 @@ void as6502_showDotForLinkedList(as6502_token *head) {
 	system(command);
 	//system("feh /tmp/gv.png");
 }
+#endif /* 0 */
