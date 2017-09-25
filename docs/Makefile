@@ -16,4 +16,6 @@ $(KMAP):
 clean:
 	rm -rf $(ISA) $(HTML)
 
-.PHONY: $(HTML)
+lib install uninstall:
+
+.PHONY: all clean lib install uninstall

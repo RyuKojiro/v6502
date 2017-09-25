@@ -18,4 +18,8 @@ $(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502)
 clean:
 	rm -f $(HTML) $(PROG) $(OBJS)
 
+lib install uninstall:
+
+.PHONY: all clean lib install uninstall
+
 include ../libtargets.mk

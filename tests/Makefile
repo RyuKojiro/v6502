@@ -19,8 +19,6 @@ FUZZOUT=afl_results
 
 all: compiledTests expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest wozmon #wozfp
 
-install uninstall:
-
 # This requires the afl fuzzer to be present, and does fuzzing of the snake code to find assembler bugs
 fuzz_as: $(AS) $(FUZZIN)
 	mkdir $(FUZZOUT)
@@ -94,5 +92,9 @@ $(DIS):
 
 clean:
 	rm -f *.o *.tmp.crc snake.dis.s snake2.s compiledTestsExecutable
+
+lib install uninstall:
+
+.PHONY: all clean lib install uninstall
 
 include ../libtargets.mk
