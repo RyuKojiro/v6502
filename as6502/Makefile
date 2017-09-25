@@ -19,7 +19,7 @@ install: $(PROG) $(LIBAS6502)
 	install -d $(INCDEST)/$(PROG)/
 	install $(HEADERS) $(INCDEST)/$(PROG)/
 
-uninstall: $(PROG) $(LIBAS6502)
+uninstall:
 	rm -f $(MANDEST)/$(MANPAGE)
 	rm -f $(BINDEST)/$(PROG)
 	rm -f $(LIBDEST)/$(LIBAS6502)

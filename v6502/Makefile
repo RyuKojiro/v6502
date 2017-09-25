@@ -19,7 +19,7 @@ install: $(PROG) $(LIBV6502)
 	install -d $(INCDEST)/$(PROG)/
 	install $(HEADERS) $(INCDEST)/$(PROG)/
 
-uninstall: $(PROG) $(LIBV6502)
+uninstall:
 	rm -f $(MANDEST)/$(MANPAGE)
 	rm -f $(BINDEST)/$(PROG)
 	rm -f $(LIBDEST)/$(LIBV6502)
