@@ -1,4 +1,4 @@
-SUBDIRS=	as6502 dis6502 ld6502 v6502 docs tests
+SUBDIRS=	as6502 dis6502 ld6502 v6502 kmapgen docs tests
 
 all clean cleandir depend analyze install uninstall lib:
 	@for dir in $(SUBDIRS) ; do			\
