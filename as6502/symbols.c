@@ -22,7 +22,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <stdio.h> // as6502_printSymbolTable
 #include <ctype.h> // isspace
 #include <assert.h>
