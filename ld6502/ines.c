@@ -22,7 +22,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 #include <stdlib.h>
 
 #include <as6502/parser.h>
