@@ -29,4 +29,4 @@ following platforms:
 - x86_64-linux-gnu (gcc 4.7.2, little-endian, 64-bit, GNU make)
 
 There is also an `analyze` target which will run the clang static analyzer
-against any library or binary target. This is also makeable from the top level.
+against any library or binary target.
