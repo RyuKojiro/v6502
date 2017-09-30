@@ -379,15 +379,22 @@ static int test_intersectingMemoryMapping() {
 	cpu->memory = v6502_createMemory(0);
 	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
 		printf("Couldn't map the first range!\n");
+
+		v6502_destroyMemory(cpu->memory);
+		v6502_destroyCPU(cpu);
 		return 1;
 	}
 	
 	if (!v6502_map(cpu->memory, 50, 100, returnHigh, NULL, NULL)) {
+		v6502_destroyMemory(cpu->memory);
+		v6502_destroyCPU(cpu);
 		return 0;
 	}
 	
 	printf("Second range was allowed!\n");
 
+	v6502_destroyMemory(cpu->memory);
+	v6502_destroyCPU(cpu);
 	return 1;
 }
 
@@ -400,14 +407,22 @@ static int test_contiguousMemoryMapping() {
 	cpu->memory = v6502_createMemory(0);
 	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
 		printf("Couldn't map the first range!\n");
+
+		v6502_destroyMemory(cpu->memory);
+		v6502_destroyCPU(cpu);
 		return 1;
 	}
 	
 	if (!v6502_map(cpu->memory, 200, 100, returnHigh, NULL, NULL)) {
 		printf("Second range was not allowed!\n");
+
+		v6502_destroyMemory(cpu->memory);
+		v6502_destroyCPU(cpu);
 		return 1;
 	}
 	
+	v6502_destroyMemory(cpu->memory);
+	v6502_destroyCPU(cpu);
 	return 0;
 }
 
