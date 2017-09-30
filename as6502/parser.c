@@ -652,6 +652,7 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 	uint16_t result;
 	
 	if (!string) {
+		free(workString);
 		return 0;
 	}
 	
