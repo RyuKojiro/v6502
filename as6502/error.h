@@ -46,7 +46,7 @@ void as6502_warn(unsigned long loc, unsigned long len, const char *reason, ...);
 /** @brief Called for code notation which pertain to preceding errors or warnings, this can reference other code */
 void as6502_note(unsigned long lineNumber, const char *reason, ...);
 /** @brief This function outputs an underline annotation for a given character range */
-void as6502_underline(unsigned long loc, unsigned long len);
+void as6502_underline(const char *str, unsigned long loc, unsigned long len);
 /**@}*/
 
 #endif
