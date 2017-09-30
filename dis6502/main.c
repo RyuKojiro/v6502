@@ -94,13 +94,13 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				uint8_t low = 0; // lint
 				uint8_t high = 0; // lint
 				if (offset + 2 < blob->len) {
-					low = blob->data[offset + 2];
+					low = blob->data[offset + 1];
 				}
 				if (offset + 1 < blob->len) {
-					high = blob->data[offset + 1];
+					high = blob->data[offset + 2];
 				}
 
-				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, low, high);
+				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, high, low);
 				as6502_symbolicateLine(table, line, MAX_LINE_LEN, blob->start, offset);
 
 				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
