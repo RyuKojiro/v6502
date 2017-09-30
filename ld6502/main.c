@@ -91,7 +91,8 @@ static void usage() {
 int main(int argc, char * const argv[]) {
 	ld6502_file_type format = ld6502_file_type_iNES;
 	char outName[FILENAME_MAX] = "out.nes";
-	char chrName[FILENAME_MAX] = "";
+	FILE *chrFile = NULL;
+	FILE *out = NULL;
 	
 	int ch;
 	while ((ch = getopt(argc, argv, "o:C:F:")) != -1) {
@@ -102,10 +103,10 @@ int main(int argc, char * const argv[]) {
 				}
 			} break;
 			case 'o': {
-				strncpy(outName, optarg, FILENAME_MAX);
+				out = fopen(optarg, "w");
 			} break;
 			case 'C': {
-				strncpy(chrName, optarg, FILENAME_MAX);
+				chrFile = fopen(optarg, "r");
 			} break;
 			case '?':
 			default:
@@ -117,17 +118,13 @@ int main(int argc, char * const argv[]) {
 	argc -= optind;
 	argv += optind;
 	
-	FILE *out;
-	FILE *chrFile = NULL;
-	out = fopen(outName, "w");
 	currentFileName = outName;
-
-	if (*chrName) {
-		chrFile = fopen(chrName, "r");
-	}
-	
 	linkObjects(out, format, chrFile, argc, argv);
-	fclose(chrFile);
-	fclose(out);
+	if (chrFile) {
+		fclose(chrFile);
+	}
+	if (out) {
+		fclose(out);
+	}
 }
 

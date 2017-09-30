@@ -94,13 +94,13 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				uint8_t low = 0; // lint
 				uint8_t high = 0; // lint
 				if (offset + 2 < blob->len) {
-					low = blob->data[offset + 2];
+					low = blob->data[offset + 1];
 				}
 				if (offset + 1 < blob->len) {
-					high = blob->data[offset + 1];
+					high = blob->data[offset + 2];
 				}
 
-				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, low, high);
+				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, high, low);
 				as6502_symbolicateLine(table, line, MAX_LINE_LEN, blob->start, offset);
 
 				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
@@ -130,7 +130,6 @@ static void usage() {
 int main(int argc, char * const argv[]) {
 	FILE *out = stdout;
 	ld6502_file_type format = ld6502_file_type_None;
-	char outName[FILENAME_MAX] = "";
 	uint16_t programStart = 0;
 	int printTable = NO;
 	FILE *sym = NULL;
@@ -147,7 +146,7 @@ int main(int argc, char * const argv[]) {
 				}
 			} break;
 			case 'o': {
-				strncpy(outName, optarg, FILENAME_MAX);
+				out = fopen(optarg, "w");
 			} break;
 			case 's': {
 				programStart = strtol(optarg, NULL, 16);
@@ -169,16 +168,12 @@ int main(int argc, char * const argv[]) {
 	argv += optind;
 	
 	for (int i = 0; i < argc; i++) {
-		currentFileName = argv[i];
-		if (*outName) {
-			out = fopen(outName, "w");
-		}
-
 		disassembleFile(argv[i], out, format, programStart, printTable, sym);
-		if (sym) {
-			fclose(sym);
-		}
-		fclose(out);
 	}
+
+	if (sym) {
+		fclose(sym);
+	}
+	fclose(out);
 }
 

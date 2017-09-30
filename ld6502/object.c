@@ -95,10 +95,13 @@ void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld65
 			ld6502_addBlobToObject(object, 0);
 			readFromINES(in, &object->blobs[0], NULL, NULL);
 		} break;
-		case ld6502_file_type_None:
+		case ld6502_file_type_None: {
 			// Something has gone horribly wrong.
-			return;
+			as6502_fatal("Unknown file format");
+		} break;
 	}
+
+	fclose(in);
 }
 
 // Object Accessors

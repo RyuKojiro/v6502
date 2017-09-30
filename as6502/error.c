@@ -81,7 +81,7 @@ static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len
 		fprintf(stderr, "\n");
 	}
 
-	as6502_underline(loc, len);
+	as6502_underline(currentLineText, loc, len);
 }
 #pragma clang diagnostic warning "-Wformat-nonliteral"
 
@@ -115,22 +115,22 @@ static void printSpaces(unsigned long num, const char *str) {
 	}
 }
 
-void as6502_underline(unsigned long loc, unsigned long len) {
+void as6502_underline(const char *str, unsigned long loc, unsigned long len) {
+	assert(str);
+
 	// Don't do anything if we don't have a valid range (non-zero length)
 	if (!len) {
 		return;
 	}
-	// Sometimes we might be called from things that don't have a currentLineText
-	if (currentLineText) {
-		fprintf(stderr, "%s", currentLineText);
-		
-		// FIXME: Shouldn't this always need a newline or always not need a newline?
-		if (currentLineText[strlen(currentLineText) - 1] != '\n') {
-			fprintf(stderr, "\n");
-		}
-	}
+
+	fprintf(stderr, "%s", str);
 	
-	printSpaces(loc, currentLineText);
+	// FIXME: Shouldn't this always need a newline or always not need a newline?
+	if (currentLineText[strlen(str) - 1] != '\n') {
+		fprintf(stderr, "\n");
+	}
+
+	printSpaces(loc, str);
 
 	int supportsColor = termcolors();
 	if (supportsColor) {

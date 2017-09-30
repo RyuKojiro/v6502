@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/RyuKojiro/v6502.svg?branch=master)](https://travis-ci.org/RyuKojiro/v6502)
+[![Coverity Status](https://scan.coverity.com/projects/13854/badge.svg)](https://scan.coverity.com/projects/ryukojiro-v6502)
 
 # Documentation
 http://ryukojiro.github.io/v6502

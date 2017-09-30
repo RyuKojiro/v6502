@@ -46,10 +46,10 @@ int fileIsINES(FILE *infile) {
 	
 	// Read Magic
 	char magic[ines_magicLength];
-	fread(magic, ines_magicLength, 1, infile);
-	
-	if (!strncmp(magic, ines_magic, ines_magicLength)) {
-		return YES;
+	if(fread(magic, ines_magicLength, 1, infile)) {
+		if (!strncmp(magic, ines_magic, ines_magicLength)) {
+			return YES;
+		}
 	}
 	
 	return NO;
