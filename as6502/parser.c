@@ -908,17 +908,15 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 		mode = &_mode;
 	}
 
-	if (!opcode) {
-		uint8_t _opcode;
-		opcode = &_opcode;
-	}
-
 	// Determine address mode
 	*mode = as6502_addressModeForExpression(head);
 	
 	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line
-	*opcode = as6502_opcodeForInstructionAndMode(head, *mode);
+	uint8_t _opcode = as6502_opcodeForInstructionAndMode(head, *mode);
+	if (opcode) {
+		*opcode = _opcode;
+	}
 	
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
