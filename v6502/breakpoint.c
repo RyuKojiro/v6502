@@ -72,7 +72,7 @@ void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t addres
 	
 	if (loc) {
 		// Shift the entire list down one
-		for (size_t i = ((loc - list->breakpoints) / sizeof(address)) + 1; i < list->count; i++) {
+		for (size_t i = (loc - list->breakpoints) + 1; i < list->count; i++) {
 			list->breakpoints[i - 1] = list->breakpoints[i];
 		}
 		
