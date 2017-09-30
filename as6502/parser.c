@@ -902,24 +902,22 @@ int as6502_instructionLengthForAddressMode(v6502_address_mode mode) {
 }
 
 void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *high, v6502_address_mode *mode, as6502_token *head) {
-	// Use stack if required storage is not passed in
-	if (!mode) {
-		v6502_address_mode _mode;
-		mode = &_mode;
-	}
-
 	// Determine address mode
-	*mode = as6502_addressModeForExpression(head);
+	v6502_address_mode _mode;
+	_mode = as6502_addressModeForExpression(head);
+	if (mode) {
+		*mode = _mode;
+	}
 	
 	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line
-	uint8_t _opcode = as6502_opcodeForInstructionAndMode(head, *mode);
+	uint8_t _opcode = as6502_opcodeForInstructionAndMode(head, _mode);
 	if (opcode) {
 		*opcode = _opcode;
 	}
 	
 	// Determine operands
-	if (as6502_instructionLengthForAddressMode(*mode) > 1) {
+	if (as6502_instructionLengthForAddressMode(_mode) > 1) {
 		// We already know the address mode at this point, so we just want the actual value
 		as6502_token *value = as6502_firstTokenOfTypeInList(head, as6502_token_type_value);
 		if (value) {
