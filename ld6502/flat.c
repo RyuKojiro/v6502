@@ -50,9 +50,7 @@ void as6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file) {
 	uint8_t byte;
 	
 	// FIXME: if the first byte is the last, this is probably going to break
-	fread(&byte, 1, 1, file);
-	do {
+	while(fread(&byte, 1, 1, file)) {
 		ld6502_appendByteToBlob(blob, byte);
-		fread(&byte, 1, 1, file);
-	} while (!feof(file));
+	}
 }
