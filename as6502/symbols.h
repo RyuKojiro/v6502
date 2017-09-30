@@ -32,8 +32,8 @@
 
 /** @defgroup sym_type_macros Symbol Type Test Macros */
 /**@{*/
-/** @brief Return YES if a given as6502_symbol_type has a high link bit */
-#define as6502_symbolTypeIsLinked(_type)		(_type | as6502_symbol_type_label)
+/** @brief Return YES if a given as6502_symbol_type has a low link bit */
+#define as6502_symbolTypeIsLinked(_type)		(_type == as6502_symbol_type_label || _type == as6502_symbol_type_variable)
 /** @brief Return YES if a given as6502_symbol_type is a label type, regardless of linkage */
 #define as6502_symbolTypeIsLabel(_type)			(_type == as6502_symbol_type_label || _type == as6502_symbol_type_label_unlinked)
 /** @brief Return YES if a given as6502_symbol_type is a variable type, regardless of linkage */
