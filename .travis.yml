@@ -12,3 +12,20 @@ install:
 os:
     - linux
     - osx
+
+env:
+    global:
+        # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+        #   via the "travis encrypt" command using the project repo's public key
+        - secure: "eZk9aOGEf/7XvzBWm9ld+hG8MD14SxCNB3fWmGOtBPojTQVe+jTkA/xVXdbJjLh9fiwTOcIpjgh/knhcQ3QeRd/85K6L4gAccvSxp+MMpV/C4xggJdB5eDJEKoVy0+6OGqyDMc6Pge89tF0VhYWgmNEcrfiKrl1A1ZDRMPOGmlwVGWtRzxLtAU/QHtxSu0FIrksViptpHQCbXBt4OucjWrLZlpgsgNwkTCe0uxNu2LkVKt0qso6vjNd5gqTfH/XRnKnf+KOPiYD7u/YkpPyWEmSF11JJQEdkqVk0/ijHNG2uny0kI3G93Ruh363KQ9nKmmpDTO4tC0+RrvX+pe9/vKPOx64J8G0sbLqWoaDstWtA/L+N7VErIRz08amWbBUB0zmuM4eaMfr0knfl0+VwAmDGMRHHnUyerSZeE3msIvh1G+lQBinxZpvigCevZpTUShmzRCjenJFCTdU+hp80LdVgLYJp0eFXPQNIOS5dbSrqrUDJMwbWIsSMwPeG1NmzlF9Nnq1lIqg5JM1o+xsVGkyrIWq2CGjFckGqovneR9UY1m83+5zOMb/r21JLOc72Zg7X/yNXruLAyuShgToCNE8jrXymbsT/zwfTfjCmAfgTssYfu9PM9Ui7kRDcnJ9X+bbP4bt4X2Sj9Gi9dgptNcC+Iqf78SsB77EtimzPeKA="
+
+before_install:
+    - if [ $TRAVIS_OS_NAME = linux ]; then echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-; fi
+
+addons:
+    coverity_scan:
+        project:
+            name: "RyuKojiro/v6502"
+        build_command_prepend: "make clean"
+        build_command: "make"
+        branch_pattern: coverity_scan
