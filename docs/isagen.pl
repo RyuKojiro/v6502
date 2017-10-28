@@ -128,7 +128,7 @@ foreach my $mnemonic (sort keys %instructions) {
 	print $out "\\section isa_$mnemonic $instructions{$mnemonic}{'comment'}\n";
 
 	print $out "<table><tr><th>Address Mode</th><th>Mnemonic</th><th>Opcode</th></tr>\n";
-	foreach (sort keys $instructions{$mnemonic}) {
+	foreach (sort keys %{$instructions{$mnemonic}}) {
 		if ($_ ne 'comment') {
 			print $out "<tr>";
 			print $out "<td>$address_modes{$_}</td>";
