@@ -42,82 +42,46 @@
 #define regeq(a, b)	(!strncasecmp(a, b, sizeof(a)))
 
 #define DEBUGGER_COMMAND_LIST(_) \
-	_(breakpoint) \
-	_(cpu) \
-	_(disassemble) \
-	_(help) \
-	_(iv) \
-	_(label) \
-	_(load) \
-	_(nmi) \
-	_(peek) \
-	_(poke) \
-	_(quit) \
-	_(run) \
-	_(register) \
-	_(reset) \
-	_(mreset) \
-	_(script) \
-	_(step) \
-	_(symbols) \
-	_(var) \
-	_(verbose)
+	_(breakpoint,  "<addr>",         "Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.") \
+	_(cpu,         NULL,             "Displays the current state of the CPU.") \
+	_(disassemble, "<addr>",         "Disassemble " STRINGIFY(DISASSEMBLY_COUNT) " instructions starting at a given address, or the program counter if no address is specified.") \
+	_(help,        NULL,             "Displays this help.") \
+	_(iv,          "<type> <addr>",  "Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.") \
+	_(label,       "<name> <addr>",  "Define a new label for automatic symbolication during disassembly.") \
+	_(load,        "<file> <addr>",  "Load binary image into memory at the address specified. If no address is specified, then the reset vector is used.") \
+	_(nmi,         NULL,             "Sends a non-maskable interrupt to the CPU.") \
+	_(peek,        "<addr>",         "Dumps the memory at and around a given address.") \
+	_(poke,        "<addr> <value>", "Sets the location in memory to the value specified.") \
+	_(quit,        NULL,             "Exits v6502.") \
+	_(run,         NULL,             "Contunuously steps the cpu until a 'brk' instruction is encountered.") \
+	_(register,    "<reg> <value>",  "Sets the value of the specified register.") \
+	_(reset,       NULL,             "Resets the CPU.") \
+	_(mreset,      NULL,             "Zeroes all memory.") \
+	_(script,      NULL,             "Load a script of debugger commands.") \
+	_(step,        NULL,             "Forcibly steps the CPU once.") \
+	_(symbols,     NULL,             "Print the entire symbol table as it currently exists.") \
+	_(var,         "<name> <addr>",  "Define a new variable for automatic symbolication during disassembly.") \
+	_(verbose,     NULL,             "Toggle verbose mode; prints each instruction as they are executed when running.")
 
-#define ARRAY_MEMBER(a)			XSTRINGIFY(a),
+#define CMD_ARRAY_MEMBER(cmd, args, help) XSTRINGIFY(cmd),
 static const char *_debuggerCommands[] = {
-	DEBUGGER_COMMAND_LIST(ARRAY_MEMBER)
+	DEBUGGER_COMMAND_LIST(CMD_ARRAY_MEMBER)
 };
 
-#define ENUM_MEMBER(a)			v6502_debuggerCommand_ ## a,
+#define CMD_ENUM_MEMBER(cmd, args, help) v6502_debuggerCommand_ ## cmd,
 typedef enum {
-	DEBUGGER_COMMAND_LIST(ENUM_MEMBER)
+	DEBUGGER_COMMAND_LIST(CMD_ENUM_MEMBER)
 	v6502_debuggerCommand_NONE
 } v6502_debuggerCommand;
 
+#define ARGS_ARRAY_MEMBER(cmd, args, help) args,
 static const char *_debuggerCommandArguments[] = {
-	"<addr>",
-	NULL,
-	"<addr>",
-	NULL,
-	"<type> <addr>",
-	"<name> <addr>",
-	"<file> <addr>",
-	NULL,
-	"<addr>",
-	"<addr> <value>",
-	NULL,
-	NULL,
-	"<reg> <value>",
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	"<name> <addr>",
-	NULL
+	DEBUGGER_COMMAND_LIST(ARGS_ARRAY_MEMBER)
 };
 
+#define HELP_ARRAY_MEMBER(cmd, args, help) help,
 static const char *_debuggerHelp[] = {
-	"Toggles a breakpoint at the specified address. If no address is spefied, lists all breakpoints.",
-	"Displays the current state of the CPU.",
-	"Disassemble " STRINGIFY(DISASSEMBLY_COUNT) " instructions starting at a given address, or the program counter if no address is specified.",
-	"Displays this help.",
-	"Sets the interrupt vector of the type specified (of nmi, reset, interrupt) to the given address. If no address is specified, then the vector value is output.",
-	"Define a new label for automatic symbolication during disassembly.",
-	"Load binary image into memory at the address specified. If no address is specified, then the reset vector is used.",
-	"Sends a non-maskable interrupt to the CPU.",
-	"Dumps the memory at and around a given address.",
-	"Sets the location in memory to the value specified.",
-	"Exits v6502.",
-	"Contunuously steps the cpu until a 'brk' instruction is encountered.",
-	"Sets the value of the specified register.",
-	"Resets the CPU.",
-	"Zeroes all memory.",
-	"Load a script of debugger commands.",
-	"Forcibly steps the CPU once.",
-	"Print the entire symbol table as it currently exists.",
-	"Define a new variable for automatic symbolication during disassembly.",
-	"Toggle verbose mode; prints each instruction as they are executed when running."
+	DEBUGGER_COMMAND_LIST(HELP_ARRAY_MEMBER)
 };
 
 static v6502_debuggerCommand v6502_debuggerCommandParse(const char *command, size_t len) {
