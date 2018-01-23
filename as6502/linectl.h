@@ -40,7 +40,7 @@ void trimtaild(char *str);
 void trimtailchard(char *str, char token);
 
 /** @brief Destructively tail trim at first encounter of whitespace from the head end */
-void trimgreedytaild(char *str);
+void trimgreedytaild(char *str, size_t len);
 
 /** @brief Destructively tail trim at first encounter of token char from the head end */
 void trimgreedytailchard(char *str, char token);

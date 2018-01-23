@@ -50,14 +50,12 @@ void trimtailchard(char *str, char token) {
 	}
 }
 
-void trimgreedytaild(char *str) {
-	while (*str) {
-		if (isspace(CTYPE_CAST *str)) {
-			*str = '\0';
+void trimgreedytaild(char *str, size_t len) {
+	for (size_t i = 0; str[i]; i++) {
+		if (isspace(CTYPE_CAST str[i])) {
+			str[i] = '\0';
 			return;
 		}
-		
-		str++;
 	}
 }
 
