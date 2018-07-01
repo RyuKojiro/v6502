@@ -24,33 +24,33 @@
 
 #include "cpu.h"
 
-#define	BOTH_BYTES								(high << 8 | low)
-#define FLAG_CARRY_WITH_HIGH_BIT(a)				{ cpu->sr &= ~v6502_cpu_status_carry; \
-												  cpu->sr |= a >> 7; }
-#define FLAG_CARRY_WITH_LOW_BIT(a)				{ cpu->sr &= ~v6502_cpu_status_carry; \
-												  cpu->sr |= (a & v6502_cpu_status_carry); }
-#define FLAG_ZERO_WITH_RESULT(a)				{ cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
-												  cpu->sr |= (a ? 0 : v6502_cpu_status_zero); }
-#define FLAG_NEGATIVE_WITH_RESULT(a)			{ cpu->sr &= ~ v6502_cpu_status_negative; \
-												  cpu->sr |= (a & v6502_cpu_status_negative); }
+#define BOTH_BYTES                              (high << 8 | low)
+#define FLAG_CARRY_WITH_HIGH_BIT(a)             { cpu->sr &= ~v6502_cpu_status_carry; \
+                                                  cpu->sr |= a >> 7; }
+#define FLAG_CARRY_WITH_LOW_BIT(a)              { cpu->sr &= ~v6502_cpu_status_carry; \
+                                                  cpu->sr |= (a & v6502_cpu_status_carry); }
+#define FLAG_ZERO_WITH_RESULT(a)                { cpu->sr &= (a ? ~v6502_cpu_status_zero : ~0); \
+                                                  cpu->sr |= (a ? 0 : v6502_cpu_status_zero); }
+#define FLAG_NEGATIVE_WITH_RESULT(a)            { cpu->sr &= ~ v6502_cpu_status_negative; \
+                                                  cpu->sr |= (a & v6502_cpu_status_negative); }
 /** After normalization to addition, arguments are:
  a = accumulator pre-operation,
  b = operand
  c = accumulator result */
-#define FLAG_OVERFLOW_WITH_COMPARISON(a, b, c)	{ cpu->sr &= ~v6502_cpu_status_overflow; \
-												  cpu->sr |= (( ~(a ^ b) & (a ^ c) & 0x80) ? 0 : v6502_cpu_status_overflow); }
+#define FLAG_OVERFLOW_WITH_COMPARISON(a, b, c)  { cpu->sr &= ~v6502_cpu_status_overflow; \
+                                                  cpu->sr |= (( ~(a ^ b) & (a ^ c) & 0x80) ? 0 : v6502_cpu_status_overflow); }
 /** After normalization to addition, arguments are:
   a = result
   b = operand,
  for subtraction:
   a = operand
   b = register */
-#define FLAG_CARRY_WITH_COMPARISON(a, b)		{ cpu->sr &= ~v6502_cpu_status_carry; \
-												  cpu->sr |= ((a <= b) ? v6502_cpu_status_carry : 0); }
-#define FLAG_NEG_AND_ZERO_WITH_RESULT(a)		{ FLAG_NEGATIVE_WITH_RESULT(a); \
-												  FLAG_ZERO_WITH_RESULT(a); }
+#define FLAG_CARRY_WITH_COMPARISON(a, b)        { cpu->sr &= ~v6502_cpu_status_carry; \
+                                                  cpu->sr |= ((a <= b) ? v6502_cpu_status_carry : 0); }
+#define FLAG_NEG_AND_ZERO_WITH_RESULT(a)        { FLAG_NEGATIVE_WITH_RESULT(a); \
+                                                  FLAG_ZERO_WITH_RESULT(a); }
 
-#define v6502_unhandledInstructionErrorText		"Unhandled CPU Instruction"
+#define v6502_unhandledInstructionErrorText     "Unhandled CPU Instruction"
 
 #pragma mark -
 #pragma mark CPU Internal Instruction Execution
@@ -168,11 +168,11 @@ int v6502_instructionLengthForOpcode(v6502_opcode opcode) {
 	if (((opcode & 0x0F) > 0x00) && ((opcode & 0x0F) < 0x07)) {
 		return 2;
 	}
-	
+
 	if ((opcode & 0x0F) > 0x0B) {
 		return 3;
 	}
-	
+
 	if ((opcode & 0x0F) == 0x09) { // low nibble is 9
 		if (opcode & 0x10) { // high nibble is odd
 			return 3;
@@ -181,15 +181,15 @@ int v6502_instructionLengthForOpcode(v6502_opcode opcode) {
 			return 2;
 		}
 	}
-	
+
 	if (opcode == v6502_opcode_jsr) {
 		return 3;
 	}
-	
+
 	if (((opcode & 0x0F) == 0x00) && ((opcode & 0x10) || ((opcode & 0xF0) > 0x80))) {
 		return 2;
 	}
-	
+
 	return 1;
 }
 
@@ -309,14 +309,15 @@ void v6502_step(v6502_cpu *cpu) {
 	cpu->pc += instructionLength;
 }
 
-/* 	1) Determine address mode, and form an operand pointer based on that
-	2) Execute operation, some in-place functions replace the value of *operand with the new resulting value
+/*
+ * 1) Determine address mode, and form an operand pointer based on that
+ * 2) Execute operation, some in-place functions replace the value of *operand with the new resulting value
  */
 void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 	// These don't need to be initialized, but do so to silence false positive clang lint warnings
 	uint8_t operand = 0;
 	uint16_t ref = 0;
-	
+
 	switch (v6502_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_implied:
 		case v6502_address_mode_accumulator: {
@@ -373,7 +374,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		default:
 			return;
 	}
-	
+
 	switch ((v6502_opcode)opcode) {
 		// Single Byte Instructions
 		case v6502_opcode_brk: {
@@ -484,13 +485,13 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_bvs: {
 			if (cpu->sr & v6502_cpu_status_overflow) {
 				cpu->pc += v6502_signedValueOfByte(low);
-			}	
+			}
 		} return;
-		
+
 		// Stack Instructions
 		case v6502_opcode_jsr: {
-			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = cpu->pc;			// Low byte first
-			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = (cpu->pc >> 8);	// High byte second
+			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = cpu->pc;        // Low byte first
+			cpu->memory->bytes[v6502_memoryStartStack + cpu->sp--] = (cpu->pc >> 8); // High byte second
 			cpu->pc = BOTH_BYTES;
 			cpu->pc -= 3; // To compensate for post execution shift
 		} return;
@@ -539,7 +540,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_and_indy:
 			_executeInPlaceAND(cpu, operand);
 			return;
-		
+
 		// ASL
 		case v6502_opcode_asl_acc:
 			cpu->ac = _executeInPlaceASL(cpu, operand);
@@ -550,7 +551,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_asl_absx:
 			v6502_write(cpu->memory, ref, _executeInPlaceASL(cpu, operand));
 			return;
-			
+
 		// BIT
 		case v6502_opcode_bit_zpg:
 		case v6502_opcode_bit_abs:
@@ -568,7 +569,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_cmp_indy:
 			_executeInPlaceCompare(cpu, cpu->ac, operand);
 			return;
-		
+
 		// CPX
 		case v6502_opcode_cpx_imm:
 		case v6502_opcode_cpx_zpg:
@@ -605,7 +606,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			FLAG_NEG_AND_ZERO_WITH_RESULT(cpu->ac);
 			//! [eor]
 			return;
-		
+
 		// INC
 		case v6502_opcode_inc_zpg:
 		case v6502_opcode_inc_zpgx:
@@ -622,7 +623,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 				cpu->pc -= 3; // PC shift
 				return;
 			}
-			
+
 			cpu->pc = BOTH_BYTES;
 			cpu->pc -= 3; // PC shift
 		} return;
@@ -630,7 +631,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			uint16_t address = BOTH_BYTES;
 			low = v6502_read(cpu->memory, address, NO);
 			high = v6502_read(cpu->memory, address + 1, NO);
-			
+
 			// Trap was already triggered by indirect memory classification in prior switch
 			cpu->pc = BOTH_BYTES;
 			cpu->pc -= 3; // PC shift
@@ -648,7 +649,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 		case v6502_opcode_ora_indy:
 			_executeInPlaceORA(cpu, operand);
 			return;
-			
+
 		// LDA
 		case v6502_opcode_lda_imm:
 		case v6502_opcode_lda_zpg:
@@ -663,7 +664,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 			//! [lda]
 			return;
-		
+
 		// LDX
 		case v6502_opcode_ldx_imm:
 		case v6502_opcode_ldx_zpg:
@@ -687,7 +688,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			FLAG_NEG_AND_ZERO_WITH_RESULT(operand);
 			//! [ldy]
 			return;
-		
+
 		// LSR
 		case v6502_opcode_lsr_acc:
 			cpu->ac = _executeInPlaceLSR(cpu, operand);
@@ -747,7 +748,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			v6502_write(cpu->memory, ref, cpu->ac);
 			//! [sta]
 			return;
-			
+
 		// STX
 		case v6502_opcode_stx_zpg:
 		case v6502_opcode_stx_zpgy:
@@ -756,7 +757,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			v6502_write(cpu->memory, ref, cpu->x);
 			//! [stx]
 			return;
-			
+
 		// STY
 		case v6502_opcode_sty_zpg:
 		case v6502_opcode_sty_zpgx:
@@ -765,7 +766,7 @@ void v6502_execute(v6502_cpu *cpu, uint8_t opcode, uint8_t low, uint8_t high) {
 			v6502_write(cpu->memory, ref, cpu->y);
 			//! [sty]
 			return;
-			
+
 		// Failure
 		default: {
 			if (cpu->fault_callback) {

@@ -49,7 +49,7 @@ int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t addres
 		}
 	}
 	instructionLength = v6502_instructionLengthForOpcode(opcode);
-	
+
 	fprintf(out, "%#04x: ", address);
 
 	switch (instructionLength) {
@@ -66,9 +66,9 @@ int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t addres
 			fprintf(out, "        ");
 		} break;
 	}
-	
+
 	fprintf(out, " - %s\n", instruction);
-	
+
 	return instructionLength;
 }
 
@@ -360,7 +360,7 @@ void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
 			strncpy(string, "wai", len);
 			return;
 	}
-	
+
 	strncpy(string, "???", len);
 }
 
@@ -436,7 +436,7 @@ void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_objec
 			else {
 				address = offset + 2 + v6502_signedValueOfByte(blob->data[offset + 1]);
 			}
-			
+
 			if (!as6502_symbolForAddress(table, address)) {
 				snprintf(symbolName, MAX_SYMBOL_LEN, "Label%d", currentLabel++);
 				as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
@@ -445,7 +445,7 @@ void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_objec
 		currentLineNum++;
 	}
 }
-	
+
 void dis6502_deriveSymbolsForObject(ld6502_object *object) {
 	if(!object->table) {
 		object->table = as6502_createSymbolTable();

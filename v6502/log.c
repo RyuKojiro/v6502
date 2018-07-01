@@ -42,11 +42,11 @@ void v6502_printCpuState(FILE *out, v6502_cpu *cpu) {
 
 void v6502_printMemoryRange(v6502_memory *memory, uint16_t start, uint16_t len) {
 	uint16_t end = start + len - 1;
-	
+
 	// Make sure we go to at least the same range specified, but then also round up to the nearest 0x0F
 	start &= ~15;
 	end |= 15;
-	
+
 	printf("      0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F\n");
 	for (uint16_t y = start; y <= end - 0x0F && y >= start; y += 0x10) {
 		printf("%04x ", y);
@@ -62,7 +62,7 @@ void v6502_printBreakpointList(v6502_breakpoint_list *list) {
 		printf("No breakpoints set.\n");
 		return;
 	}
-	
+
 	printf("Breakpoints set:\n");
 	for (size_t i = 0; i < list->count; i++) {
 		printf("Breakpoint #%zu: %#04x\n", i, list->breakpoints[i]);

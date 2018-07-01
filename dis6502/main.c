@@ -37,16 +37,16 @@
 static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, FILE *sym) {
 	char line[MAX_LINE_LEN];
 	int insideOfString = 0;
-	
+
 	ld6502_object *obj = ld6502_createObject();
 	ld6502_loadObjectFromFile(obj, in, format);
-	
+
 	as6502_symbol_table *table = as6502_createSymbolTable();
-	
+
 	for (int i = 0; i < obj->count; i++) {
 		ld6502_object_blob *blob = &obj->blobs[i];
 		blob->start += pstart;
-		
+
 		// Build Symbol Table
 		currentLineNum = 1;
 		dis6502_deriveSymbolsForObjectBlob(table, blob);
@@ -61,7 +61,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 		 * our address space. FIXME: This currently assumes only one blob!
 		 */
 		as6502_truncateTableToAddressSpace(table, blob->start, blob->len);
-		
+
 		// Disassemble
 		currentLineNum = 1;
 		for (uint16_t offset = 0; offset < blob->len; ){
@@ -71,7 +71,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				fprintf(out, "%s:\n", label->name);
 				currentLineNum++;
 			}
-			
+
 			if(insideOfString) {
 				if(!opcode) {
 					insideOfString = 0;
@@ -163,10 +163,10 @@ int main(int argc, char * const argv[]) {
 				return 0;
 		}
 	}
-	
+
 	argc -= optind;
 	argv += optind;
-	
+
 	for (int i = 0; i < argc; i++) {
 		disassembleFile(argv[i], out, format, programStart, printTable, sym);
 	}

@@ -39,7 +39,7 @@
 
 static v6502_opcode _addrModeError(as6502_token *instruction, v6502_address_mode mode) {
 	char m[12];
-	
+
 	as6502_stringForAddressMode(m, mode);
 	as6502_error(instruction->loc, instruction->len, v6502_BadAddressModeErrorText, m, instruction->text);
 
@@ -103,7 +103,7 @@ v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502
 		as6502_error(instruction->loc, instruction->len, v6502_InvalidOpcodeFormatText, instruction->text);
 		return v6502_opcode_nop;
 	}
-	
+
 	// Single-byte Instructions
 	if (asmeq(string, "brk")) {
 		return v6502_opcode_brk;
@@ -162,7 +162,7 @@ v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502
 	if (asmeq(string, "iny")) {
 		return v6502_opcode_iny;
 	}
-	
+
 	// Stack Instructions
 	if (asmeq(string, "jsr")) {
 		return v6502_opcode_jsr;
@@ -185,7 +185,7 @@ v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502
 	if (asmeq(string, "plp")) {
 		return v6502_opcode_plp;
 	}
-	
+
 	// Branching Instructions
 	if (asmeq(string, "bcc")) {
 		if (mode == v6502_address_mode_relative) {
@@ -251,13 +251,13 @@ v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502
 			return _addrModeError(instruction, mode);
 		}
 	}
-	
+
 	// If it's an unresolved symbol, might as well not go any further
 	if (mode == v6502_address_mode_symbol) {
 		as6502_error(0, strlen(string), v6502_UnknownSymbolErrorText, string);
 		return v6502_opcode_nop;
 	}
-	
+
 	// All of the rest
 	if (asmeq(string, "adc")) {
 		switch (mode) {
@@ -633,7 +633,7 @@ v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502
 static int _valueLengthInChars(const char *string) {
 	int i;
 	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
-	
+
 	return i;
 }
 
@@ -650,12 +650,12 @@ static int _containsNonDecimals(const char *string) {
 uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 	char *workString = malloc(len + 2);
 	uint16_t result;
-	
+
 	if (!string) {
 		free(workString);
 		return 0;
 	}
-	
+
 	// Remove all whitespace, #'s, *'s, high ascii, and parenthesis, also, truncate at comma
 	const char *cur;
 	for (cur = string; *cur; cur++) {
@@ -663,7 +663,7 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 			break;
 		}
 	}
-	
+
 	// Truncate to end of token
 	size_t starter = 0;
 	if (*cur == '$' || *cur == '%') {
@@ -673,7 +673,7 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 	size_t tLen = as6502_lengthOfToken(cur + starter, (80 - (cur - string)) - starter);
 	strncpy(workString, cur, tLen + starter);
 	workString[tLen + starter] = '\0';
-	
+
 	// Check first char to determine base
 	switch (workString[0]) {
 		case '$': { // Hex
@@ -708,7 +708,7 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 			if (wide) {
 				*wide = (_valueLengthInChars(workString + 1) > 3);
 			}
-			
+
 			/* FIXME: Is there a more efficient way to figure out width for
 			 * things that care, without having to get this deep?
 			 *
@@ -720,7 +720,7 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 			if (isdigit((int)workString[0]) && _containsNonDecimals(workString)) {
 				as6502_warn(0, 0, "Encountered an undecorated number (implying decimal) containing non-decimal characters.");
 			}
-			
+
 			result = strtol(workString, NULL, 10);
 		} break;
 	}
@@ -730,7 +730,7 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 		// Octal and decimal split digits
 		*wide = YES;
 	}
-	
+
 	return result;
 }
 
@@ -777,7 +777,7 @@ int as6502_isBranchInstruction(const char *string) {
 			return YES;
 		}
 	}
-	
+
 	return NO;
 }
 
@@ -908,14 +908,14 @@ void as6502_instructionForExpression(uint8_t *opcode, uint8_t *low, uint8_t *hig
 	if (mode) {
 		*mode = _mode;
 	}
-	
+
 	/* TODO: Make none of this rely on the operation being the first 3 chars every time */
 	// Determine opcode, based on entire line
 	uint8_t _opcode = as6502_opcodeForInstructionAndMode(head, _mode);
 	if (opcode) {
 		*opcode = _opcode;
 	}
-	
+
 	// Determine operands
 	if (as6502_instructionLengthForAddressMode(_mode) > 1) {
 		// We already know the address mode at this point, so we just want the actual value

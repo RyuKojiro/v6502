@@ -49,14 +49,14 @@ void as6502_destroySymbolTable(as6502_symbol_table *table) {
 	if(!table) {
 		return;
 	}
-	
+
 	as6502_symbol *next;
 	for (as6502_symbol *this = table->first_symbol; this; this = next) {
 		next = this->next;
 		free(this->name);
 		free(this);
 	}
-	
+
 	free(table);
 }
 
@@ -65,7 +65,7 @@ void as6502_printSymbolScript(as6502_symbol_table *table, FILE *out) {
 		fprintf(stderr, "Symbol table is NULL\n");
 		return;
 	}
-	
+
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		switch (this->type) {
 			case as6502_symbol_type_label: {
@@ -84,11 +84,11 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 		printf("Symbol table is NULL\n");
 		return;
 	}
-	
+
 	printf("Symbol table %p = {\n", table);
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
 		char *type;
-		
+
 		switch (this->type) {
 			default:
 			case as6502_symbol_type_unknown: {
@@ -103,7 +103,7 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 				type = "Var";
 			} break;
 		}
-		
+
 		if (as6502_symbolTypeIsLinked(this->type)) {
 			printf("\t%s { name = \"%s\", addr = %#x, next = %p, line = %lu }\n", type, this->name, this->address, this->next, this->line);
 		}
@@ -124,7 +124,7 @@ as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *na
 			return this;
 		}
 	}
-	
+
 	return NULL;
 }
 
@@ -136,7 +136,7 @@ as6502_symbol *as6502_symbolForAddress(as6502_symbol_table *table, uint16_t addr
 			return this;
 		}
 	}
-	
+
 	return NULL;
 }
 
@@ -144,11 +144,11 @@ uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
 	assert(table);
 
 	as6502_symbol *label = as6502_symbolForString(table, name);
-	
+
 	if (!label) {
 		return 0;
 	}
-	
+
 	return label->address;
 }
 
@@ -156,11 +156,11 @@ uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
 	assert(table);
 
 	as6502_symbol *var = as6502_symbolForString(table, name);
-	
+
 	if (!var) {
 		return 0;
 	}
-	
+
 	return var->address;
 }
 
@@ -174,14 +174,14 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 	sym->line = line;
 	sym->address = address;
 	sym->type = type;
-	
+
 	size_t len = strlen(name) + 1;
 	sym->name = malloc(len);
 	if (!sym->name) {
 		as6502_fatal("symbol name malloc in as6502_addVarToTable");
 	}
 	memcpy(sym->name, name, len);
-	
+
 	// Add it to the table
 	for (as6502_symbol **this = &table->first_symbol;; this = &((*this)->next)) {
 		if (*this && !strncmp((*this)->name, name, len)) {
@@ -202,7 +202,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 static void _removeConfirmedSymbol(as6502_symbol *symbol, as6502_symbol *previousSymbol) {
 	// NOTE: Never call this with a NULL previousSymbol (i.e. the head)
 	assert(previousSymbol);
-	
+
 	previousSymbol->next = symbol->next;
 	free(symbol->name);
 	free(symbol);
@@ -210,7 +210,7 @@ static void _removeConfirmedSymbol(as6502_symbol *symbol, as6502_symbol *previou
 
 void as6502_removeSymbolFromTable(as6502_symbol_table *table, as6502_symbol *symbol) {
 	assert(table);
-	
+
 	as6502_symbol *last = NULL;
 
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
@@ -258,7 +258,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 	size_t symLen = strlen(symbol);
 	size_t txtLen = strlen(text);
 	long difference = txtLen - symLen;
-	
+
 	if (difference < 0) { // Shift string left
 		for (char *cur = loc + txtLen; cur < line + len && cur < loc + symLen; cur++) {
 			cur[0] = cur[0 - difference];
@@ -277,7 +277,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 			as6502_fatal(v6502_DesymbolicationErrorText);
 		}
 	}
-	
+
 	// Strings are aligned, overwrite
 	memcpy(loc, text, txtLen);
 }
@@ -285,7 +285,7 @@ void as6502_replaceSymbolInLineAtLocationWithText(char *line, size_t len, char *
 int as6502_symbolShouldBeReplacedDoubleWidth(as6502_token *instruction) {
 	const char *trimmed = instruction->text;
 	//len -= trimmed - line;
-	
+
 	if (((trimmed[0] == 'b' || trimmed[0] == 'B') && (strncasecmp(trimmed, "bit", 3) && strncasecmp(trimmed, "brk", 3))) || as6502_tokenListFindTokenLiteral(instruction, ")")) {
 		return 0;
 	}
@@ -365,19 +365,19 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 
 static int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char *line, size_t len) {
 	line = trimhead(line, len);
-	
+
 	if (line[0] == 'b' || line[0] == 'B') {
 		if (strncasecmp(line, "bit", 3)) {
 			return as6502_symbolTypeIsLabel(type);
 		}
 	}
-	
+
 	if (line[0] == 'j' || line[0] == 'J') {
 		return as6502_symbolTypeIsLabel(type);
 	}
-	
+
 	// TODO: Variables
-	
+
 	return NO;
 }
 
@@ -386,25 +386,25 @@ void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, 
 
 	// Iterate through tokens
 	for (char *cur = line; *cur && ((size_t)(cur - line) < len); cur = (trimheadtospc(cur, len - (cur - line)) + 1)) {
-		
+
 		int wide;
 		uint16_t address = as6502_valueForString(&wide, cur, len - (cur - line));
 		as6502_symbol *symbol = as6502_symbolForAddress(table, address);
-		
+
 		// If we couldn't find one at that address, try a pstart offset symbol.
 		if (!symbol && wide) {
 			symbol = as6502_symbolForAddress(table, address - pstart);
 		}
-		
+
 		if (symbol && _symbolTypeIsAppropriateForInstruction(symbol->type, line, len)) {
 			char buf[80];
-			
+
 			int x;
 			for (x = 0; cur[x] && !isspace(CTYPE_CAST cur[x]); x++) {
 				buf[x] = cur[x];
 			}
 			buf[x] = '\0';
-			
+
 			as6502_replaceSymbolInLineAtLocationWithText(line, len, cur, buf, symbol->name);
 		}
 	}

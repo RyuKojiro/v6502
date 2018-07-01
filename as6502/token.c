@@ -41,7 +41,7 @@ as6502_token *as6502_tokenCreate(const char *text, size_t loc, size_t len) {
 	result->text = malloc(len + 1);
 	strncpy(result->text, text, len);
 	result->text[len] = '\0';
-	
+
 	return result;
 }
 
@@ -77,7 +77,7 @@ int as6502_tokenIsEqualToString(as6502_token *token, const char *string, size_t 
 void as6502_stringForTokenList(char *output, size_t len, as6502_token *head) {
 	assert(len > 1);
 	output[0] = '\0';
-	
+
 	while (head) {
 		// If len is the size of the output buffer, and strncat() function appends up to n characters PLUS the null terminator, we need to compensate.
 		strncat(output, head->text, len - 1);
@@ -144,7 +144,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 	if (line[len - 1] == '\n') {
 		len--;
 	}
-	
+
 	for (const char *cur = line; *cur && cur < line + len;) {
 		switch (*cur) {
 			case ';':
@@ -237,7 +237,7 @@ as6502_token *as6502_tokenListFindToken(as6502_token *token, const char *text, s
 		}
 		token = token->next;
 	}
-	
+
 	return NULL;
 }
 

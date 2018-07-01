@@ -41,21 +41,21 @@ static void linkObjects(FILE *outFile, ld6502_file_type format, FILE *chrFile, i
 	FILE *flatFile = fopen(files[numFiles - 1], "r");
 	as6502_readObjectFromFlatFile(linkResult, flatFile);
 	fclose(flatFile);
-	
+
 	///////////// LOAD /////////////
 	for (int o = 0; o < numFiles; o++) {
 		ld6502_loadObjectFromFile(objects[o], files[o], ld6502_file_type_None);
 	}
-	
+
 	ld6502_object *chrRom = NULL;
 	if (chrFile) {
 		as6502_readObjectFromFlatFile(chrRom, chrFile);
 	}
-	
+
 	///////////// LINK /////////////
 	// Iterate through symbol table, copy all objects into a new single flat object until all unlinked symbols are resolved, if any symbols cannot be found, error.
 	// Also make sure to consolidate all symbol tables into a singular master table that has all symbols.
-	
+
 	// Iterate thorugh unlinked objects
 	for (int o = 0; o < numFiles; o++) {
 		ld6502_object *currentObject = objects[o];
@@ -66,13 +66,13 @@ static void linkObjects(FILE *outFile, ld6502_file_type format, FILE *chrFile, i
 			// If not, copy required symbol, otherwise change symbol address
 		}
 	}
-	
+
 	/////////// CLEAN UP ///////////
 	for (int o = 0; o < numFiles; o++) {
 		ld6502_destroyObject(objects[o]);
 	}
 	free(objects);
-	
+
 	// Create the property struct
 	ines_properties props;
 
@@ -93,7 +93,7 @@ int main(int argc, char * const argv[]) {
 	char outName[FILENAME_MAX] = "out.nes";
 	FILE *chrFile = NULL;
 	FILE *out = NULL;
-	
+
 	int ch;
 	while ((ch = getopt(argc, argv, "o:C:F:")) != -1) {
 		switch (ch) {
@@ -114,10 +114,10 @@ int main(int argc, char * const argv[]) {
 				return 0;
 		}
 	}
-	
+
 	argc -= optind;
 	argv += optind;
-	
+
 	currentFileName = outName;
 	linkObjects(out, format, chrFile, argc, argv);
 	if (chrFile) {

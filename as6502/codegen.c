@@ -34,7 +34,7 @@
 
 as6502_token *as6502_resolveArithmeticInExpression(as6502_token *head) {
 	// There can be multiple arithmetical operations per line, so just loop until all are solved.
-	
+
 	as6502_token *lhs, *op, *rhs;
 	// TODO: Find the op first, then use that to determine the lhs/rhs, and error when one is missing.
 	while (as6502_tokenListFindTokenLiteral(head, "+") ||
@@ -107,7 +107,7 @@ void as6502_processObjectDirectiveInExpression(ld6502_object *obj, int *currentB
 			as6502_error(head->loc, head->len, "Encountered .org directive without an address afterwards.");
 			return;
 		}
-		
+
 		// start new blob
 		ld6502_addBlobToObject(obj, as6502_valueForToken(NULL, head->next));
 		*currentBlob = obj->count - 1;

@@ -57,7 +57,7 @@ static int v6502_memoryRangesIntersect(uint16_t start1, uint16_t size1, uint16_t
 	// Square braces are 2
 	uint16_t end1 = start1 + size1;
 	uint16_t end2 = start2 + size2;
-	
+
 	// [ { ]
 	if (start1 >= start2 && start1 < end2) {
 		return YES;
@@ -84,15 +84,15 @@ int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunct
 
 	// Create a struct and add it to the list
 	memory->mappedRanges = realloc(memory->mappedRanges, sizeof(v6502_mappedRange) * (memory->rangeCount + 1));
-	
+
 	v6502_mappedRange *this = &memory->mappedRanges[memory->rangeCount];
-	
+
 	this->start = start;
 	this->size = size;
 	this->read = read;
 	this->write = write;
 	this->context = context;
-	
+
 	memory->rangeCount++;
 
 	// Finally, if caching is enabled, update the cache
@@ -127,7 +127,7 @@ int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunct
 
 void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
 	assert(memory);
-	
+
 	if (memory->mapCacheEnabled) {
 		// Check cache
 		if (memory->writeCache && memory->writeCache[offset]) {
@@ -154,7 +154,7 @@ void v6502_write(v6502_memory *memory, uint16_t offset, uint8_t value) {
 
 uint8_t v6502_read(v6502_memory *memory, uint16_t offset, int trap) {
 	assert(memory);
-	
+
 	if (memory->mapCacheEnabled) {
 		// Check cache
 		if (memory->readCache && memory->readCache[offset]) {
@@ -194,7 +194,7 @@ v6502_memory *v6502_createMemory(size_t size) {
 	if (!memory) {
 		return NULL;
 	}
-	
+
 	// Allocate the backing storage
 	// Is doing it this way overly pedantic? The count and size are effectively reversed.
 	memory->bytes = calloc(size, sizeof(uint8_t));
@@ -212,11 +212,11 @@ void v6502_destroyMemory(v6502_memory *memory) {
 	if (!memory) {
 		return;
 	}
-	
+
 	free(memory->readCache);
 	free(memory->writeCache);
 	free(memory->contextCache);
-	
+
 	free(memory->mappedRanges);
 	free(memory->bytes);
 	free(memory);

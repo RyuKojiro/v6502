@@ -46,9 +46,9 @@ void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file) {
 void as6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file) {
 	ld6502_addBlobToObject(obj, 0);
 	ld6502_object_blob *blob = &obj->blobs[0];
-	
+
 	uint8_t byte;
-	
+
 	// FIXME: if the first byte is the last, this is probably going to break
 	while(fread(&byte, 1, 1, file)) {
 		ld6502_appendByteToBlob(blob, byte);

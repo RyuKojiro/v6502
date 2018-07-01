@@ -95,21 +95,21 @@ static v6502_debuggerCommand v6502_debuggerCommandParse(const char *command, siz
 
 int v6502_loadFileAtAddress(v6502_memory *mem, const char *fname, uint16_t address) {
 	FILE *f = fopen(fname, "r");
-	
+
 	if (!f) {
 		fprintf(stderr, "Could not open \"%s\" for reading!\n", fname);
 		return NO;
 	}
-	
+
 	uint8_t byte;
 	uint16_t offset = 0;
-	
+
 	while (fread(&byte, 1, 1, f)) {
 		mem->bytes[address + (offset++)] = byte;
 	}
-	
+
 	fprintf(stderr, "Loaded %u bytes at %#x.\n", offset, address);
-	
+
 	fclose(f);
 
 	return YES;
@@ -252,7 +252,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			else {
 				v6502_printBreakpointList(breakpoint_list);
 			}
-			
+
 			return YES;
 		}
 		case v6502_debuggerCommand_cpu: {
@@ -338,7 +338,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 
 			v6502_loadFileAtAddress(cpu->memory, filename, addr);
 			free(filename);
-			
+
 			return YES;
 		}
 		case v6502_debuggerCommand_label: {
@@ -389,7 +389,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 					break;
 				}
 			}
-			
+
 			return YES;
 		}
 		case v6502_debuggerCommand_script: {
@@ -413,7 +413,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			free(filename);
 			v6502_runDebuggerScript(cpu, file, breakpoint_list, table, runCallback, verbose);
 			fclose(file);
-			
+
 			return YES;
 		}
 		case v6502_debuggerCommand_symbols: {

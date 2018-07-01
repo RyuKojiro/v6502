@@ -43,7 +43,7 @@ int fileIsINES(FILE *infile) {
 	if (!infile) {
 		return NO;
 	}
-	
+
 	// Read Magic
 	char magic[ines_magicLength];
 	if(fread(magic, ines_magicLength, 1, infile)) {
@@ -51,7 +51,7 @@ int fileIsINES(FILE *infile) {
 			return YES;
 		}
 	}
-	
+
 	return NO;
 }
 
@@ -70,7 +70,7 @@ void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	// Write header
 	fwrite(headerData, ines_headerDataLength, 1, outfile);
 	free(headerData);
-	
+
 	// Write PRG ROM
 	if (prg_rom) {
 		fwrite(prg_rom->data, prg_rom->len, 1, outfile);
@@ -87,7 +87,7 @@ void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	char headerData[ines_headerDataLength];
 	fread(headerData, ines_headerDataLength, 1, infile);
 	uint16_t prgRomSize;
-	
+
 	// Try for 8k precision, if older format fallback to 16k
 	if (headerData[ines_headerPrgRomSizeField8]) {
 		prgRomSize = headerData[ines_headerPrgRomSizeField8] * ines_8kUnits;
@@ -95,7 +95,7 @@ void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	else {
 		prgRomSize = headerData[ines_headerPrgRomSizeField16] * ines_16kUnits;
 	}
-	
+
 	if (prg_rom) {
 		// Read PRG ROM
 		prg_rom->len = prgRomSize;
@@ -115,14 +115,14 @@ void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 void as6502_writeObjectToINES(ld6502_object *obj, FILE *file) {
 	ines_properties props;
 	props.videoMode = ines_videoMode_NTSC;
-	
+
 	ld6502_object_blob prg_rom;
-	
+
 	// Flatten all segments into a single PRG ROM blob
 	for (int i = 0; i < obj->count; i++) {
 		memcpy(&prg_rom.data[obj->blobs[i].start], obj->blobs[i].data, obj->blobs[i].len);
 	}
-	
+
 	writeToINES(file, &prg_rom, NULL, &props);
 }
 

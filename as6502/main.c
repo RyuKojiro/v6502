@@ -56,9 +56,9 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	as6502_instructionForExpression(&opcode, &low, &high, &mode, desymedHead);
 	if (printDot) as6502_printDotRankForList(stdout, desymedHead);
 	as6502_tokenListDestroy(desymedHead);
-	
+
 	addrLen = as6502_instructionLengthForAddressMode(mode);
-	
+
 	if (addrLen >= 1) {
 		ld6502_appendByteToBlob(blob, opcode);
 	}
@@ -75,15 +75,15 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 
 	if (printProcess) {
 		FILE *lineout = stdout;
-		
+
 		uint16_t address = blob->len - addrLen;
 		as6502_symbol *label = as6502_symbolForAddress(table, address + blob->start);
 		if (label) {
 			fprintf(lineout, "%#04x:          - %4lu: %s:\n", address, label->line, label->name);
 		}
-		
+
 		fprintf(lineout, "%#04x: ", blob->len - addrLen);
-		
+
 		switch (addrLen) {
 			case 1: {
 				fprintf(lineout, "%02x      ", opcode);
@@ -103,7 +103,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 		as6502_stringForTokenList(line, MAX_LINE_LEN, head->next);
 		fprintf(lineout, " - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
 	}
-	
+
 	return addrLen;
 }
 
@@ -132,7 +132,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 		if (!head) {
 			continue;
 		}
-		
+
 		if (printDot) {
 			printf("%lu -> ", currentLineNum);
 		}
@@ -142,7 +142,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, address + obj->blobs[currentBlob].start, as6502_symbol_type_label);
 			head = head->next->next;
 		}
-		
+
 		// Dot Directives
 		if (head && head->text[0] == '.') {
 			if (!strncasecmp(head->text, ".org", 5) && head->next) {
@@ -173,7 +173,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 			}
 			// These should always be: <varname>, '=', <target_address>
 			uint16_t target = as6502_valueForToken(NULL, head->next->next);
-			
+
 			as6502_addSymbolToTable(obj->table, currentLineNum, head->text, target, as6502_symbol_type_variable);
 		}
 		// Instruction (needed to keep track of offset)
@@ -196,7 +196,7 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 	if (sym) {
 		as6502_printSymbolScript(obj->table, sym);
 	}
-	
+
 	if (printDot) {
 		printf("EOF; }");
 	}
@@ -348,13 +348,13 @@ int main(int argc, char * const argv[]) {
 	}
 
 	int i = optind;
-	
+
 	if (argc - i == 0) {
 		currentFileName = "stdin";
 		currentLineNum = 0;
 
 		as6502_warn(0, 0, "Assembling from stdin does not support symbols");
-		
+
 		if (makeSymScript) {
 			char *fname = outNameFromInName(argv[i], EXTENSION_SCRIPT);
 			sym = fopen(fname, "w");
@@ -369,7 +369,7 @@ int main(int argc, char * const argv[]) {
 				perror("as6502");
 				return 1;
 			}
-			
+
 			currentFileName = argv[i];
 			int generatedOutName = NO;
 			if (!outName) {

@@ -60,23 +60,23 @@ static void as6502_vlog(unsigned long line, unsigned long loc, unsigned long len
 	if (termcolors()) {
 		fprintf(stderr,
 				ANSI_COLOR_BRIGHT_WHITE "%s:%lu:", currentFileName, line);
-		
+
 		if (len) {
 			fprintf(stderr, "%lu:", loc);
 		}
-		
+
 		fprintf(stderr,
 				" %s%s: "
 				ANSI_COLOR_BRIGHT_WHITE, color, type);
 		vfprintf(stderr, reason, ap);
-		
+
 		fprintf(stderr, ANSI_COLOR_RESET);
 	}
 	else {
 		fprintf(stderr, "%s:%lu: %s: ", currentFileName, line, type);
 		vfprintf(stderr, reason, ap);
 	}
-	
+
 	if (reason[strlen(reason)] != '\n') {
 		fprintf(stderr, "\n");
 	}
@@ -124,7 +124,7 @@ void as6502_underline(const char *str, unsigned long loc, unsigned long len) {
 	}
 
 	fprintf(stderr, "%s", str);
-	
+
 	// FIXME: Shouldn't this always need a newline or always not need a newline?
 	if (currentLineText[strlen(str) - 1] != '\n') {
 		fprintf(stderr, "\n");

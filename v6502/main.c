@@ -53,7 +53,7 @@ static as6502_symbol_table *table;
 
 static void fault(void *ctx, const char *error) {
 	(void)ctx;
-	
+
 	fprintf(stderr, "fault: ");
 	fprintf(stderr, "%s", error);
 	if (error[strlen(error)] != '\n') {
@@ -64,7 +64,7 @@ static void fault(void *ctx, const char *error) {
 static void run(v6502_cpu *cpu) {
 	cpu->sr &= ~v6502_cpu_status_break;
 	interrupt = 0;
-	
+
 	// Step once if we are starting from a breakpoint, so that we don't hit it again
 	if (v6502_breakpointIsInList(breakpoint_list, cpu->pc)) {
 		if (verbose) {
@@ -80,20 +80,20 @@ static void run(v6502_cpu *cpu) {
 			printf("Hit breakpoint at %#02x.\n", cpu->pc);
 			return;
 		}
-		
+
 		if (verbose) {
 			dis6502_printAnnotatedInstruction(stderr, cpu, cpu->pc, table);
 		}
 		v6502_step(cpu);
 	} while (!(cpu->sr & v6502_cpu_status_break) && !interrupt);
 	resist = NO;
-	
+
 	textMode_rest(video);
-	
+
 	if (cpu->sr & v6502_cpu_status_break) {
 		printf("Encountered 'brk' at %#02x.\n", cpu->pc - 1);
 	}
-	
+
 	if (interrupt) {
 		printf("Received interrupt, CPU halted.\n");
 	}
@@ -103,7 +103,7 @@ static void handleSignal(int signal) {
 	if (signal == SIGINT) {
 		interrupt++;
 	}
-	
+
 	if (!resist) {
 		exit(EXIT_SUCCESS);
 	}
@@ -118,27 +118,27 @@ static const char * prompt() {
 int main(int argc, const char * argv[])
 {
 	currentFileName = "v6502";
-	
+
 	signal(SIGINT, handleSignal);
-	
+
 	printf("Creating 1 virtual CPU...\n");
 	cpu = v6502_createCPU();
 	cpu->fault_callback = fault;
-	
+
 	printf("Allocating %dk of virtual memory...\n", (MEMORY_SIZE + 1) / 1024);
 	cpu->memory = v6502_createMemory(MEMORY_SIZE);
-	
+
 	// Check for a binary as an argument; if so, load and run it
 	if (argc > 1) {
 		const char *filename = argv[argc - 1];
 		printf("Loading binary image \"%s\" into memory...\n", filename);
 		v6502_loadFileAtAddress(cpu->memory, filename, DEFAULT_RESET_VECTOR);
 	}
-	
+
 	// Set the reset vector
 	v6502_write(cpu->memory, v6502_memoryVectorResetLow, DEFAULT_RESET_VECTOR & 0xFF);
 	v6502_write(cpu->memory, v6502_memoryVectorResetHigh, DEFAULT_RESET_VECTOR >> 8);
-	
+
 	printf("Resetting CPU...\n");
 	v6502_reset(cpu);
 
@@ -149,18 +149,18 @@ int main(int argc, const char * argv[])
 
 	// An empty symbol table is allocated, since they are dynamically created
 	table = as6502_createSymbolTable();
-	
+
 	printf("Starting Text Mode Video...\n");
 	video = textMode_create(cpu->memory);
-	
+
 	printf("Running...\n");
 	run(cpu);
-	
+
 	int commandLen;
 	HistEvent ev;
 	History *hist = history_init();
 	history(hist, &ev, H_SETSIZE, 100);
-	
+
 	EditLine *el = el_init(currentFileName, stdin, stdout, stderr);
 	el_set(el, EL_PROMPT, &prompt);
 	el_set(el, EL_SIGNAL, SIGWINCH);
@@ -172,19 +172,19 @@ int main(int argc, const char * argv[])
 	char *command = NULL;
 	while (!feof(stdin)) {
 		currentLineNum++;
-		
+
 		const char *in = el_gets(el, &commandLen);
 		if (!in) {
 			break;
 		}
-		
+
 		history(hist, &ev, H_ENTER, in);
 		command = realloc(command, commandLen + 1);
 		memcpy(command, in, commandLen);
-		
+
 		// Trim newline, always the last char
 		command[commandLen - 1] = '\0';
-		
+
 		if (command[0] == '\0') {
 			continue;
 		}
@@ -197,7 +197,7 @@ int main(int argc, const char * argv[])
 			as6502_executeAsmLineOnCPU(cpu, command, strlen(command));
 		}
 	}
-	
+
 	textMode_destroy(video);
 	as6502_destroySymbolTable(table);
 	v6502_destroyBreakpointList(breakpoint_list);

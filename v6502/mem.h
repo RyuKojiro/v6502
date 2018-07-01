@@ -31,12 +31,12 @@
 
 #ifndef YES
 /** @brief Boolean true */
-#define YES		1
+#define YES 1
 #endif
 
 #ifndef NO
 /** @brief Boolean false */
-#define NO		0
+#define NO  0
 #endif
 
 /** @defgroup mem_boundaries Memory Map Definitions */
@@ -44,49 +44,49 @@
 
 // Memory Starts
 /** @brief Start of work memory available for general program use */
-#define v6502_memoryStartWorkMemory			0x0000
+#define v6502_memoryStartWorkMemory         0x0000
 /** @brief Start of memory reserved for CPU stack */
-#define v6502_memoryStartStack				0x0100
+#define v6502_memoryStartStack              0x0100
 /** @brief Start of PPU registers for the RP2C02 chipset */
-#define v6502_memoryStartPPURegisters		0x2000
+#define v6502_memoryStartPPURegisters       0x2000
 /** @brief Start of APU registers for the RP2A03 chipset */
-#define v6502_memoryStartAPURegisters		0x4000
+#define v6502_memoryStartAPURegisters       0x4000
 /** @brief Start of memory mapped expansion ROM */
-#define v6502_memoryStartExpansionRom		0x4020
+#define v6502_memoryStartExpansionRom       0x4020
 /** @brief Start of SRAM backed memory region */
-#define v6502_memoryStartSRAM				0x6000
+#define v6502_memoryStartSRAM               0x6000
 /** @brief Start of memory mapped PRGROM */
-#define v6502_memoryStartPRGROM				0x8000
+#define v6502_memoryStartPRGROM             0x8000
 /** @brief Start of memory mapped interrupt vectors */
-#define v6502_memoryStartInterruptVectors	0xFFFA
+#define v6502_memoryStartInterruptVectors   0xFFFA
 /** @brief Maximum memory boundary */
-#define v6502_memoryStartCeiling			0xFFFF
+#define v6502_memoryStartCeiling            0xFFFF
 
 // Memory Blob Sizes
 /** @brief Size of work memory available for general program use */
-#define v6502_memorySizeWorkMemory			0x0800
+#define v6502_memorySizeWorkMemory          0x0800
 /** @brief Size of PPU registers for the RP2C02 chipset */
-#define v6502_memorySizePPURegisters		0x0008
+#define v6502_memorySizePPURegisters        0x0008
 /** @brief Size of the six interrupt vector bytes (Hint: It's six.) */
-#define v6502_memorySizeInterruptVectors	(v6502_memoryStartCeiling - v6502_memoryStartInterruptVectors)
+#define v6502_memorySizeInterruptVectors    (v6502_memoryStartCeiling - v6502_memoryStartInterruptVectors)
 
 // Vector Locations
 /** @brief The low byte location of the NMI vector stored in the v6502_memory::interrupt_vectors */
-#define v6502_memoryVectorNMILow			0xFFFA
+#define v6502_memoryVectorNMILow            0xFFFA
 /** @brief The high byte location of the NMI vector stored in the v6502_memory::interrupt_vectors */
-#define v6502_memoryVectorNMIHigh			0xFFFB
+#define v6502_memoryVectorNMIHigh           0xFFFB
 /** @brief The low byte location of the reset vector stored in the v6502_memory::interrupt_vectors */
-#define v6502_memoryVectorResetLow			0xFFFC
+#define v6502_memoryVectorResetLow          0xFFFC
 /** @brief The high byte location of the reset vector stored in the v6502_memory::interrupt_vectors */
-#define v6502_memoryVectorResetHigh			0xFFFD
+#define v6502_memoryVectorResetHigh         0xFFFD
 /** @brief The low byte location of the normal interrupt vector stored in the v6502_memory::interrupt_vectors */
-#define v6502_memoryVectorInterruptLow		0xFFFE
+#define v6502_memoryVectorInterruptLow      0xFFFE
 /** @brief The high byte location of the normal interrupt vector stored in the v6502_memory::interrupt_vectors */
-#define v6502_memoryVectorInterruptHigh		0xFFFF
+#define v6502_memoryVectorInterruptHigh     0xFFFF
 /**@}*/
 
 /** @brief Maximum possible value of an 8-bit byte */
-#define BYTE_MAX	0xFF
+#define BYTE_MAX 0xFF
 
 /** @cond STRUCT_FORWARD_DECLS */
 /* Forward declaration needed for circular dependency of mapping function and structures */
@@ -106,10 +106,10 @@ typedef struct {
 	uint16_t start;
 	/** @brief Byte-length of mapped range */
 	size_t size;
-    /** @brief Memory access callback for reading bytes within this memory range */
-    v6502_readFunction *read;
+	/** @brief Memory access callback for reading bytes within this memory range */
+	v6502_readFunction *read;
 	/** @brief Memory access callback for writing bytes within this memory range */
-    v6502_writeFunction *write;
+	v6502_writeFunction *write;
 	/** @brief Context pointer, generally used to point to hardware data structures so that they can be referenced when called back to  */
 	void *context;
 } v6502_mappedRange;

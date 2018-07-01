@@ -29,13 +29,13 @@ static void textMode_updateOffset(v6502_textmode_video *vid, uint16_t address) {
 	if (!vid->screen) {
 		vid->screen = initscr();
 	}
-	
+
 	char ch = vid->memory->bytes[address];
 	address -= textMode_characterMemoryStart;
-	
+
 	int x = address % 80;
 	int y = (address - x) / 80;
-	
+
 	if (ch) {
 		wmove(vid->screen, y, x);
 		waddch(vid->screen, ch);
@@ -72,7 +72,7 @@ void textMode_refreshVideo(v6502_textmode_video *vid) {
 	if (!vid->screen) {
 		vid->screen = initscr();
 	}
-	
+
 	for (int y = 0; y < 24; y++) {
 		for (int x = 0; x < 80; x++) {
 			textMode_updateCharacter(vid, x, y);
@@ -84,7 +84,7 @@ void textMode_refreshVideo(v6502_textmode_video *vid) {
 void textMode_updateCharacter(v6502_textmode_video *vid, int x, int y) {
 	uint16_t address = textMode_addressForLocation(x, y);
 	char ch = vid->memory->bytes[address];
-	
+
 	if (ch) {
 		wmove(vid->screen, y, x);
 		waddch(vid->screen, ch);

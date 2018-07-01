@@ -247,7 +247,7 @@ static v6502_address_mode bruteForce_instructionLengthForOpcode(v6502_opcode opc
 static int test_addressModeForOpcode() {
 	TEST_START;
 	int rc = 0;
-	
+
 	for(v6502_opcode opcode = v6502_opcode_brk; opcode < 0xFF; opcode++) {
 		v6502_address_mode knownMode = bruteForce_addressModeForOpcode(opcode);
 		// Make sure we actually even support this instruction
@@ -264,7 +264,7 @@ static int test_addressModeForOpcode() {
 static int test_instructionLengthForOpcode() {
 	TEST_START;
 	int rc = 0;
-	
+
 	for(v6502_opcode opcode = v6502_opcode_brk; opcode < 0xFF; opcode++) {
 		int knownLen = bruteForce_instructionLengthForOpcode(opcode);
 		// Make sure we actually even support this instruction
@@ -281,17 +281,17 @@ static int test_instructionLengthForOpcode() {
 static int test_sbc() {
 	TEST_START;
 	int rc = 0;
-	
+
 	v6502_cpu before;
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
-	
+
 	printf("Testing SBC instruction...\n");
-	
+
 	v6502_reset(cpu);
 	TEST_ASM("lda #$ff");
-	
+
 	memcpy(&before, cpu, sizeof(v6502_cpu));
 	TEST_ASM("sbc #$04");
 	if (!(cpu->ac == 0xfa &&
@@ -301,24 +301,24 @@ static int test_sbc() {
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
 	}
-	
+
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
-	
+
 	return rc;
 }
 
 static int test_signedUnderflow() {
 	TEST_START;
 	int rc = 0;
-	
+
 	v6502_cpu before;
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
-	
+
 	printf("Testing signed underflow...\n");
-	
+
 	v6502_reset(cpu);
 	cpu->ac = 0x04;
 	memcpy(&before, cpu, sizeof(v6502_cpu));
@@ -328,16 +328,16 @@ static int test_signedUnderflow() {
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
 	}
-	
+
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
-	
+
 	return rc;
 }
 
 static int test_jumpInstructionLength() {
 	TEST_START;
-	
+
 	printf("Making sure that the jump instruction is calculated as 3 bytes...\n");
 
 	return v6502_instructionLengthForOpcode(v6502_opcode_jmp_abs) != 3;
@@ -346,14 +346,14 @@ static int test_jumpInstructionLength() {
 static int test_wideJumpWithParsing() {
 	TEST_START;
 	int rc = 0;
-	
+
 	v6502_cpu before;
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
-	
+
 	printf("Testing wide jump with inline assembler parsing...\n");
-	
+
 	v6502_reset(cpu);
 	cpu->ac = 0x04;
 	memcpy(&before, cpu, sizeof(v6502_cpu));
@@ -363,18 +363,18 @@ static int test_wideJumpWithParsing() {
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
 	}
-	
+
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
-	
+
 	return rc;
 }
 
 static int test_intersectingMemoryMapping() {
 	TEST_START;
-	
+
 	printf("Making sure the memory controller doesn't allow overlapping mapped regions...\n");
-	
+
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
@@ -384,13 +384,13 @@ static int test_intersectingMemoryMapping() {
 		v6502_destroyCPU(cpu);
 		return 1;
 	}
-	
+
 	if (!v6502_map(cpu->memory, 50, 100, returnHigh, NULL, NULL)) {
 		v6502_destroyMemory(cpu->memory);
 		v6502_destroyCPU(cpu);
 		return 0;
 	}
-	
+
 	printf("Second range was allowed!\n");
 
 	v6502_destroyMemory(cpu->memory);
@@ -400,9 +400,9 @@ static int test_intersectingMemoryMapping() {
 
 static int test_contiguousMemoryMapping() {
 	TEST_START;
-	
+
 	printf("Making sure the memory controller allows overlapping mapped regions...\n");
-	
+
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
@@ -412,7 +412,7 @@ static int test_contiguousMemoryMapping() {
 		v6502_destroyCPU(cpu);
 		return 1;
 	}
-	
+
 	if (!v6502_map(cpu->memory, 200, 100, returnHigh, NULL, NULL)) {
 		printf("Second range was not allowed!\n");
 
@@ -420,7 +420,7 @@ static int test_contiguousMemoryMapping() {
 		v6502_destroyCPU(cpu);
 		return 1;
 	}
-	
+
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
 	return 0;
@@ -434,9 +434,9 @@ static int test_cmpCarrySet() {
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
-	
+
 	printf("Making sure 0xB4 (cmp) 0x8D sets the carry flag...\n");
-	
+
 	v6502_reset(cpu);
 	TEST_ASM("lda #$b4");
 	memcpy(&before, cpu, sizeof(v6502_cpu));
@@ -446,7 +446,7 @@ static int test_cmpCarrySet() {
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
 	}
-	
+
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
 
@@ -461,9 +461,9 @@ static int test_adc1() {
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
 	v6502_map(cpu->memory, v6502_memoryStartWorkMemory, v6502_memoryStartCeiling, returnLow, NULL, NULL);
-	
+
 	printf("Testing 0xFD (adc) 0x06 for carry, overflow, and result...\n");
-	
+
 	v6502_reset(cpu);
 	TEST_ASM("lda #253");
 	memcpy(&before, cpu, sizeof(v6502_cpu));
@@ -474,7 +474,7 @@ static int test_adc1() {
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
 	}
-	
+
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
 
@@ -503,7 +503,7 @@ static testFunction testFunctions[] = {
 int main(int argc, const char *argv[]) {
 	int rc = EX_OK;
 	int color = 0;//isatty(fileno(stdin));
-	
+
 	for (size_t i = 0; i < TOTAL_TESTS; i++) {
 		int lastResult = testFunctions[i]();
 		if (lastResult) {
@@ -513,15 +513,15 @@ int main(int argc, const char *argv[]) {
 			else {
 				printf(">>> FAILURE >>> %s\n", lastTest);
 			}
-			
+
 			rc++;
 		}
 		else {
 			printf("Passed test %s\n", lastTest);
 		}
 	}
-	
+
 	printf("Compiled unit test results: %lu/%lu tests passed, %lu%% pass rate.\n", (unsigned long)TOTAL_TESTS - rc, (unsigned long)TOTAL_TESTS, 100UL * (TOTAL_TESTS - rc) / TOTAL_TESTS);
-	
+
 	return rc;
 }

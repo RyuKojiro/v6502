@@ -93,12 +93,12 @@ void _shortStringForAddressMode(char *out, size_t len, v6502_address_mode mode) 
 void generateMap(FILE *out, kmapCallback colorizer, const char *title) {
 	char opcodeString[OPCODE_STRING_LEN];
 	char modeString[MODE_STRING_LEN];
-	
+
 	if (title) {
 		fprintf(out, "<h1>%s</h1>\n", title);
 	}
 	fprintf(out, "<table border=\"1\" cellspacing=\"0\" cellpadding=\"3\" class=\"optable\">\n");
-	
+
 	// Print low nibble header
 	fprintf(out, "<tr valign=\"top\"><td nowrap=\"\">&nbsp;</td>");
 	for (uint8_t low = 0; low < 0x10; low++) {
@@ -115,7 +115,7 @@ void generateMap(FILE *out, kmapCallback colorizer, const char *title) {
 
 			dis6502_stringForOpcode(opcodeString, OPCODE_STRING_LEN, opcode);
 			_shortStringForAddressMode(modeString, MODE_STRING_LEN, mode);
-			
+
 			fprintf(out, "<td nowrap %s>%s %s</td>", colorizer ? colorizer(opcode) : "", opcodeString, modeString);
 		}
 		fprintf(out, "</tr>\n");
@@ -266,7 +266,7 @@ const char *instructionTypeCallback(v6502_opcode opcode) {
 	if (dis6502_isBranchOpcode(opcode)) {
 		return HTML_BGCOLOR HTML_GREEN;
 	}
-	
+
 	switch (opcode) {
 		case v6502_opcode_lda_imm:
 		case v6502_opcode_lda_zpg:
@@ -319,7 +319,7 @@ const char *instructionTypeCallback(v6502_opcode opcode) {
 
 void generateLegend(FILE *out, const char *colors[], const char *labels[], int count) {
 	fprintf(out, "<p><table border=\"1\" cellspacing=\"0\" cellpadding=\"3\">\n");
-	
+
 	fprintf(out, "<tr valign=\"top\">");
 	for (int i = 0; i < count; i++) {
 		fprintf(out, "<td nowrap %s>%s</td>", colors[i], labels[i]);
@@ -343,7 +343,7 @@ void generateAllMaps(FILE *out) {
 	generateLegend(out, instructionTypeColors, instructionTypeLabels, instructionTypeCount);
 
 	// Opcode
-	
+
 	// Address Mode by Register
 	generateMap(out, addressModeByRegisterCallback, "Address Mode by Register");
 	generateLegend(out, addressModeByRegisterColors, addressModeByRegisterLabels, addressModeByRegisterCount);
@@ -351,7 +351,7 @@ void generateAllMaps(FILE *out) {
 	// Address Mode by Operand
 	generateMap(out, addressModeByOperandCallback, "Address Mode by Operand");
 	generateLegend(out, addressModeByOperandColors, addressModeByOperandLabels, addressModeByOperandCount);
-	
+
 	fprintf(out, "</html></body>\n");
 }
 

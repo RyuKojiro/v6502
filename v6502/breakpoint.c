@@ -35,7 +35,7 @@ void v6502_destroyBreakpointList(v6502_breakpoint_list *list) {
 	if (!list) {
 		return;
 	}
-	
+
 	free(list->breakpoints);
 	free(list);
 }
@@ -69,13 +69,13 @@ void v6502_removeBreakpointFromList(v6502_breakpoint_list *list, uint16_t addres
 	assert(list);
 
 	uint16_t *loc = locationOfBreakpointInList(list, address);
-	
+
 	if (loc) {
 		// Shift the entire list down one
 		for (size_t i = (loc - list->breakpoints) + 1; i < list->count; i++) {
 			list->breakpoints[i - 1] = list->breakpoints[i];
 		}
-		
+
 		list->count--;
 		list->breakpoints = realloc(list->breakpoints, sizeof(address) * list->count);
 	}
