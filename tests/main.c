@@ -401,7 +401,7 @@ static int test_intersectingMemoryMapping() {
 static int test_contiguousMemoryMapping() {
 	TEST_START;
 
-	printf("Making sure the memory controller allows overlapping mapped regions...\n");
+	printf("Making sure the memory controller allows contiguously mapped regions...\n");
 
 	v6502_cpu *cpu = v6502_createCPU();
 	cpu->memory = v6502_createMemory(0);
