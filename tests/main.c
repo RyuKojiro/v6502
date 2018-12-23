@@ -372,6 +372,7 @@ static int test_wideJumpWithParsing() {
 
 static int test_intersectingMemoryMapping() {
 	TEST_START;
+	int rc = 0;
 
 	printf("Making sure the memory controller doesn't allow overlapping mapped regions...\n");
 
@@ -379,27 +380,22 @@ static int test_intersectingMemoryMapping() {
 	cpu->memory = v6502_createMemory(0);
 	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
 		printf("Couldn't map the first range!\n");
-
-		v6502_destroyMemory(cpu->memory);
-		v6502_destroyCPU(cpu);
-		return 1;
+		rc++;
 	}
 
-	if (!v6502_map(cpu->memory, 50, 100, returnHigh, NULL, NULL)) {
-		v6502_destroyMemory(cpu->memory);
-		v6502_destroyCPU(cpu);
-		return 0;
+	if (v6502_map(cpu->memory, 50, 100, returnHigh, NULL, NULL)) {
+		printf("Second range was allowed!\n");
+		rc++;
 	}
-
-	printf("Second range was allowed!\n");
 
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
-	return 1;
+	return rc;
 }
 
 static int test_contiguousMemoryMapping() {
 	TEST_START;
+	int rc = 0;
 
 	printf("Making sure the memory controller allows contiguously mapped regions...\n");
 
@@ -407,28 +403,22 @@ static int test_contiguousMemoryMapping() {
 	cpu->memory = v6502_createMemory(0);
 	if (!v6502_map(cpu->memory, 100, 100, returnLow, NULL, NULL)) {
 		printf("Couldn't map the first range!\n");
-
-		v6502_destroyMemory(cpu->memory);
-		v6502_destroyCPU(cpu);
-		return 1;
+		rc++;
 	}
 
 	if (!v6502_map(cpu->memory, 200, 100, returnHigh, NULL, NULL)) {
 		printf("Second range was not allowed!\n");
-
-		v6502_destroyMemory(cpu->memory);
-		v6502_destroyCPU(cpu);
-		return 1;
+		rc++;
 	}
 
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
-	return 0;
+	return rc;
 }
 
 static int test_ceilingMemoryMapping() {
 	TEST_START;
-	int result = 0;
+	int rc = 0;
 
 	printf("Making sure the memory controller protects mapping near the end of the address space...\n");
 
@@ -437,17 +427,17 @@ static int test_ceilingMemoryMapping() {
 
 	if (v6502_map(cpu->memory, 0xFFFF, 2, returnLow, NULL, NULL)) {
 		printf("Mapped beyond the end!\n");
-		result++;
+		rc++;
 	}
 
 	if (!v6502_map(cpu->memory, 0xFFFF, 1, returnLow, NULL, NULL)) {
 		printf("Couldn't map the last byte!\n");
-		result++;
+		rc++;
 	}
 
 	v6502_destroyMemory(cpu->memory);
 	v6502_destroyCPU(cpu);
-	return result;
+	return rc;
 }
 
 static int test_cmpCarrySet() {
@@ -522,7 +512,7 @@ static testFunction testFunctions[] = {
 	test_addressModeForOpcode,
 	test_instructionLengthForOpcode,
 	test_cmpCarrySet,
-	test_adc1
+	test_adc1,
 };
 
 int main(int argc, const char *argv[]) {
