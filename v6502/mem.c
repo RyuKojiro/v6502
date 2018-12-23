@@ -74,6 +74,13 @@ static int v6502_memoryRangesIntersect(uint16_t start1, uint16_t size1, uint16_t
 }
 
 int v6502_map(v6502_memory *memory, uint16_t start, size_t size, v6502_readFunction *read, v6502_writeFunction *write, void *context) {
+	assert(memory);
+
+	// Mapping beyond the end of the address space is prohibited
+	if ((uint32_t)start + size > 0x10000) {
+		return NO;
+	}
+
 	// Make sure it's not already mapped
 	for (size_t i = 0; i < memory->rangeCount; i++) {
 		v6502_mappedRange *currentRange = &memory->mappedRanges[i];

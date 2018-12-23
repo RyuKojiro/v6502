@@ -426,6 +426,30 @@ static int test_contiguousMemoryMapping() {
 	return 0;
 }
 
+static int test_ceilingMemoryMapping() {
+	TEST_START;
+	int result = 0;
+
+	printf("Making sure the memory controller protects mapping near the end of the address space...\n");
+
+	v6502_cpu *cpu = v6502_createCPU();
+	cpu->memory = v6502_createMemory(0);
+
+	if (v6502_map(cpu->memory, 0xFFFF, 2, returnLow, NULL, NULL)) {
+		printf("Mapped beyond the end!\n");
+		result++;
+	}
+
+	if (!v6502_map(cpu->memory, 0xFFFF, 1, returnLow, NULL, NULL)) {
+		printf("Couldn't map the last byte!\n");
+		result++;
+	}
+
+	v6502_destroyMemory(cpu->memory);
+	v6502_destroyCPU(cpu);
+	return result;
+}
+
 static int test_cmpCarrySet() {
 	TEST_START;
 	int rc = 0;
@@ -494,6 +518,7 @@ static testFunction testFunctions[] = {
 	test_wideJumpWithParsing,
 	test_intersectingMemoryMapping,
 	test_contiguousMemoryMapping,
+	test_ceilingMemoryMapping,
 	test_addressModeForOpcode,
 	test_instructionLengthForOpcode,
 	test_cmpCarrySet,
