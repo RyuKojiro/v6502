@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include <as6502/parser.h>
 
@@ -38,6 +39,18 @@
 #define ines_headerChrRomSizeField8		5
 #define ines_headerPrgRomSizeField8		8
 #define ines_headerZeroPaddingStart		11
+
+typedef struct {
+	char magic[4];        // "NES\x1a"
+	uint8_t prg_rom_size; // 16 kB units
+	uint8_t chr_rom_size; //  8 kB units
+	uint8_t mapper_low;   // Lower nibble of mapper + flags
+	uint8_t mapper_high;  // Upper nibble of mapper + flags
+	uint8_t prg_ram_size; //  8 kB units
+	uint8_t tv_system;    // 0=NTSC 1=PAL
+	uint8_t extensions;   // Bus conflict stuff
+	uint8_t padding[5];
+} inesHeader;
 
 int fileIsINES(FILE *infile) {
 	if (!infile) {
@@ -83,18 +96,12 @@ void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 }
 
 void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props) {
-	// Read Header
-	char headerData[ines_headerDataLength];
-	fread(headerData, ines_headerDataLength, 1, infile);
-	uint16_t prgRomSize;
+	assert(sizeof(inesHeader) == 16);
 
-	// Try for 8k precision, if older format fallback to 16k
-	if (headerData[ines_headerPrgRomSizeField8]) {
-		prgRomSize = headerData[ines_headerPrgRomSizeField8] * ines_8kUnits;
-	}
-	else {
-		prgRomSize = headerData[ines_headerPrgRomSizeField16] * ines_16kUnits;
-	}
+	// Read Header
+	inesHeader header;
+	fread(&header, sizeof(inesHeader), 1, infile);
+	const size_t prgRomSize = header.prg_rom_size * ines_16kUnits;
 
 	if (prg_rom) {
 		// Read PRG ROM
@@ -105,8 +112,8 @@ void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 
 	if (chr_rom) {
 		// Read CHR ROM
-		fseek(infile, prgRomSize, SEEK_SET); // If we didn't load PRG, or over-ran
-		chr_rom->len = headerData[ines_headerChrRomSizeField8] * ines_8kUnits;
+		fseek(infile, sizeof(inesHeader) + prgRomSize, SEEK_SET); // If we didn't load PRG, or over-ran
+		chr_rom->len = header.chr_rom_size * ines_8kUnits;
 		chr_rom->data = realloc(chr_rom->data, chr_rom->len);
 		fread(chr_rom->data, chr_rom->len, 1, infile);
 	}
