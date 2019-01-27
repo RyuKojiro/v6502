@@ -34,11 +34,6 @@
 
 #define ines_magic						"NES\x1A"
 #define ines_magicLength				4
-#define ines_headerDataLength			16
-#define ines_headerPrgRomSizeField16	4
-#define ines_headerChrRomSizeField8		5
-#define ines_headerPrgRomSizeField8		8
-#define ines_headerZeroPaddingStart		11
 
 typedef struct {
 	char magic[4];        // "NES\x1a"
@@ -70,19 +65,17 @@ int fileIsINES(FILE *infile) {
 
 void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props) {
 	// Create Header
-	char *headerData = calloc(ines_headerDataLength, 1);
-	snprintf(headerData, ines_magicLength, ines_magic);
+	inesHeader header;
+	memcpy(&header.magic, ines_magic, ines_magicLength);
 	if (prg_rom) {
-		headerData[ines_headerPrgRomSizeField16] = prg_rom->len / ines_16kUnits;
-		headerData[ines_headerPrgRomSizeField8] = prg_rom->len / ines_8kUnits;
+		header.prg_rom_size = prg_rom->len / ines_16kUnits;
 	}
 	if (chr_rom) {
-		headerData[ines_headerChrRomSizeField8] = chr_rom->len / ines_8kUnits;
+		header.chr_rom_size = chr_rom->len / ines_8kUnits;
 	}
 
 	// Write header
-	fwrite(headerData, ines_headerDataLength, 1, outfile);
-	free(headerData);
+	fwrite(&header, sizeof(header), 1, outfile);
 
 	// Write PRG ROM
 	if (prg_rom) {
