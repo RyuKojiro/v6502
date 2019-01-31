@@ -31,7 +31,6 @@
 #define MAX_SYMBOL_LEN			256
 #define MAX_INSTRUCTION_LEN		32
 
-// TODO: Add desymbolication support
 int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t address, as6502_symbol_table *table) {
 	// Bytes
 	v6502_opcode opcode = v6502_read(cpu->memory, address, NO);
