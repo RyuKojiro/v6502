@@ -26,10 +26,23 @@
 #ifndef as6502_debug_h
 #define as6502_debug_h
 
+#include <stdio.h>
+#include <stdint.h>
 #include <v6502/cpu.h>
 
+/** @defgroup asm_debug Assembler Debug Printing Functions */
+/**@{*/
+
+/**
+ * @brief Prints a label annotated with address (and optionally source line
+ * number). This function is designed to be used in conjunction with
+ * as6502_printAnnotatedInstruction for neatly printed assembly.
+ */
 void as6502_printAnnotatedLabel(FILE *out, uint16_t address, const char *text, unsigned long line);
 
+/** @brief Prints a line of assembly annotated with address. */
 void as6502_printAnnotatedInstruction(FILE *out, uint16_t address, v6502_opcode opcode, uint8_t low, uint8_t high, const char *text);
+
+/**@}*/
 
 #endif /* defined(as6502_debug_h) */
