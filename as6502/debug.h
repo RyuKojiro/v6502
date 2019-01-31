@@ -28,6 +28,8 @@
 
 #include <v6502/cpu.h>
 
-void as6502_printAnnotatedInstruction(FILE *out, uint16_t address, v6502_opcode opcode, uint8_t low, uint8_t high, char *text);
+void as6502_printAnnotatedLabel(FILE *out, uint16_t address, const char *text, unsigned long line);
+
+void as6502_printAnnotatedInstruction(FILE *out, uint16_t address, v6502_opcode opcode, uint8_t low, uint8_t high, const char *text);
 
 #endif /* defined(as6502_debug_h) */

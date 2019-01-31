@@ -10,7 +10,18 @@
 
 #include "debug.h"
 
-void as6502_printAnnotatedInstruction(FILE *out, uint16_t address, v6502_opcode opcode, uint8_t low, uint8_t high, char *text) {
+void as6502_printAnnotatedLabel(FILE *out, uint16_t address, const char *text, unsigned long line) {
+	const int target = 20;
+	const int fixed = sizeof("0xff: ff ff ff - ") - 1;
+	const int printed = fprintf(out, "%#04x:          - %s:", address, text);
+	if (line) {
+		const int spaces = target - (printed - fixed);
+		fprintf(out, "%*s ; line %lu", spaces > 0 ? spaces : 0, "", line);
+	}
+	fprintf(out, "\n");
+}
+
+void as6502_printAnnotatedInstruction(FILE *out, uint16_t address, v6502_opcode opcode, uint8_t low, uint8_t high, const char *text) {
 	fprintf(out, "%#04x: ", address);
 
 	switch (v6502_instructionLengthForOpcode(opcode)) {
@@ -28,5 +39,5 @@ void as6502_printAnnotatedInstruction(FILE *out, uint16_t address, v6502_opcode 
 		} break;
 	}
 
-	fprintf(out, " - %s\n", text);
+	fprintf(out, " -    %s\n", text);
 }
