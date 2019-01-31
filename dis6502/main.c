@@ -69,7 +69,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 		currentLineNum = 1;
 		for (uint16_t offset = 0; offset < blob->len; ){
 			uint8_t opcode = blob->data[offset];
-			as6502_symbol *label = as6502_symbolForAddress(table, offset);
+			as6502_symbol *label = as6502_symbolForAddress(table, blob->start + offset);
 			if (label) {
 				if (verbose) {
 					as6502_printAnnotatedLabel(out, label->address, label->name, label->line);
@@ -118,7 +118,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				}
 
 				if (verbose) {
-					as6502_printAnnotatedInstruction(out, offset, opcode, low, high, line);
+					as6502_printAnnotatedInstruction(out, blob->start + offset, opcode, low, high, line);
 				}
 				else {
 					fprintf(out, "\t%s\n", line);
