@@ -13,7 +13,7 @@
 void as6502_printAnnotatedLabel(FILE *out, uint16_t address, const char *text, unsigned long line) {
 	const int target = 20;
 	const int fixed = sizeof("0xff: ff ff ff - ") - 1;
-	const int printed = fprintf(out, "%#04x:          - %s:", address, text);
+	const int printed = fprintf(out, "%#06x:          - %s:", address, text);
 	if (line) {
 		const int spaces = target - (printed - fixed);
 		fprintf(out, "%*s ; line %lu", spaces > 0 ? spaces : 0, "", line);
@@ -22,7 +22,7 @@ void as6502_printAnnotatedLabel(FILE *out, uint16_t address, const char *text, u
 }
 
 void as6502_printAnnotatedInstruction(FILE *out, uint16_t address, v6502_opcode opcode, uint8_t low, uint8_t high, const char *text) {
-	fprintf(out, "%#04x: ", address);
+	fprintf(out, "%#06x: ", address);
 
 	switch (v6502_instructionLengthForOpcode(opcode)) {
 		case 1: {
