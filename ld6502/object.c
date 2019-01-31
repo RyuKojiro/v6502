@@ -92,7 +92,7 @@ void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld65
 			dis6502_deriveSymbolsForObject(object);
 		} break;
 		case ld6502_file_type_iNES: {
-			ld6502_addBlobToObject(object, 0);
+			ld6502_addBlobToObject(object, 0xBFFF);
 			readFromINES(in, &object->blobs[0], NULL, NULL);
 		} break;
 		case ld6502_file_type_None: {
