@@ -68,4 +68,3 @@ void v6502_printBreakpointList(v6502_breakpoint_list *list) {
 		printf("Breakpoint #%zu: %#04x\n", i, list->breakpoints[i]);
 	}
 }
-
