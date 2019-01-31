@@ -58,8 +58,11 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 			as6502_printSymbolScript(table, sym);
 		}
 
-		/* Trim Symbol Table, so that we don't symbolicate addresses outside of
+		/*
+		 * Trim Symbol Table, so that we don't symbolicate addresses outside of
 		 * our address space. FIXME: This currently assumes only one blob!
+		 * TODO: Would it perhaps be better to symbolicate them and emit
+		 * assembler directives stating their locations?
 		 */
 		as6502_truncateTableToAddressSpace(table, blob->start, blob->len);
 
