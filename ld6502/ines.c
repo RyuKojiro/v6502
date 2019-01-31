@@ -120,10 +120,13 @@ void as6502_writeObjectToINES(ld6502_object *obj, FILE *file) {
 
 	// Flatten all segments into a single PRG ROM blob
 	for (int i = 0; i < obj->count; i++) {
+		prg_rom.data = realloc(prg_rom.data, prg_rom.len += obj->blobs[i].len);
 		memcpy(&prg_rom.data[obj->blobs[i].start], obj->blobs[i].data, obj->blobs[i].len);
 	}
 
 	writeToINES(file, &prg_rom, NULL, &props);
+
+	free(prg_rom.data);
 }
 
 void as6502_readObjectFromINES(ld6502_object *obj, FILE *file) {
