@@ -31,10 +31,11 @@
 #include <as6502/symbols.h>
 #include <ld6502/flat.h>
 #include <ld6502/ines.h>
+#include <as6502/debug.h>
 
 #define MAX_LINE_LEN		80
 
-static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, FILE *sym) {
+static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, int verbose, FILE *sym) {
 	char line[MAX_LINE_LEN];
 	int insideOfString = 0;
 
@@ -63,12 +64,19 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 		as6502_truncateTableToAddressSpace(table, blob->start, blob->len);
 
 		// Disassemble
+		uint8_t low = 0; // lint
+		uint8_t high = 0; // lint
 		currentLineNum = 1;
 		for (uint16_t offset = 0; offset < blob->len; ){
 			uint8_t opcode = blob->data[offset];
 			as6502_symbol *label = as6502_symbolForAddress(table, offset);
 			if (label) {
-				fprintf(out, "%s:\n", label->name);
+				if (verbose) {
+					as6502_printAnnotatedLabel(out, label->address, label->name, label->line);
+				}
+				else {
+					fprintf(out, "%s:\n", label->name);
+				}
 				currentLineNum++;
 			}
 
@@ -91,8 +99,6 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				continue;
 			}
 			else {
-				uint8_t low = 0; // lint
-				uint8_t high = 0; // lint
 				if (offset + 2 < blob->len) {
 					low = blob->data[offset + 1];
 				}
@@ -111,10 +117,16 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 					continue;
 				}
 
+				if (verbose) {
+					as6502_printAnnotatedInstruction(out, offset, opcode, low, high, line);
+				}
+				else {
+					fprintf(out, "\t%s\n", line);
+				}
+
 				offset += v6502_instructionLengthForOpcode(opcode) ;
 			}
 
-			fprintf(out, "\t%s\n", line);
 			currentLineNum++;
 		}
 	}
@@ -124,7 +136,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 }
 
 static void usage() {
-	fprintf(stderr, "usage: dis6502 [-tT] [-o out_file] [-F format] [-s load_address] [file ...]\n");
+	fprintf(stderr, "usage: dis6502 [-tTv] [-o out_file] [-F format] [-s load_address] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
@@ -133,9 +145,10 @@ int main(int argc, char * const argv[]) {
 	uint16_t programStart = 0;
 	int printTable = NO;
 	FILE *sym = NULL;
+	int verbose = NO;
 
 	int ch;
-	while ((ch = getopt(argc, argv, "o:F:s:Tt:")) != -1) {
+	while ((ch = getopt(argc, argv, "o:F:s:Tt:v")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "ines", 4)) {
@@ -157,6 +170,9 @@ int main(int argc, char * const argv[]) {
 			case 't': {
 				sym = fopen(optarg, "w");
 			} break;
+			case 'v': {
+				verbose = YES;
+			} break;
 			case '?':
 			default:
 				usage();
@@ -168,7 +184,7 @@ int main(int argc, char * const argv[]) {
 	argv += optind;
 
 	for (int i = 0; i < argc; i++) {
-		disassembleFile(argv[i], out, format, programStart, printTable, sym);
+		disassembleFile(argv[i], out, format, programStart, printTable, verbose, sym);
 	}
 
 	if (sym) {
