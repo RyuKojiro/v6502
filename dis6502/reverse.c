@@ -43,7 +43,7 @@ int dis6502_printAnnotatedInstruction(FILE *out, v6502_cpu *cpu, uint16_t addres
 
 	// Symbolicate
 	if (table) {
-		as6502_symbolicateLine(table, instruction, MAX_INSTRUCTION_LEN, 0, address);
+		as6502_symbolicateLine(table, instruction, MAX_INSTRUCTION_LEN, address);
 
 		// If we've got a symbol table, and this also happens to be a label site, print that too
 		as6502_symbol *symbol = as6502_symbolForAddress(table, address);
@@ -408,6 +408,7 @@ void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode,
 	dis6502_stringForOperand(string, len, v6502_addressModeForOpcode(opcode), high, low);
 }
 
+// TODO: Also derive variable locations
 void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_object_blob *blob) {
 	char symbolName[MAX_SYMBOL_LEN];
 	int currentLabel = 1;

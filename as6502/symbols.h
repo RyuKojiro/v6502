@@ -122,7 +122,7 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 	@param pstart Program start address
 	@param offset Address of current line
  */
-void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset);
+void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t offset);
 /**@}*/
 
 /** @defgroup sym_rep Symbol Replacement */

@@ -107,7 +107,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				}
 
 				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, high, low);
-				as6502_symbolicateLine(table, line, MAX_LINE_LEN, blob->start, offset);
+				as6502_symbolicateLine(table, line, MAX_LINE_LEN, blob->start + offset);
 
 				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
 					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
