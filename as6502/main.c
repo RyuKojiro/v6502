@@ -39,6 +39,7 @@
 #include "error.h"
 #include "color.h"
 #include "token.h"
+#include "debug.h"
 
 #define MAX_LINE_LEN		80
 
@@ -82,26 +83,11 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 			fprintf(lineout, "%#04x:          - %4lu: %s:\n", address, label->line, label->name);
 		}
 
-		fprintf(lineout, "%#04x: ", blob->len - addrLen);
+		char line[MAX_LINE_LEN] = {0};
 
-		switch (addrLen) {
-			case 1: {
-				fprintf(lineout, "%02x      ", opcode);
-			} break;
-			case 2: {
-				fprintf(lineout, "%02x %02x   ", opcode, low);
-			} break;
-			case 3: {
-				fprintf(lineout, "%02x %02x %02x", opcode, low, high);
-			} break;
-			default: {
-				fprintf(lineout, "        ");
-			} break;
-		}
-
-		char line[MAX_LINE_LEN];
-		as6502_stringForTokenList(line, MAX_LINE_LEN, head->next);
-		fprintf(lineout, " - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
+		int lead = snprintf(line, MAX_LINE_LEN, "%s ", head->text);
+		as6502_stringForTokenList(line + lead, MAX_LINE_LEN - lead, head->next);
+		as6502_printAnnotatedInstruction(lineout, blob->len - addrLen, opcode, low, high, line);
 	}
 
 	return addrLen;

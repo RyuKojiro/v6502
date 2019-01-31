@@ -30,6 +30,8 @@
 		E6178C461DE24DE100A75476 /* libas6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A49E1B8AAA6300B71420 /* libas6502.a */; };
 		E6178C491DE24DF100A75476 /* libdis6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4C81B8AAABC00B71420 /* libdis6502.a */; };
 		E61FA7551BAAB5B80022E2EB /* debugger.c in Sources */ = {isa = PBXBuildFile; fileRef = E61FA7531BAAB5B80022E2EB /* debugger.c */; };
+		E62BF2DC22019811005BD097 /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E62BF2DB22019811005BD097 /* debug.c */; };
+		E62BF2DE22029A50005BD097 /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = E62BF2DB22019811005BD097 /* debug.c */; };
 		E638A4951B8AAA3500B71420 /* textmode.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B04B5F1974855100F8690A /* textmode.c */; };
 		E638A4961B8AAA3500B71420 /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B21704B923009CE919 /* cpu.c */; };
 		E638A4971B8AAA3500B71420 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = E65212B51704BAE7009CE919 /* mem.c */; };
@@ -390,6 +392,8 @@
 		E61D402E1799B5A1009BA763 /* overflow.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = overflow.s; sourceTree = "<group>"; };
 		E61FA7531BAAB5B80022E2EB /* debugger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = debugger.c; sourceTree = "<group>"; };
 		E61FA7541BAAB5B80022E2EB /* debugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debugger.h; sourceTree = "<group>"; };
+		E62BF2DA22019811005BD097 /* debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		E62BF2DB22019811005BD097 /* debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = debug.c; sourceTree = "<group>"; };
 		E6305FCB1C823770007076AA /* wozmon.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = wozmon.s; sourceTree = "<group>"; };
 		E638A4911B8AAA2300B71420 /* libv6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libv6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E638A49E1B8AAA6300B71420 /* libas6502.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libas6502.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -692,6 +696,8 @@
 				E677B2881737338300A3B9E8 /* symbols.c */,
 				E6723EE81AB80D4B0045F8F6 /* token.h */,
 				E6723EE71AB80D4B0045F8F6 /* token.c */,
+				E62BF2DA22019811005BD097 /* debug.h */,
+				E62BF2DB22019811005BD097 /* debug.c */,
 			);
 			path = as6502;
 			sourceTree = "<group>";
@@ -1174,6 +1180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E638A4A21B8AAA7000B71420 /* linectl.c in Sources */,
+				E62BF2DE22029A50005BD097 /* debug.c in Sources */,
 				E638A4A31B8AAA7000B71420 /* parser.c in Sources */,
 				E638A4A41B8AAA7000B71420 /* codegen.c in Sources */,
 				E638A4A51B8AAA7000B71420 /* error.c in Sources */,
@@ -1222,6 +1229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E64198EB17373A6200D0EE25 /* main.c in Sources */,
+				E62BF2DC22019811005BD097 /* debug.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

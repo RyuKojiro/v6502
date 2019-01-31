@@ -3,7 +3,7 @@ include ../libvars.mk
 
 PROG=		as6502
 SRCS=		main.c
-LIBSRCS=	linectl.c parser.c codegen.c symbols.c error.c token.c
+LIBSRCS=	linectl.c parser.c codegen.c symbols.c error.c token.c debug.c
 LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502 -lcurses
 OBJS=		$(SRCS:.c=.o)
 LIBOBJS=	$(LIBSRCS:.c=.o)
