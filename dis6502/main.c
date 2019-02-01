@@ -46,7 +46,12 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 
 	for (int i = 0; i < obj->count; i++) {
 		ld6502_object_blob *blob = &obj->blobs[i];
+
+		// Emit org directives for slid blobs
 		blob->start += pstart;
+		if (blob->start) {
+			fprintf(out, ".org $%04x\n", pstart);
+		}
 
 		// Build Symbol Table
 		currentLineNum = 1;
