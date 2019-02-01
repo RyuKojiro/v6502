@@ -63,7 +63,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 		// Emit org directives for slid blobs
 		blob->start += pstart;
 		if (blob->start) {
-			printOrgDirective(out, verbose, pstart);
+			printOrgDirective(out, verbose, blob->start);
 		}
 
 		// Build Symbol Table
