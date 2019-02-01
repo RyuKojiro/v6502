@@ -119,7 +119,6 @@ as6502_token *as6502_desymbolicateExpression(as6502_symbol_table *table, as6502_
 	@param table The as6502_symbol_table to search
 	@param line The string to desymbolicate
 	@param len Useable length of the line in chars
-	@param pstart Program start address
 	@param offset Address of current line
  */
 void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t offset);
