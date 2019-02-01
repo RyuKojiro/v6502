@@ -140,7 +140,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 					fprintf(out, "\t%s\n", line);
 				}
 
-				offset += v6502_instructionLengthForOpcode(opcode) ;
+				offset += v6502_instructionLengthForOpcode(opcode);
 			}
 
 			currentLineNum++;
