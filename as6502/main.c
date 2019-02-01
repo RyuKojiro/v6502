@@ -39,16 +39,20 @@
 #include "error.h"
 #include "color.h"
 #include "token.h"
+#include "debug.h"
 
 #define MAX_LINE_LEN		80
 
 #define EXTENSION_OBJECT	"o"
 #define EXTENSION_SCRIPT	"dbg"
 
+// TODO: Support JMP with operands that are symbols in the zeropage (currently they desymbolicate and error)
 static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess, int printDot, uint16_t offset) {
-	uint8_t opcode, low, high;
-	int addrLen;
-	v6502_address_mode mode;
+	// When zero initialized, bugs during later assembly stages are a bit more obvious
+	uint8_t opcode = 0;
+	uint8_t low = 0;
+	uint8_t high = 0;
+	v6502_address_mode mode = v6502_address_mode_unknown;
 
 	as6502_token *desymedHead = as6502_desymbolicateExpression(table, head, offset, YES);
 	desymedHead = as6502_resolveArithmeticInExpression(desymedHead);
@@ -57,8 +61,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	if (printDot) as6502_printDotRankForList(stdout, desymedHead);
 	as6502_tokenListDestroy(desymedHead);
 
-	addrLen = as6502_instructionLengthForAddressMode(mode);
-
+	const unsigned int addrLen = as6502_instructionLengthForAddressMode(mode);
 	if (addrLen >= 1) {
 		ld6502_appendByteToBlob(blob, opcode);
 	}
@@ -76,32 +79,17 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	if (printProcess) {
 		FILE *lineout = stdout;
 
-		uint16_t address = blob->len - addrLen;
-		as6502_symbol *label = as6502_symbolForAddress(table, address + blob->start);
+		const uint16_t absAddress = blob->start + (blob->len - addrLen);
+		as6502_symbol *label = as6502_symbolForAddress(table, absAddress);
 		if (label) {
-			fprintf(lineout, "%#04x:          - %4lu: %s:\n", address, label->line, label->name);
+			as6502_printAnnotatedLabel(lineout, absAddress, label->name, label->line);
 		}
 
-		fprintf(lineout, "%#04x: ", blob->len - addrLen);
+		char line[MAX_LINE_LEN] = {0};
 
-		switch (addrLen) {
-			case 1: {
-				fprintf(lineout, "%02x      ", opcode);
-			} break;
-			case 2: {
-				fprintf(lineout, "%02x %02x   ", opcode, low);
-			} break;
-			case 3: {
-				fprintf(lineout, "%02x %02x %02x", opcode, low, high);
-			} break;
-			default: {
-				fprintf(lineout, "        ");
-			} break;
-		}
-
-		char line[MAX_LINE_LEN];
-		as6502_stringForTokenList(line, MAX_LINE_LEN, head->next);
-		fprintf(lineout, " - %4lu:  \t%s %s\n", currentLineNum, head->text, line);
+		int lead = snprintf(line, MAX_LINE_LEN, "%s ", head->text);
+		as6502_stringForTokenList(line + lead, MAX_LINE_LEN - lead, head->next);
+		as6502_printAnnotatedInstruction(lineout, absAddress, opcode, low, high, line);
 	}
 
 	return addrLen;
@@ -115,7 +103,15 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 	currentLineNum = 0;
 	ld6502_object *obj = ld6502_createObject();
 	obj->table = as6502_createSymbolTable();
+
+	/*
+	 * Create an empty blob in case there are no org directives, later we will
+	 * slide it up against the end of the address space, since that tends to be
+	 * the way every reasonable ROM setup works. This makes it easy for a
+	 * program to just lay down reset vectors at the very end of the program.
+	 */
 	int currentBlob = 0;
+	ld6502_addBlobToObject(obj, 0);
 
 	// Render rank for final pass
 	if (printDot) {

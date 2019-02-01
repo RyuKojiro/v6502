@@ -381,7 +381,9 @@ static int _symbolTypeIsAppropriateForInstruction(as6502_symbol_type type, char 
 	return NO;
 }
 
-void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t pstart, uint16_t offset) {
+// TODO: Make this work on token lists, and build a token list when disassembling
+// TOOD: Add relative jump symbolication
+void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, uint16_t offset) {
 	assert(table);
 
 	// Iterate through tokens
@@ -393,7 +395,7 @@ void as6502_symbolicateLine(as6502_symbol_table *table, char *line, size_t len, 
 
 		// If we couldn't find one at that address, try a pstart offset symbol.
 		if (!symbol && wide) {
-			symbol = as6502_symbolForAddress(table, address - pstart);
+			symbol = as6502_symbolForAddress(table, address);
 		}
 
 		if (symbol && _symbolTypeIsAppropriateForInstruction(symbol->type, line, len)) {

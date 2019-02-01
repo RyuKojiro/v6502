@@ -31,10 +31,24 @@
 #include <as6502/symbols.h>
 #include <ld6502/flat.h>
 #include <ld6502/ines.h>
+#include <as6502/debug.h>
 
 #define MAX_LINE_LEN		80
 
-static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, FILE *sym) {
+static void printOrgDirective(FILE *out, int verbose, uint16_t address) {
+	fprintf(out, ".org $%04x\n", address);
+}
+
+static void printLabel(FILE *out, int verbose, as6502_symbol *label) {
+	if (verbose) {
+		as6502_printAnnotatedLabel(out, label->address, label->name, label->line);
+	}
+	else {
+		fprintf(out, "%s:\n", label->name);
+	}
+}
+
+static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, int verbose, FILE *sym) {
 	char line[MAX_LINE_LEN];
 	int insideOfString = 0;
 
@@ -43,9 +57,15 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 
 	as6502_symbol_table *table = as6502_createSymbolTable();
 
+	uint16_t highestOffset = 0;
 	for (int i = 0; i < obj->count; i++) {
 		ld6502_object_blob *blob = &obj->blobs[i];
+
+		// Emit org directives for slid blobs
 		blob->start += pstart;
+		if (blob->start) {
+			printOrgDirective(out, verbose, blob->start);
+		}
 
 		// Build Symbol Table
 		currentLineNum = 1;
@@ -57,18 +77,23 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 			as6502_printSymbolScript(table, sym);
 		}
 
-		/* Trim Symbol Table, so that we don't symbolicate addresses outside of
+		/*
+		 * Trim Symbol Table, so that we don't symbolicate addresses outside of
 		 * our address space. FIXME: This currently assumes only one blob!
+		 * TODO: Would it perhaps be better to symbolicate them and emit
+		 * assembler directives stating their locations?
 		 */
 		as6502_truncateTableToAddressSpace(table, blob->start, blob->len);
 
 		// Disassemble
+		uint8_t low = 0; // lint
+		uint8_t high = 0; // lint
 		currentLineNum = 1;
 		for (uint16_t offset = 0; offset < blob->len; ){
 			uint8_t opcode = blob->data[offset];
-			as6502_symbol *label = as6502_symbolForAddress(table, offset);
+			as6502_symbol *label = as6502_symbolForAddress(table, blob->start + offset);
 			if (label) {
-				fprintf(out, "%s:\n", label->name);
+				printLabel(out, verbose, label);
 				currentLineNum++;
 			}
 
@@ -91,8 +116,6 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				continue;
 			}
 			else {
-				uint8_t low = 0; // lint
-				uint8_t high = 0; // lint
 				if (offset + 2 < blob->len) {
 					low = blob->data[offset + 1];
 				}
@@ -101,21 +124,42 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				}
 
 				dis6502_stringForInstruction(line, MAX_LINE_LEN, opcode, high, low);
-				as6502_symbolicateLine(table, line, MAX_LINE_LEN, blob->start, offset);
+				as6502_symbolicateLine(table, line, MAX_LINE_LEN, blob->start + offset);
 
 				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
 					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
 					// Let's see if it's a string
-					fprintf(out, "; String at $%04x:\n.ascii \"", offset);
+					fprintf(out, "; String at $%04x:\n.ascii \"", blob->start + offset);
 					insideOfString = 1;
 					continue;
 				}
 
-				offset += v6502_instructionLengthForOpcode(opcode) ;
+				if (verbose) {
+					as6502_printAnnotatedInstruction(out, blob->start + offset, opcode, low, high, line);
+				}
+				else {
+					fprintf(out, "\t%s\n", line);
+				}
+
+				offset += v6502_instructionLengthForOpcode(opcode);
 			}
 
-			fprintf(out, "\t%s\n", line);
 			currentLineNum++;
+
+			if (offset > highestOffset) {
+				highestOffset = offset;
+			}
+		}
+	}
+
+	// Emit any remaining labels that were never traversed
+	for (as6502_symbol *symbol = table->first_symbol; symbol->next; symbol = symbol->next) {
+		// FIXME: This could be way simpler if the symbol table could come into here sorted by address
+		if (symbol->address == highestOffset + pstart) {
+			printLabel(out, verbose, symbol);
+		} else if (symbol->address > highestOffset + pstart) {
+			printOrgDirective(out, verbose, symbol->address);
+			printLabel(out, verbose, symbol);
 		}
 	}
 
@@ -124,7 +168,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 }
 
 static void usage() {
-	fprintf(stderr, "usage: dis6502 [-tT] [-o out_file] [-F format] [-s load_address] [file ...]\n");
+	fprintf(stderr, "usage: dis6502 [-tTv] [-o out_file] [-F format] [-s load_address] [file ...]\n");
 }
 
 int main(int argc, char * const argv[]) {
@@ -133,9 +177,10 @@ int main(int argc, char * const argv[]) {
 	uint16_t programStart = 0;
 	int printTable = NO;
 	FILE *sym = NULL;
+	int verbose = NO;
 
 	int ch;
-	while ((ch = getopt(argc, argv, "o:F:s:Tt:")) != -1) {
+	while ((ch = getopt(argc, argv, "o:F:s:Tt:v")) != -1) {
 		switch (ch) {
 			case 'F': {
 				if (!strncmp(optarg, "ines", 4)) {
@@ -157,6 +202,9 @@ int main(int argc, char * const argv[]) {
 			case 't': {
 				sym = fopen(optarg, "w");
 			} break;
+			case 'v': {
+				verbose = YES;
+			} break;
 			case '?':
 			default:
 				usage();
@@ -168,7 +216,7 @@ int main(int argc, char * const argv[]) {
 	argv += optind;
 
 	for (int i = 0; i < argc; i++) {
-		disassembleFile(argv[i], out, format, programStart, printTable, sym);
+		disassembleFile(argv[i], out, format, programStart, printTable, verbose, sym);
 	}
 
 	if (sym) {
