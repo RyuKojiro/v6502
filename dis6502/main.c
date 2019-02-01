@@ -128,7 +128,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 				if(!strncmp("???", line, 3) && isascii(opcode) && isprint(opcode)) {
 					// We've encountered something that isn't runnable code, or is misaligned, but it is ascii.
 					// Let's see if it's a string
-					fprintf(out, "; String at $%04x:\n.ascii \"", offset);
+					fprintf(out, "; String at $%04x:\n.ascii \"", blob->start + offset);
 					insideOfString = 1;
 					continue;
 				}
