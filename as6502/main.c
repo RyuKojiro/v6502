@@ -103,7 +103,15 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 	currentLineNum = 0;
 	ld6502_object *obj = ld6502_createObject();
 	obj->table = as6502_createSymbolTable();
+
+	/*
+	 * Create an empty blob in case there are no org directives, later we will
+	 * slide it up against the end of the address space, since that tends to be
+	 * the way every reasonable ROM setup works. This makes it easy for a
+	 * program to just lay down reset vectors at the very end of the program.
+	 */
 	int currentBlob = 0;
+	ld6502_addBlobToObject(obj, 0);
 
 	// Render rank for final pass
 	if (printDot) {

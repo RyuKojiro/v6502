@@ -34,21 +34,11 @@
 
 // Object Lifecycle
 ld6502_object *ld6502_createObject() {
-	ld6502_object *obj = malloc(sizeof(ld6502_object));
+	ld6502_object *obj = calloc(1, sizeof(ld6502_object));
+
 	if (!obj) {
 		as6502_fatal("obj malloc in ld6502_createObject");
-		return NULL;
 	}
-
-	obj->blobs = calloc(1, sizeof(ld6502_object_blob));
-	if (!obj->blobs) {
-		free(obj);
-		as6502_fatal("obj->blobs malloc in ld6502_createObject");
-		return NULL;
-	}
-
-	obj->count = 1;
-	obj->table = NULL;
 
 	return obj;
 }
