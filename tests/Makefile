@@ -17,7 +17,7 @@ VM=	$(VMDIR)/v6502
 FUZZIN=afl_tests
 FUZZOUT=afl_results
 
-all: compiledTests expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest wozmon #wozfp
+all: compiledTests assembleFromStdin expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest wozmon #wozfp
 
 # This requires the afl fuzzer to be present, and does fuzzing of the snake code to find assembler bugs
 fuzz_as: $(AS) $(FUZZIN)
@@ -36,6 +36,11 @@ compiledTests: compiledTestsExecutable
 compiledTestsExecutable: $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
+# This makes sure that assembling from stdin works
+assembleFromStdin: $(AS)
+	$(AS) < snake.s > snake3.o
+	cksum snake3.o | sed 's/snake3.o/snake.o/' > snake3.tmp.crc
+	diff snake.o.crc snake3.tmp.crc
 
 # This attempts to assemble the snake code, disassemble the result, assemble the
 # disassembler result, and then compare the originally assembled binary, with

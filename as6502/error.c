@@ -116,8 +116,6 @@ static void printSpaces(unsigned long num, const char *str) {
 }
 
 void as6502_underline(const char *str, unsigned long loc, unsigned long len) {
-	assert(str);
-
 	// Don't do anything if we don't have a valid range (non-zero length)
 	if (!len) {
 		return;
