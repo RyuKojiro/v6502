@@ -36,31 +36,29 @@ compiledTests: compiledTestsExecutable
 compiledTestsExecutable: $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
-# This makes sure that assembling from stdin works
+# Assembler and Disassembler automated tests
+
 assembleFromStdin: $(AS)
+	@echo "Making sure that assembling from stdin works..."
 	$(AS) < snake.s > snake3.o
 	cksum snake3.o | sed 's/snake3.o/snake.o/' > snake3.tmp.crc
 	diff snake.o.crc snake3.tmp.crc
 
-# This attempts to assemble the snake code, disassemble the result, assemble the
-# disassembler result, and then compare the originally assembled binary, with
-# the reassembled binary.
 circularAssemble: $(AS) $(DIS)
+	@echo "Making sure a round trip of assembly -> disassembly -> assembly emits the same binary each time..."
 	$(AS) snake.s
 	$(DIS) -s 600 snake.o > snake2.s
 	$(AS) snake2.s
 	diff snake.o snake2.o
 
-# This attempts to assemble the snake code, comparing the result with an MD5
-# hash of a known-working-good binary.
 expectedAssemblyResultSnake: $(AS)
+	@echo "Making sure we can assemble snake.s, and the binary output checksum matches the known correct output..."
 	$(AS) snake.s
 	cksum snake.o > snake.tmp.crc
 	diff snake.o.crc snake.tmp.crc
 
-# This attempts to assemble the snake code, comparing the result with an MD5
-# hash of a known-working-good binary.
 expectedAssemblyResultTextModeTest: $(AS)
+	@echo "Making sure we can assemble textmode_test.s, and the binary output checksum matches the known correct output..."
 	$(AS) textmode_test.s
 	cksum textmode_test.o > textmode_test.tmp.crc
 	diff textmode_test.o.crc textmode_test.tmp.crc
@@ -68,12 +66,11 @@ expectedAssemblyResultTextModeTest: $(AS)
 # This simply tries to assemble the Apple II floating point routines originally
 # written by Steve Wozniak.
 wozfp: $(AS)
+	@echo "Making sure we are capable of assembling the Woz floating point routines..."
 	$(AS) wozfp1.s
 
-# Similar to the wozfp target, this attempts assembly of the Apple 1 "Woz Monitor"
-# originally written by Steve Wozniak, transcribed from the Apple 1 Operation
-# Manual. After building the checksum is compared with the known Apple 1 ROM hash.
 wozmon: $(AS)
+	@echo "Making sure we can assemble the Apple 1 Woz Monitor, and the binary output checksum matches the known correct output..."
 	$(AS) wozmon.s
 	cksum wozmon.o > wozmon.tmp.crc
 	diff wozmon.o.crc wozmon.tmp.crc
