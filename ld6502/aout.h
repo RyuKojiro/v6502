@@ -29,8 +29,8 @@
 #include <ld6502/object.h>
 
 /** @brief Writes an ld6502_object directly to an a.out file */
-void as6502_writeObjectToAOFile(ld6502_object *obj, FILE *file);
+void ld6502_writeObjectToAOFile(ld6502_object *obj, FILE *file);
 /** @brief Read an ld6502_object from an a.out file */
-void as6502_readObjectFromAOFile(ld6502_object *obj, FILE *file);
+void ld6502_readObjectFromAOFile(ld6502_object *obj, FILE *file);
 
 #endif

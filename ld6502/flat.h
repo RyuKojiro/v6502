@@ -29,8 +29,8 @@
 #include <ld6502/object.h>
 
 /** @brief Writes an ld6502_object directly to a flat file */
-void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file);
+void ld6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file);
 /** @brief Read an ld6502_object from a flat file */
-void as6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file);
+void ld6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file);
 
 #endif

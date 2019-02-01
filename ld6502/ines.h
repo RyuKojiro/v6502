@@ -50,8 +50,8 @@ void writeToINES(FILE *outfile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob *chr_rom, ines_properties *props);
 
 /** @brief Writes an ld6502_object directly to an iNES file */
-void as6502_writeObjectToINES(ld6502_object *obj, FILE *file);
-/** @brief Read an ld6502_object from an iNES file */
-void as6502_readObjectFromINES(ld6502_object *obj, FILE *file);
+void ld6502_writeObjectToINES(ld6502_object *obj, FILE *file);
+/** @brief Read an ld6502_object from an iNES file. This expects an already allocated ld6502_object. */
+void ld6502_readObjectFromINES(ld6502_object *obj, FILE *file);
 
 #endif

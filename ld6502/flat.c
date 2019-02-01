@@ -36,14 +36,14 @@ static int _nonZeroBlobCount(ld6502_object *obj) {
 	return total;
 }
 
-void as6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file) {
+void ld6502_writeObjectToFlatFile(ld6502_object *obj, FILE *file) {
 	if (_nonZeroBlobCount(obj) > 1) {
 		as6502_warn(0, 0, "Writing flat file with multiple segments will result in loss of object data");
 	}
 	fwrite(obj->blobs[obj->count - 1].data, 1, obj->blobs[obj->count - 1].len, file);
 }
 
-void as6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file) {
+void ld6502_readObjectFromFlatFile(ld6502_object *obj, FILE *file) {
 	ld6502_addBlobToObject(obj, 0);
 	ld6502_object_blob *blob = &obj->blobs[0];
 

@@ -112,7 +112,7 @@ void readFromINES(FILE *infile, ld6502_object_blob *prg_rom, ld6502_object_blob 
 	}
 }
 
-void as6502_writeObjectToINES(ld6502_object *obj, FILE *file) {
+void ld6502_writeObjectToINES(ld6502_object *obj, FILE *file) {
 	ines_properties props;
 	props.videoMode = ines_videoMode_NTSC;
 
@@ -129,6 +129,6 @@ void as6502_writeObjectToINES(ld6502_object *obj, FILE *file) {
 	free(prg_rom.data);
 }
 
-void as6502_readObjectFromINES(ld6502_object *obj, FILE *file) {
+void ld6502_readObjectFromINES(ld6502_object *obj, FILE *file) {
 
 }

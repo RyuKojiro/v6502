@@ -39,7 +39,7 @@ static void linkObjects(FILE *outFile, ld6502_file_type format, FILE *chrFile, i
 
 	// Read in a flat file as the only object
 	FILE *flatFile = fopen(files[numFiles - 1], "r");
-	as6502_readObjectFromFlatFile(linkResult, flatFile);
+	ld6502_readObjectFromFlatFile(linkResult, flatFile);
 	fclose(flatFile);
 
 	///////////// LOAD /////////////
@@ -49,7 +49,7 @@ static void linkObjects(FILE *outFile, ld6502_file_type format, FILE *chrFile, i
 
 	ld6502_object *chrRom = NULL;
 	if (chrFile) {
-		as6502_readObjectFromFlatFile(chrRom, chrFile);
+		ld6502_readObjectFromFlatFile(chrRom, chrFile);
 	}
 
 	///////////// LINK /////////////

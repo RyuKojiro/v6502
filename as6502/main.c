@@ -268,10 +268,10 @@ static void assembleFile(FILE *in, FILE *out, FILE *sym, int printProcess, int p
 	switch (format) {
 		case ld6502_file_type_None:
 		case ld6502_file_type_FlatFile: {
-			as6502_writeObjectToFlatFile(obj, out);
+			ld6502_writeObjectToFlatFile(obj, out);
 		} break;
 		case ld6502_file_type_iNES: {
-			as6502_writeObjectToINES(obj, out);
+			ld6502_writeObjectToINES(obj, out);
 		} break;
 	}
 

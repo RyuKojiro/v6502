@@ -78,7 +78,7 @@ void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld65
 	// Import object data
 	switch (type) {
 		case ld6502_file_type_FlatFile: {
-			as6502_readObjectFromFlatFile(object, in);
+			ld6502_readObjectFromFlatFile(object, in);
 			dis6502_deriveSymbolsForObject(object);
 		} break;
 		case ld6502_file_type_iNES: {
