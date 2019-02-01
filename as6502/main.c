@@ -46,10 +46,13 @@
 #define EXTENSION_OBJECT	"o"
 #define EXTENSION_SCRIPT	"dbg"
 
+// TODO: Support JMP with operands that are symbols in the zeropage (currently they desymbolicate and error)
 static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as6502_symbol_table *table, int printProcess, int printDot, uint16_t offset) {
-	uint8_t opcode, low, high;
-	int addrLen;
-	v6502_address_mode mode;
+	// When zero initialized, bugs during later assembly stages are a bit more obvious
+	uint8_t opcode = 0;
+	uint8_t low = 0;
+	uint8_t high = 0;
+	v6502_address_mode mode = v6502_address_mode_unknown;
 
 	as6502_token *desymedHead = as6502_desymbolicateExpression(table, head, offset, YES);
 	desymedHead = as6502_resolveArithmeticInExpression(desymedHead);
@@ -58,8 +61,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 	if (printDot) as6502_printDotRankForList(stdout, desymedHead);
 	as6502_tokenListDestroy(desymedHead);
 
-	addrLen = as6502_instructionLengthForAddressMode(mode);
-
+	const unsigned int addrLen = as6502_instructionLengthForAddressMode(mode);
 	if (addrLen >= 1) {
 		ld6502_appendByteToBlob(blob, opcode);
 	}
