@@ -35,6 +35,19 @@
 
 #define MAX_LINE_LEN		80
 
+static void printOrgDirective(FILE *out, int verbose, uint16_t address) {
+	fprintf(out, ".org $%04x\n", address);
+}
+
+static void printLabel(FILE *out, int verbose, as6502_symbol *label) {
+	if (verbose) {
+		as6502_printAnnotatedLabel(out, label->address, label->name, label->line);
+	}
+	else {
+		fprintf(out, "%s:\n", label->name);
+	}
+}
+
 static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, uint16_t pstart, int printTable, int verbose, FILE *sym) {
 	char line[MAX_LINE_LEN];
 	int insideOfString = 0;
@@ -50,7 +63,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 		// Emit org directives for slid blobs
 		blob->start += pstart;
 		if (blob->start) {
-			fprintf(out, ".org $%04x\n", pstart);
+			printOrgDirective(out, verbose, pstart);
 		}
 
 		// Build Symbol Table
@@ -79,12 +92,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 			uint8_t opcode = blob->data[offset];
 			as6502_symbol *label = as6502_symbolForAddress(table, blob->start + offset);
 			if (label) {
-				if (verbose) {
-					as6502_printAnnotatedLabel(out, label->address, label->name, label->line);
-				}
-				else {
-					fprintf(out, "%s:\n", label->name);
-				}
+				printLabel(out, verbose, label);
 				currentLineNum++;
 			}
 
