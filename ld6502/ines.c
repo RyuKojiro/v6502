@@ -130,5 +130,6 @@ void ld6502_writeObjectToINES(ld6502_object *obj, FILE *file) {
 }
 
 void ld6502_readObjectFromINES(ld6502_object *obj, FILE *file) {
-
+	ld6502_addBlobToObject(obj, 0x8000);
+	readFromINES(file, &obj->blobs[0], NULL, NULL);
 }
