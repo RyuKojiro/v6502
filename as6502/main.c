@@ -89,7 +89,7 @@ static uint16_t assembleLine(ld6502_object_blob *blob, as6502_token *head, as650
 
 		int lead = snprintf(line, MAX_LINE_LEN, "%s ", head->text);
 		as6502_stringForTokenList(line + lead, MAX_LINE_LEN - lead, head->next);
-		as6502_printAnnotatedInstruction(lineout, blob->len - addrLen, opcode, low, high, line);
+		as6502_printAnnotatedInstruction(lineout, blob->start + address, opcode, low, high, line);
 	}
 
 	return addrLen;
