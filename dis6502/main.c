@@ -57,6 +57,7 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 
 	as6502_symbol_table *table = as6502_createSymbolTable();
 
+	uint16_t highestOffset = 0;
 	for (int i = 0; i < obj->count; i++) {
 		ld6502_object_blob *blob = &obj->blobs[i];
 
@@ -144,6 +145,21 @@ static void disassembleFile(const char *in, FILE *out, ld6502_file_type format, 
 			}
 
 			currentLineNum++;
+
+			if (offset > highestOffset) {
+				highestOffset = offset;
+			}
+		}
+	}
+
+	// Emit any remaining labels that were never traversed
+	for (as6502_symbol *symbol = table->first_symbol; symbol->next; symbol = symbol->next) {
+		// FIXME: This could be way simpler if the symbol table could come into here sorted by address
+		if (symbol->address == highestOffset + pstart) {
+			printLabel(out, verbose, symbol);
+		} else if (symbol->address > highestOffset + pstart) {
+			printOrgDirective(out, verbose, symbol->address);
+			printLabel(out, verbose, symbol);
 		}
 	}
 
