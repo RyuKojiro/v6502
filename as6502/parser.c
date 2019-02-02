@@ -630,13 +630,6 @@ v6502_opcode as6502_opcodeForInstructionAndMode(as6502_token *instruction, v6502
 	return v6502_opcode_nop;
 }
 
-static int _valueLengthInChars(const char *string) {
-	int i;
-	for (i = 0; string[i] && (isdigit(CTYPE_CAST string[i]) || (string[i] >= 'a' && string[i] <= 'f')); i++);
-
-	return i;
-}
-
 static int _containsNonDecimals(const char *string) {
 	while (*string) {
 		if (!isdigit((int)*string)) {
@@ -674,17 +667,22 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 	strncpy(workString, cur, tLen + starter);
 	workString[tLen + starter] = '\0';
 
+	size_t width;
+	if (wide) {
+		width = as6502_valueLengthInChars(workString + 1, tLen + starter - 1);
+	}
+
 	// Check first char to determine base
 	switch (workString[0]) {
 		case '$': { // Hex
 			if (wide) {
-				*wide = (_valueLengthInChars(workString + 1) > 2);
+				*wide = width > 2;
 			}
 			result = strtol(workString + 1, NULL, 16);
 		} break;
 		case '%': { // Binary
 			if (wide) {
-				*wide = (_valueLengthInChars(workString + 1) > 8);
+				*wide = width > 8;
 			}
 			result = strtol(workString + 1, NULL, 2);
 		} break;
@@ -692,21 +690,21 @@ uint16_t as6502_valueForString(int *wide, const char *string, size_t len) {
 			// Traditional Hex
 			if (workString[1] == 'x') {
 				if (wide) {
-					*wide = (_valueLengthInChars(workString + 1) > 2);
+					*wide = width > 2;
 				}
 				result = strtol(workString + 2, NULL, 16);
 			}
 			// Octal
 			else {
 				if (wide) {
-					*wide = (_valueLengthInChars(workString + 1) > 3);
+					*wide = width > 3;
 				}
 				result = strtol(workString, NULL, 8);
 			}
 		} break;
 		default: { // Decimal
 			if (wide) {
-				*wide = (_valueLengthInChars(workString + 1) > 3);
+				*wide = width > 3;
 			}
 
 			/* FIXME: Is there a more efficient way to figure out width for

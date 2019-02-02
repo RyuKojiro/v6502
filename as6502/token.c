@@ -105,8 +105,8 @@ static int ishex(char c) {
 	return isdigit(CTYPE_CAST c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 }
 
-static int _valueLengthInChars(const char *string, size_t len) {
-	int i;
+size_t as6502_valueLengthInChars(const char *string, size_t len) {
+	size_t i;
 	for (i = 0; string[i] && i < len && (ishex(string[i]) || string[i] == '.'); i++);
 
 	return i;
@@ -212,7 +212,7 @@ as6502_token *as6502_lex(const char *line, size_t len) {
 						tlen++;
 					}
 
-					tlen += _valueLengthInChars(start, remaining);
+					tlen += as6502_valueLengthInChars(start, remaining);
 
 					as6502_token *t = as6502_tokenCreate(cur, consumed, tlen);
 					t->type = as6502_token_type_value;

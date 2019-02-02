@@ -75,6 +75,9 @@ as6502_token *as6502_firstTokenOfTypeInList(as6502_token *head, as6502_token_typ
 /**@{*/
 /** @brief Finds the first non-token character encountered, and returns it's location relative to the start pointer */
 size_t as6502_lengthOfToken(const char *start, size_t len);
+
+/** @brief Finds the first thing that isn't the value literal pointed to by string, and returns the length of the value literal */
+size_t as6502_valueLengthInChars(const char *string, size_t len);
 /** @brief Lexes a line of text into a linked list of tokens for later parsing */
 as6502_token *as6502_lex(const char *line, size_t len);
 /**@}*/
