@@ -140,7 +140,7 @@ as6502_symbol *as6502_symbolForAddress(as6502_symbol_table *table, uint16_t addr
 	return NULL;
 }
 
-uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
+uint16_t as6502_addressForSymbolByName(as6502_symbol_table *table, const char *name) {
 	assert(table);
 
 	as6502_symbol *label = as6502_symbolForString(table, name);
@@ -150,18 +150,6 @@ uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name) {
 	}
 
 	return label->address;
-}
-
-uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name) {
-	assert(table);
-
-	as6502_symbol *var = as6502_symbolForString(table, name);
-
-	if (!var) {
-		return 0;
-	}
-
-	return var->address;
 }
 
 void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address, as6502_symbol_type type) {

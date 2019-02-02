@@ -91,10 +91,8 @@ void as6502_printSymbolScript(as6502_symbol_table *table, FILE *out);
 as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *name);
 /** @brief Finds a as6502_symbol in a given as6502_symbol_table by address */
 as6502_symbol *as6502_symbolForAddress(as6502_symbol_table *table, uint16_t address);
-/** @brief Dereferences a label by name to retrieve its address */
-uint16_t as6502_addressForLabel(as6502_symbol_table *table, const char *name);
-/** @brief Dereferences a variable by name to retrieve its address */
-uint16_t as6502_addressForVar(as6502_symbol_table *table, const char *name);
+/** @brief Looks up a symbol by name to retrieve its address */
+uint16_t as6502_addressForSymbolByName(as6502_symbol_table *table, const char *name);
 /** @brief Creates and adds a as6502_symbol to a as6502_symbol_table */
 void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address, as6502_symbol_type type);
 /** @brief Removes a as6502_symbol from a as6502_symbol_table */

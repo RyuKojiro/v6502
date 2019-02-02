@@ -236,7 +236,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 					address = as6502_valueForString(NULL, command, len - (_command - command));
 				}
 				else {
-					address = as6502_addressForLabel(table, command);
+					address = as6502_addressForSymbolByName(table, command);
 				}
 
 				// Toggle breakpoint
@@ -377,7 +377,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 					start = as6502_valueForString(NULL, command, len - (_command - command));
 				}
 				else {
-					start = as6502_addressForLabel(table, command);
+					start = as6502_addressForSymbolByName(table, command);
 					isFunction = YES;
 				}
 			}
