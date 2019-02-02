@@ -423,10 +423,11 @@ void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_objec
 			else {
 				address = offset + 2 + v6502_signedValueOfByte(blob->data[offset + 1]);
 			}
+			address += blob->start;
 
 			if (!as6502_symbolForAddress(table, address)) {
 				snprintf(symbolName, MAX_SYMBOL_LEN, "Label%d", currentLabel++);
-				as6502_addSymbolToTable(table, currentLineNum, symbolName, address + blob->start, as6502_symbol_type_label);
+				as6502_addSymbolToTable(table, currentLineNum, symbolName, address, as6502_symbol_type_label);
 			}
 		}
 		currentLineNum++;
