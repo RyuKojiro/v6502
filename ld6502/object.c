@@ -26,7 +26,6 @@
 
 #include <as6502/error.h>
 #include <as6502/parser.h>
-#include <dis6502/reverse.h>
 
 #include "object.h"
 #include "flat.h"
@@ -79,7 +78,6 @@ void ld6502_loadObjectFromFile(ld6502_object *object, const char *fileName, ld65
 	switch (type) {
 		case ld6502_file_type_FlatFile: {
 			ld6502_readObjectFromFlatFile(object, in);
-			dis6502_deriveSymbolsForObject(object);
 		} break;
 		case ld6502_file_type_iNES: {
 			ld6502_readObjectFromINES(object, in);

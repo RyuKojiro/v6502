@@ -4,7 +4,7 @@ include ../libvars.mk
 PROG=		ld6502
 SRCS=		main.c
 LIBSRCS=	object.c aout.c flat.c ines.c
-LDFLAGS+=	-lld6502 -ldis6502 -las6502 -lv6502 -lcurses
+LDFLAGS+=	-lld6502 -las6502 -lv6502 -lcurses
 OBJS=		$(SRCS:.c=.o)
 LIBOBJS=	$(LIBSRCS:.c=.o)
 MANPAGE=	ld6502.1
@@ -29,7 +29,7 @@ uninstall:
 lib: $(LIBOBJS)
 	$(AR) $(ARFLAGS) libld6502.a $(LIBOBJS)
 
-$(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6502)
+$(PROG): $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBLD6502)
 	$(CC) $(OBJS) -o $(PROG) $(LDFLAGS)
 
 cleanlib:
