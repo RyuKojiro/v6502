@@ -168,7 +168,7 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 	if (!sym->name) {
 		as6502_fatal("symbol name malloc in as6502_addVarToTable");
 	}
-	memcpy(sym->name, name, len);
+	strncpy(sym->name, name, len);
 
 	// Add it to the table
 	for (as6502_symbol **this = &table->first_symbol;; this = &((*this)->next)) {
