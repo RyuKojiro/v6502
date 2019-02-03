@@ -155,6 +155,15 @@ uint16_t as6502_addressForSymbolByName(as6502_symbol_table *table, const char *n
 void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, const char *name, uint16_t address, as6502_symbol_type type) {
 	assert(table);
 
+	// Ensure the table doesn't already contain this symbol
+	as6502_symbol *found = as6502_symbolForString(table, name);
+	if (found && found->address != address) {
+		as6502_error(0, 0, v6502_DuplicateSymbolErrorText, name);
+		as6502_note(found->line, v6502_DuplicateSymbolNoteText);
+		return;
+	}
+
+	// Make the symol object
 	as6502_symbol *sym = malloc(sizeof(as6502_symbol));
 	if (!sym) {
 		as6502_fatal("symbol malloc in as6502_addVarToTable");
@@ -170,14 +179,8 @@ void as6502_addSymbolToTable(as6502_symbol_table *table, unsigned long line, con
 	}
 	strncpy(sym->name, name, len);
 
-	// Add it to the table
+	// Insert it into the table, in descending order of length
 	for (as6502_symbol **this = &table->first_symbol;; this = &((*this)->next)) {
-		if (*this && !strncmp((*this)->name, name, len)) {
-			as6502_error(0, 0, v6502_DuplicateSymbolErrorText, name);
-			as6502_note((*this)->line, v6502_DuplicateSymbolNoteText);
-			free(sym);
-			return;
-		}
 		if (!*this || strlen((*this)->name) < strlen(name)) {
 			as6502_symbol *next = *this;
 			*this = sym;
