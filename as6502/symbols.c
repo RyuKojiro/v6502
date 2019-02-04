@@ -118,9 +118,8 @@ void as6502_printSymbolTable(as6502_symbol_table *table) {
 as6502_symbol *as6502_symbolForString(as6502_symbol_table *table, const char *name) {
 	assert(table);
 
-	size_t len = strlen(name);
 	for (as6502_symbol *this = table->first_symbol; this; this = this->next) {
-		if (!strncmp(this->name, name, len)) {
+		if (!strcmp(this->name, name)) {
 			return this;
 		}
 	}
