@@ -76,6 +76,8 @@ while (my $line = <$f>) {
 		} else {
 			if ($mnemonic =~ /b[cvpemn][ciesql]/) {
 				$addressmode = "rel";
+			} elsif ($mnemonic eq "jsr") {
+				$addressmode = "abs";
 			}
 		}
 		if($4) {
