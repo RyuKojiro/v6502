@@ -353,7 +353,7 @@ BVS - Branch if Overflow Set</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"><div class="line"><span class="keywordflow">if</span> (cpu-&gt;sr &amp; v6502_cpu_status_overflow) {</div><div class="line">    cpu-&gt;pc += <a class="code" href="group__mem__access.html#ga527f89359bc63964cbf183d88ecf3dfe">v6502_signedValueOfByte</a>(low);</div><div class="line">}   </div></div><!-- fragment -->  </td></tr>
+<td><div class="fragment"><div class="line"><span class="keywordflow">if</span> (cpu-&gt;sr &amp; v6502_cpu_status_overflow) {</div><div class="line">    cpu-&gt;pc += <a class="code" href="group__mem__access.html#ga527f89359bc63964cbf183d88ecf3dfe">v6502_signedValueOfByte</a>(low);</div><div class="line">}</div></div><!-- fragment -->  </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_clc"></a>
@@ -628,7 +628,7 @@ JMP - Unconditional Jump</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"><div class="line">        <span class="keywordflow">case</span> v6502_opcode_jmp_abs: {</div><div class="line">            <span class="keywordflow">if</span> (BOTH_BYTES == cpu-&gt;pc) {</div><div class="line">                <a class="code" href="group__cpu__exec.html#ga54dcdefafce18115c89ca4a99b1512d9">v6502_execute</a>(cpu, v6502_opcode_wai, 0, 0);</div><div class="line">                cpu-&gt;pc -= 3; <span class="comment">// PC shift</span></div><div class="line">                <span class="keywordflow">return</span>;</div><div class="line">            }</div><div class="line">            </div><div class="line">            cpu-&gt;pc = BOTH_BYTES;</div><div class="line">            cpu-&gt;pc -= 3; <span class="comment">// PC shift</span></div><div class="line">        } <span class="keywordflow">return</span>;</div><div class="line">        <span class="keywordflow">case</span> v6502_opcode_jmp_ind: {</div><div class="line">            uint16_t address = BOTH_BYTES;</div><div class="line">            low = <a class="code" href="group__mem__access.html#ga66910078abba377dd238370337e340db">v6502_read</a>(cpu-&gt;memory, address, <a class="code" href="mem_8h.html#a996bde01ecac342918f0a2c4e7ce7bd5">NO</a>);</div><div class="line">            high = <a class="code" href="group__mem__access.html#ga66910078abba377dd238370337e340db">v6502_read</a>(cpu-&gt;memory, address + 1, <a class="code" href="mem_8h.html#a996bde01ecac342918f0a2c4e7ce7bd5">NO</a>);</div><div class="line">            </div><div class="line">            <span class="comment">// Trap was already triggered by indirect memory classification in prior switch</span></div><div class="line">            cpu-&gt;pc = BOTH_BYTES;</div><div class="line">            cpu-&gt;pc -= 3; <span class="comment">// PC shift</span></div><div class="line">        } <span class="keywordflow">return</span>;</div></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line">        <span class="keywordflow">case</span> v6502_opcode_jmp_abs: {</div><div class="line">            <span class="keywordflow">if</span> (BOTH_BYTES == cpu-&gt;pc) {</div><div class="line">                <a class="code" href="group__cpu__exec.html#ga54dcdefafce18115c89ca4a99b1512d9">v6502_execute</a>(cpu, v6502_opcode_wai, 0, 0);</div><div class="line">                cpu-&gt;pc -= 3; <span class="comment">// PC shift</span></div><div class="line">                <span class="keywordflow">return</span>;</div><div class="line">            }</div><div class="line"></div><div class="line">            cpu-&gt;pc = BOTH_BYTES;</div><div class="line">            cpu-&gt;pc -= 3; <span class="comment">// PC shift</span></div><div class="line">        } <span class="keywordflow">return</span>;</div><div class="line">        <span class="keywordflow">case</span> v6502_opcode_jmp_ind: {</div><div class="line">            uint16_t address = BOTH_BYTES;</div><div class="line">            low = <a class="code" href="group__mem__access.html#ga66910078abba377dd238370337e340db">v6502_read</a>(cpu-&gt;memory, address, <a class="code" href="mem_8h.html#a996bde01ecac342918f0a2c4e7ce7bd5">NO</a>);</div><div class="line">            high = <a class="code" href="group__mem__access.html#ga66910078abba377dd238370337e340db">v6502_read</a>(cpu-&gt;memory, address + 1, <a class="code" href="mem_8h.html#a996bde01ecac342918f0a2c4e7ce7bd5">NO</a>);</div><div class="line"></div><div class="line">            <span class="comment">// Trap was already triggered by indirect memory classification in prior switch</span></div><div class="line">            cpu-&gt;pc = BOTH_BYTES;</div><div class="line">            cpu-&gt;pc -= 3; <span class="comment">// PC shift</span></div><div class="line">        } <span class="keywordflow">return</span>;</div></div><!-- fragment --> </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_jsr"></a>
@@ -637,13 +637,13 @@ JSR - Call Subroutine</h1>
 <tr>
 <th>Address Mode</th><th>Mnemonic</th><th>Opcode </th></tr>
 <tr>
-<td>Implied</td><td>jsr </td><td>0x20</td></tr>
+<td>Absolute</td><td>jsr m16</td><td>0x20 0xLL 0xHH</td></tr>
 </table>
 <table class="doxtable">
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"><div class="line">cpu-&gt;memory-&gt;bytes[<a class="code" href="group__mem__boundaries.html#ga5f7e9368343dce1bb86689cc9822a52b">v6502_memoryStartStack</a> + cpu-&gt;sp--] = cpu-&gt;pc;           <span class="comment">// Low byte first</span></div><div class="line">cpu-&gt;memory-&gt;bytes[<a class="code" href="group__mem__boundaries.html#ga5f7e9368343dce1bb86689cc9822a52b">v6502_memoryStartStack</a> + cpu-&gt;sp--] = (cpu-&gt;pc &gt;&gt; 8);    <span class="comment">// High byte second</span></div><div class="line">cpu-&gt;pc = BOTH_BYTES;</div><div class="line">cpu-&gt;pc -= 3; <span class="comment">// To compensate for post execution shift</span></div></div><!-- fragment -->  </td></tr>
+<td><div class="fragment"><div class="line">cpu-&gt;memory-&gt;bytes[<a class="code" href="group__mem__boundaries.html#ga5f7e9368343dce1bb86689cc9822a52b">v6502_memoryStartStack</a> + cpu-&gt;sp--] = cpu-&gt;pc;        <span class="comment">// Low byte first</span></div><div class="line">cpu-&gt;memory-&gt;bytes[<a class="code" href="group__mem__boundaries.html#ga5f7e9368343dce1bb86689cc9822a52b">v6502_memoryStartStack</a> + cpu-&gt;sp--] = (cpu-&gt;pc &gt;&gt; 8); <span class="comment">// High byte second</span></div><div class="line">cpu-&gt;pc = BOTH_BYTES;</div><div class="line">cpu-&gt;pc -= 3; <span class="comment">// To compensate for post execution shift</span></div></div><!-- fragment -->  </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_lda"></a>
@@ -672,7 +672,7 @@ LDA - Load Accumulator</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line">            cpu-&gt;ac = operand;</div><div class="line">            FLAG_NEG_AND_ZERO_WITH_RESULT(operand);</div></div><!-- fragment --> </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_ldx"></a>
@@ -695,7 +695,7 @@ LDX - Load X</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line">            cpu-&gt;x = operand;</div><div class="line">            FLAG_NEG_AND_ZERO_WITH_RESULT(operand);</div></div><!-- fragment --> </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_ldy"></a>
@@ -718,7 +718,7 @@ LDY - Load Y</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line">            cpu-&gt;y = operand;</div><div class="line">            FLAG_NEG_AND_ZERO_WITH_RESULT(operand);</div></div><!-- fragment --> </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_lsr"></a>
@@ -756,7 +756,7 @@ NOP - No-op</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line"><span class="comment">/* Do nothing */</span></div></div><!-- fragment -->  </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_ora"></a>
@@ -1022,7 +1022,7 @@ STA - Store Accumulator</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line">            <a class="code" href="group__mem__access.html#ga18b65a6dc221ab302c24e0bb2817c2c1">v6502_write</a>(cpu-&gt;memory, ref, cpu-&gt;ac);</div></div><!-- fragment --> </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_stx"></a>
@@ -1041,7 +1041,7 @@ STX - Store X</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line">            <a class="code" href="group__mem__access.html#ga18b65a6dc221ab302c24e0bb2817c2c1">v6502_write</a>(cpu-&gt;memory, ref, cpu-&gt;x);</div></div><!-- fragment --> </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_sty"></a>
@@ -1060,7 +1060,7 @@ STY - Store Y</h1>
 <tr>
 <th>Implementation </th></tr>
 <tr>
-<td><div class="fragment"></div><!-- fragment --> </td></tr>
+<td><div class="fragment"><div class="line">            <a class="code" href="group__mem__access.html#ga18b65a6dc221ab302c24e0bb2817c2c1">v6502_write</a>(cpu-&gt;memory, ref, cpu-&gt;y);</div></div><!-- fragment --> </td></tr>
 </table>
 <hr/>
  <h1><a class="anchor" id="isa_tax"></a>
@@ -1156,7 +1156,7 @@ TYA - Transfer Y to Accumulator</h1>
  </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 26 2017 23:57:31 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 6 2019 00:29:39 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

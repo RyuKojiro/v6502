@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>v6502: /Users/kojiro/Code/asdf/v6502/ld6502/ines.h File Reference</title>
+<title>v6502: /Users/kojiro/Code/NES/v6502/ld6502/ines.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -107,21 +107,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ines
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ines_8h.html#a9f4f49c716ccd8202c26318e3c57984c">readFromINES</a> (FILE *infile, <a class="el" href="structld6502__object__blob.html">ld6502_object_blob</a> *prg_rom, <a class="el" href="structld6502__object__blob.html">ld6502_object_blob</a> *chr_rom, <a class="el" href="structines__properties.html">ines_properties</a> *props)</td></tr>
 <tr class="memdesc:a9f4f49c716ccd8202c26318e3c57984c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load an iNES ROM in, populate an <a class="el" href="structines__properties.html" title="All of the properties that get compiled into the four flag bytes in an iNES header. ">ines_properties</a> struct using the header data, and split the ROM into it's PRG and CHR ROMs. Pass NULL to any pointers whose results you don't care to recieve, and those steps will be skipped. <br /></td></tr>
 <tr class="separator:a9f4f49c716ccd8202c26318e3c57984c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c1326031f8f0f67035e5dbab3f8c91d"><td class="memItemLeft" align="right" valign="top"><a id="a8c1326031f8f0f67035e5dbab3f8c91d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ines_8h.html#a8c1326031f8f0f67035e5dbab3f8c91d">as6502_writeObjectToINES</a> (<a class="el" href="structld6502__object.html">ld6502_object</a> *obj, FILE *file)</td></tr>
-<tr class="memdesc:a8c1326031f8f0f67035e5dbab3f8c91d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes an <a class="el" href="structld6502__object.html" title="The assembler&#39;s representation of an object file in memory. ">ld6502_object</a> directly to an iNES file. <br /></td></tr>
-<tr class="separator:a8c1326031f8f0f67035e5dbab3f8c91d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad004cb81f53e4d23d438bb61259c61b9"><td class="memItemLeft" align="right" valign="top"><a id="ad004cb81f53e4d23d438bb61259c61b9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ines_8h.html#ad004cb81f53e4d23d438bb61259c61b9">as6502_readObjectFromINES</a> (<a class="el" href="structld6502__object.html">ld6502_object</a> *obj, FILE *file)</td></tr>
-<tr class="memdesc:ad004cb81f53e4d23d438bb61259c61b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an <a class="el" href="structld6502__object.html" title="The assembler&#39;s representation of an object file in memory. ">ld6502_object</a> from an iNES file. <br /></td></tr>
-<tr class="separator:ad004cb81f53e4d23d438bb61259c61b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a304d3b4ec346153c3b1ea9802f13d23f"><td class="memItemLeft" align="right" valign="top"><a id="a304d3b4ec346153c3b1ea9802f13d23f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ines_8h.html#a304d3b4ec346153c3b1ea9802f13d23f">ld6502_writeObjectToINES</a> (<a class="el" href="structld6502__object.html">ld6502_object</a> *obj, FILE *file)</td></tr>
+<tr class="memdesc:a304d3b4ec346153c3b1ea9802f13d23f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes an <a class="el" href="structld6502__object.html" title="The assembler&#39;s representation of an object file in memory. ">ld6502_object</a> directly to an iNES file. <br /></td></tr>
+<tr class="separator:a304d3b4ec346153c3b1ea9802f13d23f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af09dd8cada9bf3b512e07c6932a22aef"><td class="memItemLeft" align="right" valign="top"><a id="af09dd8cada9bf3b512e07c6932a22aef"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ines_8h.html#af09dd8cada9bf3b512e07c6932a22aef">ld6502_readObjectFromINES</a> (<a class="el" href="structld6502__object.html">ld6502_object</a> *obj, FILE *file)</td></tr>
+<tr class="memdesc:af09dd8cada9bf3b512e07c6932a22aef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an <a class="el" href="structld6502__object.html" title="The assembler&#39;s representation of an object file in memory. ">ld6502_object</a> from an iNES file. This expects an already allocated <a class="el" href="structld6502__object.html" title="The assembler&#39;s representation of an object file in memory. ">ld6502_object</a>. <br /></td></tr>
+<tr class="separator:af09dd8cada9bf3b512e07c6932a22aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>iNES file transformer </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 26 2017 23:57:31 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 6 2019 00:29:39 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

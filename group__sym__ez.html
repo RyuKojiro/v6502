@@ -72,9 +72,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga58572468c9aaac47e86fe69823095934"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structas6502__token.html">as6502_token</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__ez.html#ga58572468c9aaac47e86fe69823095934">as6502_desymbolicateExpression</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, <a class="el" href="structas6502__token.html">as6502_token</a> *head, uint16_t offset, int caseSensitive)</td></tr>
 <tr class="memdesc:ga58572468c9aaac47e86fe69823095934"><td class="mdescLeft">&#160;</td><td class="mdescRight">Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses.  <a href="#ga58572468c9aaac47e86fe69823095934">More...</a><br /></td></tr>
 <tr class="separator:ga58572468c9aaac47e86fe69823095934"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac6587c3b6399338e941534aaee33c48a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__ez.html#gac6587c3b6399338e941534aaee33c48a">as6502_symbolicateLine</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, char *line, size_t len, uint16_t pstart, uint16_t offset)</td></tr>
-<tr class="memdesc:gac6587c3b6399338e941534aaee33c48a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for addresses in a given line and replaces them with their symbols in a given symbol table.  <a href="#gac6587c3b6399338e941534aaee33c48a">More...</a><br /></td></tr>
-<tr class="separator:gac6587c3b6399338e941534aaee33c48a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa53fd8abd08bd2128ca3299f04ebc76d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__ez.html#gaa53fd8abd08bd2128ca3299f04ebc76d">as6502_symbolicateLine</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, char *line, size_t len, uint16_t offset)</td></tr>
+<tr class="memdesc:gaa53fd8abd08bd2128ca3299f04ebc76d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for addresses in a given line and replaces them with their symbols in a given symbol table.  <a href="#gaa53fd8abd08bd2128ca3299f04ebc76d">More...</a><br /></td></tr>
+<tr class="separator:gaa53fd8abd08bd2128ca3299f04ebc76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
@@ -131,8 +131,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gac6587c3b6399338e941534aaee33c48a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac6587c3b6399338e941534aaee33c48a">&#9670;&nbsp;</a></span>as6502_symbolicateLine()</h2>
+<a id="gaa53fd8abd08bd2128ca3299f04ebc76d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa53fd8abd08bd2128ca3299f04ebc76d">&#9670;&nbsp;</a></span>as6502_symbolicateLine()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,12 +159,6 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>pstart</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>offset</em>&#160;</td>
         </tr>
         <tr>
@@ -181,7 +175,6 @@ Functions</h2></td></tr>
     <tr><td class="paramname">table</td><td>The <a class="el" href="structas6502__symbol__table.html" title="The assembler&#39;s per-object symbol table structure, which holds all symbols. ">as6502_symbol_table</a> to search </td></tr>
     <tr><td class="paramname">line</td><td>The string to desymbolicate </td></tr>
     <tr><td class="paramname">len</td><td>Useable length of the line in chars </td></tr>
-    <tr><td class="paramname">pstart</td><td>Program start address </td></tr>
     <tr><td class="paramname">offset</td><td>Address of current line </td></tr>
   </table>
   </dd>
@@ -192,7 +185,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 26 2017 23:57:31 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 6 2019 00:29:40 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

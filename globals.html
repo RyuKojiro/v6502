@@ -63,11 +63,8 @@ $(function() {
 <div class="textblock">Here is a list of all documented functions, variables, defines, enums, and typedefs with links to the documentation:</div>
 
 <h3><a id="index_a"></a>- a -</h3><ul>
-<li>as6502_addressForLabel()
-: <a class="el" href="group__sym__access.html#ga8e81852659867fe5a0baee2545e896af">symbols.h</a>
-</li>
-<li>as6502_addressForVar()
-: <a class="el" href="group__sym__access.html#ga94693c23f056aa70e84ef5175a21b078">symbols.h</a>
+<li>as6502_addressForSymbolByName()
+: <a class="el" href="group__sym__access.html#ga0549a5ab42db7b25a01c730483972e20">symbols.h</a>
 </li>
 <li>as6502_addressModeForExpression()
 : <a class="el" href="group__parser__translit.html#ga04814137713793cd60b3d81651a3ec22">parser.h</a>
@@ -126,6 +123,12 @@ $(function() {
 <li>as6502_opcodeForInstructionAndMode()
 : <a class="el" href="group__parser__translit.html#gabb13ab0496970fe7777bebd66e89797f">parser.h</a>
 </li>
+<li>as6502_printAnnotatedInstruction()
+: <a class="el" href="group__asm__debug.html#gab9e9b8332df0fa6491e4c6be1fca3468">debug.h</a>
+</li>
+<li>as6502_printAnnotatedLabel()
+: <a class="el" href="group__asm__debug.html#gaacf87a6a0dcf195427ae58be17869a60">debug.h</a>
+</li>
 <li>as6502_printDotForList()
 : <a class="el" href="group__tok__debug.html#ga7f8287fa28bfdfee5138a2fda9a6cecd">token.h</a>
 </li>
@@ -140,15 +143,6 @@ $(function() {
 </li>
 <li>as6502_processObjectDirectiveInExpression()
 : <a class="el" href="group__codegen.html#ga12472e5ee8462397935a74d4188aa6b3">codegen.h</a>
-</li>
-<li>as6502_readObjectFromAOFile()
-: <a class="el" href="aout_8h.html#aa06f39b0a5e6a05d1fb4f87c3dd8fe42">aout.h</a>
-</li>
-<li>as6502_readObjectFromFlatFile()
-: <a class="el" href="flat_8h.html#a043eefb0dac1520237193424aa988c08">flat.h</a>
-</li>
-<li>as6502_readObjectFromINES()
-: <a class="el" href="ines_8h.html#ad004cb81f53e4d23d438bb61259c61b9">ines.h</a>
 </li>
 <li>as6502_removeSymbolFromTable()
 : <a class="el" href="group__sym__access.html#ga5ad8db75957f25ec368f6a14fad67958">symbols.h</a>
@@ -178,7 +172,7 @@ $(function() {
 : <a class="el" href="group__sym__access.html#gad1de3d68123f7a280bc5b4d24b98d61a">symbols.h</a>
 </li>
 <li>as6502_symbolicateLine()
-: <a class="el" href="group__sym__ez.html#gac6587c3b6399338e941534aaee33c48a">symbols.h</a>
+: <a class="el" href="group__sym__ez.html#gaa53fd8abd08bd2128ca3299f04ebc76d">symbols.h</a>
 </li>
 <li>as6502_symbolShouldBeReplacedDoubleWidth()
 : <a class="el" href="group__sym__rep.html#ga3abcd63a2fca47e7b8ecec788db1881b">symbols.h</a>
@@ -223,7 +217,7 @@ $(function() {
 : <a class="el" href="group__sym__access.html#gac59b4834090e2070de8d4c9ee93aee9f">symbols.h</a>
 </li>
 <li>as6502_underline()
-: <a class="el" href="group__as__error.html#ga11ee562ce6c4df01c13a1508313d1cb1">error.h</a>
+: <a class="el" href="group__as__error.html#gac952fa1bc6a2b8e32192a4d529576f42">error.h</a>
 </li>
 <li>as6502_valueForString()
 : <a class="el" href="group__parser__line.html#ga2b1a6dc1c45bb7d50696dee6f0f9f028">parser.h</a>
@@ -231,17 +225,11 @@ $(function() {
 <li>as6502_valueForToken
 : <a class="el" href="group__parser__line.html#ga0ff800ebdbb0b5b70d6b8084ed2231c9">parser.h</a>
 </li>
+<li>as6502_valueLengthInChars()
+: <a class="el" href="group__tok__lex.html#ga89703ddb0f107f381b51403f86a151a3">token.h</a>
+</li>
 <li>as6502_warn()
 : <a class="el" href="group__as__error.html#ga5dccee352e14593e6197a58b95360abe">error.h</a>
-</li>
-<li>as6502_writeObjectToAOFile()
-: <a class="el" href="aout_8h.html#a2ec28f32a28946ae3dec2b707091262c">aout.h</a>
-</li>
-<li>as6502_writeObjectToFlatFile()
-: <a class="el" href="flat_8h.html#a20cff1293d8888419f8a51adbc6dca03">flat.h</a>
-</li>
-<li>as6502_writeObjectToINES()
-: <a class="el" href="ines_8h.html#a8c1326031f8f0f67035e5dbab3f8c91d">ines.h</a>
 </li>
 </ul>
 
@@ -330,6 +318,24 @@ $(function() {
 <li>ld6502_loadObjectFromFile()
 : <a class="el" href="group__obj__lifecycle.html#ga24f7961b8bfbd8130249e6ab00278718">object.h</a>
 </li>
+<li>ld6502_readObjectFromAOFile()
+: <a class="el" href="aout_8h.html#a552beee798a59d7b495edfb2ba3e6f5d">aout.h</a>
+</li>
+<li>ld6502_readObjectFromFlatFile()
+: <a class="el" href="flat_8h.html#a46caecb5361fcfdfd4c8c22b8433167f">flat.h</a>
+</li>
+<li>ld6502_readObjectFromINES()
+: <a class="el" href="ines_8h.html#af09dd8cada9bf3b512e07c6932a22aef">ines.h</a>
+</li>
+<li>ld6502_writeObjectToAOFile()
+: <a class="el" href="aout_8h.html#a76d05288ad48fed81209cba13ba2ff1d">aout.h</a>
+</li>
+<li>ld6502_writeObjectToFlatFile()
+: <a class="el" href="flat_8h.html#a0eeacc67931f55fe8d7f345a8dd6fb62">flat.h</a>
+</li>
+<li>ld6502_writeObjectToINES()
+: <a class="el" href="ines_8h.html#a304d3b4ec346153c3b1ea9802f13d23f">ines.h</a>
+</li>
 </ul>
 
 
@@ -401,7 +407,7 @@ $(function() {
 : <a class="el" href="group__linectl.html#ga26e6f3645df86482913bc2de3fb1ae62">linectl.h</a>
 </li>
 <li>trimgreedytaild()
-: <a class="el" href="group__linectl.html#ga58f68182a256fe8576c1e75e3e79556d">linectl.h</a>
+: <a class="el" href="group__linectl.html#gaefc30a18ff61bc9fcb0441c7c8c8c6b7">linectl.h</a>
 </li>
 <li>trimhead()
 : <a class="el" href="group__linectl.html#ga039dbcc521f8d147b38e637910d3fd8c">linectl.h</a>
@@ -602,7 +608,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 26 2017 23:57:31 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 6 2019 00:29:40 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

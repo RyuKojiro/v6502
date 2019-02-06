@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>v6502: /Users/kojiro/Code/asdf/v6502/as6502/symbols.h File Reference</title>
+<title>v6502: /Users/kojiro/Code/NES/v6502/as6502/symbols.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -93,8 +93,8 @@ Data Structures</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga156566418c84a9018d47cda36338aeed"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__type__macros.html#ga156566418c84a9018d47cda36338aeed">as6502_symbolTypeIsLinked</a>(_type)&#160;&#160;&#160;(_type | as6502_symbol_type_label)</td></tr>
-<tr class="memdesc:ga156566418c84a9018d47cda36338aeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return YES if a given as6502_symbol_type has a high link bit. <br /></td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__type__macros.html#ga156566418c84a9018d47cda36338aeed">as6502_symbolTypeIsLinked</a>(_type)&#160;&#160;&#160;(_type == as6502_symbol_type_label || _type == as6502_symbol_type_variable)</td></tr>
+<tr class="memdesc:ga156566418c84a9018d47cda36338aeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return YES if a given as6502_symbol_type has a low link bit. <br /></td></tr>
 <tr class="separator:ga156566418c84a9018d47cda36338aeed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5aa62265373953e165b00a9b1590f992"><td class="memItemLeft" align="right" valign="top">
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__type__macros.html#ga5aa62265373953e165b00a9b1590f992">as6502_symbolTypeIsLabel</a>(_type)&#160;&#160;&#160;(_type == as6502_symbol_type_label || _type == as6502_symbol_type_label_unlinked)</td></tr>
@@ -145,14 +145,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <a class="el" href="structas6502__symbol.html">as6502_symbol</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__access.html#ga95e693668c2c94a9fbf6aa0be1911186">as6502_symbolForAddress</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, uint16_t address)</td></tr>
 <tr class="memdesc:ga95e693668c2c94a9fbf6aa0be1911186"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds a <a class="el" href="structas6502__symbol.html" title="An individual symbol in a symbol table. ">as6502_symbol</a> in a given <a class="el" href="structas6502__symbol__table.html" title="The assembler&#39;s per-object symbol table structure, which holds all symbols. ">as6502_symbol_table</a> by address. <br /></td></tr>
 <tr class="separator:ga95e693668c2c94a9fbf6aa0be1911186"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8e81852659867fe5a0baee2545e896af"><td class="memItemLeft" align="right" valign="top">
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__access.html#ga8e81852659867fe5a0baee2545e896af">as6502_addressForLabel</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, const char *name)</td></tr>
-<tr class="memdesc:ga8e81852659867fe5a0baee2545e896af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereferences a label by name to retrieve its address. <br /></td></tr>
-<tr class="separator:ga8e81852659867fe5a0baee2545e896af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga94693c23f056aa70e84ef5175a21b078"><td class="memItemLeft" align="right" valign="top">
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__access.html#ga94693c23f056aa70e84ef5175a21b078">as6502_addressForVar</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, const char *name)</td></tr>
-<tr class="memdesc:ga94693c23f056aa70e84ef5175a21b078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereferences a variable by name to retrieve its address. <br /></td></tr>
-<tr class="separator:ga94693c23f056aa70e84ef5175a21b078"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0549a5ab42db7b25a01c730483972e20"><td class="memItemLeft" align="right" valign="top">
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__access.html#ga0549a5ab42db7b25a01c730483972e20">as6502_addressForSymbolByName</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, const char *name)</td></tr>
+<tr class="memdesc:ga0549a5ab42db7b25a01c730483972e20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Looks up a symbol by name to retrieve its address. <br /></td></tr>
+<tr class="separator:ga0549a5ab42db7b25a01c730483972e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacc41af34acbd3a4158d8221e3341f594"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__access.html#gacc41af34acbd3a4158d8221e3341f594">as6502_addSymbolToTable</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, unsigned long line, const char *name, uint16_t address, <a class="el" href="symbols_8h.html#a3228e75fd122eaf7cf06279e61a43611">as6502_symbol_type</a> type)</td></tr>
 <tr class="memdesc:gacc41af34acbd3a4158d8221e3341f594"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and adds a <a class="el" href="structas6502__symbol.html" title="An individual symbol in a symbol table. ">as6502_symbol</a> to a <a class="el" href="structas6502__symbol__table.html" title="The assembler&#39;s per-object symbol table structure, which holds all symbols. ">as6502_symbol_table</a>. <br /></td></tr>
@@ -168,9 +164,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:ga58572468c9aaac47e86fe69823095934"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structas6502__token.html">as6502_token</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__ez.html#ga58572468c9aaac47e86fe69823095934">as6502_desymbolicateExpression</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, <a class="el" href="structas6502__token.html">as6502_token</a> *head, uint16_t offset, int caseSensitive)</td></tr>
 <tr class="memdesc:ga58572468c9aaac47e86fe69823095934"><td class="mdescLeft">&#160;</td><td class="mdescRight">Automatically detects symbols in a given line, then dereferences them and replaces them with their actual addresses.  <a href="group__sym__ez.html#ga58572468c9aaac47e86fe69823095934">More...</a><br /></td></tr>
 <tr class="separator:ga58572468c9aaac47e86fe69823095934"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac6587c3b6399338e941534aaee33c48a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__ez.html#gac6587c3b6399338e941534aaee33c48a">as6502_symbolicateLine</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, char *line, size_t len, uint16_t pstart, uint16_t offset)</td></tr>
-<tr class="memdesc:gac6587c3b6399338e941534aaee33c48a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for addresses in a given line and replaces them with their symbols in a given symbol table.  <a href="group__sym__ez.html#gac6587c3b6399338e941534aaee33c48a">More...</a><br /></td></tr>
-<tr class="separator:gac6587c3b6399338e941534aaee33c48a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa53fd8abd08bd2128ca3299f04ebc76d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__ez.html#gaa53fd8abd08bd2128ca3299f04ebc76d">as6502_symbolicateLine</a> (<a class="el" href="structas6502__symbol__table.html">as6502_symbol_table</a> *table, char *line, size_t len, uint16_t offset)</td></tr>
+<tr class="memdesc:gaa53fd8abd08bd2128ca3299f04ebc76d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for addresses in a given line and replaces them with their symbols in a given symbol table.  <a href="group__sym__ez.html#gaa53fd8abd08bd2128ca3299f04ebc76d">More...</a><br /></td></tr>
+<tr class="separator:gaa53fd8abd08bd2128ca3299f04ebc76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5211d942ecb1d1f7f9ca34060caa794b"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__rep.html#ga5211d942ecb1d1f7f9ca34060caa794b">as6502_replaceSymbolInLineAtLocationWithText</a> (char *line, size_t len, char *loc, const char *restrict symbol, const char *restrict text)</td></tr>
 <tr class="memdesc:ga5211d942ecb1d1f7f9ca34060caa794b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience function to replace a given string in another string, with its location already specified for performance. <br /></td></tr>
@@ -203,7 +199,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 26 2017 23:57:31 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 6 2019 00:29:39 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

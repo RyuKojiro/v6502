@@ -70,8 +70,8 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga156566418c84a9018d47cda36338aeed"><td class="memItemLeft" align="right" valign="top"><a id="ga156566418c84a9018d47cda36338aeed"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__type__macros.html#ga156566418c84a9018d47cda36338aeed">as6502_symbolTypeIsLinked</a>(_type)&#160;&#160;&#160;(_type | as6502_symbol_type_label)</td></tr>
-<tr class="memdesc:ga156566418c84a9018d47cda36338aeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return YES if a given as6502_symbol_type has a high link bit. <br /></td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__type__macros.html#ga156566418c84a9018d47cda36338aeed">as6502_symbolTypeIsLinked</a>(_type)&#160;&#160;&#160;(_type == as6502_symbol_type_label || _type == as6502_symbol_type_variable)</td></tr>
+<tr class="memdesc:ga156566418c84a9018d47cda36338aeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return YES if a given as6502_symbol_type has a low link bit. <br /></td></tr>
 <tr class="separator:ga156566418c84a9018d47cda36338aeed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5aa62265373953e165b00a9b1590f992"><td class="memItemLeft" align="right" valign="top"><a id="ga5aa62265373953e165b00a9b1590f992"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sym__type__macros.html#ga5aa62265373953e165b00a9b1590f992">as6502_symbolTypeIsLabel</a>(_type)&#160;&#160;&#160;(_type == as6502_symbol_type_label || _type == as6502_symbol_type_label_unlinked)</td></tr>
@@ -86,7 +86,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 26 2017 23:57:31 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 6 2019 00:29:39 for v6502 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
