@@ -17,7 +17,7 @@ VM=	$(VMDIR)/v6502
 FUZZIN=afl_tests
 FUZZOUT=afl_results
 
-all: compiledTests assembleFromStdin expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest wozmon #wozfp
+all: compiledTests duplicateSymbols assembleFromStdin expectedAssemblyResultSnake circularAssemble expectedAssemblyResultTextModeTest wozmon #wozfp
 
 # This requires the afl fuzzer to be present, and does fuzzing of the snake code to find assembler bugs
 fuzz_as: $(AS) $(FUZZIN)
@@ -38,9 +38,13 @@ compiledTestsExecutable: $(OBJS) $(LIBV6502) $(LIBAS6502) $(LIBDIS6502) $(LIBLD6
 
 # Assembler and Disassembler automated tests
 
+duplicateSymbols: $(AS)
+	@echo "Making sure that duplicate symbols produce an error..."
+	! $(AS) double_label.s 2> /dev/null
+
 assembleFromStdin: $(AS)
 	@echo "Making sure that assembling from stdin works..."
-	$(AS) < snake.s > snake3.o
+	$(AS) < snake.s 1> snake3.o 2> /dev/null
 	cksum snake3.o | sed 's/snake3.o/snake.o/' > snake3.tmp.crc
 	diff snake.o.crc snake3.tmp.crc
 
