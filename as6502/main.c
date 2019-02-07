@@ -345,17 +345,18 @@ int main(int argc, char * const argv[]) {
 
 	int i = optind;
 
+	if (makeSymScript) {
+		char *fname = outNameFromInName(argv[i], EXTENSION_SCRIPT);
+		sym = fopen(fname, "w");
+		free(fname);
+	}
+
 	if (argc - i == 0) {
 		currentFileName = "stdin";
 		currentLineNum = 0;
 
 		as6502_warn(0, 0, "Assembling from stdin does not support symbols");
 
-		if (makeSymScript) {
-			char *fname = outNameFromInName(argv[i], EXTENSION_SCRIPT);
-			sym = fopen(fname, "w");
-			free(fname);
-		}
 		assembleFile(stdin, stdout, sym, NO, NO, NO, format);
 	}
 	else {
@@ -378,11 +379,6 @@ int main(int argc, char * const argv[]) {
 			}
 			outName = NULL;
 
-			if (makeSymScript) {
-				char *fname = outNameFromInName(argv[i], EXTENSION_SCRIPT);
-				sym = fopen(fname, "w");
-				free(fname);
-			}
 			assembleFile(in, out, sym, printProcess, printTable, printDot, format);
 			fclose(in);
 			fclose(out);
