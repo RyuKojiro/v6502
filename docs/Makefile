@@ -4,7 +4,7 @@ KMAP=../kmapgen/kmap.html
 
 all: $(HTML)
 
-$(HTML): $(ISA) $(KMAP)
+$(HTML): $(ISA) $(KMAP) Doxyfile
 	doxygen
 
 $(ISA):
