@@ -82,6 +82,8 @@
 		E638A4FA1B8AAB5600B71420 /* libld6502.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E638A4AC1B8AAA7800B71420 /* libld6502.a */; };
 		E640E22317DFDD93009C0718 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E640E21217DFD81B009C0718 /* main.c */; };
 		E64198EB17373A6200D0EE25 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E666A8121715D1C000EDBF95 /* main.c */; };
+		E6588EFC220FFBB5005D7BD1 /* brute.c in Sources */ = {isa = PBXBuildFile; fileRef = E6588EFB220FFBB5005D7BD1 /* brute.c */; };
+		E6588EFD220FFBB5005D7BD1 /* brute.c in Sources */ = {isa = PBXBuildFile; fileRef = E6588EFB220FFBB5005D7BD1 /* brute.c */; };
 		E66663151A5A3F1D007025FA /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E6A4808A1758355A005ABE54 /* parser.c */; };
 		E66663161A5A3F34007025FA /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = E6FE6FB117376FCD00B4D249 /* error.c */; };
 		E66663171A5A3F42007025FA /* linectl.c in Sources */ = {isa = PBXBuildFile; fileRef = E6B33F1B1759748C00F0D8C2 /* linectl.c */; };
@@ -419,6 +421,8 @@
 		E65212B71704BAED009CE919 /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
 		E65212B81704BC42009CE919 /* log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = log.c; sourceTree = "<group>"; };
 		E65212BA1704BC4B009CE919 /* log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		E6588EFA220FFBB5005D7BD1 /* brute.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = brute.h; sourceTree = "<group>"; };
+		E6588EFB220FFBB5005D7BD1 /* brute.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = brute.c; sourceTree = "<group>"; };
 		E666A8121715D1C000EDBF95 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E666A8131715D1C000EDBF95 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		E666A8231715E50E00EDBF95 /* as6502.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = as6502.1; sourceTree = "<group>"; };
@@ -578,6 +582,8 @@
 				E6828B2D1992E0C900442439 /* wozfp1.s */,
 				E6DCD51D1A56A048002008BE /* main.c */,
 				E6FF45471B8EEF5B0008611D /* print.s */,
+				E6588EFA220FFBB5005D7BD1 /* brute.h */,
+				E6588EFB220FFBB5005D7BD1 /* brute.c */,
 			);
 			name = Tests;
 			path = tests;
@@ -1228,6 +1234,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6588EFC220FFBB5005D7BD1 /* brute.c in Sources */,
 				E64198EB17373A6200D0EE25 /* main.c in Sources */,
 				E62BF2DC22019811005BD097 /* debug.c in Sources */,
 			);
@@ -1255,6 +1262,7 @@
 				E6DCD52C1A573CDD002008BE /* log.c in Sources */,
 				E6DCD52B1A56A8BF002008BE /* mem.c in Sources */,
 				E6723EE61AB80A120045F8F6 /* reverse.c in Sources */,
+				E6588EFD220FFBB5005D7BD1 /* brute.c in Sources */,
 				E66663181A5A3F45007025FA /* symbols.c in Sources */,
 				E6DCD52A1A56A8B4002008BE /* cpu.c in Sources */,
 				E66663151A5A3F1D007025FA /* parser.c in Sources */,
