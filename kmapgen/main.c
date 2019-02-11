@@ -21,8 +21,11 @@
  */
 
 #include <stdio.h>
+#include <time.h>
 #include <v6502/cpu.h>
 #include <dis6502/reverse.h>
+
+#include "perf.h"
 
 #define OPCODE_STRING_LEN	4
 #define MODE_STRING_LEN		6
@@ -351,6 +354,13 @@ void generateAllMaps(FILE *out) {
 	// Address Mode by Operand
 	generateMap(out, addressModeByOperandCallback, "Address Mode by Operand");
 	generateLegend(out, addressModeByOperandColors, addressModeByOperandLabels, addressModeByOperandCount);
+
+	// Perf needs tables generated first, and then the colors after
+	buildPerfTables();
+
+	// bruteForce_addressModeForOpcode
+	generateMap(out, bruteModePerfCallback, "Brute-Force Address Mode Determination");
+	generateLegend(out, perfColors, perfLabels, perfCount);
 
 	fprintf(out, "</html></body>\n");
 }
