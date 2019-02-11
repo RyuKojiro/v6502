@@ -26,6 +26,6 @@
 #include <v6502/cpu.h>
 
 v6502_address_mode bruteForce_addressModeForOpcode(v6502_opcode opcode);
-v6502_address_mode bruteForce_instructionLengthForOpcode(v6502_opcode opcode);
+int bruteForce_instructionLengthForOpcode(v6502_opcode opcode);
 
 #endif /* brute_h */

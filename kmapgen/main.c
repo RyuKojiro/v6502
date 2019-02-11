@@ -362,6 +362,18 @@ void generateAllMaps(FILE *out) {
 	generateMap(out, bruteModePerfCallback, "Brute-Force Address Mode Determination");
 	generateLegend(out, perfColors, perfLabels, perfCount);
 
+	// v6502_addressModeForOpcode
+	generateMap(out, optModePerfCallback, "K-map Optimized Address Mode Determination");
+	generateLegend(out, perfColors, perfLabels, perfCount);
+
+	// bruteForce_instructionLengthForOpcode
+	generateMap(out, bruteLengthPerfCallback, "Brute-Force Instruction Length Determination");
+	generateLegend(out, perfColors, perfLabels, perfCount);
+
+	// v6502_instructionLengthForOpcode
+	generateMap(out, optLengthPerfCallback, "K-map Optimized Instruction Length Determination");
+	generateLegend(out, perfColors, perfLabels, perfCount);
+
 	fprintf(out, "</html></body>\n");
 }
 

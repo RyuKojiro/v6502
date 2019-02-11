@@ -24,6 +24,8 @@
 #include "brute.h"
 #include "time.h"
 
+#include <stdio.h>
+
 #define HTML_BGCOLOR		"bgcolor="
 
 const char *perfColors[] = {
@@ -42,20 +44,21 @@ static struct timespec bruteLengthPerfTable[256];
 static struct timespec optModePerfTable[256];
 static struct timespec optLengthPerfTable[256];
 
-#define PERF_RUN_COUNT 10000
+#define PERF_RUN_COUNT 100000
 
-void buildPerfTables(void) {
-	// bruteForce_addressModeForOpcode
+typedef int (*opcodeInFunction)(v6502_opcode opcode);
+
+static void buildTable(opcodeInFunction function, struct timespec *table) {
 	for (v6502_opcode opcode = 0; opcode < 0xFF; opcode++) {
 		struct timespec start, end, diff;
 		clock_gettime(CLOCK_MONOTONIC, &start);
 		for(int i = 0; i < PERF_RUN_COUNT; i++) {
-			(void)bruteForce_addressModeForOpcode(opcode);
+			(void)function(opcode);
 		}
 		clock_gettime(CLOCK_MONOTONIC, &end);
 
 		diff = timespec_subtract(&end, &start);
-		bruteModePerfTable[opcode] = diff;
+		table[opcode] = diff;
 
 		if (timespec_compare(&diff, &max)) {
 			max = diff;
@@ -65,6 +68,13 @@ void buildPerfTables(void) {
 			min = diff;
 		}
 	}
+}
+
+void buildPerfTables(void) {
+	buildTable(bruteForce_addressModeForOpcode, bruteModePerfTable);
+	buildTable(v6502_addressModeForOpcode, optModePerfTable);
+	buildTable(bruteForce_instructionLengthForOpcode, bruteLengthPerfTable);
+	buildTable(v6502_instructionLengthForOpcode, optLengthPerfTable);
 }
 
 static char temporaryColorBuffer[] = HTML_BGCOLOR "#0000FF";
@@ -79,4 +89,16 @@ static const char *colorForOpcodeInTable(v6502_opcode opcode, struct timespec *t
 
 const char *bruteModePerfCallback(v6502_opcode opcode) {
 	return colorForOpcodeInTable(opcode, bruteModePerfTable);
+}
+
+const char *optModePerfCallback(v6502_opcode opcode) {
+	return colorForOpcodeInTable(opcode, optModePerfTable);
+}
+
+const char *bruteLengthPerfCallback(v6502_opcode opcode) {
+	return colorForOpcodeInTable(opcode, bruteLengthPerfTable);
+}
+
+const char *optLengthPerfCallback(v6502_opcode opcode) {
+	return colorForOpcodeInTable(opcode, optLengthPerfTable);
 }

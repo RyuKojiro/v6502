@@ -194,7 +194,7 @@ v6502_address_mode bruteForce_addressModeForOpcode(v6502_opcode opcode) {
 	}
 }
 
-v6502_address_mode bruteForce_instructionLengthForOpcode(v6502_opcode opcode) {
+int bruteForce_instructionLengthForOpcode(v6502_opcode opcode) {
 	switch (bruteForce_addressModeForOpcode(opcode)) {
 		case v6502_address_mode_implied:
 		case v6502_address_mode_accumulator:

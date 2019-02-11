@@ -4,7 +4,7 @@ include ../libvars.mk
 PROG=		kmapgen
 SRCS=		main.c perf.c time.c ../tests/brute.c
 LDFLAGS+=	-ldis6502 -las6502 -lv6502 -ledit -lcurses
-CFLAGS+=    -I../tests/
+CFLAGS+=    -I../tests/ -Os
 OBJS=		$(SRCS:.c=.o)
 HTML=		kmap.html
 

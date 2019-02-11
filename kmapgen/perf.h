@@ -30,6 +30,10 @@ extern const char *perfColors[];
 extern const char *perfLabels[];
 
 void buildPerfTables(void);
+
 const char *bruteModePerfCallback(v6502_opcode opcode);
+const char *optModePerfCallback(v6502_opcode opcode);
+const char *bruteLengthPerfCallback(v6502_opcode opcode);
+const char *optLengthPerfCallback(v6502_opcode opcode);
 
 #endif /* perf_h */
