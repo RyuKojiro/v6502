@@ -49,7 +49,7 @@ static struct timespec optLengthPerfTable[256];
 typedef int (*opcodeInFunction)(v6502_opcode opcode);
 
 static void buildTable(opcodeInFunction function, struct timespec *table) {
-	for (v6502_opcode opcode = 0; opcode < 0xFF; opcode++) {
+	for (v6502_opcode opcode = 0; opcode <= 0xFF; opcode++) {
 		struct timespec start, end, diff;
 		clock_gettime(CLOCK_MONOTONIC, &start);
 		for(int i = 0; i < PERF_RUN_COUNT; i++) {
