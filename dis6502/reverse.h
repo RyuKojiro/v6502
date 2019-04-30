@@ -42,10 +42,10 @@ int dis6502_isBranchOpcode(v6502_opcode opcode);
 void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode);
 
 /** @brief Get the string representation of the operands in a given address mode */
-void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode opcode, uint8_t high, uint8_t low);
+void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode opcode, uint8_t byte2, uint8_t byte3);
 
 /** @brief Get the complete string representation of an instruction line */
-void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low);
+void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t byte2, uint8_t byte3);
 
 /** @brief Create symbols in a as6502_symbol_table for all branch instructions in a given ld6502_object_blob that do not already have corresponding entries. */
 void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_object_blob *blob);

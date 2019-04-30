@@ -350,7 +350,7 @@ void dis6502_stringForOpcode(char *string, size_t len, v6502_opcode opcode) {
 	strncpy(string, "???", len);
 }
 
-void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode mode, uint8_t high, uint8_t low) {
+void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode mode, uint8_t byte2, uint8_t byte3) {
 	switch (mode) {
 		case v6502_address_mode_accumulator: {
 			strncpy(string, "A", len);
@@ -361,37 +361,37 @@ void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode mode,
 			}
 		} return;
 		case v6502_address_mode_immediate: {
-			snprintf(string, len, "#$%02x", low);
+			snprintf(string, len, "#$%02x", byte2);
 		} return;
 		case v6502_address_mode_zeropage: {
-			snprintf(string, len, "*$%02x", low);
+			snprintf(string, len, "*$%02x", byte2);
 		} return;
 		case v6502_address_mode_zeropage_x: {
-			snprintf(string, len, "*$%02x,X", low);
+			snprintf(string, len, "*$%02x,X", byte2);
 		} return;
 		case v6502_address_mode_zeropage_y: {
-			snprintf(string, len, "*$%02x,Y", low);
+			snprintf(string, len, "*$%02x,Y", byte2);
 		} return;
 		case v6502_address_mode_relative: {
-			snprintf(string, len, "$%02x", low);
+			snprintf(string, len, "$%02x", byte2);
 		} return;
 		case v6502_address_mode_absolute: {
-			snprintf(string, len, "$%02x%02x", high, low);
+			snprintf(string, len, "$%02x%02x", byte3, byte2);
 		} return;
 		case v6502_address_mode_absolute_x: {
-			snprintf(string, len, "$%02x%02x,X", high, low);
+			snprintf(string, len, "$%02x%02x,X", byte3, byte2);
 		} return;
 		case v6502_address_mode_absolute_y: {
-			snprintf(string, len, "$%02x%02x,Y", high, low);
+			snprintf(string, len, "$%02x%02x,Y", byte3, byte2);
 		} return;
 		case v6502_address_mode_indirect: {
-			snprintf(string, len, "($%02x%02x)", high, low);
+			snprintf(string, len, "($%02x%02x)", byte3, byte2);
 		} return;
 		case v6502_address_mode_indirect_x: {
-			snprintf(string, len, "($%02x,X)", low);
+			snprintf(string, len, "($%02x,X)", byte2);
 		} return;
 		case v6502_address_mode_indirect_y: {
-			snprintf(string, len, "($%02x),Y", low);
+			snprintf(string, len, "($%02x),Y", byte2);
 		} return;
 		case v6502_address_mode_symbol:
 		case v6502_address_mode_unknown:
@@ -400,15 +400,15 @@ void dis6502_stringForOperand(char *string, size_t len, v6502_address_mode mode,
 	}
 }
 
-void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t high, uint8_t low) {
+void dis6502_stringForInstruction(char *string, size_t len, v6502_opcode opcode, uint8_t byte2, uint8_t byte3) {
 	dis6502_stringForOpcode(string, len, opcode);
 	string[3] = ' ';
 	string += 4;
 	len -= 4;
-	dis6502_stringForOperand(string, len, v6502_addressModeForOpcode(opcode), high, low);
+	dis6502_stringForOperand(string, len, v6502_addressModeForOpcode(opcode), byte2, byte3);
 }
 
-// TODO: Also derive variable locations
+// TODO: Also de	rive variable locations
 void dis6502_deriveSymbolsForObjectBlob(as6502_symbol_table *table, ld6502_object_blob *blob) {
 	char symbolName[MAX_SYMBOL_LEN];
 	int currentLabel = 1;
