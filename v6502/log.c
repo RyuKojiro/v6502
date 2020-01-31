@@ -28,7 +28,7 @@
 
 void v6502_printCpuState(FILE *out, v6502_cpu *cpu) {
 	fprintf(out, "CPU %p: pc = %#04x, ac = %#02x, x = %#02x, y = %#02x, sp = %#02x, sr = %#02x (%c%c%c%c%c%c%c%c)\n",
-			cpu, cpu->pc, cpu->ac, cpu->x, cpu->y, cpu->sp, cpu->sr,
+			cpu, cpu->pc, cpu->a, cpu->x, cpu->y, cpu->sp, cpu->sr,
 			cpu->sr & v6502_cpu_status_negative ? 'N' : '-',
 			cpu->sr & v6502_cpu_status_overflow ? 'V' : '-',
 			cpu->sr & v6502_cpu_status_ignored ? 'X' : '-',

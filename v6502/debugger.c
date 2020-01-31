@@ -502,7 +502,7 @@ int v6502_handleDebuggerCommand(v6502_cpu *cpu, char *command, size_t len, v6502
 			value &= 0xFF;
 
 			if (regeq("a", name) || regeq("ac", name)) {
-				cpu->ac = value;
+				cpu->a = value;
 				valid++;
 			}
 			else if (regeq("x", name)) {

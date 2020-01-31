@@ -36,7 +36,7 @@ typedef struct {
 	/** @brief Program counter (16-bit) */
 	uint16_t pc;
 	/** @brief Accumulator (8-bit) */
-	uint8_t ac;
+	uint8_t a;
 	/** @brief X register (8-bit) */
 	uint8_t x;
 	/** @brief Y register (8-bit) */

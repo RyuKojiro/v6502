@@ -294,7 +294,7 @@ static int test_sbc() {
 
 	memcpy(&before, cpu, sizeof(v6502_cpu));
 	TEST_ASM("sbc #$04");
-	if (!(cpu->ac == 0xfa &&
+	if (!(cpu->a == 0xfa &&
 		  cpu->sr & v6502_cpu_status_carry &&
 		  cpu->sr & v6502_cpu_status_negative)) {
 		rc++;
@@ -320,10 +320,10 @@ static int test_signedUnderflow() {
 	printf("Testing signed underflow...\n");
 
 	v6502_reset(cpu);
-	cpu->ac = 0x04;
+	cpu->a = 0x04;
 	memcpy(&before, cpu, sizeof(v6502_cpu));
 	v6502_execute(cpu, v6502_opcode_sbc_imm, 0xf0, 0x00);
-	if (!(cpu->ac == 0x13 && !(cpu->sr & v6502_cpu_status_carry))) {
+	if (!(cpu->a == 0x13 && !(cpu->sr & v6502_cpu_status_carry))) {
 		rc++;
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
@@ -355,7 +355,7 @@ static int test_wideJumpWithParsing() {
 	printf("Testing wide jump with inline assembler parsing...\n");
 
 	v6502_reset(cpu);
-	cpu->ac = 0x04;
+	cpu->a = 0x04;
 	memcpy(&before, cpu, sizeof(v6502_cpu));
 	TEST_ASM("jmp $7b7b");
 	if (cpu->pc != 0x7b7b - 3 /* instruction length */) {
@@ -483,7 +483,7 @@ static int test_adc1() {
 	memcpy(&before, cpu, sizeof(v6502_cpu));
 	TEST_ASM("adc #6");
 	if (!(cpu->sr & v6502_cpu_status_overflow &&
-		  cpu->ac == 3)) {
+		  cpu->a == 3)) {
 		rc++;
 		v6502_printCpuState(stderr, &before);
 		v6502_printCpuState(stderr, cpu);
